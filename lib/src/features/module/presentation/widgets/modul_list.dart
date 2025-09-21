@@ -12,7 +12,7 @@ class ModulList extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 17,
         children: [
-          Text("Daftar Modul", style: AppTheme.h4),
+          Text("Daftar Modul", style: AppTheme.h5),
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.only(bottom: 60),

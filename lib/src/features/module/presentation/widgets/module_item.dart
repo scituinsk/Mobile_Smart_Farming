@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/display_chip.dart';
@@ -131,7 +133,7 @@ class ModuleItem extends StatelessWidget {
                         ),
                       ),
                       FilledButton.icon(
-                        onPressed: () {},
+                        onPressed: () => Get.toNamed(RouteNamed.selenoidPage),
                         label: Text("Detail Selenoid"),
                         icon: Icon(Icons.arrow_forward_rounded),
                         iconAlignment: IconAlignment.end,

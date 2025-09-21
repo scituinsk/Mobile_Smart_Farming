@@ -20,10 +20,17 @@ abstract final class AppTheme {
   static const selenoidColor = Color(0xffFFAAF8);
   static const waterPumpColor = Color(0xff9AD16D);
 
-  static const h4 = TextStyle(
+  static const h5 = TextStyle(
     color: textColor,
 
     fontSize: 14,
+    fontWeight: FontWeight.w600,
+  );
+
+  static const h4 = TextStyle(
+    color: textColor,
+
+    fontSize: 16,
     fontWeight: FontWeight.w600,
   );
 

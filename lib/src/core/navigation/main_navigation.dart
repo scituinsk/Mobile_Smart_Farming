@@ -110,11 +110,11 @@ class _MainNavigationState extends State<MainNavigation>
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: AppTheme.primaryColor,
+                    color: AppTheme.secondaryColor,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                        color: AppTheme.secondaryColor.withValues(alpha: 0.3),
                         blurRadius: 8,
                         spreadRadius: 2,
                       ),
