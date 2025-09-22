@@ -62,88 +62,70 @@ class ModuleItem extends StatelessWidget {
             spacing: 9,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                spacing: 9,
                 children: [
-                  Row(
-                    spacing: 9,
-                    children: [
-                      DisplayChip(
-                        paddingHorizontal: 9,
-                        paddingVertical: 9,
-                        backgroundColor: AppTheme.surfaceColor,
-                        child: Row(
-                          spacing: 4,
-                          children: [
-                            CustomIcon(type: MyCustomIcon.temprature, size: 24),
-                            Text(temprature, style: AppTheme.textSmallMedium),
-                          ],
-                        ),
-                      ),
-                      DisplayChip(
-                        paddingHorizontal: 9,
-                        paddingVertical: 9,
-                        backgroundColor: AppTheme.surfaceColor,
-                        child: Row(
-                          spacing: 4,
-                          children: [
-                            CustomIcon(type: MyCustomIcon.waterPH, size: 24),
-                            Text(waterPH, style: AppTheme.textSmallMedium),
-                          ],
-                        ),
-                      ),
-                      DisplayChip(
-                        paddingHorizontal: 9,
-                        paddingVertical: 9,
-                        backgroundColor: AppTheme.surfaceColor,
-                        child: Row(
-                          spacing: 4,
-                          children: [
-                            CustomIcon(type: MyCustomIcon.waterLevel, size: 24),
-                            Text(waterLevel, style: AppTheme.textSmallMedium),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  IconWidget(
-                    customIcon: MyCustomIcon.editPencil,
+                  DisplayChip(
+                    paddingHorizontal: 9,
+                    paddingVertical: 9,
                     backgroundColor: AppTheme.surfaceColor,
+                    child: Row(
+                      spacing: 4,
+                      children: [
+                        CustomIcon(type: MyCustomIcon.temprature, size: 24),
+                        Text(temprature, style: AppTheme.textSmallMedium),
+                      ],
+                    ),
+                  ),
+                  DisplayChip(
+                    paddingHorizontal: 9,
+                    paddingVertical: 9,
+                    backgroundColor: AppTheme.surfaceColor,
+                    child: Row(
+                      spacing: 4,
+                      children: [
+                        CustomIcon(type: MyCustomIcon.waterPH, size: 24),
+                        Text(waterPH, style: AppTheme.textSmallMedium),
+                      ],
+                    ),
+                  ),
+                  DisplayChip(
+                    paddingHorizontal: 9,
+                    paddingVertical: 9,
+                    backgroundColor: AppTheme.surfaceColor,
+                    child: Row(
+                      spacing: 4,
+                      children: [
+                        CustomIcon(type: MyCustomIcon.waterLevel, size: 24),
+                        Text(waterLevel, style: AppTheme.textSmallMedium),
+                      ],
+                    ),
                   ),
                 ],
               ),
+
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                spacing: 9,
                 children: [
-                  Row(
-                    spacing: 9,
-                    children: [
-                      DisplayChip(
-                        paddingHorizontal: 9,
-                        paddingVertical: 9,
-                        backgroundColor: AppTheme.surfaceColor,
-                        child: Row(
-                          spacing: 4,
-                          children: [
-                            CustomIcon(type: MyCustomIcon.waterPump, size: 24),
-                            Text(
-                              waterPumpStatus ? "Aktif" : "Non-aktif",
-                              style: AppTheme.textSmallMedium,
-                            ),
-                          ],
+                  DisplayChip(
+                    paddingHorizontal: 9,
+                    paddingVertical: 9,
+                    backgroundColor: AppTheme.surfaceColor,
+                    child: Row(
+                      spacing: 4,
+                      children: [
+                        CustomIcon(type: MyCustomIcon.waterPump, size: 24),
+                        Text(
+                          waterPumpStatus ? "Aktif" : "Non-aktif",
+                          style: AppTheme.textSmallMedium,
                         ),
-                      ),
-                      FilledButton.icon(
-                        onPressed: () => Get.toNamed(RouteNamed.selenoidPage),
-                        label: Text("Detail Selenoid"),
-                        icon: Icon(Icons.arrow_forward_rounded),
-                        iconAlignment: IconAlignment.end,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  IconWidget(
-                    icon: Icons.delete_rounded,
-                    backgroundColor: AppTheme.errorColor,
-                    iconColor: Colors.white,
+                  FilledButton.icon(
+                    onPressed: () => Get.toNamed(RouteNamed.solenoidPage),
+                    label: Text("Detail Solenoid"),
+                    icon: Icon(Icons.arrow_forward_rounded),
+                    iconAlignment: IconAlignment.end,
                   ),
                 ],
               ),

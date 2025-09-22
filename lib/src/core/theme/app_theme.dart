@@ -17,7 +17,7 @@ abstract final class AppTheme {
   static const titleSecondary = Color(0xff7C7C7C);
   // static const defaultTextColor = Color(0xff8F9098);
 
-  static const selenoidColor = Color(0xffFFAAF8);
+  static const solenoidColor = Color(0xffFFAAF8);
   static const waterPumpColor = Color(0xff9AD16D);
 
   static const h5 = TextStyle(
@@ -58,6 +58,12 @@ abstract final class AppTheme {
     fontFamily: 'Clash Display',
     fontSize: 37,
     fontWeight: FontWeight.bold,
+  );
+
+  static const h1Rubik = TextStyle(
+    color: textColor,
+    fontSize: 37,
+    fontWeight: FontWeight.normal,
   );
 
   static const textAction = TextStyle(

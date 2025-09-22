@@ -14,7 +14,7 @@ class FilterModul extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 17,
       children: [
-        Text("Cari Modul", style: AppTheme.h5),
+        Text("Cari Modul", style: AppTheme.h4),
         Row(
           spacing: 23,
           mainAxisSize: MainAxisSize.min,

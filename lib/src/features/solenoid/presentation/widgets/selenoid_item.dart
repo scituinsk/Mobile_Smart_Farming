@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 
-class SelenoidItem extends StatelessWidget {
+class SolenoidItem extends StatelessWidget {
   final String title;
   final bool status;
-  const SelenoidItem({super.key, required this.title, required this.status});
+  const SolenoidItem({super.key, required this.title, required this.status});
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: CustomIcon(type: MyCustomIcon.selenoid),
+      leading: CustomIcon(type: MyCustomIcon.solenoid),
       title: Text(title),
       trailing: Container(
         decoration: BoxDecoration(

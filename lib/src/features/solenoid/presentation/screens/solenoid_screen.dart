@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/icon_widget.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
-import 'package:pak_tani/src/features/selenoid/presentation/widgets/selenoid_list.dart';
+import 'package:pak_tani/src/features/solenoid/presentation/widgets/solenoid_list.dart';
 
-class SelenoidScreen extends StatelessWidget {
-  const SelenoidScreen({super.key});
+class SolenoidScreen extends StatelessWidget {
+  const SolenoidScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class SelenoidScreen extends StatelessWidget {
         ),
         title: Column(
           children: [
-            Text("Selenoid", style: AppTheme.h3),
+            Text("Solenoid", style: AppTheme.h3),
             Text(
               "Mengatur penjadwalan sistem irigasi",
               style: AppTheme.textSmall.copyWith(
@@ -49,9 +50,11 @@ class SelenoidScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Daftar Selenoid", style: AppTheme.h4),
+                  Text("Daftar Solenoid", style: AppTheme.h4),
                   FilledButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.toNamed(RouteNamed.schedulingPage);
+                    },
                     icon: Icon(LucideIcons.calendarSync),
                     label: Text("Penjadwalan"),
                     style: ButtonStyle(
@@ -63,7 +66,7 @@ class SelenoidScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SelenoidList(),
+              SolenoidList(),
               SizedBox(
                 width: double.infinity, // Make the button stretch horizontally
                 child: FilledButton.icon(

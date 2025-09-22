@@ -6,10 +6,10 @@ class NotificationList extends StatelessWidget {
 
   final List<Map<String, dynamic>> notifications = const [
     {
-      "message": "Selenoid 1 pada Green House A telah terbuka",
+      "message": "Solenoid 1 pada Green House A telah terbuka",
       "time": "08:32",
       "isRead": false,
-      "type": NotificationType.selenoid,
+      "type": NotificationType.solenoid,
     },
     {
       "message": "Water pump pada Green House B telah diaktifkan",
@@ -36,10 +36,10 @@ class NotificationList extends StatelessWidget {
       "type": NotificationType.batteryLow,
     },
     {
-      "message": "Selenoid 2 pada Green House C telah ditutup",
+      "message": "Solenoid 2 pada Green House C telah ditutup",
       "time": "2 hari lalu",
       "isRead": true,
-      "type": NotificationType.selenoid,
+      "type": NotificationType.solenoid,
     },
     {
       "message": "Water pump pada Green House A telah dimatikan",
@@ -60,10 +60,10 @@ class NotificationList extends StatelessWidget {
       "type": NotificationType.batteryMax,
     },
     {
-      "message": "Selenoid 3 pada Green House A telah terbuka",
+      "message": "Solenoid 3 pada Green House A telah terbuka",
       "time": "1 minggu lalu",
       "isRead": true,
-      "type": NotificationType.selenoid,
+      "type": NotificationType.solenoid,
     },
     {
       "message": "Battery level sangat rendah (5%)",

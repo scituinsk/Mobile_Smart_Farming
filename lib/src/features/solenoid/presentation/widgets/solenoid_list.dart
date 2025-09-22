@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pak_tani/src/features/selenoid/presentation/widgets/selenoid_item.dart';
+import 'package:pak_tani/src/features/solenoid/presentation/widgets/selenoid_item.dart';
 
-class SelenoidList extends StatelessWidget {
-  const SelenoidList({super.key});
+class SolenoidList extends StatelessWidget {
+  const SolenoidList({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,8 +12,8 @@ class SelenoidList extends StatelessWidget {
         itemCount: 6,
         itemBuilder: (context, index) => Column(
           children: [
-            SelenoidItem(
-              title: "Selenoid ${index + 1}",
+            SolenoidItem(
+              title: "Solenoid ${index + 1}",
               status: index % 2 == 0 ? true : false,
             ),
             SizedBox(height: 20),

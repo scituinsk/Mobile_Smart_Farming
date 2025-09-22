@@ -14,8 +14,8 @@ class AllModulSummary extends StatelessWidget {
         Expanded(
           child: ModulSummaryWidget(
             bgIcon: AppTheme.surfaceColor,
-            customIcon: MyCustomIcon.selenoid,
-            title: "Selenoid Aktif",
+            customIcon: MyCustomIcon.solenoid,
+            title: "Solenoid Aktif",
             amount: 8,
           ),
         ),
