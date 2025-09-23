@@ -66,10 +66,22 @@ abstract final class AppTheme {
     fontWeight: FontWeight.normal,
   );
 
+  static const largeTimeText = TextStyle(
+    color: primaryColor,
+    fontSize: 60,
+    fontWeight: FontWeight.w500,
+  );
+
   static const textAction = TextStyle(
     color: onDefaultColor,
     fontSize: 12,
     fontWeight: FontWeight.w500,
+  );
+
+  static const textDefault = TextStyle(
+    color: onDefaultColor,
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
   );
 
   static const text = TextStyle(
