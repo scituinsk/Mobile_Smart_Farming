@@ -11,6 +11,7 @@ class IconWidget extends StatelessWidget {
   final double padding;
   final MyCustomIcon? customIcon;
   final VoidCallback? onPressed; // Tambahkan opsi onPressed
+  final double borderRadius;
 
   const IconWidget({
     super.key,
@@ -20,7 +21,8 @@ class IconWidget extends StatelessWidget {
     this.backgroundColor = Colors.white,
     this.padding = 8,
     this.customIcon,
-    this.onPressed, // Tambahkan ke konstruktor
+    this.onPressed,
+    this.borderRadius = 100,
   });
 
   @override
@@ -43,7 +45,7 @@ class IconWidget extends StatelessWidget {
         color: backgroundColor,
         shape: CircleBorder(),
         child: InkWell(
-          borderRadius: BorderRadius.circular(100),
+          borderRadius: BorderRadius.circular(borderRadius),
           onTap: onPressed,
           child: content,
         ),
@@ -51,7 +53,10 @@ class IconWidget extends StatelessWidget {
     }
 
     return Container(
-      decoration: BoxDecoration(color: backgroundColor, shape: BoxShape.circle),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
       padding: EdgeInsets.all(padding),
       child: iconChild,
     );

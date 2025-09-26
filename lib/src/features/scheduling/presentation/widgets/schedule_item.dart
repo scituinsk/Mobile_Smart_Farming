@@ -45,6 +45,7 @@ class ScheduleItem extends StatelessWidget {
                     color: AppTheme.primaryColor,
                   ),
                 ),
+
                 Text(
                   day,
                   style: AppTheme.text.copyWith(color: AppTheme.secondaryColor),

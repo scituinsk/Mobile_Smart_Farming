@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
+import 'package:pak_tani/src/features/add_modul/presentation/screens/add_modul_screen.dart';
 import 'package:pak_tani/src/features/notification/presentation/screens/notification_screen.dart';
 import 'package:pak_tani/src/features/scheduling/presentation/screens/scheduling_screen.dart';
 import 'package:pak_tani/src/features/solenoid/presentation/screens/solenoid_screen.dart';
@@ -15,5 +16,6 @@ class AppPage {
       name: RouteNamed.schedulingPage,
       page: () => const SchedulingScreen(),
     ),
+    GetPage(name: RouteNamed.addModulPage, page: () => const AddModulScreen()),
   ];
 }

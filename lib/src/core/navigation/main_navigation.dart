@@ -94,7 +94,7 @@ class _MainNavigationState extends State<MainNavigation>
           physics: const BouncingScrollPhysics(),
           children: screens,
         ),
-        child: Container(
+        child: SizedBox(
           height: 60,
           child: Stack(
             children: [
@@ -157,7 +157,7 @@ class _MainNavigationState extends State<MainNavigation>
       iconColor = Color.lerp(Colors.grey, Colors.white, opacity) ?? Colors.grey;
     }
 
-    return Container(
+    return SizedBox(
       height: 60,
       child: Center(child: Icon(icon, color: iconColor, size: 28)),
     );
