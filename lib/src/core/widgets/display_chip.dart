@@ -5,6 +5,7 @@ class DisplayChip extends StatelessWidget {
   final double paddingVertical;
   final double paddingHorizontal;
   final Widget child;
+  final VoidCallback? onPressed;
 
   const DisplayChip({
     super.key,
@@ -12,20 +13,37 @@ class DisplayChip extends StatelessWidget {
     this.backgroundColor = Colors.white,
     this.paddingVertical = 4,
     this.paddingHorizontal = 8,
+    this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(99),
-      ),
-      padding: EdgeInsets.symmetric(
-        vertical: paddingVertical,
-        horizontal: paddingHorizontal,
-      ),
-      child: child,
-    );
+    return onPressed == null
+        ? Container(
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(99),
+            ),
+            padding: EdgeInsets.symmetric(
+              vertical: paddingVertical,
+              horizontal: paddingHorizontal,
+            ),
+            child: child,
+          )
+        : InkWell(
+            onTap: onPressed,
+            borderRadius: BorderRadius.circular(99),
+            child: Container(
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                borderRadius: BorderRadius.circular(99),
+              ),
+              padding: EdgeInsets.symmetric(
+                vertical: paddingVertical,
+                horizontal: paddingHorizontal,
+              ),
+              child: child,
+            ),
+          );
   }
 }

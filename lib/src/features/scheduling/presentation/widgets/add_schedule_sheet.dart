@@ -1,25 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/features/scheduling/presentation/widgets/build_day_chip.dart';
-import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
 
 class AddScheduleSheet {
   static void show(BuildContext context) {
-    WoltModalSheet.show(
+    showMaterialModalBottomSheet(
       context: context,
-      useSafeArea: true,
-      pageListBuilder: (context) => [
-        WoltModalSheetPage(
-          backgroundColor: Colors.white,
-          hasTopBarLayer: false,
-          pageTitle: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 34, horizontal: 30),
-            child: Row(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Container(
+        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Handle bar di atas
+            Container(
+              width: 100,
+              height: 8,
+              margin: EdgeInsets.only(bottom: 20),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            // Custom top bar
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.back();
+                  },
                   icon: Icon(
                     LucideIcons.x,
                     color: AppTheme.primaryColor,
@@ -28,7 +44,9 @@ class AddScheduleSheet {
                 ),
                 Text("Tambah Penjadwalan", style: AppTheme.h4),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.back();
+                  },
                   icon: Icon(
                     LucideIcons.check,
                     color: AppTheme.primaryColor,
@@ -37,10 +55,8 @@ class AddScheduleSheet {
                 ),
               ],
             ),
-          ),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
+            SizedBox(height: 20),
+            Column(
               spacing: 33,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -127,9 +143,9 @@ class AddScheduleSheet {
                 SizedBox(height: 20),
               ],
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

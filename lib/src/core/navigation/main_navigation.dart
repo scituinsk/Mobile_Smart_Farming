@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/features/home/presentation/screens/home_screen.dart';
-import 'package:pak_tani/src/features/module/presentation/screen/module_screen.dart';
+import 'package:pak_tani/src/features/moduls/presentation/screen/moduls_screen.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -20,7 +20,7 @@ class _MainNavigationState extends State<MainNavigation>
 
   final List<Widget> screens = [
     HomeScreen(),
-    ModuleScreen(), // TODO: buat screen ini
+    ModulsScreen(),
     Center(child: Text('history screen')), // TODO: buat screen ini
     Center(child: Text('Profile Screen')), // TODO: buat screen ini
   ];

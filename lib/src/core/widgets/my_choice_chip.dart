@@ -20,7 +20,7 @@ class MyChoiceChip extends StatelessWidget {
       showCheckmark: false,
       backgroundColor: Colors.white, // Unselected background is white
       selectedColor:
-          AppTheme.primaryColor, // Selected background is primary color
+          AppTheme.secondaryColor, // Selected background is primary color
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
         side: BorderSide(color: Colors.transparent),

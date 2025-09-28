@@ -6,6 +6,7 @@ import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/icon_widget.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
 import 'package:pak_tani/src/features/solenoid/presentation/widgets/solenoid_list.dart';
+import 'package:pak_tani/src/features/solenoid/presentation/widgets/solenoid_setting_sheet.dart';
 
 class SolenoidScreen extends StatelessWidget {
   const SolenoidScreen({super.key});
@@ -37,7 +38,12 @@ class SolenoidScreen extends StatelessWidget {
         ),
         centerTitle: true,
         actionsPadding: EdgeInsets.only(right: 30),
-        actions: [IconWidget(icon: Icons.settings)],
+        actions: [
+          IconWidget(
+            icon: Icons.settings,
+            onPressed: () => SolenoidSettingSheet.show(context),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Container(

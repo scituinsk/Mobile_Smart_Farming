@@ -6,13 +6,13 @@ import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/display_chip.dart';
 import 'package:pak_tani/src/core/widgets/icon_widget.dart';
 
-class ModuleItem extends StatelessWidget {
+class ModulItem extends StatelessWidget {
   final String title;
   final String temprature;
   final String waterPH;
   final String waterLevel;
   final bool waterPumpStatus;
-  const ModuleItem({
+  const ModulItem({
     super.key,
     required this.title,
     required this.temprature,
@@ -55,6 +55,7 @@ class ModuleItem extends StatelessWidget {
                 icon: Icons.arrow_outward_rounded,
                 backgroundColor: AppTheme.secondaryColor,
                 iconColor: Colors.white,
+                onPressed: () => Get.toNamed(RouteNamed.detailModulPage),
               ),
             ],
           ),
