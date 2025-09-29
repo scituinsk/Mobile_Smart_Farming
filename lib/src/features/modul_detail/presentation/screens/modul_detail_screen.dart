@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/display_chip.dart';
@@ -27,7 +28,7 @@ class ModulDetailScreen extends StatelessWidget {
           child: Stack(
             children: [
               SizedBox(
-                height: 300,
+                height: 318,
                 child: Stack(
                   children: [
                     Image.asset(
@@ -37,7 +38,7 @@ class ModulDetailScreen extends StatelessWidget {
                       height: double.infinity,
                     ),
                     Container(
-                      height: 300,
+                      height: 318,
                       width: mediaQueryWidth,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -148,7 +149,9 @@ class ModulDetailScreen extends StatelessWidget {
                                   child: DisplayChip(
                                     paddingHorizontal: 16,
                                     backgroundColor: AppTheme.primaryColor,
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Get.toNamed(RouteNamed.solenoidPage);
+                                    },
                                     child: Row(
                                       spacing: 4,
                                       mainAxisSize: MainAxisSize.min,
