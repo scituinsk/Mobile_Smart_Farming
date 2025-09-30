@@ -12,6 +12,8 @@ enum MyCustomIcon {
   filter,
   waterPH,
   editPencil,
+  logoPrimary,
+  logoWhite,
 }
 
 String iconAssets(MyCustomIcon type) {
@@ -36,6 +38,10 @@ String iconAssets(MyCustomIcon type) {
       return "assets/icons/filter.svg";
     case MyCustomIcon.editPencil:
       return "assets/icons/edit-pencil.svg";
+    case MyCustomIcon.logoPrimary:
+      return "assets/logo/logo_primary.svg";
+    case MyCustomIcon.logoWhite:
+      return "assets/logo/logo_white.svg";
   }
 }
 
