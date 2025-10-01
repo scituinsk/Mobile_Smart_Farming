@@ -3,8 +3,10 @@ import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/widgets/custom_dialog.dart';
 import 'package:pak_tani/src/core/widgets/icon_widget.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
+import 'package:pak_tani/src/core/widgets/my_filled_button.dart';
 import 'package:pak_tani/src/features/solenoid/presentation/widgets/solenoid_list.dart';
 import 'package:pak_tani/src/features/solenoid/presentation/widgets/solenoid_setting_sheet.dart';
 
@@ -81,7 +83,69 @@ class SolenoidScreen extends StatelessWidget {
                       AppTheme.errorColor,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    CustomDialog.show(
+                      context: context,
+                      widthTitle: double.infinity,
+                      title: Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: Column(
+                          spacing: 8,
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.warning_rounded,
+                              color: AppTheme.primaryColor,
+                              size: 38,
+                            ),
+                            Text("Peringatan!", style: AppTheme.h4),
+                            Text(
+                              'Nonaktifkan semua solenoid?',
+                              style: AppTheme.textAction,
+                            ),
+                          ],
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 6,
+                        ),
+                        child: Column(
+                          spacing: 20,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Tindakan ini akan menghentikan semua jadwal dan operasi irigasi.",
+                              textAlign: TextAlign.center,
+                              style: AppTheme.textDefault,
+                            ),
+                            Row(
+                              spacing: 15,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                MyFilledButton(
+                                  title: "Batal",
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  backgroundColor: AppTheme.surfaceColor,
+                                  textColor: AppTheme.primaryColor,
+                                ),
+                                MyFilledButton(
+                                  title: "Konfirmasi",
+                                  onPressed: () {},
+                                  backgroundColor: AppTheme.errorColor,
+                                  textColor: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                   label: Text("Tombol Darurat"),
                   icon: Icon(Icons.warning),
                 ),

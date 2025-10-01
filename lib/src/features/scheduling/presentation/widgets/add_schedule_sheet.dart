@@ -27,7 +27,7 @@ class AddScheduleSheet {
               Container(
                 width: 100,
                 height: 8,
-                margin: EdgeInsets.only(bottom: 20),
+                margin: EdgeInsets.only(bottom: 15),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(10),
@@ -60,7 +60,7 @@ class AddScheduleSheet {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 5),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
@@ -85,7 +85,7 @@ class AddScheduleSheet {
                       // Durasi Penyiraman Section
                       Column(
                         spacing: 21,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,8 +133,8 @@ class AddScheduleSheet {
 
                               // Hari dalam seminggu
                               Wrap(
-                                spacing: 20,
-                                runSpacing: 20,
+                                spacing: 15,
+                                runSpacing: 15,
                                 children: [
                                   BuildDayChip(day: "Senin", isSelected: false),
                                   BuildDayChip(

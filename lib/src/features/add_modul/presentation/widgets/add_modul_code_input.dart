@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/icon_widget.dart';
+import 'package:pak_tani/src/core/widgets/my_text_field.dart';
 
 class AddModulCodeInput extends StatelessWidget {
   final String title;
@@ -14,36 +15,25 @@ class AddModulCodeInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 6,
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      spacing: 10,
       children: [
-        Text(title, style: AppTheme.h4),
-        Row(
-          spacing: 12,
-          children: [
-            Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: hintText,
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide.none,
-                  ),
-                  hintStyle: TextStyle(color: AppTheme.onDefaultColor),
-                ),
-              ),
-            ),
-            IconWidget(
-              icon: LucideIcons.scanLine,
-              iconColor: AppTheme.primaryColor,
-              backgroundColor: AppTheme.waterPumpColor,
-              borderRadius: 10,
-              padding: 12,
-            ),
-          ],
+        Expanded(
+          child: MyTextField(
+            title: "Kode Modul",
+            hint: "Ex: 018bd6f8-7d8b-7132-842b-3247e",
+            fillColor: Colors.white,
+          ),
+        ),
+        IconWidget(
+          icon: LucideIcons.scanLine,
+          iconColor: AppTheme.primaryColor,
+          backgroundColor: AppTheme.waterPumpColor,
+          iconSize: 30,
+          borderRadius: 10,
+          padding: 12,
+          onPressed: () {},
         ),
       ],
     );

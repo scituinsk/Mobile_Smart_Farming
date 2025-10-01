@@ -43,7 +43,9 @@ class IconWidget extends StatelessWidget {
     if (onPressed != null) {
       return Material(
         color: backgroundColor,
-        shape: CircleBorder(),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
         child: InkWell(
           borderRadius: BorderRadius.circular(borderRadius),
           onTap: onPressed,

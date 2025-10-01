@@ -22,23 +22,21 @@ class ModulInformation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          IconWidget(
-            padding: 3,
-            backgroundColor: AppTheme.surfaceColor,
-            customIcon: customIcon,
-          ),
-          Text(name, style: AppTheme.textMedium.copyWith(color: Colors.white)),
-          isWaterPump
-              ? WaterpumpTag(isActive: waterpumpStatus)
-              : Text(
-                  information,
-                  style: AppTheme.text.copyWith(color: Colors.white),
-                ),
-        ],
-      ),
+    return Column(
+      children: [
+        IconWidget(
+          padding: 3,
+          backgroundColor: AppTheme.surfaceColor,
+          customIcon: customIcon,
+        ),
+        Text(name, style: AppTheme.textMedium.copyWith(color: Colors.white)),
+        isWaterPump
+            ? WaterpumpTag(isActive: waterpumpStatus)
+            : Text(
+                information,
+                style: AppTheme.text.copyWith(color: Colors.white),
+              ),
+      ],
     );
   }
 }

@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
+import 'package:pak_tani/src/core/widgets/my_text_field.dart';
 import 'package:pak_tani/src/features/solenoid/presentation/widgets/solenoid_setting_sheet_chose.dart';
 
 class SolenoidSettingSheet {
@@ -89,34 +90,14 @@ class SolenoidSettingSheet {
                         ),
                       ],
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      spacing: 12,
-                      children: [
-                        Text(
-                          "Atur Jumlah Selenoid",
-                          style: AppTheme.textMedium,
-                        ),
-                        TextField(
-                          decoration: InputDecoration(
-                            prefixIcon: Container(
-                              padding: EdgeInsets.all(12),
-                              child: CustomIcon(type: MyCustomIcon.solenoid),
-                            ),
-                            hintText: "Masukkan durasi",
-                            filled: true,
-                            fillColor: Colors.grey.shade200,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide.none,
-                            ),
-                            hintStyle: TextStyle(
-                              color: AppTheme.onDefaultColor,
-                            ),
-                          ),
-                          keyboardType: TextInputType.number,
-                        ),
-                      ],
+                    MyTextField(
+                      title: "Atur Jumlah Solenoid",
+                      hint: "Masukkan durasi",
+                      titleStyle: AppTheme.textMedium,
+                      prefixIcon: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: CustomIcon(type: MyCustomIcon.solenoid),
+                      ),
                     ),
                     SizedBox(height: 18),
                   ],

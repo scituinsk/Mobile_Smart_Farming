@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
+import 'package:pak_tani/src/core/widgets/my_text_field.dart';
 import 'package:pak_tani/src/features/add_modul/presentation/widgets/add_modul_code_input.dart';
-import 'package:pak_tani/src/features/add_modul/presentation/widgets/add_modul_textfield.dart';
 
 class AddModulScreen extends StatelessWidget {
   const AddModulScreen({super.key});
@@ -45,7 +45,7 @@ class AddModulScreen extends StatelessWidget {
       body: Container(
         width: mediaQueryWidth,
         height: mediaQueryHeight,
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           spacing: 30,
@@ -57,13 +57,15 @@ class AddModulScreen extends StatelessWidget {
                   title: "Kode Modul",
                   hintText: "Ex: 018bd6f8-7d8b-7132-842b-3247e",
                 ),
-                AddModulTextfield(
+                MyTextField(
                   title: "Nama Modul",
-                  hintText: "Ex: Green House A",
+                  hint: "Ex: Green House A",
+                  fillColor: Colors.white,
                 ),
-                AddModulTextfield(
+                MyTextField(
                   title: "Deskripsi Modul",
-                  hintText: "Ex: Green Gouse sebelah timur",
+                  hint: "Ex: Green Gouse sebelah timur",
+                  fillColor: Colors.white,
                 ),
               ],
             ),
