@@ -4,7 +4,7 @@ import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/icon_widget.dart';
 
 enum NotificationType {
-  selenoid,
+  solenoid,
   greenHouse,
   waterPump,
   batteryMax,
@@ -18,7 +18,7 @@ class NotificationItem extends StatelessWidget {
   final bool isRead;
   const NotificationItem({
     super.key,
-    this.type = NotificationType.selenoid,
+    this.type = NotificationType.solenoid,
     required this.message,
     required this.time,
     this.isRead = false,
@@ -69,8 +69,8 @@ class NotificationItem extends StatelessWidget {
 
   String _title() {
     switch (type) {
-      case NotificationType.selenoid:
-        return "Selenoid";
+      case NotificationType.solenoid:
+        return "Solenoid";
       case NotificationType.greenHouse:
         return "Green House";
       case NotificationType.waterPump:
@@ -84,8 +84,8 @@ class NotificationItem extends StatelessWidget {
 
   MyCustomIcon _leadingIcon() {
     switch (type) {
-      case NotificationType.selenoid:
-        return MyCustomIcon.selenoid;
+      case NotificationType.solenoid:
+        return MyCustomIcon.solenoid;
       case NotificationType.greenHouse:
         return MyCustomIcon.greenHouse;
       case NotificationType.waterPump:

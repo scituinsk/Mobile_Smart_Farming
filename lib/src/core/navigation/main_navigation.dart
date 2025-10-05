@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/features/home/presentation/screens/home_screen.dart';
-import 'package:pak_tani/src/features/module/presentation/screen/module_screen.dart';
+import 'package:pak_tani/src/features/moduls/presentation/screen/moduls_screen.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -20,7 +20,7 @@ class _MainNavigationState extends State<MainNavigation>
 
   final List<Widget> screens = [
     HomeScreen(),
-    ModuleScreen(), // TODO: buat screen ini
+    ModulsScreen(),
     Center(child: Text('history screen')), // TODO: buat screen ini
     Center(child: Text('Profile Screen')), // TODO: buat screen ini
   ];
@@ -94,7 +94,7 @@ class _MainNavigationState extends State<MainNavigation>
           physics: const BouncingScrollPhysics(),
           children: screens,
         ),
-        child: Container(
+        child: SizedBox(
           height: 60,
           child: Stack(
             children: [
@@ -110,11 +110,11 @@ class _MainNavigationState extends State<MainNavigation>
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: AppTheme.primaryColor,
+                    color: AppTheme.secondaryColor,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: AppTheme.primaryColor.withValues(alpha: 0.3),
+                        color: AppTheme.secondaryColor.withValues(alpha: 0.3),
                         blurRadius: 8,
                         spreadRadius: 2,
                       ),
@@ -157,7 +157,7 @@ class _MainNavigationState extends State<MainNavigation>
       iconColor = Color.lerp(Colors.grey, Colors.white, opacity) ?? Colors.grey;
     }
 
-    return Container(
+    return SizedBox(
       height: 60,
       child: Center(child: Icon(icon, color: iconColor, size: 28)),
     );

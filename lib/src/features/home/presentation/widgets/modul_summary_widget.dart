@@ -3,12 +3,12 @@ import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/icon_widget.dart';
 
-class InformationWidget extends StatelessWidget {
+class ModulSummaryWidget extends StatelessWidget {
   final Color bgIcon;
   final MyCustomIcon customIcon;
   final String title;
   final int amount;
-  const InformationWidget({
+  const ModulSummaryWidget({
     super.key,
     required this.bgIcon,
     required this.customIcon,

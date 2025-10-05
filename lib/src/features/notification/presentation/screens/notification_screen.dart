@@ -56,7 +56,7 @@ class NotificationScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: 6,
                   children: [
-                    Text("Semua Notifikasi", style: AppTheme.h4),
+                    Text("Semua Notifikasi", style: AppTheme.h5),
                     NotificationList(),
                   ],
                 ),

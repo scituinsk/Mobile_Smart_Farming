@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 enum MyCustomIcon {
-  selenoid,
+  solenoid,
   greenHouse,
   waterPump,
   batteryMax,
@@ -12,11 +12,13 @@ enum MyCustomIcon {
   filter,
   waterPH,
   editPencil,
+  logoPrimary,
+  logoWhite,
 }
 
 String iconAssets(MyCustomIcon type) {
   switch (type) {
-    case MyCustomIcon.selenoid:
+    case MyCustomIcon.solenoid:
       return "assets/icons/carbon-iot-platform.svg";
     case MyCustomIcon.greenHouse:
       return "assets/icons/mdi-greenhouse.svg";
@@ -36,6 +38,10 @@ String iconAssets(MyCustomIcon type) {
       return "assets/icons/filter.svg";
     case MyCustomIcon.editPencil:
       return "assets/icons/edit-pencil.svg";
+    case MyCustomIcon.logoPrimary:
+      return "assets/logo/logo_primary.svg";
+    case MyCustomIcon.logoWhite:
+      return "assets/logo/logo_white.svg";
   }
 }
 

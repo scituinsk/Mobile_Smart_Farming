@@ -17,13 +17,20 @@ abstract final class AppTheme {
   static const titleSecondary = Color(0xff7C7C7C);
   // static const defaultTextColor = Color(0xff8F9098);
 
-  static const selenoidColor = Color(0xffFFAAF8);
+  static const solenoidColor = Color(0xffFFAAF8);
   static const waterPumpColor = Color(0xff9AD16D);
+
+  static const h5 = TextStyle(
+    color: textColor,
+
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+  );
 
   static const h4 = TextStyle(
     color: textColor,
 
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: FontWeight.w600,
   );
 
@@ -40,6 +47,12 @@ abstract final class AppTheme {
     fontWeight: FontWeight.w600,
   );
 
+  static const h2 = TextStyle(
+    color: textColor,
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+  );
+
   static const h2Medium = TextStyle(
     color: textColor,
     fontSize: 24,
@@ -53,10 +66,28 @@ abstract final class AppTheme {
     fontWeight: FontWeight.bold,
   );
 
+  static const h1Rubik = TextStyle(
+    color: textColor,
+    fontSize: 37,
+    fontWeight: FontWeight.normal,
+  );
+
+  static const largeTimeText = TextStyle(
+    color: primaryColor,
+    fontSize: 60,
+    fontWeight: FontWeight.w500,
+  );
+
   static const textAction = TextStyle(
     color: onDefaultColor,
     fontSize: 12,
     fontWeight: FontWeight.w500,
+  );
+
+  static const textDefault = TextStyle(
+    color: onDefaultColor,
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
   );
 
   static const text = TextStyle(

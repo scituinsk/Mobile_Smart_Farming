@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/features/module/presentation/widgets/module_item.dart';
+import 'package:pak_tani/src/features/moduls/presentation/widgets/modul_item.dart';
 
 class ModulList extends StatelessWidget {
   const ModulList({super.key});
@@ -19,7 +19,7 @@ class ModulList extends StatelessWidget {
               itemCount: 3,
               itemBuilder: (context, index) => Column(
                 children: [
-                  ModuleItem(
+                  ModulItem(
                     title: "Green house A",
                     temprature: "16°C",
                     waterPH: "60.2%",
