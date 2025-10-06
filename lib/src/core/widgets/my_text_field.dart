@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 
-class MyTextField extends StatelessWidget {
+class MyTextField extends StatefulWidget {
   final String title;
   final String hint;
   final Widget? prefixIcon;
@@ -11,6 +11,8 @@ class MyTextField extends StatelessWidget {
   final TextStyle titleStyle;
   final Color fillColor;
   final bool obscureText;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator; // Tambahkan validator
 
   const MyTextField({
     super.key,
@@ -23,31 +25,93 @@ class MyTextField extends StatelessWidget {
     this.titleStyle = AppTheme.h5,
     this.fillColor = const Color(0xFFEEEEEE),
     this.obscureText = false,
+    this.controller,
+    this.validator, // Tambahkan validator
   });
+
+  @override
+  State<MyTextField> createState() => _MyTextFieldState();
+}
+
+class _MyTextFieldState extends State<MyTextField> {
+  late TextEditingController _controller;
+  late bool _obscureText;
+  String? _errorText;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller ?? TextEditingController();
+    _obscureText = widget.obscureText;
+    _controller.addListener(_onTextChanged);
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onTextChanged);
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+    super.dispose();
+  }
+
+  void _onTextChanged() {
+    if (widget.validator != null) {
+      setState(() {
+        _errorText = widget.validator!(_controller.text);
+      });
+    } else {
+      setState(() {});
+    }
+  }
+
+  Widget? _buildSuffixIcon() {
+    if (widget.obscureText) {
+      return IconButton(
+        icon: Icon(
+          _obscureText ? Icons.visibility_off : Icons.visibility,
+          color: AppTheme.primaryColor,
+        ),
+        onPressed: () {
+          setState(() {
+            _obscureText = !_obscureText;
+          });
+        },
+      );
+    } else if (_controller.text.isNotEmpty) {
+      return IconButton(
+        icon: const Icon(Icons.clear),
+        onPressed: () {
+          _controller.clear();
+        },
+      );
+    }
+    return widget.suffixIcon;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 4,
       children: [
-        Text(title, style: titleStyle),
+        Text(widget.title, style: widget.titleStyle),
         SizedBox(
-          width: fieldWidth,
+          width: widget.fieldWidth,
           child: TextField(
-            obscureText: obscureText,
+            controller: _controller,
+            obscureText: _obscureText,
             decoration: InputDecoration(
-              prefixIcon: prefixIcon,
-              suffixIcon: suffixIcon,
-
-              hintText: hint,
+              prefixIcon: widget.prefixIcon,
+              suffixIcon: _buildSuffixIcon(),
+              hintText: widget.hint,
               filled: true,
-              fillColor: fillColor,
+              fillColor: widget.fillColor,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(borderRadius),
+                borderRadius: BorderRadius.circular(widget.borderRadius),
                 borderSide: BorderSide.none,
               ),
               hintStyle: TextStyle(color: AppTheme.onDefaultColor),
+              errorText: _errorText, // Tambahkan errorText
             ),
           ),
         ),

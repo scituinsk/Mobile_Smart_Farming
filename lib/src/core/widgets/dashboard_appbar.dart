@@ -3,12 +3,14 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/icon_widget.dart';
+import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
 
 class DashboardAppbar extends StatelessWidget {
   const DashboardAppbar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final AuthController authController = Get.find<AuthController>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -29,7 +31,7 @@ class DashboardAppbar extends StatelessWidget {
               children: [
                 Text("Selamat Pagi", style: AppTheme.textAction),
                 Text(
-                  "Kernessstra",
+                  authController.currentUser.value!.username,
                   style: AppTheme.textMedium.copyWith(
                     fontWeight: FontWeight.bold,
                   ),

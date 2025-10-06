@@ -40,9 +40,11 @@ class ApiService extends GetxService {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          final token = await _storage.readSecure('access_token');
-          if (token != null) {
-            options.headers['Authorization'] = 'Bearer $token';
+          if (!_isAuthEndpoint(options.path)) {
+            final accessToken = await _storage.readSecure('access_token');
+            if (accessToken != null) {
+              options.headers['Authorization'] = 'Bearer $accessToken';
+            }
           }
 
           handler.next(options);
@@ -53,8 +55,28 @@ class ApiService extends GetxService {
         },
 
         onError: (error, handler) async {
-          if (error.response?.statusCode == 401) {
-            await _handleUnauthorized();
+          if (error.response?.statusCode == 401 &&
+              !_isAuthEndpoint(error.requestOptions.path)) {
+            try {
+              final refreshSuccess = await _refreshAccessToken();
+
+              if (refreshSuccess) {
+                final newAccessToken = await _storage.readSecure(
+                  'access_token',
+                );
+                error.requestOptions.headers['Authorization'] =
+                    'Bearer $newAccessToken';
+
+                final response = await _dio.fetch(error.requestOptions);
+                return handler.resolve(response);
+              } else {
+                await _handleLogout();
+                return handler.next(error);
+              }
+            } catch (e) {
+              await _handleLogout();
+              return handler.next(error);
+            }
           } else if (error.response?.statusCode == 403) {
             _handleForbidden();
           } else if (error.response!.statusCode! >= 500) {
@@ -66,17 +88,48 @@ class ApiService extends GetxService {
     );
   }
 
-  Future<void> _handleUnauthorized() async {
+  bool _isAuthEndpoint(String path) {
+    return path.contains(RouteNamed.loginPage) ||
+        path.contains(RouteNamed.registerPage);
+    //nanti tambahkan juga untuk password reset page
+  }
+
+  Future<bool> _refreshAccessToken() async {
+    try {
+      final refreshToken = await _storage.readSecure('refresh_token');
+      if (refreshToken == null) {
+        return false;
+      }
+
+      final response = await _dio.post(
+        '/token/refresh',
+        data: {'refresh': refreshToken},
+      );
+
+      final newAccessToken = response.data['access'];
+      final newRefreshToken = response.data['refresh'];
+
+      await _storage.writeSecure('access_token', newAccessToken);
+      await _storage.writeSecure('refresh_token', newRefreshToken);
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<void> _handleLogout() async {
     await _storage.deleteSecure('access_token');
     await _storage.deleteSecure('refresh_token');
 
-    //notify authcontroller
     try {
-      // final authController = Get.find<AuthController>();
-      //logout
+      //final authController = Get.find<AuthController>();
+      //authController.handleAutoLogout();
     } catch (e) {
-      Get.offAllNamed(RouteNamed.loginPage);
+      print('auth controller not found: $e');
     }
+
+    Get.offAllNamed(RouteNamed.loginPage);
   }
 
   void _handleForbidden() {
@@ -193,9 +246,47 @@ class ApiService extends GetxService {
         return Exception('Waktu respons habis. Silakan coba lagi.');
       case DioExceptionType.badResponse:
         final statusCode = error.response?.statusCode;
-        final message =
-            error.response?.data?['message'] ??
-            'Terjadi kesalahan yang tidak diketahui';
+
+        // Enhanced error logging for debugging
+        print('API Error - Status Code: $statusCode');
+        print('API Error - Response Data: ${error.response?.data}');
+        print('API Error - Headers: ${error.response?.headers}');
+
+        // Try to extract more detailed error message from response
+        String message = 'Terjadi kesalahan yang tidak diketahui';
+
+        if (error.response?.data != null) {
+          final responseData = error.response!.data;
+
+          // Handle different response formats
+          if (responseData is Map<String, dynamic>) {
+            // Check for different possible error message fields
+            if (responseData.containsKey('message')) {
+              message = responseData['message'].toString();
+            } else if (responseData.containsKey('detail')) {
+              message = responseData['detail'].toString();
+            } else if (responseData.containsKey('error')) {
+              message = responseData['error'].toString();
+            } else if (responseData.containsKey('errors')) {
+              // Handle validation errors
+              final errors = responseData['errors'];
+              if (errors is Map) {
+                final errorMessages = errors.values
+                    .map((e) => e.toString())
+                    .join(', ');
+                message = 'Validation errors: $errorMessages';
+              } else {
+                message = errors.toString();
+              }
+            } else {
+              // If no standard error field, show the whole response
+              message = responseData.toString();
+            }
+          } else {
+            message = responseData.toString();
+          }
+        }
+
         return Exception('Kesalahan server ($statusCode): $message');
       case DioExceptionType.cancel:
         return Exception('Permintaan dibatalkan');

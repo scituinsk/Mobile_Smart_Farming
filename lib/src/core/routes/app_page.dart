@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/navigation/main_navigation.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/features/add_modul/presentation/screens/add_modul_screen.dart';
 import 'package:pak_tani/src/features/auth/presentation/screens/login_screen.dart';
@@ -26,5 +27,6 @@ class AppPage {
     ),
     GetPage(name: RouteNamed.loginPage, page: () => const LoginScreen()),
     GetPage(name: RouteNamed.registerPage, page: () => const RegisterScreen()),
+    GetPage(name: RouteNamed.mainPage, page: () => MainNavigation()),
   ];
 }

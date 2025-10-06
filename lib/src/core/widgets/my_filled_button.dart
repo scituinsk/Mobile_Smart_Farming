@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 
 class MyFilledButton extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String title;
   final Color textColor;
   final Color backgroundColor;

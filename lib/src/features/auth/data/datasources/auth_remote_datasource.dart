@@ -14,11 +14,12 @@ abstract class AuthRemoteDatasource {
     required String password2,
   });
   Future<void> logout(String refreshToken);
-  Future<void> refreshAccess(String refreshToken);
+  Future<Map<String, String>> refreshAccess(String refreshToken);
   Future<void> requestPasswordReset(String email);
+  Future<UserModel?> getCurrentUser();
 }
 
-class AuthREmoteDataSourceImpl implements AuthRemoteDatasource {
+class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   final ApiService _apiService = Get.find<ApiService>();
   final StorageService _storageService = Get.find<StorageService>();
 
@@ -26,16 +27,18 @@ class AuthREmoteDataSourceImpl implements AuthRemoteDatasource {
   Future<UserModel> login(String email, String password) async {
     final response = await _apiService.post(
       '/login',
-      data: {'email': email, 'password': password},
+      data: {'username': email, 'password': password},
     );
 
+    final responseData = response.data['data'] as Map<String, dynamic>;
+
     //simpan accessToken dan refreshToken
-    final accessToken = response.data['access'];
-    final refreshToken = response.data['refresh'];
+    final accessToken = responseData['access'];
+    final refreshToken = responseData['refresh'];
     await _storageService.writeSecure('access_token', accessToken);
     await _storageService.writeSecure('refresh_token', refreshToken);
 
-    return UserModel.fromJson(response.data['user']);
+    return UserModel.fromJson(responseData['user']);
   }
 
   @override
@@ -47,17 +50,24 @@ class AuthREmoteDataSourceImpl implements AuthRemoteDatasource {
     required String password1,
     required String password2,
   }) async {
-    await _apiService.post(
-      '/register',
-      data: {
-        'first_name': firstName,
-        'last_name': lastName,
-        'username': username,
-        'email': email,
-        'password1': password1,
-        'password2': password2,
-      },
-    );
+    final requestData = <String, dynamic>{
+      'first_name': firstName,
+      'username': username,
+      'email': email,
+      'password1': password1,
+      'password2': password2,
+    };
+
+    // Only add last_name if it's not null
+    if (lastName != null && lastName.isNotEmpty) {
+      requestData['last_name'] = lastName;
+    }
+
+    print('Register Request Data: $requestData');
+
+    await _apiService.post('/register', data: requestData);
+
+    print("register sampai sini le");
   }
 
   @override
@@ -70,7 +80,7 @@ class AuthREmoteDataSourceImpl implements AuthRemoteDatasource {
   }
 
   @override
-  Future<void> refreshAccess(String refreshToken) async {
+  Future<Map<String, String>> refreshAccess(String refreshToken) async {
     final response = await _apiService.post(
       '/token/refresh',
       data: {'refresh': refreshToken},
@@ -81,11 +91,19 @@ class AuthREmoteDataSourceImpl implements AuthRemoteDatasource {
     final newRefreshToken = response.data['refresh'];
     await _storageService.writeSecure('access_token', accessToken);
     await _storageService.writeSecure('refresh_token', newRefreshToken);
+
+    return {'access': accessToken, 'refresh': newRefreshToken};
   }
 
   @override
   Future<void> requestPasswordReset(String email) {
     // TODO: implement requestPasswordReset
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UserModel?> getCurrentUser() {
+    // TODO: implement getCurrentUser
     throw UnimplementedError();
   }
 }
