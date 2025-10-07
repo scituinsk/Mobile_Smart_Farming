@@ -1,20 +1,24 @@
 class User {
-  final String id;
+  final String? id;
   final String firstName;
   final String? lastName;
   final String username;
   final String email;
-  final String? role;
   final String? avatar;
+  final String? photo;
+  final int? modulCount;
+  final int? penjadwalanCount;
 
   User({
-    required this.id,
+    this.id,
     required this.firstName,
     this.lastName,
     required this.username,
     required this.email,
-    this.role,
     this.avatar,
+    this.photo,
+    this.penjadwalanCount,
+    this.modulCount,
   });
 
   @override

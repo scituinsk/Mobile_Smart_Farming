@@ -40,6 +40,10 @@ class DashboardAppbar extends StatelessWidget {
             ),
           ],
         ),
+        IconButton(
+          onPressed: authController.logout,
+          icon: Icon(Icons.logout),
+        ), //testing doang
         IconWidget(
           icon: Icons.notifications,
           iconColor: AppTheme.primaryColor,

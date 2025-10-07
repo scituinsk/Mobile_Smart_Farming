@@ -102,8 +102,11 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   }
 
   @override
-  Future<UserModel?> getCurrentUser() {
-    // TODO: implement getCurrentUser
-    throw UnimplementedError();
+  Future<UserModel?> getCurrentUser() async {
+    final response = await _apiService.get('/profile/me');
+
+    final responseData = response.data['data'] as Map<String, dynamic>;
+
+    return UserModel.fromJson(responseData);
   }
 }

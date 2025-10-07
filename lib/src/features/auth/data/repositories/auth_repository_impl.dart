@@ -39,8 +39,6 @@ class AuthRepositoryImpl implements AuthRepository {
         password1: password1,
         password2: password2,
       );
-
-      print('apakah?');
     } catch (e) {
       throw Exception('Register gagal: $e');
     }
