@@ -1,4 +1,4 @@
-# Pak Tani - Aplikasi Monitoring Pertanian IoT
+# Pak Tani - Aplikasi Smart Farming
 
 Aplikasi mobile "Pak Tani" yang dibangun menggunakan Flutter untuk membantu penyiraman dengan metode drip melalui perangkat IoT.
 
