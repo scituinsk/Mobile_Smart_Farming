@@ -18,12 +18,24 @@ class DashboardAppbar extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           spacing: 12,
           children: [
-            const CircleAvatar(
-              radius: 24,
-              backgroundImage: AssetImage(
-                'assets/image/default_profile.jpg',
-              ), // Update path as needed
-            ),
+            Obx(() {
+              final user = authController.currentUser.value;
+              if (user == null) {
+                print("nggak ada gambar");
+                return const CircleAvatar(
+                  radius: 24,
+                  child: Icon(Icons.person),
+                );
+              }
+              print(user.image);
+              final ImageProvider imageProvider = user.image != null
+                  ? NetworkImage(
+                      "https://smartfarmingapi.teknohole.com${authController.currentUser.value!.image!}",
+                    )
+                  : const AssetImage('assets/image/default_profile.jpg');
+
+              return CircleAvatar(radius: 24, backgroundImage: imageProvider);
+            }),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,

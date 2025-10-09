@@ -62,11 +62,6 @@ class AddModulScreen extends StatelessWidget {
                   hint: "Ex: Green House A",
                   fillColor: Colors.white,
                 ),
-                MyTextField(
-                  title: "Deskripsi Modul",
-                  hint: "Ex: Green Gouse sebelah timur",
-                  fillColor: Colors.white,
-                ),
               ],
             ),
             Row(

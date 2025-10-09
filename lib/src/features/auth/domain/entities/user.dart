@@ -4,7 +4,7 @@ class User {
   final String? lastName;
   final String username;
   final String email;
-  final String? avatar;
+  final String? image;
   final String? photo;
   final int? modulCount;
   final int? penjadwalanCount;
@@ -15,7 +15,7 @@ class User {
     this.lastName,
     required this.username,
     required this.email,
-    this.avatar,
+    this.image,
     this.photo,
     this.penjadwalanCount,
     this.modulCount,

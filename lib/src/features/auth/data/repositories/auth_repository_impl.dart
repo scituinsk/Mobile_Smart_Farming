@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/errors/api_exception.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:pak_tani/src/features/auth/domain/entities/user.dart';
@@ -16,9 +17,13 @@ class AuthRepositoryImpl implements AuthRepository {
       final userModel = await remoteDatasource.login(email, password);
 
       return userModel.toEntity();
+    } on ApiException {
+      rethrow;
     } catch (e) {
-      print(e);
-      throw Exception("$e");
+      print('Unexpected error in AuthRepository.login: $e');
+      throw UnexpectedException(
+        message: 'Terjadi kesalahan saat memproses data login.',
+      );
     }
   }
 
@@ -39,8 +44,14 @@ class AuthRepositoryImpl implements AuthRepository {
         password1: password1,
         password2: password2,
       );
+    } on ApiException {
+      // ✅ Lakukan hal yang sama untuk semua method repository
+      rethrow;
     } catch (e) {
-      throw Exception('Register gagal: $e');
+      print('Unexpected error in AuthRepository.register: $e');
+      throw UnexpectedException(
+        message: 'Terjadi kesalahan saat memproses data registrasi.',
+      );
     }
   }
 
@@ -60,8 +71,11 @@ class AuthRepositoryImpl implements AuthRepository {
 
       await storage.deleteSecure('access_token');
       await storage.deleteSecure('refresh_token');
+    } on ApiException {
+      rethrow;
     } catch (e) {
-      throw Exception("Logout failed: $e");
+      print('Unexpected error in AuthRepository.logout: $e');
+      throw UnexpectedException(message: 'Terjadi kesalahan saat logout.');
     }
   }
 

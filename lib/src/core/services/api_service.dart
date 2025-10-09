@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
+import 'package:pak_tani/src/core/errors/api_exception.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 
@@ -234,16 +235,21 @@ class ApiService extends GetxService {
     }
   }
 
-  Exception _handleDioError(DioException error) {
+  ApiException _handleDioError(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
-        return Exception(
-          'Waktu koneksi habis. Silakan periksa koneksi internet Anda.',
+        return NetworkException(
+          message:
+              'Waktu koneksi habis. Silakan periksa koneksi internet Anda.',
         );
       case DioExceptionType.sendTimeout:
-        return Exception('Waktu permintaan habis. Silakan coba lagi.');
+        return NetworkException(
+          message: 'Waktu permintaan habis. Silakan coba lagi.',
+        );
       case DioExceptionType.receiveTimeout:
-        return Exception('Waktu respons habis. Silakan coba lagi.');
+        return NetworkException(
+          message: 'Waktu respons habis. Silakan coba lagi.',
+        );
       case DioExceptionType.badResponse:
         final statusCode = error.response?.statusCode;
 
@@ -287,15 +293,17 @@ class ApiService extends GetxService {
           }
         }
 
-        return Exception('Kesalahan server ($statusCode): $message');
+        return ServerException(message: message, statusCode: statusCode);
       case DioExceptionType.cancel:
-        return Exception('Permintaan dibatalkan');
+        return UnexpectedException(message: 'Permintaan dibatalkan');
       case DioExceptionType.connectionError:
-        return Exception(
-          'Kesalahan koneksi. Silakan periksa koneksi internet Anda.',
+        return NetworkException(
+          message: 'Kesalahan koneksi. Silakan periksa koneksi internet Anda.',
         );
       default:
-        return Exception('Kesalahan tidak terduga: ${error.message}');
+        return UnexpectedException(
+          message: 'Kesalahan tidak terduga: ${error.message}',
+        );
     }
   }
 }
