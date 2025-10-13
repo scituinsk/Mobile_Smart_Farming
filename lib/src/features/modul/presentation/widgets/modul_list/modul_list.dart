@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/features/moduls/presentation/widgets/modul_item.dart';
+import 'package:pak_tani/src/features/modul/presentation/widgets/modul_list/modul_item.dart';
 
 class ModulList extends StatelessWidget {
   const ModulList({super.key});

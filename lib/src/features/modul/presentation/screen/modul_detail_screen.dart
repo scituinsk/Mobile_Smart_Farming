@@ -6,10 +6,10 @@ import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/display_chip.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
-import 'package:pak_tani/src/features/modul_detail/presentation/widgets/modul_detail_content_widget.dart';
-import 'package:pak_tani/src/features/modul_detail/presentation/widgets/modul_detail_data_item.dart';
-import 'package:pak_tani/src/features/modul_detail/presentation/widgets/modul_detail_dropdown_menu.dart';
-import 'package:pak_tani/src/features/modul_detail/presentation/widgets/modul_detail_feature_item.dart';
+import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_content_widget.dart';
+import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_data_item.dart';
+import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_dropdown_menu.dart';
+import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_feature_item.dart';
 
 class ModulDetailScreen extends StatelessWidget {
   const ModulDetailScreen({super.key});

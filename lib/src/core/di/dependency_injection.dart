@@ -13,56 +13,116 @@ import 'package:pak_tani/src/features/auth/presentation/controller/auth_controll
 
 class DependencyInjection {
   static Future<void> init() async {
-    // 1. Storage Service FIRST (no dependencies)
-    print('   - Initializing StorageService...');
-    final storageService = StorageService();
-    await storageService.onInit();
-    Get.put<StorageService>(storageService, permanent: true);
-    print('   ✅ StorageService ready');
+    print('🔄 Starting dependency injection...');
 
-    // 2. API Service SECOND (depends on StorageService)
-    print('   - Initializing ApiService...');
-    final apiService = ApiService();
-    await apiService.onInit();
-    Get.put<ApiService>(apiService, permanent: true);
-    print('   ✅ ApiService ready');
+    try {
+      // ===== LAYER 1: CORE SERVICES =====
+      print('   - Initializing StorageService...');
+      final storageService = StorageService();
+      await storageService.onInit();
+      Get.put<StorageService>(storageService, permanent: true);
+      print('   ✅ StorageService ready');
 
-    Get.lazyPut<AuthRemoteDatasource>(() {
-      return AuthRemoteDatasourceImpl();
-    }, fenix: true);
+      print('   - Initializing ApiService...');
+      final apiService = ApiService();
+      await apiService.onInit();
+      Get.put<ApiService>(apiService, permanent: true);
+      print('   ✅ ApiService ready');
 
-    Get.lazyPut<AuthRepository>(() {
-      return AuthRepositoryImpl(
-        remoteDatasource: Get.find<AuthRemoteDatasource>(),
+      // ===== LAYER 2: DATA SOURCES =====
+      print('   - Registering Auth DataSources...');
+      Get.lazyPut<AuthRemoteDatasource>(() {
+        return AuthRemoteDatasourceImpl();
+      }, fenix: true);
+      print('   ✅ Auth DataSources registered');
+
+      // ===== LAYER 3: REPOSITORIES =====
+      print('   - Registering Repositories...');
+      Get.lazyPut<AuthRepository>(() {
+        return AuthRepositoryImpl(
+          remoteDatasource: Get.find<AuthRemoteDatasource>(),
+        );
+      }, fenix: true);
+      print('   ✅ Repositories registered');
+
+      // ===== LAYER 4: USE CASES =====
+      print('   - Registering Use Cases...');
+      Get.lazyPut<LoginUseCase>(() => LoginUseCase(Get.find<AuthRepository>()));
+      Get.lazyPut<RegisterUseCase>(
+        () => RegisterUseCase(Get.find<AuthRepository>()),
       );
-    }, fenix: true);
+      Get.lazyPut<LogoutUseCase>(
+        () => LogoutUseCase(Get.find<AuthRepository>()),
+      );
+      Get.lazyPut<GetUserUseCase>(
+        () => GetUserUseCase(Get.find<AuthRepository>()),
+      );
+      print('   ✅ Use Cases registered');
 
-    Get.lazyPut<LoginUseCase>(() => LoginUseCase(Get.find<AuthRepository>()));
-    Get.lazyPut<RegisterUseCase>(
-      () => RegisterUseCase(Get.find<AuthRepository>()),
-    );
-    Get.lazyPut<LogoutUseCase>(() => LogoutUseCase(Get.find<AuthRepository>()));
-    Get.lazyPut<GetUserUseCase>(
-      () => GetUserUseCase(Get.find<AuthRepository>()),
-    );
+      // ===== LAYER 5: BUSINESS SERVICES =====
+      print('   - Initializing AuthService...');
+      final authService = AuthService();
+      Get.put<AuthService>(authService, permanent: true);
 
-    Get.putAsync<AuthService>(() async {
-      final service = AuthService();
-      await service.onInit();
-      return service;
-    });
+      // ✅ Initialize AuthService and wait for completion
+      await authService.onInit();
+      print('   ✅ AuthService ready');
 
-    Get.lazyPut<AuthController>(() => AuthController(), fenix: true);
+      // ===== LAYER 6: PRESENTATION CONTROLLERS =====
+      print('   - Registering Presentation Controllers...');
+      Get.lazyPut<AuthController>(() => AuthController(), fenix: true);
+      print('   ✅ Presentation Controllers registered');
+
+      print('✅ All dependencies initialized successfully!');
+    } catch (e) {
+      print('❌ Dependency injection failed: $e');
+      rethrow;
+    }
   }
 
   static bool get isReady {
     try {
+      // ✅ Check core dependencies
       Get.find<StorageService>();
       Get.find<ApiService>();
-      Get.find<AuthController>();
+      Get.find<AuthService>();
+
+      // ✅ Check if AuthService is properly initialized
+      final authService = Get.find<AuthService>();
+      if (authService.isLoading.value) {
+        return false; // Still initializing
+      }
+
       return true;
     } catch (e) {
+      print('❌ Dependency check failed: $e');
       return false;
     }
+  }
+
+  /// ✅ Wait for all dependencies to be ready with timeout
+  static Future<bool> waitUntilReady({
+    Duration timeout = const Duration(seconds: 15),
+  }) async {
+    final stopwatch = Stopwatch()..start();
+
+    while (stopwatch.elapsed < timeout) {
+      if (isReady) {
+        print(
+          '✅ All dependencies are ready in ${stopwatch.elapsed.inMilliseconds}ms',
+        );
+        return true;
+      }
+
+      await Future.delayed(Duration(milliseconds: 100));
+
+      // Log progress every 2 seconds
+      if (stopwatch.elapsed.inSeconds % 2 == 0) {
+        print('⏳ Waiting for dependencies... ${stopwatch.elapsed.inSeconds}s');
+      }
+    }
+
+    print('⚠️ Dependency wait timeout after ${timeout.inSeconds}s');
+    return false;
   }
 }

@@ -11,6 +11,8 @@ class AuthService extends GetxService {
   final LogoutUseCase _logoutUseCase = Get.find<LogoutUseCase>();
   final GetUserUseCase _getUserUseCase = Get.find<GetUserUseCase>();
 
+  // final AuthRepository _authRepository = Get.find<AuthRepository>();
+
   final RxBool isLoading = true.obs;
   final RxBool isLoggedIn = false.obs;
   final Rx<User?> currentUser = Rx<User?>(null);
@@ -18,7 +20,14 @@ class AuthService extends GetxService {
   @override
   Future<void> onInit() async {
     super.onInit();
-    _checkAuthenticationStatus();
+    await _checkAuthenticationStatus().timeout(
+      Duration(seconds: 10),
+      onTimeout: () {
+        print('⚠️ Auth initialization timeout');
+        isLoading.value = false;
+        isLoggedIn.value = false;
+      },
+    );
   }
 
   Future<void> _checkAuthenticationStatus() async {

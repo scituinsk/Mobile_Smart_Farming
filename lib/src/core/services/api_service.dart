@@ -8,9 +8,12 @@ class ApiService extends GetxService {
   late Dio _dio;
   final StorageService _storage = Get.find<StorageService>();
 
+  // ✅ Add refresh tracking to prevent loops
+  bool _isRefreshing = false;
+  final List<RequestOptions> _requestsNeedingRefresh = [];
+
   @override
   Future<void> onInit() async {
-    // TODO: implement onInit
     super.onInit();
     await _initializeDio();
   }
@@ -22,14 +25,11 @@ class ApiService extends GetxService {
         connectTimeout: Duration(seconds: 30),
         receiveTimeout: Duration(seconds: 30),
         sendTimeout: Duration(seconds: 30),
-
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
-
         responseType: ResponseType.json,
-
         followRedirects: true,
         maxRedirects: 3,
       ),
@@ -41,27 +41,58 @@ class ApiService extends GetxService {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          // ✅ Add logging to debug
+          print('📡 Request: ${options.method} ${options.path}');
+
           if (!_isAuthEndpoint(options.path)) {
             final accessToken = await _storage.readSecure('access_token');
-            if (accessToken != null) {
+            if (accessToken != null && accessToken.isNotEmpty) {
               options.headers['Authorization'] = 'Bearer $accessToken';
+              print('🔑 Added token to: ${options.path}');
+            } else {
+              print('❌ No token for: ${options.path}');
             }
+          } else {
+            print('🔓 Auth endpoint (no token): ${options.path}');
           }
 
           handler.next(options);
         },
 
         onResponse: (response, handler) {
+          print(
+            '✅ Response: ${response.statusCode} ${response.requestOptions.path}',
+          );
           handler.next(response);
         },
 
         onError: (error, handler) async {
-          if (error.response?.statusCode == 401 &&
-              !_isAuthEndpoint(error.requestOptions.path)) {
+          final statusCode = error.response?.statusCode;
+          final path = error.requestOptions.path;
+
+          print('❌ Error: ${statusCode} ${path}');
+
+          // ✅ Handle 401 with proper loop prevention
+          if (statusCode == 401 && !_isAuthEndpoint(path)) {
+            print('🔄 Handling 401 for non-auth endpoint: $path');
+
+            // ✅ Prevent multiple concurrent refresh attempts
+            if (_isRefreshing) {
+              print('⏳ Already refreshing, queuing request: $path');
+              _requestsNeedingRefresh.add(error.requestOptions);
+              return; // Don't resolve or reject yet
+            }
+
+            _isRefreshing = true;
+            print('🔄 Starting token refresh...');
+
             try {
               final refreshSuccess = await _refreshAccessToken();
 
               if (refreshSuccess) {
+                print('✅ Token refresh successful, retrying: $path');
+
+                // ✅ Retry original request with new token
                 final newAccessToken = await _storage.readSecure(
                   'access_token',
                 );
@@ -69,65 +100,135 @@ class ApiService extends GetxService {
                     'Bearer $newAccessToken';
 
                 final response = await _dio.fetch(error.requestOptions);
+
+                // ✅ Process queued requests
+                await _processQueuedRequests();
+
                 return handler.resolve(response);
               } else {
+                print('❌ Token refresh failed, logging out...');
                 await _handleLogout();
                 return handler.next(error);
               }
             } catch (e) {
+              print('❌ Token refresh error: $e');
               await _handleLogout();
               return handler.next(error);
+            } finally {
+              _isRefreshing = false;
+              _requestsNeedingRefresh.clear();
+              print('🏁 Token refresh process completed');
             }
-          } else if (error.response?.statusCode == 403) {
+          }
+          // ✅ Handle other errors
+          else if (statusCode == 403) {
             _handleForbidden();
-          } else if (error.response!.statusCode! >= 500) {
+          } else if (statusCode != null && statusCode >= 500) {
             _handleServerError();
           }
+
           handler.next(error);
         },
       ),
     );
   }
 
+  // ✅ Fixed: Check actual API endpoints
   bool _isAuthEndpoint(String path) {
-    return path.contains(RouteNamed.loginPage) ||
-        path.contains(RouteNamed.registerPage);
-    //nanti tambahkan juga untuk password reset page
+    final authEndpoints = ['/login', '/register', '/logout', '/token/refresh'];
+
+    final isAuth = authEndpoints.any((endpoint) => path.startsWith(endpoint));
+    print('🔍 Is auth endpoint? $path -> $isAuth');
+    return isAuth;
   }
 
   Future<bool> _refreshAccessToken() async {
     try {
+      print('🔄 Getting refresh token...');
       final refreshToken = await _storage.readSecure('refresh_token');
-      if (refreshToken == null) {
+
+      if (refreshToken == null || refreshToken.isEmpty) {
+        print('❌ No refresh token found');
         return false;
       }
 
-      final response = await _dio.post(
-        '/token/refresh',
+      print('🔑 Refresh token found, calling refresh API...');
+
+      // ✅ Create separate Dio instance to avoid interceptor loops
+      final refreshDio = Dio(
+        BaseOptions(
+          baseUrl: "https://smartfarmingapi.teknohole.com/api",
+          connectTimeout: Duration(seconds: 15),
+          receiveTimeout: Duration(seconds: 15),
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        ),
+      );
+
+      final response = await refreshDio.post(
+        '/token/refresh/', // ✅ Make sure endpoint is correct
         data: {'refresh': refreshToken},
       );
 
+      print('✅ Refresh API response: ${response.statusCode}');
+      print('📄 Refresh response data: ${response.data}');
+
       final newAccessToken = response.data['access'];
-      final newRefreshToken = response.data['refresh'];
 
-      await _storage.writeSecure('access_token', newAccessToken);
-      await _storage.writeSecure('refresh_token', newRefreshToken);
+      if (newAccessToken != null && newAccessToken.isNotEmpty) {
+        await _storage.writeSecure('access_token', newAccessToken);
 
-      return true;
+        // ✅ Update refresh token if provided
+        final newRefreshToken = response.data['refresh'];
+        if (newRefreshToken != null) {
+          await _storage.writeSecure('refresh_token', newRefreshToken);
+        }
+
+        print('✅ Tokens updated successfully');
+        return true;
+      } else {
+        print('❌ No access token in refresh response');
+        return false;
+      }
     } catch (e) {
+      print('❌ Token refresh failed: $e');
       return false;
     }
   }
 
+  // ✅ Process queued requests after successful refresh
+  Future<void> _processQueuedRequests() async {
+    if (_requestsNeedingRefresh.isEmpty) return;
+
+    print('🔄 Processing ${_requestsNeedingRefresh.length} queued requests...');
+
+    final newAccessToken = await _storage.readSecure('access_token');
+
+    for (final request in _requestsNeedingRefresh) {
+      try {
+        request.headers['Authorization'] = 'Bearer $newAccessToken';
+        await _dio.fetch(request);
+        print('✅ Retried queued request: ${request.path}');
+      } catch (e) {
+        print('❌ Failed to retry queued request: ${request.path} - $e');
+      }
+    }
+  }
+
   Future<void> _handleLogout() async {
+    print('🔄 Handling auto logout...');
+
     await _storage.deleteSecure('access_token');
     await _storage.deleteSecure('refresh_token');
 
     try {
-      //final authController = Get.find<AuthController>();
-      //authController.handleAutoLogout();
+      // ✅ If you have AuthService, call it
+      // final authService = Get.find<AuthService>();
+      // authService.handleAutoLogout();
     } catch (e) {
-      print('auth controller not found: $e');
+      print('❌ AuthService not found during auto logout: $e');
     }
 
     Get.offAllNamed(RouteNamed.loginPage);
@@ -238,72 +339,89 @@ class ApiService extends GetxService {
   ApiException _handleDioError(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
-        return NetworkException(
-          message:
-              'Waktu koneksi habis. Silakan periksa koneksi internet Anda.',
-        );
       case DioExceptionType.sendTimeout:
-        return NetworkException(
-          message: 'Waktu permintaan habis. Silakan coba lagi.',
-        );
       case DioExceptionType.receiveTimeout:
         return NetworkException(
-          message: 'Waktu respons habis. Silakan coba lagi.',
+          message: 'Koneksi timeout. Periksa internet Anda.',
         );
+
       case DioExceptionType.badResponse:
         final statusCode = error.response?.statusCode;
+        final responseData = error.response?.data;
 
-        // Enhanced error logging for debugging
         print('API Error - Status Code: $statusCode');
-        print('API Error - Response Data: ${error.response?.data}');
-        print('API Error - Headers: ${error.response?.headers}');
+        print('API Error - Response Data: $responseData');
 
-        // Try to extract more detailed error message from response
-        String message = 'Terjadi kesalahan yang tidak diketahui';
+        String message = _getStatusMessage(statusCode);
 
-        if (error.response?.data != null) {
-          final responseData = error.response!.data;
-
-          // Handle different response formats
-          if (responseData is Map<String, dynamic>) {
-            // Check for different possible error message fields
-            if (responseData.containsKey('message')) {
-              message = responseData['message'].toString();
-            } else if (responseData.containsKey('detail')) {
-              message = responseData['detail'].toString();
-            } else if (responseData.containsKey('error')) {
-              message = responseData['error'].toString();
-            } else if (responseData.containsKey('errors')) {
-              // Handle validation errors
-              final errors = responseData['errors'];
-              if (errors is Map) {
-                final errorMessages = errors.values
-                    .map((e) => e.toString())
-                    .join(', ');
-                message = 'Validation errors: $errorMessages';
-              } else {
-                message = errors.toString();
-              }
-            } else {
-              // If no standard error field, show the whole response
-              message = responseData.toString();
-            }
-          } else {
-            message = responseData.toString();
-          }
+        if (responseData != null) {
+          message = _extractErrorMessage(responseData);
         }
 
         return ServerException(message: message, statusCode: statusCode);
+
       case DioExceptionType.cancel:
-        return UnexpectedException(message: 'Permintaan dibatalkan');
+        return NetworkException(message: 'Permintaan dibatalkan');
+
       case DioExceptionType.connectionError:
         return NetworkException(
-          message: 'Kesalahan koneksi. Silakan periksa koneksi internet Anda.',
+          message: 'Tidak dapat terhubung ke server. Periksa internet Anda.',
         );
+
       default:
-        return UnexpectedException(
-          message: 'Kesalahan tidak terduga: ${error.message}',
+        return NetworkException(
+          message: 'Kesalahan jaringan: ${error.message}',
         );
+    }
+  }
+
+  String _extractErrorMessage(dynamic responseData) {
+    if (responseData is! Map<String, dynamic>) {
+      return responseData.toString();
+    }
+
+    final data = responseData;
+    final priorityFields = ['errors', 'message', 'detail', 'error'];
+
+    for (final field in priorityFields) {
+      if (data.containsKey(field) && data[field] != null) {
+        final value = data[field];
+
+        if (value is String && value.isNotEmpty) {
+          return value;
+        } else if (value is Map) {
+          final messages = <String>[];
+          value.forEach((key, val) {
+            if (val is List) {
+              messages.addAll(val.map((e) => e.toString()));
+            } else if (val != null) {
+              messages.add(val.toString());
+            }
+          });
+          if (messages.isNotEmpty) return messages.join(', ');
+        } else if (value is List && value.isNotEmpty) {
+          return value.map((e) => e.toString()).join(', ');
+        }
+      }
+    }
+
+    return _getStatusMessage(null);
+  }
+
+  String _getStatusMessage(int? statusCode) {
+    switch (statusCode) {
+      case 400:
+        return 'Data yang dikirim tidak valid';
+      case 401:
+        return 'Username atau password salah';
+      case 403:
+        return 'Akses tidak diizinkan';
+      case 404:
+        return 'Data tidak ditemukan';
+      case 500:
+        return 'Server sedang bermasalah';
+      default:
+        return 'Terjadi kesalahan pada server';
     }
   }
 }
