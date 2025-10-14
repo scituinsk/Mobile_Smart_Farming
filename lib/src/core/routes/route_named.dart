@@ -6,4 +6,5 @@ abstract class RouteNamed {
   static const detailModulPage = '/detail_modul_page';
   static const loginPage = '/login_page';
   static const registerPage = '/register_page';
+  static const mainPage = '/main_page';
 }

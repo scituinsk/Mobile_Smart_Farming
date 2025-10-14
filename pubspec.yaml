@@ -42,6 +42,9 @@ dependencies:
   dropdown_button2: ^2.3.9
   modal_bottom_sheet: ^3.0.0
   dio: ^5.9.0
+  shared_preferences: ^2.5.3
+  flutter_secure_storage: ^9.2.4
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:

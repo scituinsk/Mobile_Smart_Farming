@@ -8,7 +8,7 @@ class MyBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton.filled(
-      onPressed: () => Get.back(),
+      onPressed: () => Get.back(canPop: true, closeOverlays: false),
       icon: Icon(Icons.keyboard_arrow_left_rounded),
       iconSize: 30,
       padding: EdgeInsets.all(2),

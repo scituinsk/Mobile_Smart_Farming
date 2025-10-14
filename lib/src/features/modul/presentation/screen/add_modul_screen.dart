@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
-import 'package:pak_tani/src/features/add_modul/presentation/widgets/add_modul_code_input.dart';
+import 'package:pak_tani/src/features/modul/presentation/widgets/add_modul_form/add_modul_code_input.dart';
 
 class AddModulScreen extends StatelessWidget {
   const AddModulScreen({super.key});
@@ -60,11 +60,6 @@ class AddModulScreen extends StatelessWidget {
                 MyTextField(
                   title: "Nama Modul",
                   hint: "Ex: Green House A",
-                  fillColor: Colors.white,
-                ),
-                MyTextField(
-                  title: "Deskripsi Modul",
-                  hint: "Ex: Green Gouse sebelah timur",
                   fillColor: Colors.white,
                 ),
               ],

@@ -1,0 +1,128 @@
+import 'package:get/get.dart';
+import 'package:pak_tani/src/core/services/api_service.dart';
+import 'package:pak_tani/src/core/services/storage_service.dart';
+import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
+import 'package:pak_tani/src/features/auth/application/use_cases/get_user_use_case.dart';
+import 'package:pak_tani/src/features/auth/application/use_cases/login_use_case.dart';
+import 'package:pak_tani/src/features/auth/application/use_cases/logout_use_case.dart';
+import 'package:pak_tani/src/features/auth/application/use_cases/register_use_case.dart';
+import 'package:pak_tani/src/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:pak_tani/src/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:pak_tani/src/features/auth/domain/repositories/auth_repository.dart';
+import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
+
+class DependencyInjection {
+  static Future<void> init() async {
+    print('🔄 Starting dependency injection...');
+
+    try {
+      // ===== LAYER 1: CORE SERVICES =====
+      print('   - Initializing StorageService...');
+      final storageService = StorageService();
+      await storageService.onInit();
+      Get.put<StorageService>(storageService, permanent: true);
+      print('   ✅ StorageService ready');
+
+      print('   - Initializing ApiService...');
+      final apiService = ApiService();
+      await apiService.onInit();
+      Get.put<ApiService>(apiService, permanent: true);
+      print('   ✅ ApiService ready');
+
+      // ===== LAYER 2: DATA SOURCES =====
+      print('   - Registering Auth DataSources...');
+      Get.lazyPut<AuthRemoteDatasource>(() {
+        return AuthRemoteDatasourceImpl();
+      }, fenix: true);
+      print('   ✅ Auth DataSources registered');
+
+      // ===== LAYER 3: REPOSITORIES =====
+      print('   - Registering Repositories...');
+      Get.lazyPut<AuthRepository>(() {
+        return AuthRepositoryImpl(
+          remoteDatasource: Get.find<AuthRemoteDatasource>(),
+        );
+      }, fenix: true);
+      print('   ✅ Repositories registered');
+
+      // ===== LAYER 4: USE CASES =====
+      print('   - Registering Use Cases...');
+      Get.lazyPut<LoginUseCase>(() => LoginUseCase(Get.find<AuthRepository>()));
+      Get.lazyPut<RegisterUseCase>(
+        () => RegisterUseCase(Get.find<AuthRepository>()),
+      );
+      Get.lazyPut<LogoutUseCase>(
+        () => LogoutUseCase(Get.find<AuthRepository>()),
+      );
+      Get.lazyPut<GetUserUseCase>(
+        () => GetUserUseCase(Get.find<AuthRepository>()),
+      );
+      print('   ✅ Use Cases registered');
+
+      // ===== LAYER 5: BUSINESS SERVICES =====
+      print('   - Initializing AuthService...');
+      final authService = AuthService();
+      Get.put<AuthService>(authService, permanent: true);
+
+      // ✅ Initialize AuthService and wait for completion
+      await authService.onInit();
+      print('   ✅ AuthService ready');
+
+      // ===== LAYER 6: PRESENTATION CONTROLLERS =====
+      print('   - Registering Presentation Controllers...');
+      Get.lazyPut<AuthController>(() => AuthController(), fenix: true);
+      print('   ✅ Presentation Controllers registered');
+
+      print('✅ All dependencies initialized successfully!');
+    } catch (e) {
+      print('❌ Dependency injection failed: $e');
+      rethrow;
+    }
+  }
+
+  static bool get isReady {
+    try {
+      // ✅ Check core dependencies
+      Get.find<StorageService>();
+      Get.find<ApiService>();
+      Get.find<AuthService>();
+
+      // ✅ Check if AuthService is properly initialized
+      final authService = Get.find<AuthService>();
+      if (authService.isLoading.value) {
+        return false; // Still initializing
+      }
+
+      return true;
+    } catch (e) {
+      print('❌ Dependency check failed: $e');
+      return false;
+    }
+  }
+
+  /// ✅ Wait for all dependencies to be ready with timeout
+  static Future<bool> waitUntilReady({
+    Duration timeout = const Duration(seconds: 15),
+  }) async {
+    final stopwatch = Stopwatch()..start();
+
+    while (stopwatch.elapsed < timeout) {
+      if (isReady) {
+        print(
+          '✅ All dependencies are ready in ${stopwatch.elapsed.inMilliseconds}ms',
+        );
+        return true;
+      }
+
+      await Future.delayed(Duration(milliseconds: 100));
+
+      // Log progress every 2 seconds
+      if (stopwatch.elapsed.inSeconds % 2 == 0) {
+        print('⏳ Waiting for dependencies... ${stopwatch.elapsed.inSeconds}s');
+      }
+    }
+
+    print('⚠️ Dependency wait timeout after ${timeout.inSeconds}s');
+    return false;
+  }
+}

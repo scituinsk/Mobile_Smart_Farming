@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/widgets/dashboard_appbar.dart';
-import 'package:pak_tani/src/features/moduls/presentation/widgets/filter_modul.dart';
-import 'package:pak_tani/src/features/moduls/presentation/widgets/modul_list.dart';
+import 'package:pak_tani/src/features/modul/presentation/widgets/modul_list/filter_modul.dart';
+import 'package:pak_tani/src/features/modul/presentation/widgets/modul_list/modul_list.dart';
 
 class ModulsScreen extends StatelessWidget {
   const ModulsScreen({super.key});
