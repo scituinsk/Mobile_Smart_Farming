@@ -61,6 +61,10 @@ class AuthService extends GetxService {
       isLoggedIn.value = true;
 
       return user;
+    } catch (e) {
+      print("login gagal: $e");
+      isLoggedIn.value = false;
+      rethrow;
     } finally {
       isLoading.value = false;
     }
@@ -84,6 +88,9 @@ class AuthService extends GetxService {
         password1: password1,
         password2: password2,
       );
+    } catch (e) {
+      print("register error: $e");
+      rethrow;
     } finally {
       isLoading.value = false;
     }

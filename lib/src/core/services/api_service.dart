@@ -3,6 +3,7 @@ import 'package:get/get.dart' hide Response, FormData, MultipartFile;
 import 'package:pak_tani/src/core/errors/api_exception.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
+import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
 
 class ApiService extends GetxService {
   late Dio _dio;
@@ -41,19 +42,18 @@ class ApiService extends GetxService {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          // ✅ Add logging to debug
-          print('📡 Request: ${options.method} ${options.path}');
+          print(' Request: ${options.method} ${options.path}');
 
           if (!_isAuthEndpoint(options.path)) {
             final accessToken = await _storage.readSecure('access_token');
             if (accessToken != null && accessToken.isNotEmpty) {
               options.headers['Authorization'] = 'Bearer $accessToken';
-              print('🔑 Added token to: ${options.path}');
+              print('Added token to: ${options.path}');
             } else {
-              print('❌ No token for: ${options.path}');
+              print('No token for: ${options.path}');
             }
           } else {
-            print('🔓 Auth endpoint (no token): ${options.path}');
+            print('Auth endpoint (no token): ${options.path}');
           }
 
           handler.next(options);
@@ -61,7 +61,7 @@ class ApiService extends GetxService {
 
         onResponse: (response, handler) {
           print(
-            '✅ Response: ${response.statusCode} ${response.requestOptions.path}',
+            'Response: ${response.statusCode} ${response.requestOptions.path}',
           );
           handler.next(response);
         },
@@ -70,27 +70,27 @@ class ApiService extends GetxService {
           final statusCode = error.response?.statusCode;
           final path = error.requestOptions.path;
 
-          print('❌ Error: ${statusCode} ${path}');
+          print('Error: ${statusCode} ${path}');
 
-          // ✅ Handle 401 with proper loop prevention
+          // Handle 401 with proper loop prevention
           if (statusCode == 401 && !_isAuthEndpoint(path)) {
-            print('🔄 Handling 401 for non-auth endpoint: $path');
+            print(' Handling 401 for non-auth endpoint: $path');
 
-            // ✅ Prevent multiple concurrent refresh attempts
+            // Prevent multiple concurrent refresh attempts
             if (_isRefreshing) {
-              print('⏳ Already refreshing, queuing request: $path');
+              print(' Already refreshing, queuing request: $path');
               _requestsNeedingRefresh.add(error.requestOptions);
               return; // Don't resolve or reject yet
             }
 
             _isRefreshing = true;
-            print('🔄 Starting token refresh...');
+            print('Starting token refresh...');
 
             try {
               final refreshSuccess = await _refreshAccessToken();
 
               if (refreshSuccess) {
-                print('✅ Token refresh successful, retrying: $path');
+                print(' Token refresh successful, retrying: $path');
 
                 // ✅ Retry original request with new token
                 final newAccessToken = await _storage.readSecure(
@@ -101,30 +101,32 @@ class ApiService extends GetxService {
 
                 final response = await _dio.fetch(error.requestOptions);
 
-                // ✅ Process queued requests
+                // Process queued requests
                 await _processQueuedRequests();
 
                 return handler.resolve(response);
               } else {
-                print('❌ Token refresh failed, logging out...');
+                print(' Token refresh failed, logging out...');
                 await _handleLogout();
                 return handler.next(error);
               }
             } catch (e) {
-              print('❌ Token refresh error: $e');
+              print(' Token refresh error: $e');
               await _handleLogout();
               return handler.next(error);
             } finally {
               _isRefreshing = false;
               _requestsNeedingRefresh.clear();
-              print('🏁 Token refresh process completed');
+              print(' Token refresh process completed');
             }
           }
           // ✅ Handle other errors
           else if (statusCode == 403) {
-            _handleForbidden();
+            print('❌ Access forbidden (403): $path');
+            // Don't call UI methods from interceptor
           } else if (statusCode != null && statusCode >= 500) {
-            _handleServerError();
+            print('❌ Server error ($statusCode): $path');
+            // Don't call UI methods from interceptor
           }
 
           handler.next(error);
@@ -133,26 +135,26 @@ class ApiService extends GetxService {
     );
   }
 
-  // ✅ Fixed: Check actual API endpoints
+  //  Fixed: Check actual API endpoints
   bool _isAuthEndpoint(String path) {
     final authEndpoints = ['/login', '/register', '/logout', '/token/refresh'];
 
     final isAuth = authEndpoints.any((endpoint) => path.startsWith(endpoint));
-    print('🔍 Is auth endpoint? $path -> $isAuth');
+    print(' Is auth endpoint? $path -> $isAuth');
     return isAuth;
   }
 
   Future<bool> _refreshAccessToken() async {
     try {
-      print('🔄 Getting refresh token...');
+      print(' Getting refresh token...');
       final refreshToken = await _storage.readSecure('refresh_token');
 
       if (refreshToken == null || refreshToken.isEmpty) {
-        print('❌ No refresh token found');
+        print(' No refresh token found');
         return false;
       }
 
-      print('🔑 Refresh token found, calling refresh API...');
+      print(' Refresh token found, calling refresh API...');
 
       // ✅ Create separate Dio instance to avoid interceptor loops
       final refreshDio = Dio(
@@ -172,28 +174,28 @@ class ApiService extends GetxService {
         data: {'refresh': refreshToken},
       );
 
-      print('✅ Refresh API response: ${response.statusCode}');
-      print('📄 Refresh response data: ${response.data}');
+      print(' Refresh API response: ${response.statusCode}');
+      print(' Refresh response data: ${response.data}');
 
       final newAccessToken = response.data['access'];
 
       if (newAccessToken != null && newAccessToken.isNotEmpty) {
         await _storage.writeSecure('access_token', newAccessToken);
 
-        // ✅ Update refresh token if provided
+        // Update refresh token if provided
         final newRefreshToken = response.data['refresh'];
         if (newRefreshToken != null) {
           await _storage.writeSecure('refresh_token', newRefreshToken);
         }
 
-        print('✅ Tokens updated successfully');
+        print('Tokens updated successfully');
         return true;
       } else {
-        print('❌ No access token in refresh response');
+        print(' No access token in refresh response');
         return false;
       }
     } catch (e) {
-      print('❌ Token refresh failed: $e');
+      print(' Token refresh failed: $e');
       return false;
     }
   }
@@ -202,7 +204,7 @@ class ApiService extends GetxService {
   Future<void> _processQueuedRequests() async {
     if (_requestsNeedingRefresh.isEmpty) return;
 
-    print('🔄 Processing ${_requestsNeedingRefresh.length} queued requests...');
+    print(' Processing ${_requestsNeedingRefresh.length} queued requests...');
 
     final newAccessToken = await _storage.readSecure('access_token');
 
@@ -210,42 +212,24 @@ class ApiService extends GetxService {
       try {
         request.headers['Authorization'] = 'Bearer $newAccessToken';
         await _dio.fetch(request);
-        print('✅ Retried queued request: ${request.path}');
+        print('Retried queued request: ${request.path}');
       } catch (e) {
-        print('❌ Failed to retry queued request: ${request.path} - $e');
+        print(' Failed to retry queued request: ${request.path} - $e');
       }
     }
   }
 
   Future<void> _handleLogout() async {
-    print('🔄 Handling auto logout...');
-
-    await _storage.deleteSecure('access_token');
-    await _storage.deleteSecure('refresh_token');
-
     try {
+      print(' Handling auto logout...');
       // ✅ If you have AuthService, call it
-      // final authService = Get.find<AuthService>();
-      // authService.handleAutoLogout();
+      final authService = Get.find<AuthService>();
+      authService.logout();
     } catch (e) {
-      print('❌ AuthService not found during auto logout: $e');
+      print(' AuthService not found during auto logout: $e');
     }
 
     Get.offAllNamed(RouteNamed.loginPage);
-  }
-
-  void _handleForbidden() {
-    Get.snackbar(
-      'Akses Ditolak',
-      'Kamu tidak punya izin untuk mengakses resource',
-    );
-  }
-
-  void _handleServerError() {
-    Get.snackbar(
-      'Server Error',
-      'Sesuatu bermasalah di server. Silahkan coba lagi nanti.',
-    );
   }
 
   //http method

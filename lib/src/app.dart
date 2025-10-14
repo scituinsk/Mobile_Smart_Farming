@@ -17,6 +17,11 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.light,
       home: SplashScreen(),
       getPages: AppPage.pages,
+
+      defaultTransition: Transition.cupertino,
+      transitionDuration: Duration(milliseconds: 300),
+
+      enableLog: true,
     );
   }
 }

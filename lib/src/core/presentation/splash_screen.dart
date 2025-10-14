@@ -25,9 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _initializeApp() async {
     try {
       statusMessage.value = 'Starting app...';
-      print('🚀 Splash: Starting app initialization...');
 
-      // ✅ Wait for all dependencies with timeout
       statusMessage.value = 'Loading dependencies...';
       bool isReady = await DependencyInjection.waitUntilReady(
         timeout: Duration(seconds: 15),
@@ -38,31 +36,26 @@ class _SplashScreenState extends State<SplashScreen> {
       }
 
       statusMessage.value = 'Checking authentication...';
-      print('✅ Splash: Dependencies ready, checking auth status...');
 
-      // ✅ Get AuthService
+      // Get AuthService
       final authService = Get.find<AuthService>();
 
-      // ✅ Wait a bit to ensure UI is ready
+      //  Wait a bit to ensure UI is ready
       await Future.delayed(Duration(milliseconds: 500));
 
-      // ✅ Navigate based on auth status
+      //  Navigate based on auth status
       if (authService.isLoggedIn.value) {
-        print('👤 Splash: User is logged in, navigating to main...');
         statusMessage.value = 'Welcome back!';
         await Future.delayed(Duration(milliseconds: 300));
         Get.offAllNamed(RouteNamed.mainPage);
       } else {
-        print('🔐 Splash: User not logged in, navigating to auth...');
         statusMessage.value = 'Please login...';
         await Future.delayed(Duration(milliseconds: 300));
         Get.offAllNamed(RouteNamed.loginPage);
       }
     } catch (e) {
-      print('❌ Splash initialization error: $e');
       statusMessage.value = 'Error occurred, redirecting...';
       await Future.delayed(Duration(milliseconds: 500));
-      // ✅ Always fallback to auth screen on error
       Get.offAllNamed(RouteNamed.loginPage);
     }
   }

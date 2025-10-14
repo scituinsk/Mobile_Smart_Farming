@@ -17,7 +17,7 @@ class AuthController extends GetxController {
       Get.offAllNamed(RouteNamed.mainPage);
       Get.snackbar("Success", "Login berhasil");
     } catch (e) {
-      print(e);
+      print("error login auth controller:  $e");
       Get.snackbar("error", e.toString());
     }
   }
