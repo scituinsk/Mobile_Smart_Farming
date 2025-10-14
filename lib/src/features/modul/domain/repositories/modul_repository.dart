@@ -11,5 +11,4 @@ abstract class ModulRepository {
   });
   Future<void> deleteDeviceFromUser(String id);
   Future<String> scanQr();
-  // Future<>
 }

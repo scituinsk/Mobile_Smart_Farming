@@ -3,7 +3,7 @@ class Modul {
   final String name;
   final String? description;
   final String serialId;
-  final Map<String, dynamic>? features;
+  final List<Map<String, dynamic>>? features;
   final String createdAt;
   Modul({
     required this.id,
