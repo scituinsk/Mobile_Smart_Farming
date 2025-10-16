@@ -1,7 +1,7 @@
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 
 abstract class ModulRepository {
-  Future<List<Modul>>? getListDevices();
+  Future<List<Modul>?>? getListDevices();
   Future<Modul?> getDevice(String id);
   Future<Modul> editDevice(
     String id, {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
 import 'package:pak_tani/src/core/errors/api_exception.dart';
@@ -9,9 +11,10 @@ class ApiService extends GetxService {
   late Dio _dio;
   final StorageService _storage = Get.find<StorageService>();
 
-  // ✅ Add refresh tracking to prevent loops
+  // ✅ Better refresh tracking
   bool _isRefreshing = false;
-  final List<RequestOptions> _requestsNeedingRefresh = [];
+  Completer<bool>? _refreshCompleter;
+  final Set<String> _pendingRequests = <String>{}; // Track pending requests
 
   @override
   Future<void> onInit() async {
@@ -42,91 +45,109 @@ class ApiService extends GetxService {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          print(' Request: ${options.method} ${options.path}');
+          final requestId = '${options.method}-${options.path}';
+
+          // ✅ Prevent duplicate requests
+          if (_pendingRequests.contains(requestId)) {
+            print('🚫 Duplicate request blocked: $requestId');
+            handler.reject(
+              DioException(
+                requestOptions: options,
+                message: 'Duplicate request blocked',
+              ),
+            );
+            return;
+          }
+
+          _pendingRequests.add(requestId);
+          print('📡 Request: ${options.method} ${options.path}');
 
           if (!_isAuthEndpoint(options.path)) {
             final accessToken = await _storage.readSecure('access_token');
             if (accessToken != null && accessToken.isNotEmpty) {
               options.headers['Authorization'] = 'Bearer $accessToken';
-              print('Added token to: ${options.path}');
+              print('✅ Added token to: ${options.path}');
             } else {
-              print('No token for: ${options.path}');
+              print('❌ No token for: ${options.path}');
+
+              // ✅ If no token and not auth endpoint, reject immediately
+              _pendingRequests.remove(requestId);
+              handler.reject(
+                DioException(
+                  requestOptions: options,
+                  response: Response(
+                    requestOptions: options,
+                    statusCode: 401,
+                    statusMessage: 'No access token',
+                  ),
+                ),
+              );
+              return;
             }
           } else {
-            print('Auth endpoint (no token): ${options.path}');
+            print('🔐 Auth endpoint (no token): ${options.path}');
           }
 
           handler.next(options);
         },
 
         onResponse: (response, handler) {
+          final requestId =
+              '${response.requestOptions.method}-${response.requestOptions.path}';
+          _pendingRequests.remove(requestId);
+
           print(
-            'Response: ${response.statusCode} ${response.requestOptions.path}',
+            '✅ Response: ${response.statusCode} ${response.requestOptions.path}',
           );
           handler.next(response);
         },
 
         onError: (error, handler) async {
+          final requestId =
+              '${error.requestOptions.method}-${error.requestOptions.path}';
+          _pendingRequests.remove(requestId);
+
           final statusCode = error.response?.statusCode;
           final path = error.requestOptions.path;
 
-          print('Error: ${statusCode} ${path}');
+          print('❌ Error: ${statusCode} ${path}');
 
-          // Handle 401 with proper loop prevention
+          // ✅ Handle 401 with better logic
           if (statusCode == 401 && !_isAuthEndpoint(path)) {
-            print(' Handling 401 for non-auth endpoint: $path');
+            print('🔄 Handling 401 for non-auth endpoint: $path');
 
-            // Prevent multiple concurrent refresh attempts
-            if (_isRefreshing) {
-              print(' Already refreshing, queuing request: $path');
-              _requestsNeedingRefresh.add(error.requestOptions);
-              return; // Don't resolve or reject yet
+            // ✅ Wait for ongoing refresh or start new one
+            bool refreshSuccess = false;
+
+            if (_isRefreshing && _refreshCompleter != null) {
+              print('⏳ Waiting for ongoing refresh...');
+              refreshSuccess = await _refreshCompleter!.future;
+            } else {
+              print('🔄 Starting new token refresh...');
+              refreshSuccess = await _performTokenRefresh();
             }
 
-            _isRefreshing = true;
-            print('Starting token refresh...');
+            if (refreshSuccess) {
+              print('✅ Token refreshed, retrying: $path');
 
-            try {
-              final refreshSuccess = await _refreshAccessToken();
-
-              if (refreshSuccess) {
-                print(' Token refresh successful, retrying: $path');
-
-                // ✅ Retry original request with new token
-                final newAccessToken = await _storage.readSecure(
-                  'access_token',
-                );
+              // ✅ Retry original request with new token
+              final newAccessToken = await _storage.readSecure('access_token');
+              if (newAccessToken != null) {
                 error.requestOptions.headers['Authorization'] =
                     'Bearer $newAccessToken';
 
-                final response = await _dio.fetch(error.requestOptions);
-
-                // Process queued requests
-                await _processQueuedRequests();
-
-                return handler.resolve(response);
-              } else {
-                print(' Token refresh failed, logging out...');
-                await _handleLogout();
-                return handler.next(error);
+                try {
+                  final response = await _dio.fetch(error.requestOptions);
+                  return handler.resolve(response);
+                } catch (retryError) {
+                  print('❌ Retry failed: $retryError');
+                  return handler.next(error);
+                }
               }
-            } catch (e) {
-              print(' Token refresh error: $e');
+            } else {
+              print('❌ Token refresh failed, logging out...');
               await _handleLogout();
-              return handler.next(error);
-            } finally {
-              _isRefreshing = false;
-              _requestsNeedingRefresh.clear();
-              print(' Token refresh process completed');
             }
-          }
-          // ✅ Handle other errors
-          else if (statusCode == 403) {
-            print('❌ Access forbidden (403): $path');
-            // Don't call UI methods from interceptor
-          } else if (statusCode != null && statusCode >= 500) {
-            print('❌ Server error ($statusCode): $path');
-            // Don't call UI methods from interceptor
           }
 
           handler.next(error);
@@ -135,26 +156,26 @@ class ApiService extends GetxService {
     );
   }
 
-  //  Fixed: Check actual API endpoints
-  bool _isAuthEndpoint(String path) {
-    final authEndpoints = ['/login', '/register', '/logout', '/token/refresh'];
+  // ✅ Improved token refresh with Completer
+  Future<bool> _performTokenRefresh() async {
+    if (_isRefreshing && _refreshCompleter != null) {
+      return await _refreshCompleter!.future;
+    }
 
-    final isAuth = authEndpoints.any((endpoint) => path.startsWith(endpoint));
-    print(' Is auth endpoint? $path -> $isAuth');
-    return isAuth;
-  }
+    _isRefreshing = true;
+    _refreshCompleter = Completer<bool>();
 
-  Future<bool> _refreshAccessToken() async {
     try {
-      print(' Getting refresh token...');
+      print('🔄 Getting refresh token...');
       final refreshToken = await _storage.readSecure('refresh_token');
 
       if (refreshToken == null || refreshToken.isEmpty) {
-        print(' No refresh token found');
+        print('❌ No refresh token found');
+        _refreshCompleter!.complete(false);
         return false;
       }
 
-      print(' Refresh token found, calling refresh API...');
+      print('🔄 Refresh token found, calling refresh API...');
 
       // ✅ Create separate Dio instance to avoid interceptor loops
       final refreshDio = Dio(
@@ -170,12 +191,11 @@ class ApiService extends GetxService {
       );
 
       final response = await refreshDio.post(
-        '/token/refresh/', // ✅ Make sure endpoint is correct
+        '/token/refresh',
         data: {'refresh': refreshToken},
       );
 
-      print(' Refresh API response: ${response.statusCode}');
-      print(' Refresh response data: ${response.data}');
+      print('✅ Refresh API response: ${response.statusCode}');
 
       final newAccessToken = response.data['access'];
 
@@ -188,65 +208,94 @@ class ApiService extends GetxService {
           await _storage.writeSecure('refresh_token', newRefreshToken);
         }
 
-        print('Tokens updated successfully');
+        print('✅ Tokens updated successfully');
+        _refreshCompleter!.complete(true);
         return true;
       } else {
-        print(' No access token in refresh response');
+        print('❌ No access token in refresh response');
+        _refreshCompleter!.complete(false);
         return false;
       }
     } catch (e) {
-      print(' Token refresh failed: $e');
+      print('❌ Token refresh failed: $e');
+      _refreshCompleter!.complete(false);
       return false;
+    } finally {
+      _isRefreshing = false;
+      _refreshCompleter = null;
     }
   }
 
-  // ✅ Process queued requests after successful refresh
-  Future<void> _processQueuedRequests() async {
-    if (_requestsNeedingRefresh.isEmpty) return;
-
-    print(' Processing ${_requestsNeedingRefresh.length} queued requests...');
-
-    final newAccessToken = await _storage.readSecure('access_token');
-
-    for (final request in _requestsNeedingRefresh) {
-      try {
-        request.headers['Authorization'] = 'Bearer $newAccessToken';
-        await _dio.fetch(request);
-        print('Retried queued request: ${request.path}');
-      } catch (e) {
-        print(' Failed to retry queued request: ${request.path} - $e');
-      }
-    }
+  bool _isAuthEndpoint(String path) {
+    final authEndpoints = ['/login', '/register', '/logout', '/token/refresh'];
+    return authEndpoints.any((endpoint) => path.contains(endpoint));
   }
 
   Future<void> _handleLogout() async {
     try {
-      print(' Handling auto logout...');
-      // ✅ If you have AuthService, call it
-      final authService = Get.find<AuthService>();
-      authService.logout();
-    } catch (e) {
-      print(' AuthService not found during auto logout: $e');
-    }
+      print('🔄 Handling auto logout...');
 
-    Get.offAllNamed(RouteNamed.loginPage);
+      // ✅ Clear pending requests
+      _pendingRequests.clear();
+      _isRefreshing = false;
+      _refreshCompleter = null;
+
+      // ✅ Clear tokens
+      await _storage.deleteSecure('access_token');
+      await _storage.deleteSecure('refresh_token');
+
+      // ✅ Call AuthService if available
+      if (Get.isRegistered<AuthService>()) {
+        final authService = Get.find<AuthService>();
+        await authService.logout();
+      }
+    } catch (e) {
+      print('❌ Logout error: $e');
+    } finally {
+      // ✅ Navigate to login
+      if (Get.currentRoute != RouteNamed.loginPage) {
+        Get.offAllNamed(RouteNamed.loginPage);
+      }
+    }
   }
 
-  //http method
+  // ✅ Add request debouncing helper
+  Future<T> _executeRequest<T>(
+    String method,
+    String path,
+    Future<T> Function() request,
+  ) async {
+    final requestId = '$method-$path';
+
+    // ✅ Check if similar request is already pending
+    if (_pendingRequests.contains(requestId)) {
+      throw NetworkException(message: 'Request already in progress');
+    }
+
+    try {
+      return await request();
+    } finally {
+      _pendingRequests.remove(requestId);
+    }
+  }
+
+  // ✅ Updated HTTP methods with debouncing
   Future<Response> get(
     String path, {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
-    try {
-      return await _dio.get(
-        path,
-        queryParameters: queryParameters,
-        options: options,
-      );
-    } on DioException catch (error) {
-      throw _handleDioError(error);
-    }
+    return await _executeRequest('GET', path, () async {
+      try {
+        return await _dio.get(
+          path,
+          queryParameters: queryParameters,
+          options: options,
+        );
+      } on DioException catch (error) {
+        throw _handleDioError(error);
+      }
+    });
   }
 
   Future<Response> post(
@@ -255,16 +304,18 @@ class ApiService extends GetxService {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
-    try {
-      return await _dio.post(
-        path,
-        data: data,
-        queryParameters: queryParameters,
-        options: options,
-      );
-    } on DioException catch (error) {
-      throw _handleDioError(error);
-    }
+    return await _executeRequest('POST', path, () async {
+      try {
+        return await _dio.post(
+          path,
+          data: data,
+          queryParameters: queryParameters,
+          options: options,
+        );
+      } on DioException catch (error) {
+        throw _handleDioError(error);
+      }
+    });
   }
 
   Future<Response> put(
@@ -338,6 +389,7 @@ class ApiService extends GetxService {
     }
   }
 
+  // ✅ Rest of error handling methods stay the same...
   ApiException _handleDioError(DioException error) {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
@@ -350,16 +402,10 @@ class ApiService extends GetxService {
       case DioExceptionType.badResponse:
         final statusCode = error.response?.statusCode;
         final responseData = error.response?.data;
-
-        print('API Error - Status Code: $statusCode');
-        print('API Error - Response Data: $responseData');
-
         String message = _getStatusMessage(statusCode);
-
         if (responseData != null) {
           message = _extractErrorMessage(responseData);
         }
-
         return ServerException(message: message, statusCode: statusCode);
 
       case DioExceptionType.cancel:
@@ -378,9 +424,7 @@ class ApiService extends GetxService {
   }
 
   String _extractErrorMessage(dynamic responseData) {
-    if (responseData is! Map<String, dynamic>) {
-      return responseData.toString();
-    }
+    if (responseData is! Map<String, dynamic>) return responseData.toString();
 
     final data = responseData;
     final priorityFields = ['errors', 'message', 'detail', 'error'];
@@ -388,10 +432,8 @@ class ApiService extends GetxService {
     for (final field in priorityFields) {
       if (data.containsKey(field) && data[field] != null) {
         final value = data[field];
-
-        if (value is String && value.isNotEmpty) {
-          return value;
-        } else if (value is Map) {
+        if (value is String && value.isNotEmpty) return value;
+        if (value is Map) {
           final messages = <String>[];
           value.forEach((key, val) {
             if (val is List) {
@@ -401,12 +443,12 @@ class ApiService extends GetxService {
             }
           });
           if (messages.isNotEmpty) return messages.join(', ');
-        } else if (value is List && value.isNotEmpty) {
+        }
+        if (value is List && value.isNotEmpty) {
           return value.map((e) => e.toString()).join(', ');
         }
       }
     }
-
     return _getStatusMessage(null);
   }
 

@@ -17,6 +17,9 @@ class AuthService extends GetxService {
   final RxBool isLoggedIn = false.obs;
   final Rx<User?> currentUser = Rx<User?>(null);
 
+  /// Indicates if the AuthService has completed its initialization
+  bool get isReady => !isLoading.value;
+
   @override
   Future<void> onInit() async {
     super.onInit();

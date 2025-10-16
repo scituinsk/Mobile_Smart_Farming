@@ -1,7 +1,7 @@
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 
 class ModulModel extends Modul {
-  ModulModel({
+  const ModulModel({
     required super.id,
     required super.name,
     super.description,
@@ -16,7 +16,7 @@ class ModulModel extends Modul {
       name: json['name'] ?? '',
       description: json['description'],
       serialId: json['serial_id'] ?? '',
-      features: json['feature'],
+      features: _parseFeatures(json['feature']),
       createdAt: json['created_at'] ?? DateTime.now(),
     );
   }
@@ -52,5 +52,33 @@ class ModulModel extends Modul {
       features: features,
       createdAt: createdAt,
     );
+  }
+
+  static List<DeviceFeature>? _parseFeatures(dynamic value) {
+    if (value == null) return null;
+
+    if (value is! List) {
+      print("features is not a list: ${value.runtimeType}");
+      return null;
+    }
+
+    final List<dynamic> featureList = value;
+    final List<DeviceFeature> features = [];
+
+    for (var featureItem in featureList) {
+      try {
+        final feature = DeviceFeature(
+          name: featureItem['name'].toString(),
+          description: featureItem["descriptions"]?.toString(),
+        );
+        features.add(feature);
+        print("parsed feature: ${feature.name}");
+      } catch (e) {
+        print("error parsing feature: $e");
+        continue;
+      }
+    }
+    print('✅ Successfully parsed ${features.length} features');
+    return features.isEmpty ? null : features;
   }
 }
