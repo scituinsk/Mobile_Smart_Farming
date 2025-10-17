@@ -70,6 +70,7 @@ class ModulModel extends Modul {
         final feature = DeviceFeature(
           name: featureItem['name'].toString(),
           description: featureItem["descriptions"]?.toString(),
+          data: featureItem['data'].toString(),
         );
         features.add(feature);
         print("parsed feature: ${feature.name}");

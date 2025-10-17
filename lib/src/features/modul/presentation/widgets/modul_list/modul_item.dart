@@ -91,20 +91,22 @@ class ModulItem extends StatelessWidget {
     return Row(
       spacing: 9,
       children: [
-        ...modul.features!.take(3).map((feature) {
-          return DisplayChip(
-            paddingHorizontal: 9,
-            paddingVertical: 9,
-            backgroundColor: AppTheme.surfaceColor,
-            child: Row(
-              spacing: 4,
-              children: [
-                CustomIcon(type: _getFeatureIcon(feature.name), size: 24),
-                Text(feature.name, style: AppTheme.textSmallMedium),
-              ],
-            ),
-          );
-        }).toList(),
+        ...modul.features!.map((feature) {
+          return (feature.name != "schedule")
+              ? DisplayChip(
+                  paddingHorizontal: 9,
+                  paddingVertical: 9,
+                  backgroundColor: AppTheme.surfaceColor,
+                  child: Row(
+                    spacing: 4,
+                    children: [
+                      CustomIcon(type: _getFeatureIcon(feature.name), size: 24),
+                      Text(feature.data, style: AppTheme.textSmallMedium),
+                    ],
+                  ),
+                )
+              : SizedBox.shrink();
+        }),
       ],
     );
   }

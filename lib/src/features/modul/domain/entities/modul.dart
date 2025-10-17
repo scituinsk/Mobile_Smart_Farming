@@ -30,8 +30,13 @@ class Modul extends Equatable {
 class DeviceFeature extends Equatable {
   final String name;
   final String? description;
+  final String data;
 
-  const DeviceFeature({required this.name, this.description});
+  const DeviceFeature({
+    required this.name,
+    this.description,
+    required this.data,
+  });
 
   @override
   List<Object?> get props => [name, description];
