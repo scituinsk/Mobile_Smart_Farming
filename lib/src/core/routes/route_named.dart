@@ -7,4 +7,5 @@ abstract class RouteNamed {
   static const loginPage = '/login_page';
   static const registerPage = '/register_page';
   static const mainPage = '/main_page';
+  static const qrScanPage = '/qr_scan_page';
 }

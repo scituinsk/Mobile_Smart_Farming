@@ -9,6 +9,6 @@ abstract class ModulRepository {
     String? description,
     String? imagePath,
   });
+
   Future<void> deleteDeviceFromUser(String id);
-  Future<String> scanQr();
 }

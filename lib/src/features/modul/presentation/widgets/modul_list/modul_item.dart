@@ -45,7 +45,10 @@ class ModulItem extends StatelessWidget {
                 icon: Icons.arrow_outward_rounded,
                 backgroundColor: AppTheme.secondaryColor,
                 iconColor: Colors.white,
-                onPressed: () => Get.toNamed(RouteNamed.detailModulPage),
+                onPressed: () => Get.toNamed(
+                  RouteNamed.detailModulPage,
+                  arguments: modul.serialId,
+                ),
               ),
             ],
           ),

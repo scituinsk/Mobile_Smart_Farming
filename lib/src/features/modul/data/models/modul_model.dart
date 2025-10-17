@@ -8,6 +8,7 @@ class ModulModel extends Modul {
     required super.serialId,
     super.features,
     required super.createdAt,
+    super.image,
   });
 
   factory ModulModel.fromJson(Map<String, dynamic> json) {
@@ -18,6 +19,7 @@ class ModulModel extends Modul {
       serialId: json['serial_id'] ?? '',
       features: _parseFeatures(json['feature']),
       createdAt: json['created_at'] ?? DateTime.now(),
+      image: json['image'] ?? "",
     );
   }
 
@@ -29,17 +31,19 @@ class ModulModel extends Modul {
       'serial_id': serialId,
       'features': features,
       'created_at': createdAt,
+      'image': image,
     };
   }
 
-  factory ModulModel.fromEntity(Modul user) {
+  factory ModulModel.fromEntity(Modul modul) {
     return ModulModel(
-      id: user.id,
-      name: user.name,
-      description: user.description,
-      serialId: user.serialId,
-      features: user.features,
-      createdAt: user.createdAt,
+      id: modul.id,
+      name: modul.name,
+      description: modul.description,
+      serialId: modul.serialId,
+      features: modul.features,
+      createdAt: modul.createdAt,
+      image: modul.image,
     );
   }
 
@@ -51,6 +55,7 @@ class ModulModel extends Modul {
       serialId: serialId,
       features: features,
       createdAt: createdAt,
+      image: image,
     );
   }
 

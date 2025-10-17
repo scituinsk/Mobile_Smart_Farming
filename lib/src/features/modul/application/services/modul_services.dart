@@ -41,4 +41,27 @@ class ModulServices extends GetxService {
       isLoading.value = false;
     }
   }
+
+  Future<void> loadDevice(String id) async {
+    isLoading.value = true;
+
+    try {
+      print("loading get device");
+      final device = await _repository.getDevice(id);
+      if (device != null) {
+        final index = devices.indexWhere((d) => d.serialId == device.serialId);
+        if (index != -1) {
+          devices[index] = device;
+        } else {
+          devices.add(device);
+        }
+        selectedDevice.value = device;
+      }
+    } catch (e) {
+      print("error load device(service): $e");
+      rethrow;
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

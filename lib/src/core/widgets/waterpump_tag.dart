@@ -23,9 +23,8 @@ class WaterpumpTag extends StatelessWidget {
       ),
       child: Text(
         isActive ? (activeLabel ?? 'Aktif') : (inactiveLabel ?? 'Non-aktif'),
-        style: AppTheme.textSmall.copyWith(
+        style: AppTheme.textAction.copyWith(
           color: isActive ? Color(0xff306B00) : Color(0xffAC3B3D),
-          fontWeight: FontWeight.bold,
         ),
       ),
     );

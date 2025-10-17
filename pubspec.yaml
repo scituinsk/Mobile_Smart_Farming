@@ -46,6 +46,7 @@ dependencies:
   flutter_secure_storage: ^9.2.4
   qr_flutter: ^4.1.0
   equatable: ^2.0.7
+  ai_barcode_scanner: ^7.1.0
 
 dev_dependencies:
   flutter_test:

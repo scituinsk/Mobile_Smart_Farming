@@ -12,4 +12,8 @@ class ModulController extends GetxController {
   Future<void> refreshModulList() async {
     await _modulServices.loadDevices(refresh: true);
   }
+
+  Future<void> getSelectedDevice(String id) async {
+    await _modulServices.loadDevice(id);
+  }
 }

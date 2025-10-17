@@ -7,6 +7,7 @@ class Modul extends Equatable {
   final String serialId;
   final List<DeviceFeature>? features;
   final String createdAt;
+  final String? image;
   const Modul({
     required this.id,
     required this.name,
@@ -14,6 +15,7 @@ class Modul extends Equatable {
     required this.serialId,
     this.features,
     required this.createdAt,
+    this.image,
   });
 
   @override
@@ -24,6 +26,7 @@ class Modul extends Equatable {
     serialId,
     features,
     createdAt,
+    image,
   ];
 }
 

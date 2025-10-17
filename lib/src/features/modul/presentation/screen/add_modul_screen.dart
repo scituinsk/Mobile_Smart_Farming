@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
+import 'package:pak_tani/src/features/modul/presentation/controllers/add_modul_ui_controller.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/add_modul_form/add_modul_code_input.dart';
 
 class AddModulScreen extends StatelessWidget {
@@ -12,6 +13,7 @@ class AddModulScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final mediaQueryWidth = Get.width;
     final mediaQueryHeight = Get.height;
+    final controller = Get.put(AddModulUiController());
 
     return Scaffold(
       appBar: AppBar(
@@ -58,9 +60,10 @@ class AddModulScreen extends StatelessWidget {
                   hintText: "Ex: 018bd6f8-7d8b-7132-842b-3247e",
                 ),
                 MyTextField(
-                  title: "Nama Modul",
-                  hint: "Ex: Green House A",
+                  title: "Password Modul",
+                  hint: "Ex: paktani1",
                   fillColor: Colors.white,
+                  controller: controller.modulPasswordController,
                 ),
               ],
             ),

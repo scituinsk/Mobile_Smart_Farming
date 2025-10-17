@@ -4,9 +4,9 @@ import 'package:pak_tani/src/core/services/api_service.dart';
 import 'package:pak_tani/src/features/modul/data/models/modul_model.dart';
 
 abstract class ModulRemoteDatasource {
-  Future<List<ModulModel>?> getListDevices();
-  Future<ModulModel?> getDevice(String id);
-  Future<ModulModel?> editDevice(
+  Future<List<ModulModel>?> getListModuls();
+  Future<ModulModel?> getModul(String id);
+  Future<ModulModel?> editModul(
     String id, {
     String? name,
     String? description,
@@ -19,7 +19,7 @@ class ModulRemoteDatasourceImpl implements ModulRemoteDatasource {
   final ApiService _apiService = Get.find<ApiService>();
 
   @override
-  Future<List<ModulModel>?> getListDevices() async {
+  Future<List<ModulModel>?> getListModuls() async {
     final response = await _apiService.get('/iot/device/list/');
     final responseData = response.data['data'] as List<dynamic>;
 
@@ -29,7 +29,7 @@ class ModulRemoteDatasourceImpl implements ModulRemoteDatasource {
   }
 
   @override
-  Future<ModulModel?> getDevice(String id) async {
+  Future<ModulModel?> getModul(String id) async {
     final response = await _apiService.get('/iot/device/$id/');
     final responseData = response.data['data'] as Map<String, dynamic>;
 
@@ -37,9 +37,10 @@ class ModulRemoteDatasourceImpl implements ModulRemoteDatasource {
   }
 
   @override
-  Future<ModulModel?> editDevice(
+  Future<ModulModel?> editModul(
     String id, {
     String? name,
+    String? password,
     String? description,
     String? imagePath,
   }) async {
@@ -47,6 +48,7 @@ class ModulRemoteDatasourceImpl implements ModulRemoteDatasource {
     if (imagePath != null && imagePath.isNotEmpty) {
       final formData = FormData.fromMap({
         if (name != null) 'name': name,
+        if (password != null) 'password': password,
         if (description != null) 'description': description,
         'image': await MultipartFile.fromFile(
           imagePath,
@@ -63,6 +65,7 @@ class ModulRemoteDatasourceImpl implements ModulRemoteDatasource {
       final requestData = <String, dynamic>{};
 
       if (name != null) requestData['name'] = name;
+      if (password != null) requestData['password'] = password;
       if (description != null) requestData['description'] = description;
 
       response = await _apiService.patch('/iot/device/$id/', data: requestData);

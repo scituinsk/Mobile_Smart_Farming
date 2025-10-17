@@ -282,6 +282,7 @@ class ApiService extends GetxService {
   // ✅ Updated HTTP methods with debouncing
   Future<Response> get(
     String path, {
+    dynamic data,
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
@@ -289,6 +290,7 @@ class ApiService extends GetxService {
       try {
         return await _dio.get(
           path,
+          data: data,
           queryParameters: queryParameters,
           options: options,
         );

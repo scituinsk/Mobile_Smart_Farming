@@ -11,7 +11,7 @@ class ModulRepositoryImpl implements ModulRepository {
   Future<List<Modul>?>? getListDevices() async {
     // TODO: implement getListDevices
     try {
-      final listModul = await remoteDatasource.getListDevices();
+      final listModul = await remoteDatasource.getListModuls();
 
       if (listModul != null) {
         return listModul.map((modul) => modul.toEntity()).toList();
@@ -24,15 +24,24 @@ class ModulRepositoryImpl implements ModulRepository {
   }
 
   @override
-  Future<Modul?> getDevice(String id) {
-    // TODO: implement getDevice
-    throw UnimplementedError();
+  Future<Modul?> getDevice(String id) async {
+    try {
+      final modul = await remoteDatasource.getModul(id);
+      if (modul == null) {
+        return null;
+      }
+      return modul.toEntity();
+    } catch (e) {
+      print("error get modul(repository): $e");
+      rethrow;
+    }
   }
 
   @override
   Future<Modul> editDevice(
     String id, {
     String? name,
+    String? password,
     String? description,
     String? imagePath,
   }) {
@@ -43,12 +52,6 @@ class ModulRepositoryImpl implements ModulRepository {
   @override
   Future<void> deleteDeviceFromUser(String id) {
     // TODO: implement deleteDeviceFromUser
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<String> scanQr() {
-    // TODO: implement scanQr
     throw UnimplementedError();
   }
 }

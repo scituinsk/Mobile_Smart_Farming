@@ -29,12 +29,12 @@ class ModulInformation extends StatelessWidget {
           backgroundColor: AppTheme.surfaceColor,
           customIcon: customIcon,
         ),
-        Text(name, style: AppTheme.textMedium.copyWith(color: Colors.white)),
+        Text(name, style: AppTheme.text.copyWith(color: Colors.white)),
         isWaterPump
             ? WaterpumpTag(isActive: waterpumpStatus)
             : Text(
                 information,
-                style: AppTheme.text.copyWith(color: Colors.white),
+                style: AppTheme.textAction.copyWith(color: Colors.white),
               ),
       ],
     );

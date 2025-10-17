@@ -6,6 +6,7 @@ import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/display_chip.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
+import 'package:pak_tani/src/features/modul/presentation/controllers/modul_detail_ui_controller.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_content_widget.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_data_item.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_dropdown_menu.dart';
@@ -16,6 +17,8 @@ class ModulDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(ModulDetailUiController());
+
     final mediaQueryWidth = Get.width;
     final mediaQueryHeight = Get.height;
 
@@ -31,12 +34,35 @@ class ModulDetailScreen extends StatelessWidget {
                 height: 318,
                 child: Stack(
                   children: [
-                    Image.asset(
-                      'assets/image/default_modul.jpg',
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: double.infinity,
-                    ),
+                    Obx(() {
+                      final modul = controller.modul.value;
+                      late ImageProvider imageProvider;
+                      if (modul != null) {
+                        imageProvider = modul.image != null
+                            ? NetworkImage(
+                                "https://smartfarmingapi.teknohole.com${modul.image}",
+                              )
+                            : const AssetImage(
+                                'assets/image/default_modul.jpg',
+                              );
+                      } else {
+                        imageProvider = const AssetImage(
+                          'assets/image/default_modul.jpg',
+                        );
+                      }
+
+                      return Image(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                      );
+                    }),
+
+                    // Image.asset(
+                    //   'assets/image/default_modul.jpg',
+
+                    // ),
                     Container(
                       height: 318,
                       width: mediaQueryWidth,
@@ -77,10 +103,14 @@ class ModulDetailScreen extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 CustomIcon(type: MyCustomIcon.greenHouse),
-                                Text(
-                                  "Green House A",
-                                  style: AppTheme.textMedium.copyWith(
-                                    color: AppTheme.primaryColor,
+                                Obx(
+                                  () => Text(
+                                    controller.modul.value != null
+                                        ? controller.modul.value!.name
+                                        : "Green House A",
+                                    style: AppTheme.textMedium.copyWith(
+                                      color: AppTheme.primaryColor,
+                                    ),
                                   ),
                                 ),
                               ],
