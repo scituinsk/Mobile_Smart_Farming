@@ -5,6 +5,7 @@ import 'package:pak_tani/src/core/widgets/custom_dialog.dart';
 import 'package:pak_tani/src/core/widgets/icon_widget.dart';
 import 'package:pak_tani/src/core/widgets/my_filled_button.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
+import 'package:pak_tani/src/features/modul/presentation/controllers/modul_detail_ui_controller.dart';
 
 class MenuItem {
   final String text;
@@ -173,7 +174,11 @@ abstract class ModulDetailDropdownMenuItems {
                     ),
                     MyFilledButton(
                       title: "Hapus",
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.back();
+                        final controller = Get.find<ModulDetailUiController>();
+                        controller.deleteDevice();
+                      },
                       backgroundColor: AppTheme.errorColor,
                       textColor: Colors.white,
                     ),

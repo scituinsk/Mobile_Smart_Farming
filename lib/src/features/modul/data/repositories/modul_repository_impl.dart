@@ -8,7 +8,7 @@ class ModulRepositoryImpl implements ModulRepository {
   ModulRepositoryImpl({required this.remoteDatasource});
 
   @override
-  Future<List<Modul>?>? getListDevices() async {
+  Future<List<Modul>?>? getListModul() async {
     // TODO: implement getListDevices
     try {
       final listModul = await remoteDatasource.getListModuls();
@@ -24,7 +24,7 @@ class ModulRepositoryImpl implements ModulRepository {
   }
 
   @override
-  Future<Modul?> getDevice(String id) async {
+  Future<Modul?> getModul(String id) async {
     try {
       final modul = await remoteDatasource.getModul(id);
       if (modul == null) {
@@ -38,20 +38,50 @@ class ModulRepositoryImpl implements ModulRepository {
   }
 
   @override
-  Future<Modul> editDevice(
+  Future<Modul?> addModulToUSer(String id, String password) async {
+    try {
+      final modul = await remoteDatasource.addModulToUser(id, password);
+      if (modul == null) {
+        return null;
+      }
+      return modul.toEntity();
+    } catch (e) {
+      print("error add modul(repository): $e");
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Modul?> editModul(
     String id, {
     String? name,
     String? password,
     String? description,
     String? imagePath,
-  }) {
-    // TODO: implement editDevice
-    throw UnimplementedError();
+  }) async {
+    try {
+      final modul = await remoteDatasource.editModul(
+        id,
+        name: name,
+        description: description,
+        imagePath: imagePath,
+        password: password,
+      );
+      if (modul == null) return null;
+      return modul.toEntity();
+    } catch (e) {
+      print("error edit modul(repository): $e");
+      rethrow;
+    }
   }
 
   @override
-  Future<void> deleteDeviceFromUser(String id) {
-    // TODO: implement deleteDeviceFromUser
-    throw UnimplementedError();
+  Future<void> deleteModulFromUser(String id) async {
+    try {
+      await remoteDatasource.deleteModulFromUser(id);
+    } catch (e) {
+      print("error deleting modul(repository): $e");
+      rethrow;
+    }
   }
 }

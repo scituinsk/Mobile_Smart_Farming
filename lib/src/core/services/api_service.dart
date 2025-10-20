@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' hide Response, FormData, MultipartFile;
+import 'package:pak_tani/src/core/config/app_config.dart';
 import 'package:pak_tani/src/core/errors/api_exception.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
@@ -11,7 +12,7 @@ class ApiService extends GetxService {
   late Dio _dio;
   final StorageService _storage = Get.find<StorageService>();
 
-  // ✅ Better refresh tracking
+  //  Better refresh tracking
   bool _isRefreshing = false;
   Completer<bool>? _refreshCompleter;
   final Set<String> _pendingRequests = <String>{}; // Track pending requests
@@ -25,10 +26,10 @@ class ApiService extends GetxService {
   Future<void> _initializeDio() async {
     _dio = Dio(
       BaseOptions(
-        baseUrl: "https://smartfarmingapi.teknohole.com/api",
-        connectTimeout: Duration(seconds: 30),
-        receiveTimeout: Duration(seconds: 30),
-        sendTimeout: Duration(seconds: 30),
+        baseUrl: AppConfig.apiBaseUrl,
+        connectTimeout: Duration(seconds: AppConfig.timeout),
+        receiveTimeout: Duration(seconds: AppConfig.timeout),
+        sendTimeout: Duration(seconds: AppConfig.timeout),
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -180,7 +181,7 @@ class ApiService extends GetxService {
       // ✅ Create separate Dio instance to avoid interceptor loops
       final refreshDio = Dio(
         BaseOptions(
-          baseUrl: "https://smartfarmingapi.teknohole.com/api",
+          baseUrl: AppConfig.apiBaseUrl,
           connectTimeout: Duration(seconds: 15),
           receiveTimeout: Duration(seconds: 15),
           headers: {

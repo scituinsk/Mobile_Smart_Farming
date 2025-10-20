@@ -6,59 +6,129 @@ class ModulServices extends GetxService {
   final ModulRepository _repository = Get.find<ModulRepository>();
 
   final RxBool isLoading = false.obs;
-  final RxList<Modul> devices = <Modul>[].obs;
-  final Rx<Modul?> selectedDevice = Rx<Modul?>(null);
+
+  final RxList<Modul> moduls = <Modul>[].obs;
+  final Rx<Modul?> selectedModul = Rx<Modul?>(null);
 
   @override
   Future<void> onInit() async {
     // TODO: implement onInit
     super.onInit();
-    await loadDevices();
+    await loadModuls();
   }
 
-  Future<void> loadDevices({bool refresh = false}) async {
+  Future<void> loadModuls({bool refresh = false}) async {
     if (refresh) {
-      devices.clear();
+      moduls.clear();
     }
 
     isLoading.value = true;
+    print("memulai loading: ${isLoading.value}");
 
     try {
       print("loading devices.....");
-      final deviceList = await _repository.getListDevices();
+      final deviceList = await _repository.getListModul();
 
       if (deviceList != null) {
-        devices.assignAll(deviceList);
+        moduls.assignAll(deviceList);
         print("loaded ${deviceList.length} devices");
       } else {
-        devices.clear();
+        moduls.clear();
         print("no device found");
       }
     } catch (e) {
       print("error loading devices(service): $e");
       rethrow;
     } finally {
+      print("sebelum loading selesai: ${isLoading.value}");
       isLoading.value = false;
+      print("loading devices selesai");
     }
   }
 
-  Future<void> loadDevice(String id) async {
+  Future<void> loadModul(String id) async {
     isLoading.value = true;
 
     try {
       print("loading get device");
-      final device = await _repository.getDevice(id);
-      if (device != null) {
-        final index = devices.indexWhere((d) => d.serialId == device.serialId);
+      final modul = await _repository.getModul(id);
+      if (modul != null) {
+        final index = moduls.indexWhere((d) => d.serialId == modul.serialId);
         if (index != -1) {
-          devices[index] = device;
+          moduls[index] = modul;
         } else {
-          devices.add(device);
+          moduls.add(modul);
         }
-        selectedDevice.value = device;
+        selectedModul.value = modul;
       }
     } catch (e) {
       print("error load device(service): $e");
+      rethrow;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> addModul(String id, String password) async {
+    isLoading.value = true;
+
+    try {
+      final modul = await _repository.addModulToUSer(id, password);
+      if (modul != null) {
+        final index = moduls.indexWhere(
+          (device) => device.serialId == modul.serialId,
+        );
+        if (index != -1) {
+          moduls[index] = modul;
+        } else {
+          moduls.add(modul);
+        }
+      }
+    } catch (e) {
+      print("error add device(service): $e");
+      rethrow;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> editModul(
+    String id, {
+    String? name,
+    String? password,
+    String? description,
+    String? imagePath,
+  }) async {
+    isLoading.value = true;
+    try {
+      final modul = await _repository.editModul(
+        id,
+        name: name,
+        description: description,
+        imagePath: imagePath,
+        password: password,
+      );
+      if (modul != null) {
+        final index = moduls.indexWhere(
+          (element) => element.serialId == modul.serialId,
+        );
+        moduls[index] = modul;
+      }
+    } catch (e) {
+      print("error editing modul(service): $e");
+      rethrow;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> deleteModul(String id) async {
+    isLoading.value = true;
+    try {
+      await _repository.deleteModulFromUser(id);
+      moduls.removeWhere((element) => element.serialId == id);
+    } catch (e) {
+      print("error removing modul: $e");
       rethrow;
     } finally {
       isLoading.value = false;

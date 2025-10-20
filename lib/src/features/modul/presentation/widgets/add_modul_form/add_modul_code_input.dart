@@ -29,6 +29,7 @@ class AddModulCodeInput extends StatelessWidget {
             controller: controller.modulCodeController,
             hint: "Ex: 018bd6f8-7d8b-7132-842b-3247e",
             fillColor: Colors.white,
+            validator: controller.validateCode,
           ),
         ),
         IconWidget(

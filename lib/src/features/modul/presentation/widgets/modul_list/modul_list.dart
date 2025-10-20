@@ -11,8 +11,6 @@ class ModulList extends StatelessWidget {
   Widget build(BuildContext context) {
     final ModulController controller = Get.find<ModulController>();
 
-    controller.refreshModulList(); //refresh ketika rebuild
-
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

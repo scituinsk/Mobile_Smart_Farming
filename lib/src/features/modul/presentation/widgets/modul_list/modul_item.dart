@@ -60,21 +60,28 @@ class ModulItem extends StatelessWidget {
               Row(
                 spacing: 9,
                 children: [
-                  DisplayChip(
-                    paddingHorizontal: 9,
-                    paddingVertical: 9,
-                    backgroundColor: AppTheme.surfaceColor,
-                    child: Row(
-                      spacing: 4,
-                      children: [
-                        CustomIcon(type: MyCustomIcon.waterPump, size: 24),
-                        Text(
-                          true ? "Aktif" : "Non-aktif",
-                          style: AppTheme.textSmallMedium,
-                        ),
-                      ],
-                    ),
-                  ),
+                  (modul.features != null &&
+                          modul.features!.any((f) => f.name == 'water_pump'))
+                      ? DisplayChip(
+                          paddingHorizontal: 9,
+                          paddingVertical: 9,
+                          backgroundColor: AppTheme.surfaceColor,
+                          child: Row(
+                            spacing: 4,
+                            children: [
+                              CustomIcon(
+                                type: MyCustomIcon.waterPump,
+                                size: 24,
+                              ),
+                              Text(
+                                "Water Pump",
+                                style: AppTheme.textSmallMedium,
+                              ),
+                            ],
+                          ),
+                        )
+                      : SizedBox.shrink(),
+
                   FilledButton.icon(
                     onPressed: () => Get.toNamed(RouteNamed.solenoidPage),
                     label: Text("Detail Solenoid"),
@@ -95,7 +102,12 @@ class ModulItem extends StatelessWidget {
       spacing: 9,
       children: [
         ...modul.features!.map((feature) {
-          return (feature.name != "schedule")
+          final bool ifFeature =
+              feature.name == "temperature" ||
+              feature.name == "humidity" ||
+              feature.name == "water_level";
+
+          return (ifFeature)
               ? DisplayChip(
                   paddingHorizontal: 9,
                   paddingVertical: 9,
@@ -116,12 +128,14 @@ class ModulItem extends StatelessWidget {
 
   MyCustomIcon _getFeatureIcon(String? featureName) {
     switch (featureName?.toLowerCase()) {
-      case 'temprature':
+      case 'temperature':
         return MyCustomIcon.temprature;
       case "water_level":
         return MyCustomIcon.waterLevel;
       case 'humidity':
         return MyCustomIcon.waterPH;
+      case "water_pump":
+        return MyCustomIcon.waterPump;
       default:
         return MyCustomIcon.solenoid;
     }

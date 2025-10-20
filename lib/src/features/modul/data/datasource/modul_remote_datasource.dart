@@ -9,10 +9,12 @@ abstract class ModulRemoteDatasource {
   Future<ModulModel?> editModul(
     String id, {
     String? name,
+    String? password,
     String? description,
     String? imagePath,
   });
-  Future<void> deleteDeviceFromUser(String id);
+  Future<void> deleteModulFromUser(String id);
+  Future<ModulModel?> addModulToUser(String id, String password);
 }
 
 class ModulRemoteDatasourceImpl implements ModulRemoteDatasource {
@@ -31,7 +33,19 @@ class ModulRemoteDatasourceImpl implements ModulRemoteDatasource {
   @override
   Future<ModulModel?> getModul(String id) async {
     final response = await _apiService.get('/iot/device/$id/');
-    final responseData = response.data['data'] as Map<String, dynamic>;
+    final responseData = await response.data['data'] as Map<String, dynamic>;
+
+    return ModulModel.fromJson(responseData);
+  }
+
+  @override
+  Future<ModulModel?> addModulToUser(String id, String password) async {
+    final response = await _apiService.post(
+      '/iot/device/$id/',
+      data: {"password": password},
+    );
+
+    final responseData = await response.data['data'] as Map<String, dynamic>;
 
     return ModulModel.fromJson(responseData);
   }
@@ -75,7 +89,7 @@ class ModulRemoteDatasourceImpl implements ModulRemoteDatasource {
   }
 
   @override
-  Future<void> deleteDeviceFromUser(String id) async {
+  Future<void> deleteModulFromUser(String id) async {
     await _apiService.delete('/iot/device/$id/');
   }
 }

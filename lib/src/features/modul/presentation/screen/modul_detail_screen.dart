@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:pak_tani/src/core/config/app_config.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
@@ -28,229 +29,256 @@ class ModulDetailScreen extends StatelessWidget {
         child: SizedBox(
           width: mediaQueryWidth,
           height: mediaQueryHeight,
-          child: Stack(
-            children: [
-              SizedBox(
-                height: 318,
-                child: Stack(
-                  children: [
-                    Obx(() {
-                      final modul = controller.modul.value;
-                      late ImageProvider imageProvider;
-                      if (modul != null) {
-                        imageProvider = modul.image != null
-                            ? NetworkImage(
-                                "https://smartfarmingapi.teknohole.com${modul.image}",
-                              )
-                            : const AssetImage(
-                                'assets/image/default_modul.jpg',
-                              );
-                      } else {
-                        imageProvider = const AssetImage(
-                          'assets/image/default_modul.jpg',
+          child: Obx(() {
+            if (controller.isLoading.value) {
+              return Center(child: CircularProgressIndicator());
+            }
+
+            return Stack(
+              children: [
+                SizedBox(
+                  height: 318,
+                  child: Stack(
+                    children: [
+                      Obx(() {
+                        final modul = controller.modul.value;
+                        late ImageProvider imageProvider;
+                        if (modul != null) {
+                          imageProvider = modul.image != null
+                              ? NetworkImage((AppConfig.baseUrl + modul.image!))
+                              : const AssetImage(
+                                  'assets/image/default_modul.jpg',
+                                );
+                        } else {
+                          imageProvider = const AssetImage(
+                            'assets/image/default_modul.jpg',
+                          );
+                        }
+
+                        return Image(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            }
+
+                            return Center(child: CircularProgressIndicator());
+                          },
                         );
-                      }
+                      }),
 
-                      return Image(
-                        image: imageProvider,
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: double.infinity,
-                      );
-                    }),
-
-                    // Image.asset(
-                    //   'assets/image/default_modul.jpg',
-
-                    // ),
-                    Container(
-                      height: 318,
-                      width: mediaQueryWidth,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.transparent,
-                            Colors.black.withValues(alpha: 0.7),
-                          ],
-                          stops: [0.4, 1.0], // Atur posisi transisi gradient
+                      Container(
+                        height: 318,
+                        width: mediaQueryWidth,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withValues(alpha: 0.7),
+                            ],
+                            stops: [0.4, 1.0], // Atur posisi transisi gradient
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 18,
-                        horizontal: 30,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [MyBackButton(), ModulDetailDropdownMenu()],
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 40,
-                      left: 30,
-                      right: 30,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          DisplayChip(
-                            paddingHorizontal: 14,
-                            child: Row(
-                              spacing: 5,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                CustomIcon(type: MyCustomIcon.greenHouse),
-                                Obx(
-                                  () => Text(
-                                    controller.modul.value != null
-                                        ? controller.modul.value!.name
-                                        : "Green House A",
-                                    style: AppTheme.textMedium.copyWith(
-                                      color: AppTheme.primaryColor,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          DisplayChip(
-                            paddingHorizontal: 10,
-                            child: Row(
-                              spacing: 5,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                CustomIcon(type: MyCustomIcon.batteryMax),
-                                Text("75%", style: AppTheme.textMedium),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                child: Container(
-                  height: mediaQueryHeight - 328,
-                  width: mediaQueryWidth,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
-                    ),
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      spacing: 14,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ModulDetailContentWidget(
-                          title: "Kode Modul",
-                          content: Text(
-                            "018bd6f8-7d8b-7132-842b-3247e",
-                            style: AppTheme.textDefault,
-                          ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 18,
+                          horizontal: 30,
                         ),
-                        ModulDetailContentWidget(
-                          title: "Deskripsi Modul",
-                          content: Text(
-                            "Modul ini dibuat khusus untuk melakukan penyiraman di lokasi Green House A sebelah Timur, yang berisikan tanaman hidroponik melon, untuk jadwal penyiraman. ",
-                            style: AppTheme.textDefault,
-                            textAlign: TextAlign.justify,
-                          ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [MyBackButton(), ModulDetailDropdownMenu()],
                         ),
-                        ModulDetailContentWidget(
-                          title: "Fitur Modul",
-                          content: Row(
-                            spacing: 20,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: ModulDetailFeatureItem(
-                                  title: "Solenoid",
-                                  myCustomIcon: MyCustomIcon.solenoid,
-                                  child: DisplayChip(
-                                    paddingHorizontal: 16,
-                                    backgroundColor: AppTheme.primaryColor,
-                                    onPressed: () {
-                                      Get.toNamed(RouteNamed.solenoidPage);
-                                    },
-                                    child: Row(
-                                      spacing: 4,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          "Detail",
-                                          style: AppTheme.text.copyWith(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        Icon(
-                                          LucideIcons.arrowRight,
-                                          color: Colors.white,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: ModulDetailFeatureItem(
-                                  title: "Water Pump",
-                                  myCustomIcon: MyCustomIcon.waterPump,
-                                  child: DisplayChip(
-                                    paddingHorizontal: 16,
-                                    backgroundColor: AppTheme.waterPumpColor,
-                                    onPressed: () {},
-                                    child: Text(
-                                      "Aktif",
-                                      style: AppTheme.text.copyWith(
+                      ),
+                      Positioned(
+                        bottom: 40,
+                        left: 30,
+                        right: 30,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            DisplayChip(
+                              paddingHorizontal: 14,
+                              child: Row(
+                                spacing: 5,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  CustomIcon(type: MyCustomIcon.greenHouse),
+                                  Obx(
+                                    () => Text(
+                                      controller.modul.value != null
+                                          ? controller.modul.value!.name
+                                          : "Green House A",
+                                      style: AppTheme.textMedium.copyWith(
                                         color: AppTheme.primaryColor,
                                       ),
                                     ),
                                   ),
+                                ],
+                              ),
+                            ),
+                            Obx(() {
+                              final content = controller.modul.value?.features
+                                  ?.firstWhereOrNull(
+                                    (element) => element.name == "battery",
+                                  );
+
+                              if (content == null) {
+                                return SizedBox.shrink();
+                              }
+
+                              return DisplayChip(
+                                paddingHorizontal: 10,
+                                child: Row(
+                                  spacing: 5,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    CustomIcon(type: MyCustomIcon.batteryMax),
+                                    Text(
+                                      "${content.data}%",
+                                      style: AppTheme.textMedium,
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
+                              );
+                            }),
+                          ],
                         ),
-                        ModulDetailContentWidget(
-                          title: "Data Modul",
-                          content: Column(
-                            spacing: 20,
-                            children: [
-                              ModulDetailDataItem(
-                                myCustomIcon: MyCustomIcon.temprature,
-                                title: "Suhu",
-                                data: "26°C",
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  child: Container(
+                    height: mediaQueryHeight - 328,
+                    width: mediaQueryWidth,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                    child: SingleChildScrollView(
+                      child: Obx(() {
+                        final content = controller.modul.value!;
+
+                        return Column(
+                          spacing: 14,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ModulDetailContentWidget(
+                              title: "Kode Modul",
+                              content: Text(
+                                content.serialId,
+                                style: AppTheme.textDefault,
                               ),
-                              ModulDetailDataItem(
-                                myCustomIcon: MyCustomIcon.waterPH,
-                                title: "Kelembapan",
-                                data: "60 %",
+                            ),
+                            ModulDetailContentWidget(
+                              title: "Deskripsi Modul",
+                              content: Text(
+                                content.description ?? "",
+                                style: AppTheme.textDefault,
+                                textAlign: TextAlign.justify,
                               ),
-                              ModulDetailDataItem(
-                                myCustomIcon: MyCustomIcon.waterLevel,
-                                title: "Level Air",
-                                data: "83 %",
+                            ),
+                            ModulDetailContentWidget(
+                              title: "Fitur Modul",
+                              content: Row(
+                                spacing: 20,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: ModulDetailFeatureItem(
+                                      title: "Solenoid",
+                                      myCustomIcon: MyCustomIcon.solenoid,
+                                      child: DisplayChip(
+                                        paddingHorizontal: 16,
+                                        backgroundColor: AppTheme.primaryColor,
+                                        onPressed: () {
+                                          Get.toNamed(RouteNamed.solenoidPage);
+                                        },
+                                        child: Row(
+                                          spacing: 4,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              "Detail",
+                                              style: AppTheme.text.copyWith(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            Icon(
+                                              LucideIcons.arrowRight,
+                                              color: Colors.white,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: ModulDetailFeatureItem(
+                                      title: "Water Pump",
+                                      myCustomIcon: MyCustomIcon.waterPump,
+                                      child: DisplayChip(
+                                        paddingHorizontal: 16,
+                                        backgroundColor:
+                                            AppTheme.waterPumpColor,
+                                        onPressed: () {},
+                                        child: Text(
+                                          "Aktif",
+                                          style: AppTheme.text.copyWith(
+                                            color: AppTheme.primaryColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                      ],
+                            ),
+                            ModulDetailContentWidget(
+                              title: "Data Modul",
+                              content: Column(
+                                spacing: 20,
+                                children: [
+                                  ModulDetailDataItem(
+                                    myCustomIcon: MyCustomIcon.temprature,
+                                    title: "Suhu",
+                                    data: "26°C",
+                                  ),
+                                  ModulDetailDataItem(
+                                    myCustomIcon: MyCustomIcon.waterPH,
+                                    title: "Kelembapan",
+                                    data: "60 %",
+                                  ),
+                                  ModulDetailDataItem(
+                                    myCustomIcon: MyCustomIcon.waterLevel,
+                                    title: "Level Air",
+                                    data: "83 %",
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            );
+          }),
         ),
       ),
     );

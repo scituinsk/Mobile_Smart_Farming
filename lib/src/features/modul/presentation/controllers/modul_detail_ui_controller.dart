@@ -26,6 +26,17 @@ class ModulDetailUiController extends GetxController {
   }
 
   Future<void> getDevice(String id) async {
-    await _controller.getSelectedDevice(id);
+    await _controller.getSelectedModul(id);
+  }
+
+  Future<void> deleteDevice() async {
+    try {
+      await _controller.deleteModul(modul.value!.serialId);
+      Get.back();
+      Get.snackbar("success", "berhasil menghapus modul dari user ini");
+    } catch (e) {
+      print("error (ui controller): $e");
+      Get.snackbar("Error!", e.toString());
+    }
   }
 }

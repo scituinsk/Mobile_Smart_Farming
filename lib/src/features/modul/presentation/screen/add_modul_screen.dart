@@ -48,45 +48,58 @@ class AddModulScreen extends StatelessWidget {
         width: mediaQueryWidth,
         height: mediaQueryHeight,
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          spacing: 30,
-          children: [
-            Column(
-              spacing: 20,
-              children: [
-                AddModulCodeInput(
-                  title: "Kode Modul",
-                  hintText: "Ex: 018bd6f8-7d8b-7132-842b-3247e",
-                ),
-                MyTextField(
-                  title: "Password Modul",
-                  hint: "Ex: paktani1",
-                  fillColor: Colors.white,
-                  controller: controller.modulPasswordController,
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              spacing: 8,
-              children: [
-                FilledButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(Colors.white),
+        child: Form(
+          key: controller.formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 30,
+            children: [
+              Column(
+                spacing: 20,
+                children: [
+                  AddModulCodeInput(
+                    title: "Kode Modul",
+                    hintText: "Ex: 018bd6f8-7d8b-7132-842b-3247e",
                   ),
-                  child: Text(
-                    "Batal",
-                    style: TextStyle(color: AppTheme.primaryColor),
+                  MyTextField(
+                    title: "Password Modul",
+                    hint: "Ex: paktani1",
+                    fillColor: Colors.white,
+                    controller: controller.modulPasswordController,
+                    validator: controller.validatePassword,
                   ),
-                ),
-                FilledButton(onPressed: () {}, child: Text("Simpan")),
-              ],
-            ),
-          ],
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                spacing: 8,
+                children: [
+                  FilledButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Colors.white),
+                    ),
+                    child: Text(
+                      "Batal",
+                      style: TextStyle(color: AppTheme.primaryColor),
+                    ),
+                  ),
+                  Obx(
+                    () => FilledButton(
+                      onPressed: controller.isSubmitting.value
+                          ? null
+                          : () => controller.handleAddModul(),
+                      child: controller.isSubmitting.value
+                          ? CircularProgressIndicator()
+                          : Text('Tambah Modul'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/config/app_config.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/icon_widget.dart';
@@ -30,7 +31,7 @@ class DashboardAppbar extends StatelessWidget {
               print(user.image);
               final ImageProvider imageProvider = user.image != null
                   ? NetworkImage(
-                      "https://smartfarmingapi.teknohole.com${authController.currentUser.value!.image!}",
+                      "${AppConfig.baseUrl}${authController.currentUser.value!.image!}",
                     )
                   : const AssetImage('assets/image/default_profile.jpg');
 
