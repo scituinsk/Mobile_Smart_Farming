@@ -247,27 +247,13 @@ class ModulDetailScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            ModulDetailContentWidget(
-                              title: "Data Modul",
-                              content: Column(
-                                spacing: 20,
-                                children: [
-                                  ModulDetailDataItem(
-                                    myCustomIcon: MyCustomIcon.temprature,
-                                    title: "Suhu",
-                                    data: "26°C",
-                                  ),
-                                  ModulDetailDataItem(
-                                    myCustomIcon: MyCustomIcon.waterPH,
-                                    title: "Kelembapan",
-                                    data: "60 %",
-                                  ),
-                                  ModulDetailDataItem(
-                                    myCustomIcon: MyCustomIcon.waterLevel,
-                                    title: "Level Air",
-                                    data: "83 %",
-                                  ),
-                                ],
+                            Obx(
+                              () => ModulDetailContentWidget(
+                                title: "Data Modul",
+                                content: Column(
+                                  spacing: 20,
+                                  children: _buildModulDataItems(controller),
+                                ),
                               ),
                             ),
                           ],
@@ -282,5 +268,44 @@ class ModulDetailScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<Widget> _buildModulDataItems(ModulDetailUiController controller) {
+    final dataItems = <Widget>[];
+
+    final modulData = controller.modulData.value;
+    if (modulData != null) {
+      if (modulData.temperature != null) {
+        dataItems.add(
+          ModulDetailDataItem(
+            myCustomIcon: MyCustomIcon.temprature,
+            title: "Suhu",
+            data: "${modulData.temperature}°C",
+          ),
+        );
+      }
+      if (modulData.humidity != null) {
+        dataItems.add(
+          ModulDetailDataItem(
+            myCustomIcon: MyCustomIcon.waterPH,
+            title: "Kelembapan",
+            data: "${modulData.humidity} %",
+          ),
+        );
+      }
+      if (modulData.waterLevel != null) {
+        dataItems.add(
+          ModulDetailDataItem(
+            myCustomIcon: MyCustomIcon.waterLevel,
+            title: "Level Air",
+            data: "${modulData.waterLevel} %",
+          ),
+        );
+      }
+    } else {
+      dataItems.add(Text("modul kosong"));
+    }
+
+    return dataItems;
   }
 }

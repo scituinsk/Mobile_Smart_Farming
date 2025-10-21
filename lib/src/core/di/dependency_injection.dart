@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/services/api_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
+import 'package:pak_tani/src/core/services/web_socket_service.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/get_user_use_case.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/login_use_case.dart';
@@ -28,6 +29,10 @@ class DependencyInjection {
       await apiService.onInit();
       Get.put<ApiService>(apiService, permanent: true);
       print('   ✅ ApiService ready');
+
+      print('   - Initializing websocket...');
+      Get.put<WebSocketService>(WebSocketService(), permanent: true);
+      print('   ✅ wsService ready');
 
       // ===== LAYER 2: DATA SOURCES =====
       print('   - Registering Auth DataSources...');
