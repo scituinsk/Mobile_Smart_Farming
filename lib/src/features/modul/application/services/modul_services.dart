@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:get/get.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/domain/repositories/modul_repository.dart';
@@ -97,7 +99,7 @@ class ModulServices extends GetxService {
     String? name,
     String? password,
     String? description,
-    String? imagePath,
+    File? imageFile,
   }) async {
     isLoading.value = true;
     try {
@@ -105,7 +107,7 @@ class ModulServices extends GetxService {
         id,
         name: name,
         description: description,
-        imagePath: imagePath,
+        imageFile: imageFile,
         password: password,
       );
       if (modul != null) {

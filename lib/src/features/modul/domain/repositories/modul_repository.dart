@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 
 abstract class ModulRepository {
@@ -9,7 +11,7 @@ abstract class ModulRepository {
     String? name,
     String? password,
     String? description,
-    String? imagePath,
+    File? imageFile,
   });
 
   Future<void> deleteModulFromUser(String id);

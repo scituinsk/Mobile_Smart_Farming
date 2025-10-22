@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 class Modul extends Equatable {
   final String id;
   final String name;
-  final String? description;
+  final String? descriptions;
   final String serialId;
   final List<DeviceFeature>? features;
   final String createdAt;
@@ -11,7 +11,7 @@ class Modul extends Equatable {
   const Modul({
     required this.id,
     required this.name,
-    this.description,
+    this.descriptions,
     required this.serialId,
     this.features,
     required this.createdAt,
@@ -22,7 +22,7 @@ class Modul extends Equatable {
   List<Object?> get props => [
     id,
     name,
-    description,
+    descriptions,
     serialId,
     features,
     createdAt,
@@ -32,19 +32,19 @@ class Modul extends Equatable {
 
 class DeviceFeature extends Equatable {
   final String name;
-  final String? description;
+  final String? descriptions;
   final String data;
 
   const DeviceFeature({
     required this.name,
-    this.description,
+    this.descriptions,
     required this.data,
   });
 
   @override
-  List<Object?> get props => [name, description];
+  List<Object?> get props => [name, descriptions];
 
   @override
   String toString() =>
-      "DeviceFeature(name: $name, description: $description, )";
+      "DeviceFeature(name: $name, description: $descriptions, )";
 }

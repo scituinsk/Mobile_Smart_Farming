@@ -185,7 +185,7 @@ class ModulDetailScreen extends StatelessWidget {
                             ModulDetailContentWidget(
                               title: "Deskripsi Modul",
                               content: Text(
-                                content.description ?? "",
+                                content.descriptions ?? "",
                                 style: AppTheme.textDefault,
                                 textAlign: TextAlign.justify,
                               ),
@@ -247,10 +247,10 @@ class ModulDetailScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            Obx(
-                              () => ModulDetailContentWidget(
-                                title: "Data Modul",
-                                content: Column(
+                            ModulDetailContentWidget(
+                              title: "Data Modul",
+                              content: Obx(
+                                () => Column(
                                   spacing: 20,
                                   children: _buildModulDataItems(controller),
                                 ),

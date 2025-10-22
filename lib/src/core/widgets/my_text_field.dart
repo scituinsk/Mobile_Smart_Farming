@@ -12,7 +12,8 @@ class MyTextField extends StatefulWidget {
   final Color fillColor;
   final bool obscureText;
   final TextEditingController? controller;
-  final String? Function(String?)? validator; // Tambahkan validator
+  final String? Function(String?)? validator;
+  final void Function(String)? onChanged;
 
   const MyTextField({
     super.key,
@@ -27,6 +28,7 @@ class MyTextField extends StatefulWidget {
     this.obscureText = false,
     this.controller,
     this.validator, // Tambahkan validator
+    this.onChanged,
   });
 
   @override
@@ -113,6 +115,7 @@ class _MyTextFieldState extends State<MyTextField> {
               hintStyle: TextStyle(color: AppTheme.onDefaultColor),
               errorText: _errorText, // Tambahkan errorText
             ),
+            onChanged: widget.onChanged,
           ),
         ),
       ],

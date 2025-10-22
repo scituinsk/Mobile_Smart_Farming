@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:get/get.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_services.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
@@ -32,6 +34,34 @@ class ModulController extends GetxController {
       await _modulServices.addModul(id, password);
     } catch (e) {
       print('error(controller): $e');
+      rethrow;
+    }
+  }
+
+  Future<void> editModul(
+    String id, {
+    String? name,
+    String? description,
+    File? imageFile,
+  }) async {
+    try {
+      await _modulServices.editModul(
+        id,
+        name: name,
+        description: description,
+        imageFile: imageFile,
+      );
+    } catch (e) {
+      print("error(controller): $e");
+      rethrow;
+    }
+  }
+
+  Future<void> editPasswordModul(String id, {String? password}) async {
+    try {
+      await _modulServices.editModul(id, password: password);
+    } catch (e) {
+      print("error(controller): $e");
       rethrow;
     }
   }

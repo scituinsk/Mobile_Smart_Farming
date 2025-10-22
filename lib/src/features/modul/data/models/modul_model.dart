@@ -4,7 +4,7 @@ class ModulModel extends Modul {
   const ModulModel({
     required super.id,
     required super.name,
-    super.description,
+    super.descriptions,
     required super.serialId,
     super.features,
     required super.createdAt,
@@ -15,7 +15,7 @@ class ModulModel extends Modul {
     return ModulModel(
       id: json['id'].toString(),
       name: json['name'] ?? '',
-      description: json['description'],
+      descriptions: json['descriptions'],
       serialId: json['serial_id'] ?? '',
       features: _parseFeatures(json['feature']),
       createdAt: json['created_at'] ?? DateTime.now(),
@@ -27,7 +27,7 @@ class ModulModel extends Modul {
     return {
       'id': id,
       'name': name,
-      'description': description,
+      'descriptions': descriptions,
       'serial_id': serialId,
       'features': features,
       'created_at': createdAt,
@@ -39,7 +39,7 @@ class ModulModel extends Modul {
     return ModulModel(
       id: modul.id,
       name: modul.name,
-      description: modul.description,
+      descriptions: modul.descriptions,
       serialId: modul.serialId,
       features: modul.features,
       createdAt: modul.createdAt,
@@ -51,7 +51,7 @@ class ModulModel extends Modul {
     return Modul(
       id: id,
       name: name,
-      description: description,
+      descriptions: descriptions,
       serialId: serialId,
       features: features,
       createdAt: createdAt,
@@ -74,7 +74,7 @@ class ModulModel extends Modul {
       try {
         final feature = DeviceFeature(
           name: featureItem['name'].toString(),
-          description: featureItem["descriptions"]?.toString(),
+          descriptions: featureItem["descriptions"]?.toString(),
           data: featureItem['data'].toString(),
         );
         features.add(feature);

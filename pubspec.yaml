@@ -49,6 +49,8 @@ dependencies:
   ai_barcode_scanner: ^7.1.0
   flutter_dotenv: ^6.0.0
   web_socket_channel: ^3.0.3
+  image_cropper: ^11.0.0
+  image_picker: ^1.2.0
 
 dev_dependencies:
   flutter_test:

@@ -92,7 +92,10 @@ class AddModulScreen extends StatelessWidget {
                           ? null
                           : () => controller.handleAddModul(),
                       child: controller.isSubmitting.value
-                          ? CircularProgressIndicator()
+                          ? Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: CircularProgressIndicator(),
+                            )
                           : Text('Tambah Modul'),
                     ),
                   ),

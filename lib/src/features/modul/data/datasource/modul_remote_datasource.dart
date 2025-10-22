@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:get/get.dart' hide FormData, MultipartFile, Response;
 import 'package:dio/dio.dart';
 import 'package:pak_tani/src/core/services/api_service.dart';
 import 'package:pak_tani/src/features/modul/data/models/modul_model.dart';
+import 'package:path/path.dart' as p;
 
 abstract class ModulRemoteDatasource {
   Future<List<ModulModel>?> getListModuls();
@@ -11,7 +14,7 @@ abstract class ModulRemoteDatasource {
     String? name,
     String? password,
     String? description,
-    String? imagePath,
+    File? imageFile,
   });
   Future<void> deleteModulFromUser(String id);
   Future<ModulModel?> addModulToUser(String id, String password);
@@ -56,22 +59,22 @@ class ModulRemoteDatasourceImpl implements ModulRemoteDatasource {
     String? name,
     String? password,
     String? description,
-    String? imagePath,
+    File? imageFile,
   }) async {
     Response response;
-    if (imagePath != null && imagePath.isNotEmpty) {
+    if (imageFile != null) {
       final formData = FormData.fromMap({
         if (name != null) 'name': name,
         if (password != null) 'password': password,
-        if (description != null) 'description': description,
+        if (description != null) 'descriptions': description,
         'image': await MultipartFile.fromFile(
-          imagePath,
-          filename: imagePath.split('/').last,
+          imageFile.path,
+          filename: p.basename(imageFile.path),
         ),
       });
 
       response = await _apiService.patch(
-        '/iot/device/$id',
+        '/iot/device/$id/',
         data: formData,
         options: Options(headers: {'Content-Type': 'multipart/form-data'}),
       );
@@ -80,7 +83,7 @@ class ModulRemoteDatasourceImpl implements ModulRemoteDatasource {
 
       if (name != null) requestData['name'] = name;
       if (password != null) requestData['password'] = password;
-      if (description != null) requestData['description'] = description;
+      if (description != null) requestData['descriptions'] = description;
 
       response = await _apiService.patch('/iot/device/$id/', data: requestData);
     }

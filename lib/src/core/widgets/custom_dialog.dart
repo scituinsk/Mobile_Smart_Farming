@@ -11,6 +11,7 @@ class CustomDialog {
   }) {
     Get.dialog(
       Dialog(
+        insetPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Container(
           height: height,
@@ -29,13 +30,10 @@ class CustomDialog {
                     bottom: BorderSide(color: Colors.grey.shade300, width: 1),
                   ),
                 ),
-                margin: EdgeInsets.fromLTRB(20, 20, 20, 15),
+                margin: EdgeInsets.fromLTRB(20, 20, 20, 12),
                 child: title,
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
-                child: child,
-              ),
+              Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 8), child: child),
             ],
           ),
         ),

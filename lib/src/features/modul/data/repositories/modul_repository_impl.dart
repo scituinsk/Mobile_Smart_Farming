@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:pak_tani/src/features/modul/data/datasource/modul_remote_datasource.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/domain/repositories/modul_repository.dart';
@@ -57,14 +59,14 @@ class ModulRepositoryImpl implements ModulRepository {
     String? name,
     String? password,
     String? description,
-    String? imagePath,
+    File? imageFile,
   }) async {
     try {
       final modul = await remoteDatasource.editModul(
         id,
         name: name,
         description: description,
-        imagePath: imagePath,
+        imageFile: imageFile,
         password: password,
       );
       if (modul == null) return null;
