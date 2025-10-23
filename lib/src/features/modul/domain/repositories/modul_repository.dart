@@ -1,15 +1,18 @@
+import 'dart:io';
+
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 
 abstract class ModulRepository {
-  Future<List<Modul>>? getListDevices();
-  Future<Modul?> getDevice(String id);
-  Future<Modul> editDevice(
+  Future<List<Modul>?>? getListModul();
+  Future<Modul?> getModul(String id);
+  Future<Modul?> addModulToUSer(String id, String password);
+  Future<Modul?> editModul(
     String id, {
     String? name,
+    String? password,
     String? description,
-    String? imagePath,
+    File? imageFile,
   });
-  Future<void> deleteDeviceFromUser(String id);
-  Future<String> scanQr();
-  // Future<>
+
+  Future<void> deleteModulFromUser(String id);
 }

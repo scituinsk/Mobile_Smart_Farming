@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
+import 'package:pak_tani/src/features/modul/presentation/controllers/add_modul_ui_controller.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/add_modul_form/add_modul_code_input.dart';
 
 class AddModulScreen extends StatelessWidget {
@@ -12,6 +13,7 @@ class AddModulScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final mediaQueryWidth = Get.width;
     final mediaQueryHeight = Get.height;
+    final controller = Get.put(AddModulUiController());
 
     return Scaffold(
       appBar: AppBar(
@@ -46,44 +48,61 @@ class AddModulScreen extends StatelessWidget {
         width: mediaQueryWidth,
         height: mediaQueryHeight,
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          spacing: 30,
-          children: [
-            Column(
-              spacing: 20,
-              children: [
-                AddModulCodeInput(
-                  title: "Kode Modul",
-                  hintText: "Ex: 018bd6f8-7d8b-7132-842b-3247e",
-                ),
-                MyTextField(
-                  title: "Nama Modul",
-                  hint: "Ex: Green House A",
-                  fillColor: Colors.white,
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              spacing: 8,
-              children: [
-                FilledButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(Colors.white),
+        child: Form(
+          key: controller.formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 30,
+            children: [
+              Column(
+                spacing: 20,
+                children: [
+                  AddModulCodeInput(
+                    title: "Kode Modul",
+                    hintText: "Ex: 018bd6f8-7d8b-7132-842b-3247e",
                   ),
-                  child: Text(
-                    "Batal",
-                    style: TextStyle(color: AppTheme.primaryColor),
+                  MyTextField(
+                    title: "Password Modul",
+                    hint: "Ex: paktani1",
+                    fillColor: Colors.white,
+                    controller: controller.modulPasswordController,
+                    validator: controller.validatePassword,
                   ),
-                ),
-                FilledButton(onPressed: () {}, child: Text("Simpan")),
-              ],
-            ),
-          ],
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                spacing: 8,
+                children: [
+                  FilledButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(Colors.white),
+                    ),
+                    child: Text(
+                      "Batal",
+                      style: TextStyle(color: AppTheme.primaryColor),
+                    ),
+                  ),
+                  Obx(
+                    () => FilledButton(
+                      onPressed: controller.isSubmitting.value
+                          ? null
+                          : () => controller.handleAddModul(),
+                      child: controller.isSubmitting.value
+                          ? Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: CircularProgressIndicator(),
+                            )
+                          : Text('Tambah Modul'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

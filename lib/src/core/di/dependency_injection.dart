@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/services/api_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
+import 'package:pak_tani/src/core/services/web_socket_service.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/get_user_use_case.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/login_use_case.dart';
@@ -28,6 +29,10 @@ class DependencyInjection {
       await apiService.onInit();
       Get.put<ApiService>(apiService, permanent: true);
       print('   ✅ ApiService ready');
+
+      print('   - Initializing websocket...');
+      Get.put<WebSocketService>(WebSocketService(), permanent: true);
+      print('   ✅ wsService ready');
 
       // ===== LAYER 2: DATA SOURCES =====
       print('   - Registering Auth DataSources...');
@@ -61,11 +66,15 @@ class DependencyInjection {
 
       // ===== LAYER 5: BUSINESS SERVICES =====
       print('   - Initializing AuthService...');
-      final authService = AuthService();
-      Get.put<AuthService>(authService, permanent: true);
 
-      // ✅ Initialize AuthService and wait for completion
-      await authService.onInit();
+      // ✅ Use putAsync to ensure proper initialization sequence
+      await Get.putAsync<AuthService>(() async {
+        final authService = AuthService();
+        // ✅ Wait for AuthService initialization to complete
+        await authService.onInit();
+        return authService;
+      }, permanent: true);
+
       print('   ✅ AuthService ready');
 
       // ===== LAYER 6: PRESENTATION CONTROLLERS =====
@@ -85,12 +94,25 @@ class DependencyInjection {
       // ✅ Check core dependencies
       Get.find<StorageService>();
       Get.find<ApiService>();
-      Get.find<AuthService>();
 
-      // ✅ Check if AuthService is properly initialized
+      // ✅ Check if AuthService exists and is ready
+      if (!Get.isRegistered<AuthService>()) {
+        print('⏳ AuthService not registered yet');
+        return false;
+      }
+
       final authService = Get.find<AuthService>();
+
+      // ✅ Check if AuthService is still initializing
       if (authService.isLoading.value) {
-        return false; // Still initializing
+        print('⏳ AuthService still initializing...');
+        return false;
+      }
+
+      // ✅ Check if AuthService initialization is complete
+      if (!authService.isReady) {
+        print('⏳ AuthService not ready yet');
+        return false;
       }
 
       return true;

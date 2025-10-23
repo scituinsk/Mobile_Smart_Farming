@@ -1,25 +1,50 @@
-class Modul {
+import 'package:equatable/equatable.dart';
+
+class Modul extends Equatable {
   final String id;
   final String name;
-  final String? description;
+  final String? descriptions;
   final String serialId;
-  final Map<String, dynamic>? features;
+  final List<DeviceFeature>? features;
   final String createdAt;
-  Modul({
+  final String? image;
+  const Modul({
     required this.id,
     required this.name,
-    this.description,
+    this.descriptions,
     required this.serialId,
     this.features,
     required this.createdAt,
+    this.image,
   });
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Modul && other.id == id; // Cuma compare ID
-  }
+  List<Object?> get props => [
+    id,
+    name,
+    descriptions,
+    serialId,
+    features,
+    createdAt,
+    image,
+  ];
+}
+
+class DeviceFeature extends Equatable {
+  final String name;
+  final String? descriptions;
+  final String data;
+
+  const DeviceFeature({
+    required this.name,
+    this.descriptions,
+    required this.data,
+  });
 
   @override
-  int get hashCode => id.hashCode; // Cuma hash ID
+  List<Object?> get props => [name, descriptions];
+
+  @override
+  String toString() =>
+      "DeviceFeature(name: $name, description: $descriptions, )";
 }

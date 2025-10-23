@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:pak_tani/src/core/config/app_config.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_dialog.dart';
 import 'package:pak_tani/src/core/widgets/icon_widget.dart';
 import 'package:pak_tani/src/core/widgets/my_filled_button.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
+import 'package:pak_tani/src/features/modul/presentation/controllers/modul_detail_ui_controller.dart';
 
 class MenuItem {
   final String text;
@@ -18,8 +21,12 @@ abstract class ModulDetailDropdownMenuItems {
     text: "Delete Modul",
     icon: Icons.delete_rounded,
   );
+  static const editPasswordIcon = MenuItem(
+    text: "Edit password",
+    icon: Icons.key,
+  );
 
-  static const List<MenuItem> items = [editIcon, deleteIcon];
+  static const List<MenuItem> items = [editIcon, editPasswordIcon, deleteIcon];
 
   static Widget buildItem(MenuItem item) {
     return item == deleteIcon
@@ -54,76 +61,171 @@ abstract class ModulDetailDropdownMenuItems {
           );
   }
 
+  static Future<void> _showImageSourceBottomSheet(BuildContext context) async {
+    final controller = Get.find<ModulDetailUiController>();
+    await showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Pilih Sumber Gambar', style: AppTheme.h4),
+              SizedBox(height: 20),
+              ListTile(
+                leading: Icon(Icons.camera_alt, color: AppTheme.primaryColor),
+                title: Text('Kamera', style: AppTheme.text),
+                onTap: () async {
+                  Get.back();
+                  await controller.pickAndCropImage(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.photo_library,
+                  color: AppTheme.primaryColor,
+                ),
+                title: Text('Galeri', style: AppTheme.text),
+                onTap: () async {
+                  Get.back();
+                  await controller.pickAndCropImage(ImageSource.gallery);
+                },
+              ),
+              SizedBox(height: 10),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   static void onChanged(BuildContext context, MenuItem item) {
+    final controller = Get.find<ModulDetailUiController>();
+
     switch (item) {
       case ModulDetailDropdownMenuItems.editIcon:
+        controller.selectedImage.value = null;
         CustomDialog.show(
           widthTitle: 240,
-          height: 506,
           context: context,
           title: Text("Edit Modul", style: AppTheme.h4),
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              spacing: 10,
-              children: [
-                MyTextField(
-                  fieldWidth: 240,
-                  title: "Nama Modul",
-                  hint: "Ex: Green House A",
-                  borderRadius: 10,
-                ),
-                MyTextField(
-                  fieldWidth: 240,
-                  title: "Deskripsi Modul",
-                  hint: "Ex: Green house timur",
-                  borderRadius: 10,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Gambar Modul", style: AppTheme.h4),
-                    Stack(
-                      children: [
-                        Container(
-                          clipBehavior: Clip.hardEdge,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
+            child: Form(
+              key: controller.formKeyEdit,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                spacing: 10,
+                children: [
+                  MyTextField(
+                    fieldWidth: 240,
+                    title: "Nama Modul",
+                    validator: controller.validateName,
+                    controller: controller.modulNameC,
+                    hint: "Ex: Green House A",
+                    borderRadius: 10,
+                  ),
+                  MyTextField(
+                    fieldWidth: 240,
+                    title: "Deskripsi Modul",
+                    controller: controller.modulDescriptionC,
+                    hint: "Ex: Green house timur",
+                    borderRadius: 10,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Gambar Modul", style: AppTheme.h4),
+                      Stack(
+                        children: [
+                          Obx(() {
+                            final modul = controller.modul.value;
+                            final selectedImage =
+                                controller.selectedImage.value;
+                            late ImageProvider imageProvider;
+                            if (selectedImage == null) {
+                              if (modul != null) {
+                                imageProvider = modul.image != null
+                                    ? NetworkImage(
+                                        (AppConfig.baseUrl + modul.image!),
+                                      )
+                                    : const AssetImage(
+                                        'assets/image/default_modul.jpg',
+                                      );
+                              } else {
+                                imageProvider = const AssetImage(
+                                  'assets/image/default_modul.jpg',
+                                );
+                              }
+                            } else {
+                              imageProvider = FileImage(selectedImage);
+                            }
+
+                            return Container(
+                              clipBehavior: Clip.hardEdge,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              height: 164,
+                              width: 240,
+                              child: Image(image: imageProvider),
+                            );
+                          }),
+                          Positioned(
+                            right: 8,
+                            top: 8,
+                            child: IconWidget(
+                              icon: Icons.edit,
+                              backgroundColor: AppTheme.primaryColor,
+                              iconColor: Colors.white,
+                              padding: 6,
+                              onPressed: () {
+                                _showImageSourceBottomSheet(context);
+                              },
+                            ),
                           ),
-                          height: 164,
-                          width: 240,
-                          child: Image.asset('assets/image/default_modul.jpg'),
-                        ),
-                        Positioned(
-                          right: 10,
-                          top: 10,
-                          child: IconWidget(
-                            icon: Icons.edit,
-                            onPressed: () {
-                              print("object");
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    MyFilledButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      backgroundColor: Colors.white,
-                      title: "Batal",
-                      textColor: AppTheme.primaryColor,
-                    ),
-                    MyFilledButton(onPressed: () {}, title: "Simpan"),
-                  ],
-                ),
-              ],
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      MyFilledButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        backgroundColor: Colors.white,
+                        title: "Batal",
+                        textColor: AppTheme.primaryColor,
+                      ),
+                      Obx(() {
+                        final enabled = controller.isEditFormValid.value;
+                        final loading = controller.isSubmitting.value;
+                        return FilledButton(
+                          onPressed: enabled && !loading
+                              ? () => controller.handleEditModul()
+                              : null,
+                          child: loading
+                              ? SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text("Simpan"),
+                        );
+                      }),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -173,13 +275,81 @@ abstract class ModulDetailDropdownMenuItems {
                     ),
                     MyFilledButton(
                       title: "Hapus",
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.back();
+                        final controller = Get.find<ModulDetailUiController>();
+                        controller.deleteDevice();
+                      },
                       backgroundColor: AppTheme.errorColor,
                       textColor: Colors.white,
                     ),
                   ],
                 ),
               ],
+            ),
+          ),
+        );
+        break;
+      case ModulDetailDropdownMenuItems.editPasswordIcon:
+        controller.isPasswordFormValid.value = false;
+        CustomDialog.show(
+          widthTitle: 240,
+          // height: 300,
+          context: context,
+          title: Text("Edit password", style: AppTheme.h4),
+          child: SingleChildScrollView(
+            child: Form(
+              key: controller.formKeyPassword,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                spacing: 10,
+                children: [
+                  MyTextField(
+                    fieldWidth: 240,
+                    title: "Password baru",
+                    controller: controller.modulNewPassC,
+                    validator: controller.validatePassword,
+                    hint: "Ex: PakTani1",
+                    borderRadius: 10,
+                  ),
+                  MyTextField(
+                    fieldWidth: 240,
+                    title: "Konfirmasi password",
+                    controller: controller.modulConfirmNewPassC,
+                    validator: controller.validateConfirmPassword,
+                    hint: "Ex: PakTani1",
+                    borderRadius: 10,
+                  ),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      MyFilledButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        backgroundColor: Colors.white,
+                        title: "Batal",
+                        textColor: AppTheme.primaryColor,
+                      ),
+                      Obx(() {
+                        final enabled = controller.isPasswordFormValid.value;
+                        final loading = controller.isSubmitting.value;
+                        return FilledButton(
+                          onPressed: enabled && !loading
+                              ? () => controller.handleEditPassword()
+                              : null,
+                          child: loading
+                              ? CircularProgressIndicator(
+                                  padding: EdgeInsets.all(5),
+                                )
+                              : Text("Simpan"),
+                        );
+                      }),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         );
