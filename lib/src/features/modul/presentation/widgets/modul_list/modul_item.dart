@@ -116,7 +116,12 @@ class ModulItem extends StatelessWidget {
                     spacing: 4,
                     children: [
                       CustomIcon(type: _getFeatureIcon(feature.name), size: 24),
-                      Text(feature.data, style: AppTheme.textSmallMedium),
+                      Text(
+                        feature.name == "temperature"
+                            ? "${feature.data}°C"
+                            : "${feature.data}%",
+                        style: AppTheme.textSmallMedium,
+                      ),
                     ],
                   ),
                 )

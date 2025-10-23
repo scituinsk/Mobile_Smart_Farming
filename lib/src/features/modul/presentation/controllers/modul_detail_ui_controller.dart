@@ -43,6 +43,8 @@ class ModulDetailUiController extends GetxController {
   final RxBool isPasswordFormValid = false.obs;
   final RxBool isEditFormValid = false.obs;
 
+  Worker? _imageWorker;
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -75,6 +77,11 @@ class ModulDetailUiController extends GetxController {
     modulDescriptionC.addListener(_checkEditFormValidity);
     modulNewPassC.addListener(_checkPasswordFormValidity);
     modulConfirmNewPassC.addListener(_checkPasswordFormValidity);
+
+    _imageWorker = ever(selectedImage, (_) {
+      print("selected image changed: ${selectedImage.value!.path}");
+      _checkEditFormValidity();
+    });
   }
 
   void _disposeFormController() {
@@ -83,6 +90,8 @@ class ModulDetailUiController extends GetxController {
     modulDescriptionC.removeListener(_checkEditFormValidity);
     modulNewPassC.removeListener(_checkPasswordFormValidity);
     modulConfirmNewPassC.removeListener(_checkPasswordFormValidity);
+
+    _imageWorker?.dispose();
 
     modulNameC.dispose();
     modulDescriptionC.dispose();

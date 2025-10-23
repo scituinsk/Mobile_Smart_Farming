@@ -25,6 +25,7 @@ class ModulDetailScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: SizedBox(
           width: mediaQueryWidth,
@@ -156,109 +157,120 @@ class ModulDetailScreen extends StatelessWidget {
                 ),
                 Positioned(
                   bottom: 0,
-                  child: Container(
-                    height: mediaQueryHeight - 328,
-                    width: mediaQueryWidth,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
+                  child: MediaQuery(
+                    data: MediaQuery.of(
+                      context,
+                    ).copyWith(viewInsets: EdgeInsets.zero),
+                    child: Container(
+                      height: mediaQueryHeight - 328,
+                      width: mediaQueryWidth,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
                       ),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-                    child: SingleChildScrollView(
-                      child: Obx(() {
-                        final content = controller.modul.value!;
+                      padding: EdgeInsets.symmetric(
+                        vertical: 20,
+                        horizontal: 30,
+                      ),
+                      child: SingleChildScrollView(
+                        child: Obx(() {
+                          final content = controller.modul.value!;
 
-                        return Column(
-                          spacing: 14,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ModulDetailContentWidget(
-                              title: "Kode Modul",
-                              content: Text(
-                                content.serialId,
-                                style: AppTheme.textDefault,
+                          return Column(
+                            spacing: 14,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ModulDetailContentWidget(
+                                title: "Kode Modul",
+                                content: Text(
+                                  content.serialId,
+                                  style: AppTheme.textDefault,
+                                ),
                               ),
-                            ),
-                            ModulDetailContentWidget(
-                              title: "Deskripsi Modul",
-                              content: Text(
-                                content.descriptions ?? "",
-                                style: AppTheme.textDefault,
-                                textAlign: TextAlign.justify,
+                              ModulDetailContentWidget(
+                                title: "Deskripsi Modul",
+                                content: Text(
+                                  content.descriptions ?? "",
+                                  style: AppTheme.textDefault,
+                                  textAlign: TextAlign.justify,
+                                ),
                               ),
-                            ),
-                            ModulDetailContentWidget(
-                              title: "Fitur Modul",
-                              content: Row(
-                                spacing: 20,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: ModulDetailFeatureItem(
-                                      title: "Solenoid",
-                                      myCustomIcon: MyCustomIcon.solenoid,
-                                      child: DisplayChip(
-                                        paddingHorizontal: 16,
-                                        backgroundColor: AppTheme.primaryColor,
-                                        onPressed: () {
-                                          Get.toNamed(RouteNamed.solenoidPage);
-                                        },
-                                        child: Row(
-                                          spacing: 4,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              "Detail",
-                                              style: AppTheme.text.copyWith(
+                              ModulDetailContentWidget(
+                                title: "Fitur Modul",
+                                content: Row(
+                                  spacing: 20,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: ModulDetailFeatureItem(
+                                        title: "Solenoid",
+                                        myCustomIcon: MyCustomIcon.solenoid,
+                                        child: DisplayChip(
+                                          paddingHorizontal: 16,
+                                          backgroundColor:
+                                              AppTheme.primaryColor,
+                                          onPressed: () {
+                                            Get.toNamed(
+                                              RouteNamed.solenoidPage,
+                                            );
+                                          },
+                                          child: Row(
+                                            spacing: 4,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                "Detail",
+                                                style: AppTheme.text.copyWith(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              Icon(
+                                                LucideIcons.arrowRight,
                                                 color: Colors.white,
                                               ),
-                                            ),
-                                            Icon(
-                                              LucideIcons.arrowRight,
-                                              color: Colors.white,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: ModulDetailFeatureItem(
-                                      title: "Water Pump",
-                                      myCustomIcon: MyCustomIcon.waterPump,
-                                      child: DisplayChip(
-                                        paddingHorizontal: 16,
-                                        backgroundColor:
-                                            AppTheme.waterPumpColor,
-                                        onPressed: () {},
-                                        child: Text(
-                                          "Aktif",
-                                          style: AppTheme.text.copyWith(
-                                            color: AppTheme.primaryColor,
+                                            ],
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            ModulDetailContentWidget(
-                              title: "Data Modul",
-                              content: Obx(
-                                () => Column(
-                                  spacing: 20,
-                                  children: _buildModulDataItems(controller),
+                                    Expanded(
+                                      child: ModulDetailFeatureItem(
+                                        title: "Water Pump",
+                                        myCustomIcon: MyCustomIcon.waterPump,
+                                        child: DisplayChip(
+                                          paddingHorizontal: 16,
+                                          backgroundColor:
+                                              AppTheme.waterPumpColor,
+                                          onPressed: () {},
+                                          child: Text(
+                                            "Aktif",
+                                            style: AppTheme.text.copyWith(
+                                              color: AppTheme.primaryColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                          ],
-                        );
-                      }),
+                              ModulDetailContentWidget(
+                                title: "Data Modul",
+                                content: Obx(
+                                  () => Column(
+                                    spacing: 20,
+                                    children: _buildModulDataItems(controller),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
+                      ),
                     ),
                   ),
                 ),
