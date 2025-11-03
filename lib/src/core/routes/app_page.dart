@@ -9,7 +9,7 @@ import 'package:pak_tani/src/features/modul/presentation/screen/modul_detail_scr
 import 'package:pak_tani/src/features/modul/presentation/screen/qr_scann_screen.dart';
 import 'package:pak_tani/src/features/notification/presentation/screens/notification_screen.dart';
 import 'package:pak_tani/src/features/scheduling/presentation/screens/scheduling_screen.dart';
-import 'package:pak_tani/src/features/solenoid/presentation/screens/solenoid_screen.dart';
+import 'package:pak_tani/src/features/scheduling/presentation/screens/solenoid_screen.dart';
 
 class AppPage {
   static final pages = [

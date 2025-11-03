@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
-import 'package:pak_tani/src/features/scheduling/presentation/widgets/add_schedule_sheet.dart';
-import 'package:pak_tani/src/features/scheduling/presentation/widgets/schedule_list.dart';
+import 'package:pak_tani/src/features/scheduling/presentation/widgets/schedule_widgets/add_schedule_sheet.dart';
+import 'package:pak_tani/src/features/scheduling/presentation/widgets/schedule_widgets/schedule_list.dart';
 
 class SchedulingScreen extends StatelessWidget {
   const SchedulingScreen({super.key});

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pak_tani/src/features/solenoid/presentation/widgets/selenoid_item.dart';
+import 'package:pak_tani/src/features/scheduling/presentation/widgets/solenoid_widgets/selenoid_item.dart';
 
 class SolenoidList extends StatelessWidget {
   const SolenoidList({super.key});

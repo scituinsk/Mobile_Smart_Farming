@@ -4,7 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
-import 'package:pak_tani/src/features/scheduling/presentation/widgets/build_day_chip.dart';
+import 'package:pak_tani/src/features/scheduling/presentation/widgets/schedule_widgets/build_day_chip.dart';
 
 class EditScheduleSheet {
   static void show(BuildContext context) {
