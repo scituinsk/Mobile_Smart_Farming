@@ -24,7 +24,7 @@ class ModulsScreen extends StatelessWidget {
             child: Column(
               spacing: 26,
               mainAxisSize: MainAxisSize.min,
-              children: [DashboardAppbar(), FilterModul(), ModulList()],
+              children: [DashboardAppbar(), ModulList()],
             ),
           ),
 

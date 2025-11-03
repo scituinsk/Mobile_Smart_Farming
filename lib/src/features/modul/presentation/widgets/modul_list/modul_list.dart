@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_controller.dart';
-import 'package:pak_tani/src/features/modul/presentation/widgets/modul_list/modul_item.dart';
+import 'package:pak_tani/src/features/modul/presentation/widgets/modul_list/home_module_item.dart';
 
 class ModulList extends StatelessWidget {
   const ModulList({super.key});
@@ -19,7 +19,7 @@ class ModulList extends StatelessWidget {
           // ✅ Header with device count (reactive)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("Daftar Modul", style: AppTheme.h4)],
+            children: [Text("Daftar Modul", style: AppTheme.h3)],
           ),
 
           // ✅ Reactive list
@@ -69,7 +69,7 @@ class ModulList extends StatelessWidget {
               return RefreshIndicator(
                 onRefresh: () => controller.refreshModulList(),
                 child: ListView.builder(
-                  padding: EdgeInsets.only(bottom: 60),
+                  padding: EdgeInsets.only(bottom: 100),
                   itemCount: controller.devices.length,
                   itemBuilder: (context, index) {
                     final device = controller.devices[index];
@@ -77,7 +77,7 @@ class ModulList extends StatelessWidget {
 
                     return Column(
                       children: [
-                        ModulItem(modul: device),
+                        HomeModuleItem(modul: device),
                         SizedBox(height: 20),
                       ],
                     );
