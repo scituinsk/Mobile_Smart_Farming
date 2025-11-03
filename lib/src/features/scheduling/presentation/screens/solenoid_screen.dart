@@ -7,8 +7,8 @@ import 'package:pak_tani/src/core/widgets/custom_dialog.dart';
 import 'package:pak_tani/src/core/widgets/icon_widget.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
 import 'package:pak_tani/src/core/widgets/my_filled_button.dart';
-import 'package:pak_tani/src/features/solenoid/presentation/widgets/solenoid_list.dart';
-import 'package:pak_tani/src/features/solenoid/presentation/widgets/solenoid_setting_sheet.dart';
+import 'package:pak_tani/src/features/scheduling/presentation/widgets/solenoid_widgets/solenoid_list.dart';
+import 'package:pak_tani/src/features/scheduling/presentation/widgets/solenoid_widgets/solenoid_setting_sheet.dart';
 
 class SolenoidScreen extends StatelessWidget {
   const SolenoidScreen({super.key});
