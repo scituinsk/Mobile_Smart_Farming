@@ -10,7 +10,6 @@ import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/services/web_socket_service.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
-import 'package:pak_tani/src/features/modul/domain/entities/modul_data.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_controller.dart';
 
 class ModulDetailUiController extends GetxController {
@@ -28,7 +27,7 @@ class ModulDetailUiController extends GetxController {
   final _storage = Get.find<StorageService>();
   final _wsService = Get.find<WebSocketService>();
 
-  final Rxn<ModulData> modulData = Rxn<ModulData>();
+  // final Rxn<ModulData> modulData = Rxn<ModulData>();
 
   // edit modul text editing controller
   late TextEditingController modulNameC;
@@ -81,7 +80,7 @@ class ModulDetailUiController extends GetxController {
     modulConfirmNewPassC.addListener(_checkPasswordFormValidity);
 
     _imageWorker = ever(selectedImage, (_) {
-      print("selected image changed: ${selectedImage.value!.path}");
+      // print("selected image changed: ${selectedImage.value!.path}");
       _checkEditFormValidity();
     });
   }
@@ -118,11 +117,10 @@ class ModulDetailUiController extends GetxController {
       (raw) {
         try {
           final json = jsonDecode(raw as String) as Map<String, dynamic>;
-          final data = ModulData.fromJson(json);
-          modulData.value = data;
+          _updateFeatureData(json);
 
           print(
-            "T=${data.temperature}, H=${data.humidity}, B=${data.battery}, W=${data.waterLevel}",
+            "T=${json['temperature_data']}, H=${json['humidity_data']}, B=${json['battery_data']}, W=${json['water_level_data']}",
           );
         } catch (e) {
           print("parse error: $e | raw=$raw");
@@ -134,6 +132,62 @@ class ModulDetailUiController extends GetxController {
     );
 
     _ws.value?.send("STREAMING_ON");
+  }
+
+  void _updateFeatureData(Map<String, dynamic> wsData) {
+    final currentModul = modul.value;
+    if (currentModul?.features == null) return;
+
+    final updatedFeatures = currentModul!.features!.map((feature) {
+      String newData = feature.data;
+
+      switch (feature.name.toLowerCase()) {
+        case 'temperature':
+          newData = wsData['temperature_data']?.toString() ?? feature.data;
+          break;
+        case 'humidity':
+          newData = wsData['humidity_data']?.toString() ?? feature.data;
+          break;
+        case 'water_level':
+          newData = wsData['water_level_data']?.toString() ?? feature.data;
+          break;
+        case 'battery':
+          newData = wsData['battery_data']?.toString() ?? feature.data;
+          break;
+        default:
+          newData = feature.data;
+      }
+
+      return DeviceFeature(
+        name: feature.name,
+        data: newData,
+        descriptions: feature.descriptions,
+      );
+    }).toList();
+
+    final Modul updatedModul = Modul(
+      id: currentModul.id,
+      name: currentModul.name,
+      descriptions: currentModul.descriptions,
+      serialId: currentModul.serialId,
+      features: updatedFeatures,
+      createdAt: currentModul.createdAt,
+      image: currentModul.image,
+    );
+
+    // Update selectedDevice
+    _controller.selectedDevice.value = updatedModul;
+    final idx = _controller.devices.indexWhere(
+      (device) => device.serialId == modul.value!.serialId,
+    );
+    if (idx != -1) {
+      _controller.devices[idx] = updatedModul;
+    }
+
+    // Force refresh dengan berbagai cara
+    _controller.selectedDevice.refresh();
+    _controller.update(); // Update parent controller juga
+    update();
   }
 
   Future<void> getDevice(String id) async {

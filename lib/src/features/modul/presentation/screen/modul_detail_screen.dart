@@ -1,19 +1,14 @@
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/config/app_config.dart';
-import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/core/widgets/custom_icon.dart';
-import 'package:pak_tani/src/core/widgets/display_chip.dart';
+import 'package:pak_tani/src/core/widgets/battery_status.dart';
 import 'package:pak_tani/src/core/widgets/expandable_button.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_detail_ui_controller.dart';
-import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_content_widget.dart';
-import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_data_item.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_dropdown_menu.dart';
-import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_feature_item.dart';
+import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_feature_section.dart';
 
 class ModulDetailScreen extends StatelessWidget {
   const ModulDetailScreen({super.key});
@@ -91,26 +86,32 @@ class ModulDetailScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           vertical: 18,
-                          horizontal: 20,
+                          horizontal: 15,
                         ),
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             MyBackButton(),
                             Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               spacing: 5,
                               children: [
                                 Obx(
                                   () => ExpandableButton(
+                                    width: 180,
+                                    onExpandChanged: (isExpanded) =>
+                                        controller.isTitleExpanded.value =
+                                            isExpanded,
                                     child: Text(
                                       controller.modul.value!.name,
                                       style: AppTheme.h4.copyWith(
                                         color: Colors.white,
                                       ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: true,
                                     ),
-                                    onExpandChanged: (isExpanded) =>
-                                        controller.isTitleExpanded.value =
-                                            isExpanded,
                                   ),
                                 ),
                                 Obx(() {
@@ -126,23 +127,11 @@ class ModulDetailScreen extends StatelessWidget {
                                     return SizedBox.shrink();
                                   }
 
-                                  return DisplayChip(
-                                    paddingHorizontal: 5,
-                                    child: Row(
-                                      spacing: 3,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        CustomIcon(
-                                          type: MyCustomIcon.batteryMax,
-                                          size: 25,
-                                        ),
-                                        Text(
-                                          "${content.data}%",
-                                          style: AppTheme.textMedium,
-                                        ),
-                                      ],
-                                    ),
-                                  );
+                                  final percent =
+                                      int.tryParse(content.data.toString()) ??
+                                      0;
+
+                                  return BatteryStatus(percent: percent);
                                 }),
                               ],
                             ),
@@ -159,16 +148,16 @@ class ModulDetailScreen extends StatelessWidget {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             BlurryContainer(
-                              child: Text(
-                                controller.modul.value!.serialId,
-                                style: TextStyle(color: Colors.white),
-                              ),
                               blur: 10,
 
                               color: Colors.transparent,
                               padding: const EdgeInsets.all(8),
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(20),
+                              ),
+                              child: Text(
+                                controller.modul.value!.serialId,
+                                style: TextStyle(color: Colors.white),
                               ),
                             ),
                           ],
@@ -180,7 +169,7 @@ class ModulDetailScreen extends StatelessWidget {
                 Positioned(
                   left: 20,
                   right: 20,
-                  top: 70,
+                  top: 82,
                   child: AnimatedSwitcher(
                     duration: Duration(milliseconds: 300),
                     switchInCurve: Curves.easeOut,
@@ -199,181 +188,70 @@ class ModulDetailScreen extends StatelessWidget {
                     child: controller.isTitleExpanded.value
                         ? BlurryContainer(
                             key: const ValueKey('expandedDescription'),
-                            blur: 25,
-                            padding: const EdgeInsets.all(16),
-                            child: Text(
-                              controller.modul.value!.descriptions ?? "",
-                              style: AppTheme.text.copyWith(
-                                color: Colors.white,
-                              ),
+                            blur: 10,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 9,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Stack(
+                                  children: [
+                                    // Outline hitam
+                                    Text(
+                                      controller.modul.value!.name,
+                                      style: AppTheme.h4.copyWith(
+                                        foreground: Paint()
+                                          ..style = PaintingStyle.stroke
+                                          ..strokeWidth = 1
+                                          ..color = Colors.black,
+                                      ),
+                                    ),
+                                    // Text putih di atas
+                                    Text(
+                                      controller.modul.value!.name,
+                                      style: AppTheme.h4.copyWith(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Stack(
+                                  children: [
+                                    // Outline hitam untuk deskripsi
+                                    Text(
+                                      controller.modul.value!.descriptions ??
+                                          "",
+                                      style: AppTheme.text.copyWith(
+                                        foreground: Paint()
+                                          ..style = PaintingStyle.stroke
+                                          ..strokeWidth = 0.8
+                                          ..color = Colors.black,
+                                      ),
+                                    ),
+                                    // Text putih di atas
+                                    Text(
+                                      controller.modul.value!.descriptions ??
+                                          "",
+                                      style: AppTheme.text.copyWith(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           )
                         : const SizedBox.shrink(key: ValueKey('collapsed')),
                   ),
                 ),
-                Positioned(
-                  bottom: 0,
-                  child: MediaQuery(
-                    data: MediaQuery.of(
-                      context,
-                    ).copyWith(viewInsets: EdgeInsets.zero),
-                    child: Container(
-                      height: mediaQueryHeight - 328,
-                      width: mediaQueryWidth,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        vertical: 20,
-                        horizontal: 30,
-                      ),
-                      child: SingleChildScrollView(
-                        child: Obx(() {
-                          final content = controller.modul.value!;
-
-                          return Column(
-                            spacing: 14,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ModulDetailContentWidget(
-                                title: "Kode Modul",
-                                content: Text(
-                                  content.serialId,
-                                  style: AppTheme.textDefault,
-                                ),
-                              ),
-                              ModulDetailContentWidget(
-                                title: "Deskripsi Modul",
-                                content: Text(
-                                  content.descriptions ?? "",
-                                  style: AppTheme.textDefault,
-                                  textAlign: TextAlign.justify,
-                                ),
-                              ),
-                              ModulDetailContentWidget(
-                                title: "Fitur Modul",
-                                content: Row(
-                                  spacing: 20,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: ModulDetailFeatureItem(
-                                        title: "Solenoid",
-                                        myCustomIcon: MyCustomIcon.solenoid,
-                                        child: DisplayChip(
-                                          paddingHorizontal: 16,
-                                          backgroundColor:
-                                              AppTheme.primaryColor,
-                                          onPressed: () {
-                                            Get.toNamed(
-                                              RouteNamed.solenoidPage,
-                                            );
-                                          },
-                                          child: Row(
-                                            spacing: 4,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(
-                                                "Detail",
-                                                style: AppTheme.text.copyWith(
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              Icon(
-                                                LucideIcons.arrowRight,
-                                                color: Colors.white,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: ModulDetailFeatureItem(
-                                        title: "Water Pump",
-                                        myCustomIcon: MyCustomIcon.waterPump,
-                                        child: DisplayChip(
-                                          paddingHorizontal: 16,
-                                          backgroundColor:
-                                              AppTheme.waterPumpColor,
-                                          onPressed: () {},
-                                          child: Text(
-                                            "Aktif",
-                                            style: AppTheme.text.copyWith(
-                                              color: AppTheme.primaryColor,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              ModulDetailContentWidget(
-                                title: "Data Modul",
-                                content: Obx(
-                                  () => Column(
-                                    spacing: 20,
-                                    children: _buildModulDataItems(controller),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        }),
-                      ),
-                    ),
-                  ),
-                ),
+                Positioned.fill(top: 298, child: ModulDetailFeatureSection()),
               ],
             );
           }),
         ),
       ),
     );
-  }
-
-  List<Widget> _buildModulDataItems(ModulDetailUiController controller) {
-    final dataItems = <Widget>[];
-
-    final modulData = controller.modulData.value;
-    if (modulData != null) {
-      if (modulData.temperature != null) {
-        dataItems.add(
-          ModulDetailDataItem(
-            myCustomIcon: MyCustomIcon.temprature,
-            title: "Suhu",
-            data: "${modulData.temperature}°C",
-          ),
-        );
-      }
-      if (modulData.humidity != null) {
-        dataItems.add(
-          ModulDetailDataItem(
-            myCustomIcon: MyCustomIcon.waterPH,
-            title: "Kelembapan",
-            data: "${modulData.humidity} %",
-          ),
-        );
-      }
-      if (modulData.waterLevel != null) {
-        dataItems.add(
-          ModulDetailDataItem(
-            myCustomIcon: MyCustomIcon.waterLevel,
-            title: "Level Air",
-            data: "${modulData.waterLevel} %",
-          ),
-        );
-      }
-    } else {
-      dataItems.add(Text("modul kosong"));
-    }
-
-    return dataItems;
   }
 }

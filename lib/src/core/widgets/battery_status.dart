@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 
 class BatteryStatus extends StatelessWidget {
   final int percent;
@@ -19,11 +19,13 @@ class BatteryStatus extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         spacing: 4,
         children: [
-          SvgPicture.asset(
-            percent > 50
-                ? 'assets/icons/fluent-battery-924-regular.svg'
-                : 'assets/icons/fluent-battery-432-regular.svg',
+          CustomIcon(
+            type: percent > 50
+                ? MyCustomIcon.batteryMax
+                : MyCustomIcon.batteryLow,
+            size: 20,
           ),
+
           Text("$percent%", style: AppTheme.textMedium),
         ],
       ),

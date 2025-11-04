@@ -4,7 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_dialog.dart';
-import 'package:pak_tani/src/core/widgets/icon_widget.dart';
+import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
 import 'package:pak_tani/src/core/widgets/my_filled_button.dart';
 import 'package:pak_tani/src/features/scheduling/presentation/widgets/solenoid_widgets/solenoid_list.dart';
@@ -41,7 +41,7 @@ class SolenoidScreen extends StatelessWidget {
         centerTitle: true,
         actionsPadding: EdgeInsets.only(right: 30),
         actions: [
-          IconWidget(
+          MyIcon(
             icon: Icons.settings,
             onPressed: () => SolenoidSettingSheet.show(context),
           ),

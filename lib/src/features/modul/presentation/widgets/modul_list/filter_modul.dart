@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
-import 'package:pak_tani/src/core/widgets/icon_widget.dart';
+import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/core/widgets/search_widget.dart';
 
 class FilterModul extends StatelessWidget {
@@ -20,7 +20,7 @@ class FilterModul extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Expanded(child: SearchWidget()),
-            IconWidget(
+            MyIcon(
               iconSize: 20,
               customIcon: MyCustomIcon.filter,
               padding: 12,

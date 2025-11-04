@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
-import 'package:pak_tani/src/core/widgets/icon_widget.dart';
+import 'package:pak_tani/src/core/widgets/my_icon.dart';
 
 enum NotificationType {
   solenoid,
@@ -33,11 +33,7 @@ class NotificationItem extends StatelessWidget {
         ),
       ),
       child: ListTile(
-        leading: IconWidget(
-          customIcon: _leadingIcon(),
-          iconSize: 32,
-          padding: 5,
-        ),
+        leading: MyIcon(customIcon: _leadingIcon(), iconSize: 32, padding: 5),
         title: Text(_title(), style: AppTheme.text),
         subtitle: Text(
           message,

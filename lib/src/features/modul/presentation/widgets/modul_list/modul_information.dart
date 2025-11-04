@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
-import 'package:pak_tani/src/core/widgets/icon_widget.dart';
+import 'package:pak_tani/src/core/widgets/my_icon.dart';
 
 class ModulInformation extends StatelessWidget {
   final MyCustomIcon customIcon;
@@ -21,7 +21,7 @@ class ModulInformation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        IconWidget(
+        MyIcon(
           padding: 3,
           backgroundColor: AppTheme.surfaceColor,
           customIcon: customIcon,

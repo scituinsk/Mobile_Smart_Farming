@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:pak_tani/src/features/modul/domain/entities/modul_data.dart';
-
 class WebsocketMessage {
   final String type;
   final Map<String, dynamic> data;
@@ -41,13 +39,6 @@ class WebsocketMessage {
   }
 
   String toRawData() => jsonEncode(toJson());
-
-  ModulData? get deviceData {
-    if (data.isNotEmpty) {
-      return ModulData.fromJson(data);
-    }
-    return null;
-  }
 
   @override
   String toString() => "webSocketMessage(type: $type, data: $data)";

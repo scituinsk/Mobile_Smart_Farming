@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class DisplayChip extends StatelessWidget {
+class MyDisplayChip extends StatelessWidget {
   final Color backgroundColor;
   final double paddingVertical;
   final double paddingHorizontal;
   final Widget child;
   final VoidCallback? onPressed;
 
-  const DisplayChip({
+  const MyDisplayChip({
     super.key,
     required this.child,
     this.backgroundColor = Colors.white,

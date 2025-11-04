@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_controller.dart';
-import 'package:pak_tani/src/features/modul/presentation/widgets/modul_list/home_module_item.dart';
+import 'package:pak_tani/src/features/modul/presentation/widgets/modul_list/modul_item.dart';
 
 class ModulList extends StatelessWidget {
   const ModulList({super.key});
@@ -77,7 +77,7 @@ class ModulList extends StatelessWidget {
 
                     return Column(
                       children: [
-                        ModuleItem(modul: device),
+                        ModulItem(modul: device),
                         SizedBox(height: 20),
                       ],
                     );

@@ -51,10 +51,18 @@ String iconAssets(MyCustomIcon type) {
 class CustomIcon extends StatelessWidget {
   final MyCustomIcon type;
   final double size;
-  const CustomIcon({super.key, required this.type, this.size = 28});
+  final Color? color;
+  const CustomIcon({super.key, required this.type, this.size = 28, this.color});
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.asset(iconAssets(type), width: size, height: size);
+    return SvgPicture.asset(
+      iconAssets(type),
+      width: size,
+      height: size,
+      colorFilter: color != null
+          ? ColorFilter.mode(color!, BlendMode.srcIn)
+          : null,
+    );
   }
 }

@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pak_tani/src/core/config/app_config.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_dialog.dart';
-import 'package:pak_tani/src/core/widgets/icon_widget.dart';
+import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_filled_button.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_detail_ui_controller.dart';
@@ -33,7 +33,7 @@ abstract class ModulDetailDropdownMenuItems {
         ? Row(
             spacing: 15,
             children: [
-              IconWidget(
+              MyIcon(
                 icon: item.icon,
                 backgroundColor: AppTheme.errorColor,
                 iconColor: Colors.white,
@@ -48,7 +48,7 @@ abstract class ModulDetailDropdownMenuItems {
         : Row(
             spacing: 15,
             children: [
-              IconWidget(
+              MyIcon(
                 icon: item.icon,
                 backgroundColor: AppTheme.surfaceColor,
                 iconSize: 16,
@@ -110,18 +110,21 @@ abstract class ModulDetailDropdownMenuItems {
       case ModulDetailDropdownMenuItems.editIcon:
         controller.selectedImage.value = null;
         CustomDialog.show(
-          widthTitle: 240,
+          widthTitle: double.infinity,
+          widthChild: double.infinity,
+          dialogMargin: 20,
           context: context,
           title: Text("Edit Modul", style: AppTheme.h4),
           child: SingleChildScrollView(
             child: Form(
               key: controller.formKeyEdit,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 10,
                 children: [
                   MyTextField(
-                    fieldWidth: 240,
+                    fieldWidth: double.infinity,
                     title: "Nama Modul",
                     validator: controller.validateName,
                     controller: controller.modulNameC,
@@ -129,7 +132,7 @@ abstract class ModulDetailDropdownMenuItems {
                     borderRadius: 10,
                   ),
                   MyTextField(
-                    fieldWidth: 240,
+                    fieldWidth: double.infinity,
                     title: "Deskripsi Modul",
                     controller: controller.modulDescriptionC,
                     hint: "Ex: Green house timur",
@@ -177,7 +180,7 @@ abstract class ModulDetailDropdownMenuItems {
                           Positioned(
                             right: 8,
                             top: 8,
-                            child: IconWidget(
+                            child: MyIcon(
                               icon: Icons.edit,
                               backgroundColor: AppTheme.primaryColor,
                               iconColor: Colors.white,
@@ -192,7 +195,7 @@ abstract class ModulDetailDropdownMenuItems {
                     ],
                   ),
                   Row(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       MyFilledButton(
@@ -233,6 +236,7 @@ abstract class ModulDetailDropdownMenuItems {
       case ModulDetailDropdownMenuItems.deleteIcon:
         CustomDialog.show(
           context: context,
+          dialogMargin: 35,
           widthTitle: double.infinity,
           title: Padding(
             padding: const EdgeInsets.only(bottom: 5),

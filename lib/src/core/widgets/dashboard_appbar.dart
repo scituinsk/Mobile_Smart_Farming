@@ -4,7 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
-import 'package:pak_tani/src/core/widgets/icon_widget.dart';
+import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
 
 class DashboardAppbar extends StatelessWidget {
@@ -31,12 +31,12 @@ class DashboardAppbar extends StatelessWidget {
         Row(
           spacing: 12,
           children: [
-            IconWidget(
+            MyIcon(
               icon: LucideIcons.search,
               iconColor: AppTheme.primaryColor,
               onPressed: () {},
             ),
-            IconWidget(
+            MyIcon(
               icon: Icons.notifications,
               iconColor: AppTheme.primaryColor,
               onPressed: () => Get.toNamed(RouteNamed.notificationPage),

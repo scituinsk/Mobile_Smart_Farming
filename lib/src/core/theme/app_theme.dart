@@ -20,6 +20,10 @@ abstract final class AppTheme {
   static const solenoidColor = Color(0xffFFAAF8);
   static const waterPumpColor = Color(0xff9AD16D);
 
+  static const humidityColor = Color(0xff158694);
+  static const temperatureColor = Color(0xffBD0D00);
+  static const waterLevelColor = Color(0xff0055A5);
+
   static const h5 = TextStyle(
     color: textColor,
 

@@ -5,7 +5,9 @@ class ExpandableButton extends StatefulWidget {
   final Color backgroundColor;
   final Color foregroundColor;
   final double borderRadius;
+  final double width;
   final Widget child;
+
   final Function(bool isExpanded)? onExpandChanged;
 
   const ExpandableButton({
@@ -15,6 +17,7 @@ class ExpandableButton extends StatefulWidget {
     this.foregroundColor = Colors.white,
     this.borderRadius = 20,
     this.onExpandChanged,
+    this.width = 180,
   });
 
   @override
@@ -35,15 +38,18 @@ class _ExpandableButtonState extends State<ExpandableButton> {
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        constraints: BoxConstraints(maxWidth: widget.width),
+
         decoration: BoxDecoration(
           color: widget.backgroundColor,
           borderRadius: BorderRadius.circular(widget.borderRadius),
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
+          spacing: 2,
           children: [
-            widget.child,
-            SizedBox(width: 8),
+            Flexible(child: widget.child),
             AnimatedRotation(
               turns: isExpanded ? 0.5 : 0,
               duration: Duration(milliseconds: 200),

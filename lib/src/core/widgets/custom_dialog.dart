@@ -7,14 +7,20 @@ class CustomDialog {
     required Widget title,
     required Widget child,
     double? widthTitle,
+    double? widthChild,
     double? height,
+    double dialogMargin = 5,
   }) {
     Get.dialog(
       Dialog(
-        insetPadding: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+        insetPadding: EdgeInsets.symmetric(
+          vertical: 5,
+          horizontal: dialogMargin,
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Container(
           height: height,
+          constraints: BoxConstraints(maxWidth: 500),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
@@ -33,11 +39,16 @@ class CustomDialog {
                 margin: EdgeInsets.fromLTRB(20, 20, 20, 12),
                 child: title,
               ),
-              Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 8), child: child),
+              Container(
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 8),
+                width: widthChild,
+                child: child,
+              ),
             ],
           ),
         ),
       ),
+
       barrierDismissible: true,
     );
   }
