@@ -14,6 +14,7 @@ enum MyCustomIcon {
   editPencil,
   logoPrimary,
   logoWhite,
+  calendar,
 }
 
 String iconAssets(MyCustomIcon type) {
@@ -38,6 +39,8 @@ String iconAssets(MyCustomIcon type) {
       return "assets/icons/filter.svg";
     case MyCustomIcon.editPencil:
       return "assets/icons/edit-pencil.svg";
+    case MyCustomIcon.calendar:
+      return "assets/icons/calendar.svg";
     case MyCustomIcon.logoPrimary:
       return "assets/logo/logo_primary.svg";
     case MyCustomIcon.logoWhite:

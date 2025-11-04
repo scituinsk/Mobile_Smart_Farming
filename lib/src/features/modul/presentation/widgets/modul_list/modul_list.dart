@@ -77,7 +77,7 @@ class ModulList extends StatelessWidget {
 
                     return Column(
                       children: [
-                        HomeModuleItem(modul: device),
+                        ModuleItem(modul: device),
                         SizedBox(height: 20),
                       ],
                     );

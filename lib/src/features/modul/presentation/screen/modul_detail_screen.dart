@@ -1,3 +1,4 @@
+import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -6,6 +7,7 @@ import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/display_chip.dart';
+import 'package:pak_tani/src/core/widgets/expandable_button.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_detail_ui_controller.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_content_widget.dart';
@@ -89,70 +91,124 @@ class ModulDetailScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           vertical: 18,
-                          horizontal: 30,
+                          horizontal: 20,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [MyBackButton(), ModulDetailDropdownMenu()],
+                          children: [
+                            MyBackButton(),
+                            Row(
+                              spacing: 5,
+                              children: [
+                                Obx(
+                                  () => ExpandableButton(
+                                    child: Text(
+                                      controller.modul.value!.name,
+                                      style: AppTheme.h4.copyWith(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    onExpandChanged: (isExpanded) =>
+                                        controller.isTitleExpanded.value =
+                                            isExpanded,
+                                  ),
+                                ),
+                                Obx(() {
+                                  final content = controller
+                                      .modul
+                                      .value
+                                      ?.features
+                                      ?.firstWhereOrNull(
+                                        (element) => element.name == "battery",
+                                      );
+
+                                  if (content == null) {
+                                    return SizedBox.shrink();
+                                  }
+
+                                  return DisplayChip(
+                                    paddingHorizontal: 5,
+                                    child: Row(
+                                      spacing: 3,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        CustomIcon(
+                                          type: MyCustomIcon.batteryMax,
+                                          size: 25,
+                                        ),
+                                        Text(
+                                          "${content.data}%",
+                                          style: AppTheme.textMedium,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }),
+                              ],
+                            ),
+                            ModulDetailDropdownMenu(),
+                          ],
                         ),
                       ),
                       Positioned(
                         bottom: 40,
-                        left: 30,
+                        left: 15,
                         right: 30,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            DisplayChip(
-                              paddingHorizontal: 14,
-                              child: Row(
-                                spacing: 5,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  CustomIcon(type: MyCustomIcon.greenHouse),
-                                  Obx(
-                                    () => Text(
-                                      controller.modul.value != null
-                                          ? controller.modul.value!.name
-                                          : "Green House A",
-                                      style: AppTheme.textMedium.copyWith(
-                                        color: AppTheme.primaryColor,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                            BlurryContainer(
+                              child: Text(
+                                controller.modul.value!.serialId,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              blur: 10,
+
+                              color: Colors.transparent,
+                              padding: const EdgeInsets.all(8),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(20),
                               ),
                             ),
-                            Obx(() {
-                              final content = controller.modul.value?.features
-                                  ?.firstWhereOrNull(
-                                    (element) => element.name == "battery",
-                                  );
-
-                              if (content == null) {
-                                return SizedBox.shrink();
-                              }
-
-                              return DisplayChip(
-                                paddingHorizontal: 10,
-                                child: Row(
-                                  spacing: 5,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    CustomIcon(type: MyCustomIcon.batteryMax),
-                                    Text(
-                                      "${content.data}%",
-                                      style: AppTheme.textMedium,
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }),
                           ],
                         ),
                       ),
                     ],
+                  ),
+                ),
+                Positioned(
+                  left: 20,
+                  right: 20,
+                  top: 70,
+                  child: AnimatedSwitcher(
+                    duration: Duration(milliseconds: 300),
+                    switchInCurve: Curves.easeOut,
+                    switchOutCurve: Curves.easeIn,
+                    transitionBuilder: (child, animation) {
+                      final offsetAnimation = Tween<Offset>(
+                        begin: const Offset(0, -0.25),
+                        end: Offset.zero,
+                      ).animate(animation);
+
+                      return SlideTransition(
+                        position: offsetAnimation,
+                        child: FadeTransition(opacity: animation, child: child),
+                      );
+                    },
+                    child: controller.isTitleExpanded.value
+                        ? BlurryContainer(
+                            key: const ValueKey('expandedDescription'),
+                            blur: 25,
+                            padding: const EdgeInsets.all(16),
+                            child: Text(
+                              controller.modul.value!.descriptions ?? "",
+                              style: AppTheme.text.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(key: ValueKey('collapsed')),
                   ),
                 ),
                 Positioned(

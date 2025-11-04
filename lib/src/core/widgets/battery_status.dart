@@ -24,7 +24,7 @@ class BatteryStatus extends StatelessWidget {
                 ? 'assets/icons/fluent-battery-924-regular.svg'
                 : 'assets/icons/fluent-battery-432-regular.svg',
           ),
-          Text("$percent %", style: AppTheme.textMedium),
+          Text("$percent%", style: AppTheme.textMedium),
         ],
       ),
     );

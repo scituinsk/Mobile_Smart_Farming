@@ -45,6 +45,8 @@ class ModulDetailUiController extends GetxController {
 
   Worker? _imageWorker;
 
+  final RxBool isTitleExpanded = false.obs;
+
   @override
   Future<void> onInit() async {
     super.onInit();

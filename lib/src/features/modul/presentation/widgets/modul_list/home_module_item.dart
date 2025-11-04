@@ -9,9 +9,9 @@ import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/modul_list/modul_information.dart';
 
-class HomeModuleItem extends StatelessWidget {
+class ModuleItem extends StatelessWidget {
   final Modul modul;
-  const HomeModuleItem({super.key, required this.modul});
+  const ModuleItem({super.key, required this.modul});
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +115,7 @@ class HomeModuleItem extends StatelessWidget {
               feature.name == "temperature" ||
               feature.name == "humidity" ||
               feature.name == "water_level" ||
-              feature.name == "water_pump",
+              feature.name == "schedule",
         )
         .toList();
 
@@ -129,7 +129,7 @@ class HomeModuleItem extends StatelessWidget {
             padding: const EdgeInsets.only(right: 10),
             child: ModulInformation(
               customIcon: _getFeatureIcon(feature.name),
-              information: feature.data,
+              information: _getFeatureData(feature.name, feature.data),
               name: _getFeatureName(feature.name),
               isWaterPump: feature.name == "water_pump",
             ),
@@ -147,8 +147,8 @@ class HomeModuleItem extends StatelessWidget {
         return MyCustomIcon.waterLevel;
       case 'humidity':
         return MyCustomIcon.waterPH;
-      case "water_pump":
-        return MyCustomIcon.waterPump;
+      case "schedule":
+        return MyCustomIcon.calendar;
       default:
         return MyCustomIcon.solenoid;
     }
@@ -162,8 +162,23 @@ class HomeModuleItem extends StatelessWidget {
         return "Water level";
       case 'humidity':
         return "Humidity";
-      case "water_pump":
-        return "Water Pump";
+      case "schedule":
+        return "Penjadwalan";
+      default:
+        return "undifined";
+    }
+  }
+
+  String _getFeatureData(String? featureName, String data) {
+    switch (featureName?.toLowerCase()) {
+      case 'temperature':
+        return "$data°C";
+      case "water_level":
+        return "$data%";
+      case 'humidity':
+        return "$data%";
+      case "schedule":
+        return data;
       default:
         return "undifined";
     }
