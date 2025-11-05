@@ -27,8 +27,6 @@ class ModulDetailUiController extends GetxController {
   final _storage = Get.find<StorageService>();
   final _wsService = Get.find<WebSocketService>();
 
-  // final Rxn<ModulData> modulData = Rxn<ModulData>();
-
   // edit modul text editing controller
   late TextEditingController modulNameC;
   late TextEditingController modulDescriptionC;
@@ -45,6 +43,7 @@ class ModulDetailUiController extends GetxController {
   Worker? _imageWorker;
 
   final RxBool isTitleExpanded = false.obs;
+  final RxBool isQrVisible = false.obs;
 
   @override
   Future<void> onInit() async {

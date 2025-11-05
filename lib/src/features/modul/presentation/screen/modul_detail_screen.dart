@@ -1,11 +1,15 @@
+import 'dart:ui';
+
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/config/app_config.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/battery_status.dart';
 import 'package:pak_tani/src/core/widgets/expandable_button.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
+import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_detail_ui_controller.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_dropdown_menu.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_feature_section.dart';
@@ -140,24 +144,121 @@ class ModulDetailScreen extends StatelessWidget {
                         ),
                       ),
                       Positioned(
-                        bottom: 40,
+                        bottom: 28,
                         left: 15,
-                        right: 30,
+                        right: 15,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            BlurryContainer(
-                              blur: 10,
+                            Obx(
+                              () => TweenAnimationBuilder<double>(
+                                duration: Duration(milliseconds: 100),
+                                curve: Curves.easeInOut,
+                                tween: Tween<double>(
+                                  begin: 0.0,
+                                  end: controller.isQrVisible.value ? 1.0 : 0.0,
+                                ),
+                                builder: (context, value, child) {
+                                  return InkWell(
+                                    onTap: () => controller.isQrVisible.value =
+                                        !controller.isQrVisible.value,
+                                    child: AnimatedContainer(
+                                      duration: Duration(milliseconds: 100),
+                                      height: 52,
+                                      width: controller.isQrVisible.value
+                                          ? 350
+                                          : 320,
+                                      curve: Curves.easeInOut,
+                                      decoration: BoxDecoration(
+                                        color: Color.lerp(
+                                          Colors.transparent,
+                                          Colors.white,
+                                          value,
+                                        ),
+                                        borderRadius:
+                                            const BorderRadius.horizontal(
+                                              left: Radius.circular(20),
+                                              right: Radius.circular(20),
+                                            ),
+                                        border: Border.all(
+                                          color: Color.lerp(
+                                            Colors.white.withValues(alpha: 0.3),
+                                            Colors.transparent,
+                                            value,
+                                          )!,
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            const BorderRadius.horizontal(
+                                              left: Radius.circular(20),
+                                              right: Radius.circular(20),
+                                            ),
+                                        child: BackdropFilter(
+                                          filter: ImageFilter.blur(
+                                            sigmaX: 10 * (1 - value),
+                                            sigmaY: 10 * (1 - value),
+                                          ),
+                                          child: Container(
+                                            padding: const EdgeInsets.all(8),
+                                            child: Row(
+                                              spacing: 6,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Flexible(
+                                                  child: Text(
+                                                    controller
+                                                        .modul
+                                                        .value!
+                                                        .serialId,
+                                                    style: TextStyle(
+                                                      color: Color.lerp(
+                                                        Colors.white,
+                                                        AppTheme.primaryColor,
+                                                        value,
+                                                      ),
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                    maxLines: 1,
+                                                  ),
+                                                ),
 
-                              color: Colors.transparent,
-                              padding: const EdgeInsets.all(8),
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(20),
-                              ),
-                              child: Text(
-                                controller.modul.value!.serialId,
-                                style: TextStyle(color: Colors.white),
+                                                if (value > 0.7)
+                                                  Transform.scale(
+                                                    scale: value,
+                                                    child:
+                                                        controller
+                                                            .isQrVisible
+                                                            .value
+                                                        ? MyIcon(
+                                                            icon: LucideIcons
+                                                                .qrCode,
+                                                            padding: 8,
+                                                            iconSize: 20,
+                                                            iconColor: AppTheme
+                                                                .primaryColor,
+                                                            backgroundColor:
+                                                                AppTheme
+                                                                    .surfaceColor,
+                                                            onPressed: () =>
+                                                                print(
+                                                                  "lihat qr",
+                                                                ),
+                                                          )
+                                                        : null,
+                                                  ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ],

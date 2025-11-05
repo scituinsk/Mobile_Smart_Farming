@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/utils/modul_feature_helper.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_detail_ui_controller.dart';
@@ -53,7 +54,7 @@ class ModulDetailFeatureSection extends StatelessWidget {
                   title: "Relay",
                   icon: Icons.settings,
                   onPressed: () {
-                    print("masnya lho chik");
+                    Get.toNamed(RouteNamed.relayPage);
                   },
                 );
               }

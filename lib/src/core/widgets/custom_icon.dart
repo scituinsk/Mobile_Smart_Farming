@@ -15,6 +15,8 @@ enum MyCustomIcon {
   logoPrimary,
   logoWhite,
   calendar,
+  lightBulb,
+  waterDrop,
 }
 
 String iconAssets(MyCustomIcon type) {
@@ -45,6 +47,10 @@ String iconAssets(MyCustomIcon type) {
       return "assets/logo/logo_primary.svg";
     case MyCustomIcon.logoWhite:
       return "assets/logo/logo_white.svg";
+    case MyCustomIcon.lightBulb:
+      return "assets/icons/lightbulb.svg";
+    case MyCustomIcon.waterDrop:
+      return "assets/icons/water_drop.svg";
   }
 }
 
