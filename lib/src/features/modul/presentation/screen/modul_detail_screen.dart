@@ -290,58 +290,73 @@ class ModulDetailScreen extends StatelessWidget {
                         ? BlurryContainer(
                             key: const ValueKey('expandedDescription'),
                             blur: 10,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 9,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Stack(
-                                  children: [
-                                    // Outline hitam
-                                    Text(
-                                      controller.modul.value!.name,
-                                      style: AppTheme.h4.copyWith(
-                                        foreground: Paint()
-                                          ..style = PaintingStyle.stroke
-                                          ..strokeWidth = 1
-                                          ..color = Colors.black,
-                                      ),
-                                    ),
-                                    // Text putih di atas
-                                    Text(
-                                      controller.modul.value!.name,
-                                      style: AppTheme.h4.copyWith(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
+                            // padding: const EdgeInsets.symmetric(
+                            //   horizontal: 16,
+                            //   vertical: 9,
+                            // ),
+                            padding: EdgeInsetsGeometry.all(0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.3),
+                                  width: 1,
                                 ),
-                                Stack(
-                                  children: [
-                                    // Outline hitam untuk deskripsi
-                                    Text(
-                                      controller.modul.value!.descriptions ??
-                                          "",
-                                      style: AppTheme.text.copyWith(
-                                        foreground: Paint()
-                                          ..style = PaintingStyle.stroke
-                                          ..strokeWidth = 0.8
-                                          ..color = Colors.black,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 9,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Stack(
+                                    children: [
+                                      // Outline hitam
+                                      Text(
+                                        controller.modul.value!.name,
+                                        style: AppTheme.h4.copyWith(
+                                          foreground: Paint()
+                                            ..style = PaintingStyle.stroke
+                                            ..strokeWidth = 1
+                                            ..color = Colors.black,
+                                        ),
                                       ),
-                                    ),
-                                    // Text putih di atas
-                                    Text(
-                                      controller.modul.value!.descriptions ??
-                                          "",
-                                      style: AppTheme.text.copyWith(
-                                        color: Colors.white,
+                                      // Text putih di atas
+                                      Text(
+                                        controller.modul.value!.name,
+                                        style: AppTheme.h4.copyWith(
+                                          color: Colors.white,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                  Stack(
+                                    children: [
+                                      // Outline hitam untuk deskripsi
+                                      Text(
+                                        controller.modul.value!.descriptions ??
+                                            "",
+                                        style: AppTheme.text.copyWith(
+                                          foreground: Paint()
+                                            ..style = PaintingStyle.stroke
+                                            ..strokeWidth = 0.8
+                                            ..color = Colors.black,
+                                        ),
+                                      ),
+                                      // Text putih di atas
+                                      Text(
+                                        controller.modul.value!.descriptions ??
+                                            "",
+                                        style: AppTheme.text.copyWith(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           )
                         : const SizedBox.shrink(key: ValueKey('collapsed')),

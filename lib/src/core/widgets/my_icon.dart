@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 
@@ -30,11 +29,12 @@ class MyIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget iconChild = customIcon != null
-        ? SvgPicture.asset(
-            iconAssets(customIcon!),
-            height: iconSize,
-            width: iconSize,
-          )
+        // ? SvgPicture.asset(
+        //     iconAssets(customIcon!),
+        //     height: iconSize,
+        //     width: iconSize,
+        //   )
+        ? CustomIcon(type: customIcon!, size: iconSize, color: iconColor)
         : Icon(icon, color: iconColor, size: iconSize, weight: iconWeight);
 
     Widget content = Container(

@@ -52,8 +52,15 @@ class RelayItem extends StatelessWidget {
               width: 12,
               height: 12,
               decoration: BoxDecoration(
-                color: status ? Colors.green : Colors.red,
+                color: status ? Colors.lightGreenAccent : Colors.red,
                 shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: status ? Colors.lightGreenAccent : Colors.red,
+                    blurRadius: 2,
+                    spreadRadius: 1,
+                  ),
+                ],
               ),
             ),
           ),

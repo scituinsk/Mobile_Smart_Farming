@@ -38,6 +38,7 @@ class ModulDetailDataItem extends StatelessWidget {
             children: [
               MyIcon(
                 customIcon: myCustomIcon,
+                iconColor: color,
                 backgroundColor: color.withValues(alpha: 0.2),
               ),
               Text(title, style: AppTheme.h4),
