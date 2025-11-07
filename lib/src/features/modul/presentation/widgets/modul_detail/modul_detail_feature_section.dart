@@ -3,6 +3,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/utils/modul_feature_helper.dart';
+import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_detail_ui_controller.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_data_item.dart';
@@ -45,7 +46,7 @@ class ModulDetailFeatureSection extends StatelessWidget {
             gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
             ),
-            itemCount: modulDatas.length + 1,
+            itemCount: modulDatas.length + 2,
             mainAxisSpacing: 8,
             crossAxisSpacing: 8,
             itemBuilder: (context, index) {
@@ -59,7 +60,17 @@ class ModulDetailFeatureSection extends StatelessWidget {
                 );
               }
 
-              final dataIndex = index - 1;
+              if (index == 1) {
+                return ModulDetailFeatureItem(
+                  title: "Green house A",
+                  myCustomIcon: MyCustomIcon.solenoid,
+                  onPressed: () {
+                    Get.toNamed(RouteNamed.solenoidPage);
+                  },
+                );
+              }
+
+              final dataIndex = index - 2;
               final modulData = modulDatas[dataIndex];
 
               print("Building ${modulData.name} with data: ${modulData.data}");

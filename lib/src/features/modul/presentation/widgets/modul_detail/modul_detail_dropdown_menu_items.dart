@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/config/app_config.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_dialog.dart';
@@ -16,6 +17,10 @@ class MenuItem {
 }
 
 abstract class ModulDetailDropdownMenuItems {
+  static const modulLogs = MenuItem(
+    text: "Riwayat Modul",
+    icon: LucideIcons.scrollText,
+  );
   static const editIcon = MenuItem(text: "Edit Modul", icon: Icons.edit);
   static const deleteIcon = MenuItem(
     text: "Delete Modul",
@@ -26,7 +31,12 @@ abstract class ModulDetailDropdownMenuItems {
     icon: Icons.key,
   );
 
-  static const List<MenuItem> items = [editIcon, editPasswordIcon, deleteIcon];
+  static const List<MenuItem> items = [
+    modulLogs,
+    editIcon,
+    editPasswordIcon,
+    deleteIcon,
+  ];
 
   static Widget buildItem(MenuItem item) {
     return item == deleteIcon
@@ -358,6 +368,8 @@ abstract class ModulDetailDropdownMenuItems {
           ),
         );
         break;
+      case ModulDetailDropdownMenuItems.modulLogs:
+        print("belum ada apa-apa");
     }
   }
 }

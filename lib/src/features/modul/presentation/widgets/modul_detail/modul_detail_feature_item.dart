@@ -32,17 +32,15 @@ class ModulDetailFeatureItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           spacing: 10,
           children: [
-            Row(
-              spacing: 8,
-              children: [
-                myCustomIcon != null
-                    ? CustomIcon(type: myCustomIcon!, color: Colors.white)
-                    : Icon(Icons.settings, color: Colors.white, size: 28),
-                Text(
-                  title,
-                  style: AppTheme.textMedium.copyWith(color: Colors.white),
-                ),
-              ],
+            myCustomIcon != null
+                ? CustomIcon(type: myCustomIcon!, color: Colors.white)
+                : Icon(Icons.settings, color: Colors.white, size: 28),
+            Expanded(
+              child: Text(
+                title,
+                style: AppTheme.textMedium.copyWith(color: Colors.white),
+                softWrap: true,
+              ),
             ),
             MyIcon(
               icon: LucideIcons.arrowRight500,

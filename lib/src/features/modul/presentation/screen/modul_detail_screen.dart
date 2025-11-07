@@ -290,10 +290,6 @@ class ModulDetailScreen extends StatelessWidget {
                         ? BlurryContainer(
                             key: const ValueKey('expandedDescription'),
                             blur: 10,
-                            // padding: const EdgeInsets.symmetric(
-                            //   horizontal: 16,
-                            //   vertical: 9,
-                            // ),
                             padding: EdgeInsetsGeometry.all(0),
                             child: Container(
                               decoration: BoxDecoration(
