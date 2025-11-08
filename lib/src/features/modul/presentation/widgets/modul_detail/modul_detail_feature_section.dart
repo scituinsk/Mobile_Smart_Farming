@@ -65,7 +65,10 @@ class ModulDetailFeatureSection extends StatelessWidget {
                   title: "Green house A",
                   myCustomIcon: MyCustomIcon.solenoid,
                   onPressed: () {
-                    Get.toNamed(RouteNamed.solenoidPage);
+                    Get.toNamed(
+                      RouteNamed.solenoidPage,
+                      arguments: "Green Gouse A",
+                    );
                   },
                 );
               }

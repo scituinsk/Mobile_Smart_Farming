@@ -18,6 +18,8 @@ class GroupScreen extends StatelessWidget {
     final mediaQueryWidth = Get.width;
     final mediaQueryHeight = Get.height;
 
+    final title = Get.arguments;
+
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 70,
@@ -29,9 +31,9 @@ class GroupScreen extends StatelessWidget {
         ),
         title: Column(
           children: [
-            Text("Solenoid", style: AppTheme.h3),
+            Text(title, style: AppTheme.h3),
             Text(
-              "Mengatur penjadwalan sistem irigasi",
+              "Atur penjadwalan group",
               style: AppTheme.textSmall.copyWith(
                 color: AppTheme.titleSecondary,
               ),

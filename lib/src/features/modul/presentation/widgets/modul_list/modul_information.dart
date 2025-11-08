@@ -8,6 +8,7 @@ class ModulInformation extends StatelessWidget {
   final String name;
   final String information;
   final bool isWaterPump;
+  final Color iconColor;
 
   const ModulInformation({
     super.key,
@@ -15,6 +16,7 @@ class ModulInformation extends StatelessWidget {
     required this.name,
     required this.information,
     this.isWaterPump = false,
+    this.iconColor = AppTheme.primaryColor,
   });
 
   @override
@@ -25,6 +27,7 @@ class ModulInformation extends StatelessWidget {
           padding: 3,
           backgroundColor: AppTheme.surfaceColor,
           customIcon: customIcon,
+          iconColor: iconColor,
         ),
         Text(name, style: AppTheme.text.copyWith(color: Colors.white)),
         isWaterPump

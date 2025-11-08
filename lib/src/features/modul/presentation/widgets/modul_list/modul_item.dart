@@ -135,6 +135,7 @@ class ModulItem extends StatelessWidget {
             padding: const EdgeInsets.only(right: 10),
             child: ModulInformation(
               customIcon: ModulFeatureHelper.getFeatureIcon(feature.name),
+              iconColor: ModulFeatureHelper.getFeatureColor(feature.name),
               information: ModulFeatureHelper.getFeatureData(
                 feature.name,
                 feature.data,
