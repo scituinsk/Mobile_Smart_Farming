@@ -19,7 +19,7 @@ class ModulList extends StatelessWidget {
           // ✅ Header with device count (reactive)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("Daftar Modul", style: AppTheme.h4)],
+            children: [Text("Daftar Modul", style: AppTheme.h3)],
           ),
 
           // ✅ Reactive list
@@ -69,7 +69,7 @@ class ModulList extends StatelessWidget {
               return RefreshIndicator(
                 onRefresh: () => controller.refreshModulList(),
                 child: ListView.builder(
-                  padding: EdgeInsets.only(bottom: 60),
+                  padding: EdgeInsets.only(bottom: 100),
                   itemCount: controller.devices.length,
                   itemBuilder: (context, index) {
                     final device = controller.devices[index];

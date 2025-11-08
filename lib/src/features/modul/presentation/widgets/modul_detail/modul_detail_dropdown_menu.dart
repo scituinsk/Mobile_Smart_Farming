@@ -2,7 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/core/widgets/icon_widget.dart';
+import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_dropdown_menu_items.dart';
 
 class ModulDetailDropdownMenu extends StatelessWidget {
@@ -13,7 +13,7 @@ class ModulDetailDropdownMenu extends StatelessWidget {
     return DropdownButtonHideUnderline(
       child: DropdownButton2(
         alignment: Alignment.bottomLeft,
-        customButton: IconWidget(
+        customButton: MyIcon(
           icon: LucideIcons.ellipsisVertical,
           iconColor: AppTheme.primaryColor,
         ),

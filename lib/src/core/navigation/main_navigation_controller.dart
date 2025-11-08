@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pak_tani/src/features/home/presentation/screens/home_screen.dart';
 import 'package:pak_tani/src/features/modul/presentation/bindings/modul_binding.dart';
 import 'package:pak_tani/src/features/modul/presentation/screen/moduls_screen.dart';
 
@@ -32,7 +31,7 @@ class MainNavigationController extends GetxController
   }
 
   void _initializeControllers() {
-    tabController = TabController(length: 4, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
     animationController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 300),
@@ -63,15 +62,12 @@ class MainNavigationController extends GetxController
 
     switch (index) {
       case 0: // home
-        _initializeHomeTab();
-        break;
-      case 1: // modul
         _initializeModulTab();
         break;
-      case 2: // history
+      case 1: // history
         _initializeHistoryTab();
         break;
-      case 3: // profile
+      case 2: // profile
         _initializeProfileTab();
         break;
     }
@@ -83,14 +79,10 @@ class MainNavigationController extends GetxController
 
   // ✅ Update screens list and trigger GetBuilder update
   void _updateScreensList() {
-    _screens = [_getScreen(0), _getScreen(1), _getScreen(2), _getScreen(3)];
+    _screens = [_getScreen(0), _getScreen(1), _getScreen(2)];
 
     // ✅ Trigger GetBuilder rebuild
     update();
-  }
-
-  void _initializeHomeTab() {
-    _screensCache[0] = HomeScreen();
   }
 
   void _initializeModulTab() {
@@ -99,11 +91,11 @@ class MainNavigationController extends GetxController
       print("inisialisasi modul binding");
     }
 
-    _screensCache[1] = ModulsScreen();
+    _screensCache[0] = ModulsScreen();
   }
 
   void _initializeHistoryTab() {
-    _screensCache[2] = Scaffold(
+    _screensCache[1] = Scaffold(
       appBar: AppBar(title: Text('History'), leading: SizedBox()),
       body: Center(
         child: Column(
@@ -121,7 +113,7 @@ class MainNavigationController extends GetxController
   }
 
   void _initializeProfileTab() {
-    _screensCache[3] = Scaffold(
+    _screensCache[2] = Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
         leading: SizedBox(),
@@ -190,15 +182,14 @@ class MainNavigationController extends GetxController
   }
 
   void navigateToTab(int index) {
-    if (index >= 0 && index < 4) {
+    if (index >= 0 && index < 3) {
       tabController.animateTo(index);
     }
   }
 
   void navigateToHome() => navigateToTab(0);
-  void navigateToModul() => navigateToTab(1);
-  void navigateToHistory() => navigateToTab(2);
-  void navigateToProfile() => navigateToTab(3);
+  void navigateToHistory() => navigateToTab(1);
+  void navigateToProfile() => navigateToTab(2);
 
   Future<bool> onWillPop() async {
     final tabNames = ["Home", "Modul", "History", "Profile"];

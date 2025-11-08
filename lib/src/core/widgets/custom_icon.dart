@@ -14,6 +14,9 @@ enum MyCustomIcon {
   editPencil,
   logoPrimary,
   logoWhite,
+  calendar,
+  lightBulb,
+  waterDrop,
 }
 
 String iconAssets(MyCustomIcon type) {
@@ -38,20 +41,34 @@ String iconAssets(MyCustomIcon type) {
       return "assets/icons/filter.svg";
     case MyCustomIcon.editPencil:
       return "assets/icons/edit-pencil.svg";
+    case MyCustomIcon.calendar:
+      return "assets/icons/calendar.svg";
     case MyCustomIcon.logoPrimary:
       return "assets/logo/logo_primary.svg";
     case MyCustomIcon.logoWhite:
       return "assets/logo/logo_white.svg";
+    case MyCustomIcon.lightBulb:
+      return "assets/icons/lightbulb.svg";
+    case MyCustomIcon.waterDrop:
+      return "assets/icons/water_drop.svg";
   }
 }
 
 class CustomIcon extends StatelessWidget {
   final MyCustomIcon type;
   final double size;
-  const CustomIcon({super.key, required this.type, this.size = 28});
+  final Color? color;
+  const CustomIcon({super.key, required this.type, this.size = 28, this.color});
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.asset(iconAssets(type), width: size, height: size);
+    return SvgPicture.asset(
+      iconAssets(type),
+      width: size,
+      height: size,
+      colorFilter: color != null
+          ? ColorFilter.mode(color!, BlendMode.srcIn)
+          : null,
+    );
   }
 }

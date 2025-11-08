@@ -42,7 +42,7 @@ class DeviceFeature extends Equatable {
   });
 
   @override
-  List<Object?> get props => [name, descriptions];
+  List<Object?> get props => [name, descriptions, data];
 
   @override
   String toString() =>

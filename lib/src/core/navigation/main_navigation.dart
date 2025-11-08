@@ -65,12 +65,12 @@ class MainNavigation extends GetView<MainNavigationController> {
                 id: 'animation', // ✅ Specific ID for animation updates
                 builder: (controller) => Stack(
                   children: [
-                    // ✅ Animated indicator using animationValue.value
                     Positioned(
                       left:
                           controller.animationValue.value *
-                              (MediaQuery.of(context).size.width * 0.8 / 4) +
-                          (MediaQuery.of(context).size.width * 0.8 / 4 - 50) /
+                              (MediaQuery.of(context).size.width * 0.8 / 3) +
+                          //(0.8 / jumlah tab), jika 3 maka 3, jika maka 4
+                          (MediaQuery.of(context).size.width * 0.8 / 3 - 50) /
                               2,
                       top: 5,
                       child: AnimatedContainer(
@@ -97,9 +97,8 @@ class MainNavigation extends GetView<MainNavigationController> {
                       controller: controller.tabController,
                       tabs: [
                         _buildCustomTab(Icons.home, 0, controller),
-                        _buildCustomTab(Icons.view_comfy_sharp, 1, controller),
-                        _buildCustomTab(Icons.access_time, 2, controller),
-                        _buildCustomTab(Icons.person_rounded, 3, controller),
+                        _buildCustomTab(Icons.access_time, 1, controller),
+                        _buildCustomTab(Icons.person_rounded, 2, controller),
                       ],
                       indicatorColor: Colors.transparent,
                       dividerColor: Colors.transparent,

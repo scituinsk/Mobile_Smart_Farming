@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 
-class IconWidget extends StatelessWidget {
+class MyIcon extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
   final double iconSize;
+  final double iconWeight;
   final Color backgroundColor;
   final double padding;
   final MyCustomIcon? customIcon;
   final VoidCallback? onPressed; // Tambahkan opsi onPressed
   final double borderRadius;
 
-  const IconWidget({
+  const MyIcon({
     super.key,
     this.icon = Icons.notifications,
     this.iconColor = AppTheme.primaryColor,
     this.iconSize = 24,
+    this.iconWeight = 8,
     this.backgroundColor = Colors.white,
     this.padding = 8,
     this.customIcon,
@@ -28,12 +29,13 @@ class IconWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget iconChild = customIcon != null
-        ? SvgPicture.asset(
-            iconAssets(customIcon!),
-            height: iconSize,
-            width: iconSize,
-          )
-        : Icon(icon, color: iconColor, size: iconSize);
+        // ? SvgPicture.asset(
+        //     iconAssets(customIcon!),
+        //     height: iconSize,
+        //     width: iconSize,
+        //   )
+        ? CustomIcon(type: customIcon!, size: iconSize, color: iconColor)
+        : Icon(icon, color: iconColor, size: iconSize, weight: iconWeight);
 
     Widget content = Container(
       padding: EdgeInsets.all(padding),

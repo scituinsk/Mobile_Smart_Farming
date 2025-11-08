@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/core/widgets/icon_widget.dart';
+import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/add_modul_ui_controller.dart';
 
@@ -32,7 +32,7 @@ class AddModulCodeInput extends StatelessWidget {
             validator: controller.validateCode,
           ),
         ),
-        IconWidget(
+        MyIcon(
           icon: LucideIcons.scanLine,
           iconColor: AppTheme.primaryColor,
           backgroundColor: AppTheme.waterPumpColor,

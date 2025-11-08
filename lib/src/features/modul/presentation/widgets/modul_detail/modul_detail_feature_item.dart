@@ -1,36 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
-import 'package:pak_tani/src/core/widgets/icon_widget.dart';
+import 'package:pak_tani/src/core/widgets/my_icon.dart';
 
 class ModulDetailFeatureItem extends StatelessWidget {
   final String title;
-  final MyCustomIcon myCustomIcon;
+  final MyCustomIcon? myCustomIcon;
+  final IconData icon;
   final VoidCallback? onPressed;
-  final Widget child;
   const ModulDetailFeatureItem({
     super.key,
     required this.title,
-    required this.myCustomIcon,
+    this.myCustomIcon,
+    this.icon = Icons.settings,
     this.onPressed,
-    required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceColor,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        spacing: 10,
-        children: [
-          IconWidget(customIcon: myCustomIcon),
-          Text(title, style: AppTheme.textMedium),
-          child,
-        ],
+    return InkWell(
+      borderRadius: BorderRadius.circular(10),
+      onTap: onPressed,
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppTheme.primaryColor,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          spacing: 10,
+          children: [
+            myCustomIcon != null
+                ? CustomIcon(type: myCustomIcon!, color: Colors.white)
+                : Icon(Icons.settings, color: Colors.white, size: 28),
+            Expanded(
+              child: Text(
+                title,
+                style: AppTheme.textMedium.copyWith(color: Colors.white),
+                softWrap: true,
+              ),
+            ),
+            MyIcon(
+              icon: LucideIcons.arrowRight500,
+              iconColor: AppTheme.primaryColor,
+              backgroundColor: Colors.white,
+              padding: 3,
+            ),
+          ],
+        ),
       ),
     );
   }

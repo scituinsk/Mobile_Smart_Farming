@@ -5,7 +5,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
-import 'package:pak_tani/src/features/scheduling/presentation/widgets/solenoid_widgets/solenoid_setting_sheet_chose.dart';
+import 'package:pak_tani/src/features/group/presentation/widgets/solenoid_widgets/solenoid_setting_sheet_chose.dart';
 
 class SolenoidSettingSheet {
   static void show(BuildContext context) {
