@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
-import 'package:pak_tani/src/features/group/presentation/widgets/solenoid_widgets/solenoid_setting_sheet.dart';
+import 'package:pak_tani/src/features/group_schedule/presentation/widgets/solenoid_widgets/solenoid_setting_sheet.dart';
 
 /// Widget untuk menampilkan informasi mode penjadwalan dan sequential
-class GroupInformation extends StatelessWidget {
+class GroupScheduleInformation extends StatelessWidget {
   final bool isSequentialMode;
   final int sequentialCount;
   final int relayCount;
 
-  const GroupInformation({
+  const GroupScheduleInformation({
     super.key,
     required this.isSequentialMode,
     required this.sequentialCount,

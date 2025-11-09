@@ -68,6 +68,7 @@ class ApiService extends GetxService {
             if (accessToken != null && accessToken.isNotEmpty) {
               options.headers['Authorization'] = 'Bearer $accessToken';
               print('✅ Added token to: ${options.path}');
+              print("Access token: $accessToken");
             } else {
               print('❌ No token for: ${options.path}');
 
@@ -110,8 +111,10 @@ class ApiService extends GetxService {
 
           final statusCode = error.response?.statusCode;
           final path = error.requestOptions.path;
+          final message = error.response!.statusMessage;
 
           print('❌ Error: ${statusCode} ${path}');
+          print('❌ message: $message');
 
           // ✅ Handle 401 with better logic
           if (statusCode == 401 && !_isAuthEndpoint(path)) {

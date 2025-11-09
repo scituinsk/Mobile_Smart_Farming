@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
-import 'package:pak_tani/src/features/group/presentation/widgets/solenoid_widgets/solenoid_status_chip.dart';
+import 'package:pak_tani/src/features/group_schedule/presentation/widgets/solenoid_widgets/solenoid_status_chip.dart';
 
 class SolenoidItem extends StatelessWidget {
   final String title;

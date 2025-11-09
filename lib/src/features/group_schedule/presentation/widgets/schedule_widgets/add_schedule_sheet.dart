@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/features/group/presentation/widgets/schedule_widgets/build_day_chip.dart';
+import 'package:pak_tani/src/features/group_schedule/presentation/widgets/schedule_widgets/build_day_chip.dart';
 
 class AddScheduleSheet {
   static void show(BuildContext context) {

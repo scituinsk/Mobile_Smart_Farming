@@ -26,21 +26,43 @@ class _SplashScreenState extends State<SplashScreen> {
     try {
       statusMessage.value = 'Starting app...';
 
-      statusMessage.value = 'Loading dependencies...';
-      bool isReady = await DependencyInjection.waitUntilReady(
-        timeout: Duration(seconds: 15),
-      );
+      // statusMessage.value = 'Loading dependencies...';
+      // bool isReady = await DependencyInjection.waitUntilReady(
+      //   timeout: Duration(seconds: 15),
+      // );
 
-      if (!isReady) {
-        throw Exception('❌ Dependencies initialization timeout');
+      // if (!isReady) {
+      //   throw Exception('❌ Dependencies initialization timeout');
+      // }
+
+      // statusMessage.value = 'Initializing auth service...';
+      // final authService = Get.find<AuthService>();
+
+      // while (!authService.isReady) {
+      //   await Future.delayed(Duration(milliseconds: 100));
+      // }
+
+      statusMessage.value = "Getting auth service...";
+      final authService = Get.find<AuthService>();
+      authService.debugInfo();
+
+      if (!authService.isReady) {
+        print('❌ AuthService not ready, initializing...');
+        // Force wait maksimal 3 detik
+        int attempts = 0;
+        while (!authService.isReady && attempts < 30) {
+          await Future.delayed(Duration(milliseconds: 100));
+          attempts++;
+        }
+
+        if (!authService.isReady) {
+          throw Exception('AuthService failed to initialize');
+        }
       }
 
       statusMessage.value = 'Checking authentication...';
+      await authService.checkAuthenticationStatus();
 
-      // Get AuthService
-      final authService = Get.find<AuthService>();
-
-      //  Wait a bit to ensure UI is ready
       await Future.delayed(Duration(milliseconds: 500));
 
       //  Navigate based on auth status

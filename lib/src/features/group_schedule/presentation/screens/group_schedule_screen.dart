@@ -4,14 +4,14 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
-import 'package:pak_tani/src/features/group/presentation/widgets/group_information.dart';
-import 'package:pak_tani/src/features/group/presentation/widgets/schedule_widgets/add_schedule_sheet.dart';
-import 'package:pak_tani/src/features/group/presentation/widgets/schedule_widgets/schedule_list.dart';
-import 'package:pak_tani/src/features/group/presentation/widgets/solenoid_widgets/solenoid_emergency_dialog.dart';
-import 'package:pak_tani/src/features/group/presentation/widgets/solenoid_widgets/solenoid_list.dart';
+import 'package:pak_tani/src/features/group_schedule/presentation/widgets/group_schedule_information.dart';
+import 'package:pak_tani/src/features/group_schedule/presentation/widgets/schedule_widgets/add_schedule_sheet.dart';
+import 'package:pak_tani/src/features/group_schedule/presentation/widgets/schedule_widgets/schedule_list.dart';
+import 'package:pak_tani/src/features/group_schedule/presentation/widgets/solenoid_widgets/solenoid_emergency_dialog.dart';
+import 'package:pak_tani/src/features/group_schedule/presentation/widgets/solenoid_widgets/solenoid_list.dart';
 
-class GroupScreen extends StatelessWidget {
-  const GroupScreen({super.key});
+class GroupScheduleScreen extends StatelessWidget {
+  const GroupScheduleScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class GroupScreen extends StatelessWidget {
           child: ListView(
             children: [
               SizedBox(height: 10),
-              GroupInformation(
+              GroupScheduleInformation(
                 isSequentialMode: false,
                 sequentialCount: 2,
                 relayCount: 8,

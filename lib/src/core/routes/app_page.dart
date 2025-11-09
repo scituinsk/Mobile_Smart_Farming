@@ -9,7 +9,7 @@ import 'package:pak_tani/src/features/modul/presentation/screen/modul_detail_scr
 import 'package:pak_tani/src/features/modul/presentation/screen/qr_scann_screen.dart';
 import 'package:pak_tani/src/features/modul/presentation/screen/relay_screen.dart';
 import 'package:pak_tani/src/features/notification/presentation/screens/notification_screen.dart';
-import 'package:pak_tani/src/features/group/presentation/screens/group_screen.dart';
+import 'package:pak_tani/src/features/group_schedule/presentation/screens/group_schedule_screen.dart';
 
 class AppPage {
   static final pages = [
@@ -17,7 +17,10 @@ class AppPage {
       name: RouteNamed.notificationPage,
       page: () => const NotificationScreen(),
     ),
-    GetPage(name: RouteNamed.solenoidPage, page: () => const GroupScreen()),
+    GetPage(
+      name: RouteNamed.groupSchedulePage,
+      page: () => const GroupScheduleScreen(),
+    ),
 
     GetPage(name: RouteNamed.addModulPage, page: () => const AddModulScreen()),
     GetPage(

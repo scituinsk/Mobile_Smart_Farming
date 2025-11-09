@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/features/group/presentation/widgets/schedule_widgets/schedule_item.dart';
+import 'package:pak_tani/src/features/group_schedule/presentation/widgets/schedule_widgets/schedule_item.dart';
 
 class ScheduleList extends StatelessWidget {
   const ScheduleList({super.key});
