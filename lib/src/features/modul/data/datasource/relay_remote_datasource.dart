@@ -5,7 +5,7 @@ import 'package:pak_tani/src/features/modul/data/models/group_relay_model.dart';
 import 'package:pak_tani/src/features/modul/data/models/relay_model.dart';
 
 abstract class RelayRemoteDatasource {
-  Future<List<RelayModel>>? getListRelay(String serialId);
+  Future<List<RelayModel>?> getListRelay(String serialId);
   Future<RelayModel> editRelay(
     int pin,
     String serialId, {
@@ -21,7 +21,7 @@ class RelayRemoteDatasourceImpl implements RelayRemoteDatasource {
   final ApiService _apiService = Get.find<ApiService>();
 
   @override
-  Future<List<RelayModel>>? getListRelay(String serialId) async {
+  Future<List<RelayModel>?> getListRelay(String serialId) async {
     final Response response = await _apiService.get(
       "/iot/device/$serialId/pin/",
     );

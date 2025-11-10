@@ -7,6 +7,7 @@ import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/utils/modul_feature_helper.dart';
 import 'package:pak_tani/src/core/widgets/battery_status.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/modul_feature.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/modul_list/modul_information.dart';
 
 class ModulItem extends StatelessWidget {
@@ -19,13 +20,13 @@ class ModulItem extends StatelessWidget {
         ? NetworkImage((AppConfig.baseUrl + modul.image!))
         : const AssetImage('assets/image/default_modul.jpg');
 
-    final batteryFeatureList = (modul.features ?? [])
+    final batteryFeature = (modul.features ?? [])
         .where((feature) => feature.name == "battery")
-        .toList();
+        .firstOrNull;
 
-    final int? batteryStatus = batteryFeatureList.isNotEmpty
-        ? int.tryParse(batteryFeatureList.first.data)
-        : null;
+    final int? batteryStatus = ModulFeatureHelper.getBatteryValue(
+      batteryFeature,
+    );
 
     return GestureDetector(
       onTap: () =>
@@ -115,7 +116,7 @@ class ModulItem extends StatelessWidget {
   }
 
   Widget _buildFeaturesRow() {
-    final List<DeviceFeature> features = (modul.features ?? [])
+    final List<ModulFeature> features = (modul.features ?? [])
         .where(
           (feature) =>
               feature.name == "temperature" ||
@@ -136,12 +137,9 @@ class ModulItem extends StatelessWidget {
             child: ModulInformation(
               customIcon: ModulFeatureHelper.getFeatureIcon(feature.name),
               iconColor: ModulFeatureHelper.getFeatureColor(feature.name),
-              information: ModulFeatureHelper.getFeatureData(
-                feature.name,
-                feature.data,
-              ),
-              name: ModulFeatureHelper.getFeatureName(feature.name),
+              name: feature.name,
               isWaterPump: feature.name == "water_pump",
+              featureData: feature.data!,
             ),
           );
         }).toList(),

@@ -1,4 +1,6 @@
+import 'package:pak_tani/src/features/modul/data/models/modul_feature_model.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/modul_feature.dart';
 
 class ModulModel extends Modul {
   const ModulModel({
@@ -17,7 +19,16 @@ class ModulModel extends Modul {
       name: json['name'] ?? '',
       descriptions: json['descriptions'],
       serialId: json['serial_id'] ?? '',
-      features: _parseFeatures(json['feature']),
+      features: json['feature'] != null
+          ? (json["feature"] as List<dynamic>)
+                .map(
+                  (featureJson) => ModulFeatureModel.fromJson(
+                    featureJson as Map<String, dynamic>,
+                  ),
+                )
+                .cast<ModulFeature>()
+                .toList()
+          : null,
       createdAt: json['created_at'] ?? DateTime.now(),
       image: json['image'] ?? "",
     );
@@ -57,34 +68,5 @@ class ModulModel extends Modul {
       createdAt: createdAt,
       image: image,
     );
-  }
-
-  static List<DeviceFeature>? _parseFeatures(dynamic value) {
-    if (value == null) return null;
-
-    if (value is! List) {
-      print("features is not a list: ${value.runtimeType}");
-      return null;
-    }
-
-    final List<dynamic> featureList = value;
-    final List<DeviceFeature> features = [];
-
-    for (var featureItem in featureList) {
-      try {
-        final feature = DeviceFeature(
-          name: featureItem['name'].toString(),
-          descriptions: featureItem["descriptions"]?.toString(),
-          data: featureItem['data'].toString(),
-        );
-        features.add(feature);
-        print("parsed feature: ${feature.name}");
-      } catch (e) {
-        print("error parsing feature: $e");
-        continue;
-      }
-    }
-    print('✅ Successfully parsed ${features.length} features');
-    return features.isEmpty ? null : features;
   }
 }

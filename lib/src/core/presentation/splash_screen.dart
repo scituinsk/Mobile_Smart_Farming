@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
-import 'package:pak_tani/src/core/di/dependency_injection.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -25,22 +24,6 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _initializeApp() async {
     try {
       statusMessage.value = 'Starting app...';
-
-      // statusMessage.value = 'Loading dependencies...';
-      // bool isReady = await DependencyInjection.waitUntilReady(
-      //   timeout: Duration(seconds: 15),
-      // );
-
-      // if (!isReady) {
-      //   throw Exception('❌ Dependencies initialization timeout');
-      // }
-
-      // statusMessage.value = 'Initializing auth service...';
-      // final authService = Get.find<AuthService>();
-
-      // while (!authService.isReady) {
-      //   await Future.delayed(Duration(milliseconds: 100));
-      // }
 
       statusMessage.value = "Getting auth service...";
       final authService = Get.find<AuthService>();

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/utils/modul_feature_helper.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
-import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/modul_feature.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_detail_ui_controller.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_data_item.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_detail_feature_item.dart';
@@ -29,7 +29,7 @@ class ModulDetailFeatureSection extends StatelessWidget {
         child: Obx(() {
           final modul = controller.modul.value!;
           print("UI rebuilding with modul: ${modul.name}");
-          List<DeviceFeature> modulDatas = [];
+          List<ModulFeature> modulDatas = [];
 
           if (modul.features != null) {
             modulDatas = modul.features!
@@ -78,17 +78,18 @@ class ModulDetailFeatureSection extends StatelessWidget {
 
               print("Building ${modulData.name} with data: ${modulData.data}");
 
-              final processedData = ModulFeatureHelper.getFeatureData(
-                modulData.name,
-                modulData.data,
-              );
+              // final processedData = ModulFeatureHelper.getFeatureData(
+              //   modulData.name,
+              //   modulData.data,
+              // );
 
-              print("Processed data for ${modulData.name}: $processedData");
+              // print("Processed data for ${modulData.name}: $processedData");
 
               return ModulDetailDataItem(
                 myCustomIcon: ModulFeatureHelper.getFeatureIcon(modulData.name),
                 title: ModulFeatureHelper.getFeatureName(modulData.name),
-                data: processedData,
+                rawName: modulData.name,
+                data: modulData.data,
                 descriptions: modulData.descriptions ?? "",
                 color: ModulFeatureHelper.getFeatureColor(modulData.name),
               );

@@ -2,7 +2,7 @@ import 'package:pak_tani/src/features/modul/domain/entities/group_relay.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/relay.dart';
 
 abstract class RelayRepository {
-  Future<List<Relay>>? getListRelay(String serialId);
+  Future<List<Relay>?> getListRelay(String serialId);
   Future<Relay> editRelay(
     int pin,
     String serialId, {

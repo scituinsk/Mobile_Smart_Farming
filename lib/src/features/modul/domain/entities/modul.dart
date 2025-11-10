@@ -1,11 +1,12 @@
 import 'package:equatable/equatable.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/modul_feature.dart';
 
 class Modul extends Equatable {
   final String id;
   final String name;
   final String? descriptions;
   final String serialId;
-  final List<DeviceFeature>? features;
+  final List<ModulFeature>? features;
   final String createdAt;
   final String? image;
   const Modul({
@@ -28,23 +29,4 @@ class Modul extends Equatable {
     createdAt,
     image,
   ];
-}
-
-class DeviceFeature extends Equatable {
-  final String name;
-  final String? descriptions;
-  final String data;
-
-  const DeviceFeature({
-    required this.name,
-    this.descriptions,
-    required this.data,
-  });
-
-  @override
-  List<Object?> get props => [name, descriptions, data];
-
-  @override
-  String toString() =>
-      "DeviceFeature(name: $name, description: $descriptions, )";
 }

@@ -122,29 +122,5 @@ class DependencyInjection {
     }
   }
 
-  /// ✅ Wait for all dependencies to be ready with timeout
-  static Future<bool> waitUntilReady({
-    Duration timeout = const Duration(seconds: 15),
-  }) async {
-    final stopwatch = Stopwatch()..start();
-
-    while (stopwatch.elapsed < timeout) {
-      if (isReady) {
-        print(
-          '✅ All dependencies are ready in ${stopwatch.elapsed.inMilliseconds}ms',
-        );
-        return true;
-      }
-
-      await Future.delayed(Duration(milliseconds: 100));
-
-      // Log progress every 2 seconds
-      if (stopwatch.elapsed.inSeconds % 2 == 0) {
-        print('⏳ Waiting for dependencies... ${stopwatch.elapsed.inSeconds}s');
-      }
-    }
-
-    print('⚠️ Dependency wait timeout after ${timeout.inSeconds}s');
-    return false;
-  }
+  //
 }

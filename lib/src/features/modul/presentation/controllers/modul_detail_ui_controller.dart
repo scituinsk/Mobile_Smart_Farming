@@ -9,7 +9,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/services/web_socket_service.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/feature_data.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/modul_feature.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_controller.dart';
 
 class ModulDetailUiController extends GetxController {
@@ -138,28 +140,36 @@ class ModulDetailUiController extends GetxController {
     if (currentModul?.features == null) return;
 
     final updatedFeatures = currentModul!.features!.map((feature) {
-      String newData = feature.data;
+      List<FeatureData>? updatedFeatureData = feature.data != null
+          ? List.from(feature.data!)
+          : null;
 
+      List<dynamic>? wsFeatureData;
       switch (feature.name.toLowerCase()) {
         case 'temperature':
-          newData = wsData['temperature_data']?.toString() ?? feature.data;
+          wsFeatureData = wsData['temperature_data'] as List<dynamic>?;
           break;
         case 'humidity':
-          newData = wsData['humidity_data']?.toString() ?? feature.data;
+          wsFeatureData = wsData['humidity_data'] as List<dynamic>?;
           break;
         case 'water_level':
-          newData = wsData['water_level_data']?.toString() ?? feature.data;
+          wsFeatureData = wsData['water_level_data'] as List<dynamic>?;
           break;
         case 'battery':
-          newData = wsData['battery_data']?.toString() ?? feature.data;
+          wsFeatureData = wsData['battery_data'] as List<dynamic>?;
           break;
-        default:
-          newData = feature.data;
       }
 
-      return DeviceFeature(
+      if (wsFeatureData != null && wsFeatureData.isNotEmpty) {
+        updatedFeatureData = wsFeatureData.map((item) {
+          final itemMap = item as Map<String, dynamic>;
+          return FeatureData(name: itemMap["name"], data: itemMap["data"]);
+        }).toList();
+      }
+
+      return ModulFeature(
         name: feature.name,
-        data: newData,
+        data: updatedFeatureData,
         descriptions: feature.descriptions,
       );
     }).toList();
