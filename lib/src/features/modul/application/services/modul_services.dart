@@ -12,13 +12,6 @@ class ModulServices extends GetxService {
   final RxList<Modul> moduls = <Modul>[].obs;
   final Rx<Modul?> selectedModul = Rx<Modul?>(null);
 
-  @override
-  Future<void> onInit() async {
-    // TODO: implement onInit
-    super.onInit();
-    await loadModuls();
-  }
-
   Future<void> loadModuls({bool refresh = false}) async {
     if (refresh) {
       moduls.clear();

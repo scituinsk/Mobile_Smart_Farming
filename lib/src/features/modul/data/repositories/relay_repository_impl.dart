@@ -29,29 +29,91 @@ class RelayRepositoryImpl extends RelayRepository {
     String serialId, {
     String? name,
     int? groupId,
-  }) {
-    // TODO: implement editRelay
-    throw UnimplementedError();
+  }) async {
+    try {
+      final relay = await remoteDatasource.editRelay(
+        pin,
+        serialId,
+        name: name,
+        groupId: groupId,
+      );
+      return relay.toEntity();
+    } catch (e) {
+      print("Error edit modul(repo): $e");
+      rethrow;
+    }
   }
 
   @override
-  Future<List<GroupRelay>> getListGroup(String serialId) {
-    // TODO: implement getListGroup
-    throw UnimplementedError();
+  Future<List<GroupRelay>> getListGroup(String serialId) async {
+    try {
+      final listGroup = await remoteDatasource.getListGroup(serialId);
+
+      return listGroup.map((element) => element.toEntity()).toList();
+    } catch (e) {
+      print("error get list group(repo): $e");
+      rethrow;
+    }
   }
 
   @override
-  Future<GroupRelay> editGroup(String id) {
-    // TODO: implement editGroup
-    throw UnimplementedError();
+  Future<GroupRelay> editGroup(String id, String name) async {
+    try {
+      final group = await remoteDatasource.editGroup(id, name);
+      return group.toEntity();
+    } catch (e) {
+      print("error edit group(repo): $e");
+      rethrow;
+    }
   }
 
+  //perlu dilihat lagi
   @override
   Future<List<GroupRelay>> insertRelaysToGroupsRelay(
-    List<GroupRelay> group,
-    List<Relay> relay,
-  ) {
-    // TODO: implement insertRelaysToGroupsRelay
-    throw UnimplementedError();
+    List<GroupRelay> groups,
+    List<Relay> relays,
+  ) async {
+    try {
+      final Map<String, List<Relay>> relaysByGroup = {};
+      for (final r in relays) {
+        final key = r.groupId.toString();
+        relaysByGroup.putIfAbsent(key, () => []).add(r);
+      }
+
+      final updatedGroups = groups.map((g) {
+        final gId = g.id.toString();
+        final existing = (g.relays ?? <Relay>[]).toList();
+        final toInsert = relaysByGroup[gId] ?? <Relay>[];
+
+        final seenkeys = <String>{};
+        String keyOf(Relay r) => r.id.toString();
+
+        for (final r in existing) {
+          final k = keyOf(r);
+          seenkeys.add(k);
+        }
+
+        final merged = List<Relay>.from(existing);
+        for (var r in toInsert) {
+          final k = keyOf(r);
+          if (!seenkeys.contains(k)) {
+            merged.add(r);
+            seenkeys.add(k);
+          }
+        }
+
+        return GroupRelay(
+          id: g.id,
+          modulId: g.modulId,
+          name: g.name,
+          relays: merged,
+        );
+      }).toList();
+
+      return updatedGroups;
+    } catch (e) {
+      print('error insertRelaysToGroupsRelay (local merge): $e');
+      return groups;
+    }
   }
 }

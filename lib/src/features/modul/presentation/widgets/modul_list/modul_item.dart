@@ -6,6 +6,7 @@ import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/utils/modul_feature_helper.dart';
 import 'package:pak_tani/src/core/widgets/battery_status.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/feature_data.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul_feature.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/modul_list/modul_information.dart';
@@ -139,7 +140,7 @@ class ModulItem extends StatelessWidget {
               iconColor: ModulFeatureHelper.getFeatureColor(feature.name),
               name: feature.name,
               isWaterPump: feature.name == "water_pump",
-              featureData: feature.data!,
+              featureData: feature.data ?? <FeatureData>[],
             ),
           );
         }).toList(),

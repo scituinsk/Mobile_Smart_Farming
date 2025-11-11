@@ -26,7 +26,7 @@ class ModulList extends StatelessWidget {
           Expanded(
             child: Obx(() {
               // ✅ Show loading state
-              if (controller.isLoading.value) {
+              if (controller.isLoadingModul.value) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

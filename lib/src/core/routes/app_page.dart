@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/navigation/main_navigation.dart';
 import 'package:pak_tani/src/core/navigation/main_navigation_binding.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
+import 'package:pak_tani/src/features/modul/presentation/bindings/relay_binding.dart';
 import 'package:pak_tani/src/features/modul/presentation/screen/add_modul_screen.dart';
 import 'package:pak_tani/src/features/auth/presentation/screens/login_screen.dart';
 import 'package:pak_tani/src/features/auth/presentation/screens/register_screen.dart';
@@ -26,6 +27,7 @@ class AppPage {
     GetPage(
       name: RouteNamed.detailModulPage,
       page: () => const ModulDetailScreen(),
+      binding: RelayBinding(),
     ),
     GetPage(name: RouteNamed.loginPage, page: () => const LoginScreen()),
     GetPage(name: RouteNamed.registerPage, page: () => const RegisterScreen()),

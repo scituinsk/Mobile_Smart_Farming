@@ -13,10 +13,14 @@ import 'package:pak_tani/src/features/modul/domain/entities/feature_data.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul_feature.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_controller.dart';
+import 'package:pak_tani/src/features/modul/presentation/controllers/relay_controller.dart';
 
 class ModulDetailUiController extends GetxController {
-  final _controller = Get.find<ModulController>();
-  Rx<Modul?> get modul => _controller.selectedDevice;
+  final _modulController = Get.find<ModulController>();
+  final _relayController = Get.find<RelayController>();
+
+  Rx<Modul?> get modul => _modulController.selectedDevice;
+
   final RxBool isLoading = false.obs;
 
   Rxn<File> selectedImage = Rxn<File>(null);
@@ -55,6 +59,8 @@ class ModulDetailUiController extends GetxController {
       modulId = await Get.arguments;
       await getDevice(modulId);
       print("selected device: ${modul.value!.name}");
+
+      await _relayController.initRelayAndGroup(modul.value!.serialId);
 
       _initFormController();
 
@@ -185,27 +191,27 @@ class ModulDetailUiController extends GetxController {
     );
 
     // Update selectedDevice
-    _controller.selectedDevice.value = updatedModul;
-    final idx = _controller.devices.indexWhere(
+    _modulController.selectedDevice.value = updatedModul;
+    final idx = _modulController.devices.indexWhere(
       (device) => device.serialId == modul.value!.serialId,
     );
     if (idx != -1) {
-      _controller.devices[idx] = updatedModul;
+      _modulController.devices[idx] = updatedModul;
     }
 
     // Force refresh dengan berbagai cara
-    _controller.selectedDevice.refresh();
-    _controller.update(); // Update parent controller juga
+    _modulController.selectedDevice.refresh();
+    _modulController.update(); // Update parent controller juga
     update();
   }
 
   Future<void> getDevice(String id) async {
-    await _controller.getSelectedModul(id);
+    await _modulController.getSelectedModul(id);
   }
 
   Future<void> deleteDevice() async {
     try {
-      await _controller.deleteModul(modul.value!.serialId);
+      await _modulController.deleteModul(modul.value!.serialId);
       Get.back();
       Get.snackbar("success", "berhasil menghapus modul dari user ini");
     } catch (e) {
@@ -265,13 +271,13 @@ class ModulDetailUiController extends GetxController {
 
     try {
       isSubmitting.value = true;
-      await _controller.editModul(
+      await _modulController.editModul(
         modul.value!.serialId,
         name: modulNameC.text.trim(),
         description: modulDescriptionC.text.trim(),
         imageFile: selectedImage.value,
       );
-      await _controller.getSelectedModul(modul.value!.serialId);
+      await _modulController.getSelectedModul(modul.value!.serialId);
 
       Get.back();
       Get.snackbar("Success", "Berhasil mengubah modul");
@@ -299,11 +305,11 @@ class ModulDetailUiController extends GetxController {
 
     try {
       isSubmitting.value = true;
-      await _controller.editPasswordModul(
+      await _modulController.editPasswordModul(
         modul.value!.serialId,
         password: modulNewPassC.text.trim(),
       );
-      await _controller.getSelectedModul(modul.value!.serialId);
+      await _modulController.getSelectedModul(modul.value!.serialId);
 
       Get.back();
       Get.snackbar("Success", "Berhasil mengubah password modul");

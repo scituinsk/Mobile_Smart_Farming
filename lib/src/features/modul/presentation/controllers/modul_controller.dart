@@ -7,9 +7,16 @@ import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 class ModulController extends GetxController {
   final ModulServices _modulServices = Get.find<ModulServices>();
 
-  RxBool get isLoading => _modulServices.isLoading;
+  RxBool get isLoadingModul => _modulServices.isLoading;
+
   RxList<Modul> get devices => _modulServices.moduls;
   Rx<Modul?> get selectedDevice => _modulServices.selectedModul;
+
+  @override
+  Future<void> onInit() async {
+    super.onInit();
+    await _modulServices.loadModuls();
+  }
 
   Future<void> refreshModulList() async {
     try {
