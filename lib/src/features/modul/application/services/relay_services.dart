@@ -57,4 +57,21 @@ class RelayServices extends GetxService {
       isLoading.value = false;
     }
   }
+
+  Future<void> editRelayGroup(String serialId, int pin, int groupId) async {
+    try {
+      final relay = await _repository.editRelay(
+        pin,
+        serialId,
+        groupId: groupId,
+      );
+
+      final index = relays.indexWhere((element) => element.pin == pin);
+      print("move relays $index to $groupId");
+      relays[index] = relay;
+    } catch (e) {
+      print("error editing modul(service): $e ");
+      rethrow;
+    }
+  }
 }

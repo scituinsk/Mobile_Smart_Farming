@@ -23,6 +23,7 @@ class RelayItem extends StatelessWidget {
         color: AppTheme.surfaceColor,
         borderRadius: BorderRadius.circular(10),
       ),
+      margin: EdgeInsets.fromLTRB(12, 10, 12, 10),
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
       child: Row(
         spacing: 10,

@@ -28,7 +28,7 @@ class ModulDetailFeatureSection extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
         child: Obx(() {
           final modul = controller.modul.value!;
-          print("UI rebuilding with modul: ${modul.name}");
+          // print("UI rebuilding with modul: ${modul.name}");
           List<ModulFeature> modulDatas = [];
 
           if (modul.features != null) {
@@ -76,7 +76,7 @@ class ModulDetailFeatureSection extends StatelessWidget {
               final dataIndex = index - 2;
               final modulData = modulDatas[dataIndex];
 
-              print("Building ${modulData.name} with data: ${modulData.data}");
+              // print("Building ${modulData.name} with data: ${modulData.data}");
 
               // final processedData = ModulFeatureHelper.getFeatureData(
               //   modulData.name,

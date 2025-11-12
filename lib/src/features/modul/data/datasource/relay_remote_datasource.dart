@@ -61,7 +61,8 @@ class RelayRemoteDatasourceImpl implements RelayRemoteDatasource {
     final Response response = await _apiService.get(
       "/iot/device/$serialId/groups/",
     );
-    final responseData = response.data["data"] as List<Map<String, dynamic>>;
+
+    final responseData = response.data["data"] as List<dynamic>;
 
     return responseData.map((json) => GroupRelayModel.fromJson(json)).toList();
   }

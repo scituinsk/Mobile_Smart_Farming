@@ -21,6 +21,9 @@ class ModulDetailUiController extends GetxController {
 
   Rx<Modul?> get modul => _modulController.selectedDevice;
 
+  bool _pendingListUpdate = false;
+  Modul? _lastUpdatedModul;
+
   final RxBool isLoading = false.obs;
 
   Rxn<File> selectedImage = Rxn<File>(null);
@@ -60,11 +63,11 @@ class ModulDetailUiController extends GetxController {
       await getDevice(modulId);
       print("selected device: ${modul.value!.name}");
 
-      await _relayController.initRelayAndGroup(modul.value!.serialId);
-
       _initFormController();
 
       await _initWsStream();
+
+      await _relayController.initRelayAndGroup(modul.value!.serialId);
     } catch (e) {
       print("error at detail init: $e");
     } finally {
@@ -126,9 +129,9 @@ class ModulDetailUiController extends GetxController {
           final json = jsonDecode(raw as String) as Map<String, dynamic>;
           _updateFeatureData(json);
 
-          print(
-            "T=${json['temperature_data']}, H=${json['humidity_data']}, B=${json['battery_data']}, W=${json['water_level_data']}",
-          );
+          // print(
+          //   "T=${json['temperature_data']}, H=${json['humidity_data']}, B=${json['battery_data']}, W=${json['water_level_data']}",
+          // );
         } catch (e) {
           print("parse error: $e | raw=$raw");
         }
@@ -190,18 +193,13 @@ class ModulDetailUiController extends GetxController {
       image: currentModul.image,
     );
 
-    // Update selectedDevice
+    //update only the selected device to void rebuilding main modules
     _modulController.selectedDevice.value = updatedModul;
-    final idx = _modulController.devices.indexWhere(
-      (device) => device.serialId == modul.value!.serialId,
-    );
-    if (idx != -1) {
-      _modulController.devices[idx] = updatedModul;
-    }
-
-    // Force refresh dengan berbagai cara
     _modulController.selectedDevice.refresh();
-    _modulController.update(); // Update parent controller juga
+
+    _lastUpdatedModul = updatedModul;
+    _pendingListUpdate = true;
+
     update();
   }
 
@@ -389,6 +387,17 @@ class ModulDetailUiController extends GetxController {
     _ws.value?.send("STREAMING_OFF");
     await _sub?.cancel();
     await _ws.value?.close(); // berhenti streaming saat dispose
+
+    if (_pendingListUpdate && _lastUpdatedModul != null) {
+      final idx = _modulController.devices.indexWhere(
+        (modul) => modul.serialId == _lastUpdatedModul!.serialId,
+      );
+      if (idx != -1) {
+        _modulController.devices[idx] = _lastUpdatedModul!;
+      }
+      _pendingListUpdate = false;
+      _lastUpdatedModul = null;
+    }
 
     _disposeFormController();
     super.onClose();
