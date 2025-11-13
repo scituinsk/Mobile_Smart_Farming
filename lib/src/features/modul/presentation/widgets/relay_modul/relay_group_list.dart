@@ -9,16 +9,16 @@ import 'package:pak_tani/src/features/modul/presentation/controllers/relay_contr
 import 'package:pak_tani/src/features/modul/presentation/widgets/relay_modul/relay_item.dart';
 
 class RelayGroupList extends StatelessWidget {
-  const RelayGroupList({super.key, required this.controller});
+  RelayGroupList({super.key});
 
-  final RelayController controller;
+  final RelayController controller = Get.find<RelayController>();
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Obx(() {
-        final groups = controller.groupsRelay;
+        final groups = controller.relayGroups;
 
         if (groups.isEmpty) {
           return Center(
@@ -60,10 +60,10 @@ class RelayGroupList extends StatelessWidget {
                 );
               },
           onListReorder: (oldListIndex, newListIndex) {
-            final List<GroupRelay> copied = List.from(groups);
+            final List<RelayGroup> copied = List.from(groups);
             final moved = copied.removeAt(oldListIndex);
             copied.insert(newListIndex, moved);
-            controller.groupsRelay.assignAll(copied);
+            controller.relayGroups.assignAll(copied);
           },
           listPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
           listInnerDecoration: BoxDecoration(

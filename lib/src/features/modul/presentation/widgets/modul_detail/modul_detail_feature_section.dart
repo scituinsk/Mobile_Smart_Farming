@@ -29,7 +29,7 @@ class ModulDetailFeatureSection extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
         child: Obx(() {
           final modul = controller.modul.value!;
-          final relayGroups = controller.groupRelay;
+          final relayGroups = controller.relayGroups;
           // print("UI rebuilding with modul: ${modul.name}");
           List<ModulFeature> modulDatas = [];
 

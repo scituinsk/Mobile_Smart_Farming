@@ -30,6 +30,7 @@ class GroupScheduleInformation extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           /// Informasi mode penjadwalan umum
           Flexible(
@@ -43,8 +44,12 @@ class GroupScheduleInformation extends StatelessWidget {
                   style: AppTheme.h4.copyWith(color: AppTheme.primaryColor),
                 ),
                 Text(
-                  "Status mode penjadwalan sistem",
-                  style: Theme.of(context).textTheme.bodySmall,
+                  isSequentialMode
+                      ? sequentialCount.toString()
+                      : "Status mode penjadwalan sistem",
+                  style: isSequentialMode
+                      ? AppTheme.h1Rubik.copyWith(color: AppTheme.primaryColor)
+                      : AppTheme.textAction,
                   textAlign: TextAlign.center,
                 ),
                 Align(
@@ -92,25 +97,22 @@ class GroupScheduleInformation extends StatelessWidget {
           Expanded(
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  isSequentialMode ? "Jumlah Sequential" : "Jumlah Relay",
+                  "Jumlah Relay",
                   style: AppTheme.h4,
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  isSequentialMode
-                      ? sequentialCount.toString()
-                      : relayCount.toString(),
+                  relayCount.toString(),
                   style: AppTheme.h1Rubik.copyWith(
                     color: AppTheme.primaryColor,
                   ),
                 ),
                 Text(
-                  isSequentialMode
-                      ? "Jumlah relay aktif bergantian"
-                      : "Total jumlah relay",
+                  "Total jumlah relay",
                   style: AppTheme.textAction,
                   textAlign: TextAlign.center,
                 ),

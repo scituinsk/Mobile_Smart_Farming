@@ -61,7 +61,7 @@ class GroupScheduleScreen extends StatelessWidget {
             children: [
               SizedBox(height: 10),
               GroupScheduleInformation(
-                isSequentialMode: false,
+                isSequentialMode: true,
                 sequentialCount: 2,
                 relayCount: 8,
               ),

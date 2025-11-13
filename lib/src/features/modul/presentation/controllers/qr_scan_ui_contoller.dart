@@ -1,8 +1,9 @@
 import 'package:get/get.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/add_modul_ui_controller.dart';
 
-class QrBarcodeUiContoller extends GetxController {
-  final addModulController = Get.find<AddModulUiController>();
+class QrScanUiContoller extends GetxController {
+  final AddModulUiController addModulController;
+  QrScanUiContoller(this.addModulController);
 
   final RxBool isProcessingQR = false.obs;
 

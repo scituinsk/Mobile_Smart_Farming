@@ -10,7 +10,7 @@ class ModulController extends GetxController {
   RxBool get isLoadingModul => _modulServices.isLoading;
 
   RxList<Modul> get devices => _modulServices.moduls;
-  Rx<Modul?> get selectedDevice => _modulServices.selectedModul;
+  Rx<Modul?> get selectedModul => _modulServices.selectedModul;
 
   @override
   Future<void> onInit() async {

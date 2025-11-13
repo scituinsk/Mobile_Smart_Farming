@@ -17,11 +17,12 @@ import 'package:pak_tani/src/features/modul/presentation/controllers/modul_contr
 import 'package:pak_tani/src/features/modul/presentation/controllers/relay_controller.dart';
 
 class ModulDetailUiController extends GetxController {
-  final _modulController = Get.find<ModulController>();
-  final _relayController = Get.find<RelayController>();
+  final ModulController _modulController;
+  final RelayController _relayController;
+  ModulDetailUiController(this._modulController, this._relayController);
 
-  Rx<Modul?> get modul => _modulController.selectedDevice;
-  RxList<GroupRelay> get groupRelay => _relayController.groupsRelay;
+  Rx<Modul?> get modul => _modulController.selectedModul;
+  RxList<RelayGroup> get relayGroups => _relayController.relayGroups;
 
   bool _pendingListUpdate = false;
   Modul? _lastUpdatedModul;
@@ -196,8 +197,8 @@ class ModulDetailUiController extends GetxController {
     );
 
     //update only the selected device to void rebuilding main modules
-    _modulController.selectedDevice.value = updatedModul;
-    _modulController.selectedDevice.refresh();
+    _modulController.selectedModul.value = updatedModul;
+    _modulController.selectedModul.refresh();
 
     _lastUpdatedModul = updatedModul;
     _pendingListUpdate = true;
@@ -376,6 +377,7 @@ class ModulDetailUiController extends GetxController {
     final v = value?.trim() ?? "";
     if (v.isEmpty) return "Nama tidak boleh kosong";
     if (v.length < 3) return "Nama modul minimal 3 karakter";
+    if (v.length >= 20) return "Nama modul maksimal 20 karakter";
     return null;
   }
 

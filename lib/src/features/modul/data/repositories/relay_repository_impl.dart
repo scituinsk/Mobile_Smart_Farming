@@ -45,7 +45,7 @@ class RelayRepositoryImpl extends RelayRepository {
   }
 
   @override
-  Future<List<GroupRelay>> getListGroup(String serialId) async {
+  Future<List<RelayGroup>> getRelayGroups(String serialId) async {
     try {
       final listGroup = await remoteDatasource.getListGroup(serialId);
 
@@ -57,10 +57,22 @@ class RelayRepositoryImpl extends RelayRepository {
   }
 
   @override
-  Future<GroupRelay> editGroup(String id, String name) async {
+  Future<RelayGroup> addRelayGroup(String modulId, String name) async {
     try {
-      final group = await remoteDatasource.editGroup(id, name);
-      return group.toEntity();
+      final relayGroup = await remoteDatasource.addGroup(modulId, name);
+
+      return relayGroup.toEntity();
+    } catch (e) {
+      print("error add group(repo): $e");
+      rethrow;
+    }
+  }
+
+  @override
+  Future<RelayGroup> editRelayGroup(String id, String name) async {
+    try {
+      final relayGroup = await remoteDatasource.editGroup(id, name);
+      return relayGroup.toEntity();
     } catch (e) {
       print("error edit group(repo): $e");
       rethrow;
@@ -69,8 +81,8 @@ class RelayRepositoryImpl extends RelayRepository {
 
   //perlu dilihat lagi
   @override
-  Future<List<GroupRelay>> insertRelaysToGroupsRelay(
-    List<GroupRelay> groups,
+  Future<List<RelayGroup>> insertRelaysToRelayGroups(
+    List<RelayGroup> groups,
     List<Relay> relays,
   ) async {
     try {
@@ -102,7 +114,7 @@ class RelayRepositoryImpl extends RelayRepository {
           }
         }
 
-        return GroupRelay(
+        return RelayGroup(
           id: g.id,
           modulId: g.modulId,
           name: g.name,

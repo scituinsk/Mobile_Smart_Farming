@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_controller.dart';
 
 class AddModulUiController extends GetxController {
-  final _controller = Get.find<ModulController>();
+  final ModulController _controller;
+  AddModulUiController(this._controller);
+
   late TextEditingController modulCodeController;
   late TextEditingController modulPasswordController;
   final formKey = GlobalKey<FormState>();

@@ -13,6 +13,7 @@ abstract class RelayRemoteDatasource {
     int? groupId,
   });
   Future<List<GroupRelayModel>> getListGroup(String serialId);
+  Future<GroupRelayModel> addGroup(String modulId, String name);
   Future<GroupRelayModel> editGroup(String id, String name);
   Future<void> deleteGroup(String id);
 }
@@ -65,6 +66,17 @@ class RelayRemoteDatasourceImpl implements RelayRemoteDatasource {
     final responseData = response.data["data"] as List<dynamic>;
 
     return responseData.map((json) => GroupRelayModel.fromJson(json)).toList();
+  }
+
+  @override
+  Future<GroupRelayModel> addGroup(String modulId, String name) async {
+    final response = await _apiService.post(
+      "/schedule/groups/",
+      data: {"modul": modulId, "name": name},
+    );
+
+    final responseData = response.data["data"] as Map<String, dynamic>;
+    return GroupRelayModel.fromJson(responseData);
   }
 
   @override

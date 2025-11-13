@@ -10,7 +10,7 @@ class RelayServices extends GetxService {
   final RxBool isLoading = false.obs;
 
   final RxList<Relay> relays = <Relay>[].obs;
-  final RxList<GroupRelay> groupsRelay = <GroupRelay>[].obs;
+  final RxList<RelayGroup> relayGroups = <RelayGroup>[].obs;
 
   Future<void> _loadRelays(String serialId) async {
     try {
@@ -30,8 +30,8 @@ class RelayServices extends GetxService {
 
   Future<void> _loadGroupRelays(String serialId) async {
     try {
-      final groupRelayList = await _repository.getListGroup(serialId);
-      groupsRelay.assignAll(groupRelayList);
+      final groupRelayList = await _repository.getRelayGroups(serialId);
+      relayGroups.assignAll(groupRelayList);
       print("loaded relays ${groupRelayList.length}");
     } catch (e) {
       print("error load relays(service): $e");
@@ -44,12 +44,12 @@ class RelayServices extends GetxService {
     try {
       await _loadRelays(serialId);
       await _loadGroupRelays(serialId);
-      final groupRelayList = await _repository.insertRelaysToGroupsRelay(
-        groupsRelay,
+      final groupRelayList = await _repository.insertRelaysToRelayGroups(
+        relayGroups,
         relays,
       );
 
-      groupsRelay.assignAll(groupRelayList);
+      relayGroups.assignAll(groupRelayList);
     } catch (e) {
       print("error load and assign relays to groups(service): $e");
       rethrow;
@@ -71,6 +71,16 @@ class RelayServices extends GetxService {
       relays[index] = relay;
     } catch (e) {
       print("error editing modul(service): $e ");
+      rethrow;
+    }
+  }
+
+  Future<void> addRelayGroup(String modulId, String name) async {
+    try {
+      final relayGroup = await _repository.addRelayGroup(modulId, name);
+      relayGroups.add(relayGroup);
+    } catch (e) {
+      print("error add relay group(service): $e");
       rethrow;
     }
   }

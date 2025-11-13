@@ -26,12 +26,8 @@ class RelayBinding extends Bindings {
       fenix: true,
     );
 
-    Get.lazyPut<RelayController>(
-      () => RelayController(
-        Get.find<RelayServices>(),
-        Get.find<ModulController>(),
-      ),
-      fenix: true,
+    Get.put<RelayController>(
+      RelayController(Get.find<RelayServices>(), Get.find<ModulController>()),
     );
 
     print('✅ ModulBinding dependencies initialized');

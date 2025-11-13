@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
-import 'package:pak_tani/src/features/modul/presentation/controllers/relay_controller.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/relay_modul/relay_add_modal.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/relay_modul/relay_group_list.dart';
 
@@ -12,8 +10,6 @@ class RelayScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<RelayController>();
-
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 70,
@@ -36,7 +32,7 @@ class RelayScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: SafeArea(child: RelayGroupList(controller: controller)),
+      body: SafeArea(child: RelayGroupList()),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           RelayAddModal.show(context);

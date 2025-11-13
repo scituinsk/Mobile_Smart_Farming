@@ -21,7 +21,7 @@ class ModulDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ModulDetailUiController());
+    final controller = Get.find<ModulDetailUiController>();
 
     final mediaQueryWidth = Get.width;
     final mediaQueryHeight = Get.height;

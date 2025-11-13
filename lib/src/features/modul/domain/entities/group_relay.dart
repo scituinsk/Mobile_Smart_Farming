@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/relay.dart';
 
-class GroupRelay extends Equatable {
+class RelayGroup extends Equatable {
   final int id;
   final int modulId;
   final String name;
   final List<Relay>? relays;
-  const GroupRelay({
+  const RelayGroup({
     required this.id,
     required this.modulId,
     required this.name,

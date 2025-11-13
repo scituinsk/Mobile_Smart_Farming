@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:pak_tani/src/features/modul/application/services/relay_services.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/group_relay.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/relay.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_controller.dart';
 
@@ -10,7 +11,8 @@ class RelayController extends GetxController {
   RelayController(this._relayServices, this._modulController);
 
   RxList<Relay> get relays => _relayServices.relays;
-  RxList<GroupRelay> get groupsRelay => _relayServices.groupsRelay;
+  RxList<RelayGroup> get relayGroups => _relayServices.relayGroups;
+  Rx<Modul?> get selectedModul => _modulController.selectedModul;
 
   RxBool get isLoading => _relayServices.isLoading;
 
@@ -19,7 +21,7 @@ class RelayController extends GetxController {
       await _relayServices.loadRelaysAndAssignToGroupRelays(serialId);
 
       //for debug
-      for (var group in groupsRelay) {
+      for (var group in relayGroups) {
         print("relay group: ${group.name}");
         if (group.relays != null && group.relays!.isNotEmpty) {
           for (var relay in group.relays!) {
@@ -38,13 +40,13 @@ class RelayController extends GetxController {
     int toListIndex,
     int toItemIndex,
   ) async {
-    if (groupsRelay.isEmpty) return;
+    if (relayGroups.isEmpty) return;
 
-    final previous = groupsRelay.toList();
+    final previous = relayGroups.toList();
 
     try {
-      final sourceGroup = groupsRelay[fromListIndex];
-      final targetGroup = groupsRelay[toListIndex];
+      final sourceGroup = relayGroups[fromListIndex];
+      final targetGroup = relayGroups[toListIndex];
 
       final sourceRelays = List<Relay>.from(sourceGroup.relays ?? []);
       if (fromListIndex < 0 || fromItemIndex >= sourceRelays.length) return;
@@ -58,13 +60,13 @@ class RelayController extends GetxController {
             ? updatedList.length
             : toItemIndex;
         updatedList.insert(insertIndex, moving);
-        final updatedGroup = GroupRelay(
+        final updatedGroup = RelayGroup(
           id: sourceGroup.id,
           modulId: sourceGroup.modulId,
           name: sourceGroup.name,
           relays: updatedList,
         );
-        groupsRelay[fromListIndex] = updatedGroup;
+        relayGroups[fromListIndex] = updatedGroup;
       } else {
         final movedRelay = Relay(
           id: moving.id,
@@ -80,32 +82,32 @@ class RelayController extends GetxController {
             : toItemIndex;
         targetRelays.insert(insertIndex, movedRelay);
 
-        final updatedSource = GroupRelay(
+        final updatedSource = RelayGroup(
           id: sourceGroup.id,
           modulId: sourceGroup.modulId,
           name: sourceGroup.name,
           relays: sourceRelays,
         );
 
-        final updatedTarget = GroupRelay(
+        final updatedTarget = RelayGroup(
           id: targetGroup.id,
           modulId: targetGroup.modulId,
           name: targetGroup.name,
           relays: targetRelays,
         );
 
-        groupsRelay[fromListIndex] = updatedSource;
-        groupsRelay[toListIndex] = updatedTarget;
+        relayGroups[fromListIndex] = updatedSource;
+        relayGroups[toListIndex] = updatedTarget;
       }
 
       await _relayServices.editRelayGroup(
-        _modulController.selectedDevice.value!.serialId,
+        _modulController.selectedModul.value!.serialId,
         moving.pin,
         targetGroup.id,
       );
     } catch (e, st) {
       // rollback on error
-      groupsRelay.assignAll(previous);
+      relayGroups.assignAll(previous);
       print("Failed to move relay: $e\n$st");
       rethrow;
     }
