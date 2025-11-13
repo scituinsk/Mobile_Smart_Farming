@@ -10,6 +10,7 @@ import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/services/web_socket_service.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/feature_data.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/group_relay.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul_feature.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_controller.dart';
@@ -20,6 +21,7 @@ class ModulDetailUiController extends GetxController {
   final _relayController = Get.find<RelayController>();
 
   Rx<Modul?> get modul => _modulController.selectedDevice;
+  RxList<GroupRelay> get groupRelay => _relayController.groupsRelay;
 
   bool _pendingListUpdate = false;
   Modul? _lastUpdatedModul;
@@ -221,33 +223,46 @@ class ModulDetailUiController extends GetxController {
   Future<void> pickAndCropImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
 
-    //pick file
-    final XFile? pickedFile = await picker.pickImage(
-      source: source,
-      imageQuality: 100,
-    );
-
-    print("berhasil memilih file: $pickedFile");
-    if (pickedFile != null) {
-      print("memulai crop iamge:");
-      final CroppedFile? croppedFile = await ImageCropper().cropImage(
-        sourcePath: pickedFile.path,
-        aspectRatio: CropAspectRatio(ratioX: 590, ratioY: 390),
-        uiSettings: [
-          AndroidUiSettings(
-            toolbarTitle: "Crop Gambar",
-            toolbarColor: AppTheme.primaryColor,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: true,
-            hideBottomControls: false,
-            aspectRatioPresets: [CropAspectRatioPreset.original],
-          ),
-        ],
-        compressQuality: 80,
+    try {
+      Get.dialog(
+        const Center(child: CircularProgressIndicator(color: Colors.white)),
+        barrierDismissible: false,
+        barrierColor: Colors.black54,
+        useSafeArea: false,
       );
-      if (croppedFile != null) {
-        selectedImage.value = File(croppedFile.path);
+
+      //pick file
+      final XFile? pickedFile = await picker.pickImage(
+        source: source,
+        imageQuality: 100,
+      );
+
+      print("berhasil memilih file: $pickedFile");
+      if (pickedFile != null) {
+        print("memulai crop iamge:");
+        final CroppedFile? croppedFile = await ImageCropper().cropImage(
+          sourcePath: pickedFile.path,
+          aspectRatio: CropAspectRatio(ratioX: 590, ratioY: 390),
+          uiSettings: [
+            AndroidUiSettings(
+              toolbarTitle: "Crop Gambar",
+              toolbarColor: AppTheme.primaryColor,
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: true,
+              hideBottomControls: false,
+              aspectRatioPresets: [CropAspectRatioPreset.original],
+            ),
+          ],
+          compressQuality: 80,
+        );
+        if (croppedFile != null) {
+          selectedImage.value = File(croppedFile.path);
+        }
+      }
+    } finally {
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
       }
     }
   }

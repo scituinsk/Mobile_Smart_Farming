@@ -39,7 +39,7 @@ class ModulItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
 
-        height: 240,
+        // height: 240,
         width: double.infinity,
 
         child: Column(
@@ -107,7 +107,7 @@ class ModulItem extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
               child: _buildFeaturesRow(),
             ),
           ],

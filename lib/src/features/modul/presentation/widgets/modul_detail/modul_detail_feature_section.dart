@@ -15,6 +15,7 @@ class ModulDetailFeatureSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ModulDetailUiController>();
+
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(viewInsets: EdgeInsets.zero),
       child: Container(
@@ -28,6 +29,7 @@ class ModulDetailFeatureSection extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
         child: Obx(() {
           final modul = controller.modul.value!;
+          final relayGroups = controller.groupRelay;
           // print("UI rebuilding with modul: ${modul.name}");
           List<ModulFeature> modulDatas = [];
 
@@ -46,7 +48,7 @@ class ModulDetailFeatureSection extends StatelessWidget {
             gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
             ),
-            itemCount: modulDatas.length + 2,
+            itemCount: modulDatas.length + relayGroups.length + 1,
             mainAxisSpacing: 8,
             crossAxisSpacing: 8,
             itemBuilder: (context, index) {
@@ -60,20 +62,23 @@ class ModulDetailFeatureSection extends StatelessWidget {
                 );
               }
 
-              if (index == 1) {
-                return ModulDetailFeatureItem(
-                  title: "Green house A",
-                  myCustomIcon: MyCustomIcon.solenoid,
-                  onPressed: () {
-                    Get.toNamed(
-                      RouteNamed.groupSchedulePage,
-                      arguments: "Green Gouse A",
-                    );
-                  },
-                );
+              if (index >= 1) {
+                final relayIndex = index - 1;
+                if (index <= relayGroups.length) {
+                  return ModulDetailFeatureItem(
+                    title: relayGroups[relayIndex].name,
+                    myCustomIcon: MyCustomIcon.solenoid,
+                    onPressed: () {
+                      Get.toNamed(
+                        RouteNamed.groupSchedulePage,
+                        arguments: relayGroups[relayIndex].name,
+                      );
+                    },
+                  );
+                }
               }
 
-              final dataIndex = index - 2;
+              final dataIndex = index - relayGroups.length - 1;
               final modulData = modulDatas[dataIndex];
 
               // print("Building ${modulData.name} with data: ${modulData.data}");
