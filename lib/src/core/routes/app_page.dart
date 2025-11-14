@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/navigation/main_navigation.dart';
 import 'package:pak_tani/src/core/navigation/main_navigation_binding.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
+import 'package:pak_tani/src/features/group_schedule/presentation/bindings/group_schedule_screen_binding.dart';
 import 'package:pak_tani/src/features/modul/presentation/bindings/add_modul_screen_binding.dart';
 import 'package:pak_tani/src/features/modul/presentation/bindings/modul_detail_screen_binding.dart';
 import 'package:pak_tani/src/features/modul/presentation/bindings/qr_scan_screen_binding.dart';
@@ -25,6 +26,7 @@ class AppPage {
     GetPage(
       name: RouteNamed.groupSchedulePage,
       page: () => const GroupScheduleScreen(),
+      binding: GroupScheduleScreenBinding(),
     ),
 
     GetPage(

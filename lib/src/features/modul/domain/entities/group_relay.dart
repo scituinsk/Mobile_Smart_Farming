@@ -6,14 +6,15 @@ class RelayGroup extends Equatable {
   final int modulId;
   final String name;
   final List<Relay>? relays;
+  final int sequential;
   const RelayGroup({
     required this.id,
     required this.modulId,
     required this.name,
     this.relays,
+    required this.sequential,
   });
 
   @override
-  // TODO: implement props
-  List<Object?> get props => [id, modulId, name, relays];
+  List<Object?> get props => [id, modulId, name, relays, sequential];
 }

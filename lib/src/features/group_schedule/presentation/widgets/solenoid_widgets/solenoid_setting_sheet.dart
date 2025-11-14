@@ -5,11 +5,16 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
+import 'package:pak_tani/src/features/group_schedule/presentation/controllers/group_schedule_ui_controller.dart';
 import 'package:pak_tani/src/features/group_schedule/presentation/widgets/solenoid_widgets/solenoid_setting_sheet_chose.dart';
 
 class SolenoidSettingSheet {
-  static void show(BuildContext context) {
-    showMaterialModalBottomSheet(
+  static void show(BuildContext context) async {
+    final controller = Get.find<GroupScheduleUiController>();
+
+    controller.prepareSettingSheet();
+
+    await showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
@@ -22,87 +27,118 @@ class SolenoidSettingSheet {
         child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.fromLTRB(30, 20, 30, 0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Handle bar di atas
-                Container(
-                  width: 100,
-                  height: 8,
-                  margin: EdgeInsets.only(bottom: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(10),
+            child: Form(
+              key: controller.sequentalFormKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Handle bar di atas
+                  Container(
+                    width: 100,
+                    height: 8,
+                    margin: EdgeInsets.only(bottom: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
-                ),
-                // Custom top bar
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      icon: Icon(
-                        LucideIcons.x,
-                        color: AppTheme.primaryColor,
-                        size: 30,
+                  // Custom top bar
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        icon: Icon(
+                          LucideIcons.x,
+                          color: AppTheme.primaryColor,
+                          size: 30,
+                        ),
                       ),
-                    ),
-                    Text("Total Selenoid Aktif", style: AppTheme.h4),
-                    IconButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      icon: Icon(
-                        LucideIcons.check,
-                        color: AppTheme.primaryColor,
-                        size: 30,
+                      Text("Total Selenoid Aktif", style: AppTheme.h3),
+                      Obx(
+                        () => IconButton(
+                          onPressed: controller.isSubmitting.value
+                              ? null
+                              : () async {
+                                  await controller.handleEditGroupSequential();
+                                },
+                          icon: controller.isSubmitting.value
+                              ? CircularProgressIndicator()
+                              : Icon(
+                                  LucideIcons.check,
+                                  color: AppTheme.primaryColor,
+                                  size: 30,
+                                ),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Column(
-                  spacing: 26,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text("6", style: AppTheme.largeTimeText),
-
-                    Column(
-                      spacing: 12,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Obx(
+                    () => Column(
+                      spacing: 26,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("Pilih Penjadwalan", style: AppTheme.textMedium),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        Text(
+                          controller.relayCount.value.toString(),
+                          style: AppTheme.largeTimeText,
+                        ),
+
+                        Column(
+                          spacing: 12,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SolenoidSettingSheetChose(
-                              text: "Bergantian",
-                              value: 'bergantian',
-                              groupValue: 'bergantian',
+                            Text(
+                              "Pilih Penjadwalan",
+                              style: AppTheme.textMedium,
                             ),
-                            SolenoidSettingSheetChose(
-                              text: "Bersamaan",
-                              value: 'bersamaan',
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SolenoidSettingSheetChose(
+                                  text: "Bergantian",
+                                  value: true,
+                                  groupValue:
+                                      controller.isSequentialController.value,
+                                  onChanged: (value) =>
+                                      controller.isSequentialController.value =
+                                          value ?? false,
+                                ),
+                                SolenoidSettingSheetChose(
+                                  text: "Bersamaan",
+                                  value: false,
+                                  groupValue:
+                                      controller.isSequentialController.value,
+                                  onChanged: (value) =>
+                                      controller.isSequentialController.value =
+                                          value ?? false,
+                                ),
+                              ],
                             ),
                           ],
                         ),
+                        if (controller.isSequentialController.value)
+                          MyTextField(
+                            title: "Atur Jumlah Solenoid",
+                            hint: "Masukkan durasi",
+                            controller:
+                                controller.relaySequentialCountController,
+                            keyboardType: TextInputType.number,
+                            validator: controller.validateSequential,
+                            titleStyle: AppTheme.textMedium,
+                            prefixIcon: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: CustomIcon(type: MyCustomIcon.solenoid),
+                            ),
+                          ),
+                        SizedBox(height: 18),
                       ],
                     ),
-                    MyTextField(
-                      title: "Atur Jumlah Solenoid",
-                      hint: "Masukkan durasi",
-                      titleStyle: AppTheme.textMedium,
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: CustomIcon(type: MyCustomIcon.solenoid),
-                      ),
-                    ),
-                    SizedBox(height: 18),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

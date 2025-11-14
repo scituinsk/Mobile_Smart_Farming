@@ -14,7 +14,7 @@ abstract class RelayRemoteDatasource {
   });
   Future<List<GroupRelayModel>> getListGroup(String serialId);
   Future<GroupRelayModel> addGroup(String modulId, String name);
-  Future<GroupRelayModel> editGroup(String id, String name);
+  Future<GroupRelayModel> editGroup(String id, String name, int sequential);
   Future<void> deleteGroup(String id);
 }
 
@@ -80,11 +80,15 @@ class RelayRemoteDatasourceImpl implements RelayRemoteDatasource {
   }
 
   @override
-  Future<GroupRelayModel> editGroup(String id, String name) async {
+  Future<GroupRelayModel> editGroup(
+    String id,
+    String name,
+    int sequential,
+  ) async {
     // kemungkinan akan ada perubahan
     final Response response = await _apiService.put(
       "/schedule/groups/$id/",
-      data: {"name": name},
+      data: {"name": name, "sequential": sequential},
     );
 
     final responseData = response.data["data"] as Map<String, dynamic>;

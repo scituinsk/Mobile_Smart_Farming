@@ -11,6 +11,7 @@ class RelayServices extends GetxService {
 
   final RxList<Relay> relays = <Relay>[].obs;
   final RxList<RelayGroup> relayGroups = <RelayGroup>[].obs;
+  final Rx<RelayGroup?> selectedRelayGroup = Rx<RelayGroup?>(null);
 
   Future<void> _loadRelays(String serialId) async {
     try {
@@ -58,7 +59,7 @@ class RelayServices extends GetxService {
     }
   }
 
-  Future<void> editRelayGroup(String serialId, int pin, int groupId) async {
+  Future<void> editGroupForRelay(String serialId, int pin, int groupId) async {
     try {
       final relay = await _repository.editRelay(
         pin,
@@ -82,6 +83,63 @@ class RelayServices extends GetxService {
     } catch (e) {
       print("error add relay group(service): $e");
       rethrow;
+    }
+  }
+
+  Future<void> editRelayGroup(int id, {String? name, int? sequential}) async {
+    isLoading.value = true;
+    try {
+      final relayGroupIndex = relayGroups.indexWhere(
+        (element) => element.id == id,
+      );
+      if (relayGroupIndex == -1) {
+        throw Exception("RelayGroup tidak ditemukan");
+      }
+
+      final RelayGroup current = relayGroups[relayGroupIndex];
+      final updatedName = name ?? current.name;
+      final updatedSequential = sequential ?? current.sequential;
+
+      final response = await _repository.editRelayGroup(
+        id,
+        updatedName,
+        updatedSequential,
+      );
+
+      final RelayGroup newRelayGroup = RelayGroup(
+        id: response.id,
+        modulId: response.modulId,
+        name: response.name,
+        sequential: response.sequential,
+        relays: current.relays,
+      );
+
+      relayGroups[relayGroupIndex] = newRelayGroup;
+      selectedRelayGroup.value = newRelayGroup;
+    } catch (e) {
+      print("Error editing relayGroup(service): $e");
+      rethrow;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void selectRelayGroup(int id) {
+    isLoading.value = true;
+    try {
+      final relayGroup = relayGroups.firstWhereOrNull(
+        (element) => element.id == id,
+      );
+      if (relayGroup != null) {
+        selectedRelayGroup.value = relayGroup;
+      } else {
+        throw Exception("RelayGroup tidak ditemukan");
+      }
+    } catch (e) {
+      print("Error select relay group(service): $e");
+      rethrow;
+    } finally {
+      isLoading.value = false;
     }
   }
 }

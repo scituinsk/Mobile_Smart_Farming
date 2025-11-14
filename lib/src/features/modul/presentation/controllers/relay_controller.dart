@@ -13,6 +13,7 @@ class RelayController extends GetxController {
   RxList<Relay> get relays => _relayServices.relays;
   RxList<RelayGroup> get relayGroups => _relayServices.relayGroups;
   Rx<Modul?> get selectedModul => _modulController.selectedModul;
+  Rx<RelayGroup?> get selectedRelayGroup => _relayServices.selectedRelayGroup;
 
   RxBool get isLoading => _relayServices.isLoading;
 
@@ -65,6 +66,7 @@ class RelayController extends GetxController {
           modulId: sourceGroup.modulId,
           name: sourceGroup.name,
           relays: updatedList,
+          sequential: sourceGroup.sequential,
         );
         relayGroups[fromListIndex] = updatedGroup;
       } else {
@@ -87,6 +89,7 @@ class RelayController extends GetxController {
           modulId: sourceGroup.modulId,
           name: sourceGroup.name,
           relays: sourceRelays,
+          sequential: sourceGroup.sequential,
         );
 
         final updatedTarget = RelayGroup(
@@ -94,13 +97,14 @@ class RelayController extends GetxController {
           modulId: targetGroup.modulId,
           name: targetGroup.name,
           relays: targetRelays,
+          sequential: targetGroup.sequential,
         );
 
         relayGroups[fromListIndex] = updatedSource;
         relayGroups[toListIndex] = updatedTarget;
       }
 
-      await _relayServices.editRelayGroup(
+      await _relayServices.editGroupForRelay(
         _modulController.selectedModul.value!.serialId,
         moving.pin,
         targetGroup.id,

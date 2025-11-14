@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
+import 'package:pak_tani/src/features/group_schedule/presentation/controllers/group_schedule_ui_controller.dart';
 import 'package:pak_tani/src/features/group_schedule/presentation/widgets/group_schedule_information.dart';
 import 'package:pak_tani/src/features/group_schedule/presentation/widgets/schedule_widgets/add_schedule_sheet.dart';
 import 'package:pak_tani/src/features/group_schedule/presentation/widgets/schedule_widgets/schedule_list.dart';
@@ -18,7 +19,7 @@ class GroupScheduleScreen extends StatelessWidget {
     final mediaQueryWidth = Get.width;
     final mediaQueryHeight = Get.height;
 
-    final title = Get.arguments;
+    final controller = Get.find<GroupScheduleUiController>();
 
     return Scaffold(
       appBar: AppBar(
@@ -31,7 +32,7 @@ class GroupScheduleScreen extends StatelessWidget {
         ),
         title: Column(
           children: [
-            Text(title, style: AppTheme.h3),
+            Text(controller.selectedRelayGroup.value!.name, style: AppTheme.h3),
             Text(
               "Atur penjadwalan group",
               style: AppTheme.textSmall.copyWith(
@@ -60,11 +61,7 @@ class GroupScheduleScreen extends StatelessWidget {
           child: ListView(
             children: [
               SizedBox(height: 10),
-              GroupScheduleInformation(
-                isSequentialMode: true,
-                sequentialCount: 2,
-                relayCount: 8,
-              ),
+              GroupScheduleInformation(),
               SizedBox(height: 20),
               SolenoidList(),
               SizedBox(height: 20),

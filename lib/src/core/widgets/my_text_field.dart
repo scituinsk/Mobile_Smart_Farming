@@ -14,6 +14,7 @@ class MyTextField extends StatefulWidget {
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
+  final TextInputType keyboardType;
 
   const MyTextField({
     super.key,
@@ -29,6 +30,7 @@ class MyTextField extends StatefulWidget {
     this.controller,
     this.validator, // Tambahkan validator
     this.onChanged,
+    this.keyboardType = TextInputType.text,
   });
 
   @override
@@ -100,6 +102,7 @@ class _MyTextFieldState extends State<MyTextField> {
         SizedBox(
           width: widget.fieldWidth,
           child: TextField(
+            keyboardType: widget.keyboardType,
             controller: _controller,
             obscureText: _obscureText,
             decoration: InputDecoration(

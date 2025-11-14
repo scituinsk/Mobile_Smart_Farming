@@ -69,9 +69,13 @@ class RelayRepositoryImpl extends RelayRepository {
   }
 
   @override
-  Future<RelayGroup> editRelayGroup(String id, String name) async {
+  Future<RelayGroup> editRelayGroup(int id, String name, int sequential) async {
     try {
-      final relayGroup = await remoteDatasource.editGroup(id, name);
+      final relayGroup = await remoteDatasource.editGroup(
+        id.toString(),
+        name,
+        sequential,
+      );
       return relayGroup.toEntity();
     } catch (e) {
       print("error edit group(repo): $e");
@@ -119,6 +123,7 @@ class RelayRepositoryImpl extends RelayRepository {
           modulId: g.modulId,
           name: g.name,
           relays: merged,
+          sequential: g.sequential,
         );
       }).toList();
 

@@ -24,7 +24,7 @@ class SolenoidStatusChip extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.transparent,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.red, width: 1),
+              border: Border.all(color: Colors.red.shade200, width: 1),
             ),
             padding: EdgeInsets.symmetric(vertical: 3, horizontal: 7),
             child: Text(

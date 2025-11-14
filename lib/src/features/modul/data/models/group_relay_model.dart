@@ -6,6 +6,7 @@ class GroupRelayModel extends RelayGroup {
     required super.name,
     required super.modulId,
     super.relays,
+    required super.sequential,
   });
 
   factory GroupRelayModel.fromJson(Map<String, dynamic> json) {
@@ -13,6 +14,7 @@ class GroupRelayModel extends RelayGroup {
       id: json["id"],
       name: json["name"],
       modulId: json["modul"],
+      sequential: json["sequential"],
     );
   }
 
@@ -25,10 +27,16 @@ class GroupRelayModel extends RelayGroup {
       id: group.id,
       modulId: group.modulId,
       name: group.name,
+      sequential: group.sequential,
     );
   }
 
   RelayGroup toEntity() {
-    return RelayGroup(id: id, modulId: modulId, name: name);
+    return RelayGroup(
+      id: id,
+      modulId: modulId,
+      name: name,
+      sequential: sequential,
+    );
   }
 }

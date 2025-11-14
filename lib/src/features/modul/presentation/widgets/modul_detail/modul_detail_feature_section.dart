@@ -71,7 +71,7 @@ class ModulDetailFeatureSection extends StatelessWidget {
                     onPressed: () {
                       Get.toNamed(
                         RouteNamed.groupSchedulePage,
-                        arguments: relayGroups[relayIndex].name,
+                        arguments: relayGroups[relayIndex].id,
                       );
                     },
                   );
@@ -80,15 +80,6 @@ class ModulDetailFeatureSection extends StatelessWidget {
 
               final dataIndex = index - relayGroups.length - 1;
               final modulData = modulDatas[dataIndex];
-
-              // print("Building ${modulData.name} with data: ${modulData.data}");
-
-              // final processedData = ModulFeatureHelper.getFeatureData(
-              //   modulData.name,
-              //   modulData.data,
-              // );
-
-              // print("Processed data for ${modulData.name}: $processedData");
 
               return ModulDetailDataItem(
                 myCustomIcon: ModulFeatureHelper.getFeatureIcon(modulData.name),
