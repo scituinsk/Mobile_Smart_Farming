@@ -4,21 +4,8 @@ import 'package:get/get.dart' hide FormData, MultipartFile, Response;
 import 'package:dio/dio.dart';
 import 'package:pak_tani/src/core/services/api_service.dart';
 import 'package:pak_tani/src/features/modul/data/models/modul_model.dart';
+import 'package:pak_tani/src/features/modul/domain/datasources/modul_remote_datasource.dart';
 import 'package:path/path.dart' as p;
-
-abstract class ModulRemoteDatasource {
-  Future<List<ModulModel>?> getListModuls();
-  Future<ModulModel?> getModul(String id);
-  Future<ModulModel?> editModul(
-    String id, {
-    String? name,
-    String? password,
-    String? description,
-    File? imageFile,
-  });
-  Future<void> deleteModulFromUser(String id);
-  Future<ModulModel?> addModulToUser(String id, String password);
-}
 
 class ModulRemoteDatasourceImpl implements ModulRemoteDatasource {
   final ApiService _apiService = Get.find<ApiService>();

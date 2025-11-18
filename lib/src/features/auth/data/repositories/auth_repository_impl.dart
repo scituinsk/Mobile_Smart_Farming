@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/errors/api_exception.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
-import 'package:pak_tani/src/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:pak_tani/src/features/auth/domain/datasources/auth_remote_datasource.dart';
 import 'package:pak_tani/src/features/auth/domain/entities/user.dart';
 import 'package:pak_tani/src/features/auth/domain/repositories/auth_repository.dart';
 

@@ -2,22 +2,7 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/services/api_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/features/auth/data/models/user_model.dart';
-
-abstract class AuthRemoteDatasource {
-  Future<UserModel> login(String email, String password);
-  Future<void> register({
-    required String firstName,
-    String? lastName,
-    required String username,
-    required String email,
-    required String password1,
-    required String password2,
-  });
-  Future<void> logout(String refreshToken);
-  Future<Map<String, String>> refreshAccess(String refreshToken);
-  Future<void> requestPasswordReset(String email);
-  Future<UserModel?> getCurrentUser();
-}
+import 'package:pak_tani/src/features/auth/domain/datasources/auth_remote_datasource.dart';
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
   final ApiService _apiService = Get.find<ApiService>();

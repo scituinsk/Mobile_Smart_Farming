@@ -7,8 +7,9 @@ import 'package:pak_tani/src/features/auth/application/use_cases/get_user_use_ca
 import 'package:pak_tani/src/features/auth/application/use_cases/login_use_case.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/logout_use_case.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/register_use_case.dart';
-import 'package:pak_tani/src/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:pak_tani/src/features/auth/data/datasources/auth_remote_datasource_impl.dart';
 import 'package:pak_tani/src/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:pak_tani/src/features/auth/domain/datasources/auth_remote_datasource.dart';
 import 'package:pak_tani/src/features/auth/domain/repositories/auth_repository.dart';
 import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
 

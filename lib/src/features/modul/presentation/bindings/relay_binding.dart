@@ -1,7 +1,8 @@
 import 'package:get/get.dart';
 import 'package:pak_tani/src/features/modul/application/services/relay_services.dart';
-import 'package:pak_tani/src/features/modul/data/datasource/relay_remote_datasource.dart';
+import 'package:pak_tani/src/features/modul/data/datasource/relay_remote_datasource_impl.dart';
 import 'package:pak_tani/src/features/modul/data/repositories/relay_repository_impl.dart';
+import 'package:pak_tani/src/features/modul/domain/datasources/relay_remote_datasource.dart';
 import 'package:pak_tani/src/features/modul/domain/repositories/relay_repository.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_controller.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/relay_controller.dart';

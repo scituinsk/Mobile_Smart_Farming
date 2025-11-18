@@ -3,20 +3,7 @@ import 'package:get/get.dart' hide Response, FormData;
 import 'package:pak_tani/src/core/services/api_service.dart';
 import 'package:pak_tani/src/features/modul/data/models/group_relay_model.dart';
 import 'package:pak_tani/src/features/modul/data/models/relay_model.dart';
-
-abstract class RelayRemoteDatasource {
-  Future<List<RelayModel>?> getListRelay(String serialId);
-  Future<RelayModel> editRelay(
-    int pin,
-    String serialId, {
-    String? name,
-    int? groupId,
-  });
-  Future<List<GroupRelayModel>> getListGroup(String serialId);
-  Future<GroupRelayModel> addGroup(String modulId, String name);
-  Future<GroupRelayModel> editGroup(String id, String name, int sequential);
-  Future<void> deleteGroup(String id);
-}
+import 'package:pak_tani/src/features/modul/domain/datasources/relay_remote_datasource.dart';
 
 class RelayRemoteDatasourceImpl implements RelayRemoteDatasource {
   final ApiService _apiService = Get.find<ApiService>();
