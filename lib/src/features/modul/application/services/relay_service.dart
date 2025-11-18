@@ -3,9 +3,9 @@ import 'package:pak_tani/src/features/modul/domain/entities/group_relay.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/relay.dart';
 import 'package:pak_tani/src/features/modul/domain/repositories/relay_repository.dart';
 
-class RelayServices extends GetxService {
+class RelayService extends GetxService {
   final RelayRepository _repository;
-  RelayServices(this._repository);
+  RelayService(this._repository);
 
   final RxBool isLoading = false.obs;
 
@@ -40,7 +40,7 @@ class RelayServices extends GetxService {
     }
   }
 
-  Future<void> loadRelaysAndAssignToGroupRelays(String serialId) async {
+  Future<void> loadRelaysAndAssignToRelayGroup(String serialId) async {
     isLoading.value = true;
     try {
       await _loadRelays(serialId);

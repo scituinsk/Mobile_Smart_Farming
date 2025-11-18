@@ -1,10 +1,10 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:pak_tani/src/features/modul/application/services/relay_services.dart';
+import 'package:pak_tani/src/features/modul/application/services/relay_service.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/group_relay.dart';
 
 class GroupScheduleUiController extends GetxController {
-  final RelayServices relayService;
+  final RelayService relayService;
   GroupScheduleUiController(this.relayService);
 
   Rx<RelayGroup?> get selectedRelayGroup => relayService.selectedRelayGroup;

@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:pak_tani/src/features/modul/application/services/modul_services.dart';
+import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 import 'package:pak_tani/src/features/modul/data/datasource/modul_remote_datasource_impl.dart';
 import 'package:pak_tani/src/features/modul/data/repositories/modul_repository_impl.dart';
 import 'package:pak_tani/src/features/modul/domain/datasources/modul_remote_datasource.dart';
@@ -21,7 +21,7 @@ class ModulBinding extends Bindings {
       fenix: true,
     );
 
-    Get.lazyPut<ModulServices>(() => ModulServices(), fenix: true);
+    Get.lazyPut<ModulService>(() => ModulService(), fenix: true);
 
     Get.lazyPut<ModulController>(() => ModulController(), fenix: true);
 

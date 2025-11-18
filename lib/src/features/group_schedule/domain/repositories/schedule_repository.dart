@@ -15,8 +15,7 @@ abstract class ScheduleRepository {
     bool? repeatSunday,
   });
   Future<Schedule> editSchedule(
-    int id,
-    int groupId, {
+    int id, {
     String? time,
     int? duration,
     bool? repeatMonday,

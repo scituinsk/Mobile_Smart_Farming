@@ -15,8 +15,7 @@ abstract class ScheduleRemoteDatasource {
     bool? repeatSunday,
   });
   Future<ScheduleModel> editScheduleInGroup(
-    int id,
-    int groupId, {
+    int id, {
     String? time,
     int? duration,
     bool? repeatMonday,

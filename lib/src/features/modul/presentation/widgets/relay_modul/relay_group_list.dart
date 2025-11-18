@@ -5,13 +5,13 @@ import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/group_relay.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/relay.dart';
-import 'package:pak_tani/src/features/modul/presentation/controllers/relay_controller.dart';
+import 'package:pak_tani/src/features/modul/presentation/controllers/relay_ui_controller.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/relay_modul/relay_item.dart';
 
 class RelayGroupList extends StatelessWidget {
   RelayGroupList({super.key});
 
-  final RelayController controller = Get.find<RelayController>();
+  final RelayUiController controller = Get.find<RelayUiController>();
 
   @override
   Widget build(BuildContext context) {

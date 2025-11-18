@@ -44,7 +44,7 @@ class RelayAddModal {
                     textColor: AppTheme.primaryColor,
                   ),
                   Obx(() {
-                    final loading = controller.isSubmitting.value;
+                    final loading = controller.isLoading.value;
                     return FilledButton(
                       onPressed: !loading
                           ? () => controller.handleAddRelayGroup()

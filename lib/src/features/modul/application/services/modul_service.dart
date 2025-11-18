@@ -4,13 +4,20 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/domain/repositories/modul_repository.dart';
 
-class ModulServices extends GetxService {
+class ModulService extends GetxService {
   final ModulRepository _repository = Get.find<ModulRepository>();
 
   final RxBool isLoading = false.obs;
 
   final RxList<Modul> moduls = <Modul>[].obs;
   final Rx<Modul?> selectedModul = Rx<Modul?>(null);
+
+  @override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+    loadModuls();
+  }
 
   Future<void> loadModuls({bool refresh = false}) async {
     if (refresh) {

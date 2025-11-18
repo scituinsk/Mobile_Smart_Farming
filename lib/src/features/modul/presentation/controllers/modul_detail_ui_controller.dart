@@ -9,20 +9,20 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/services/web_socket_service.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
+import 'package:pak_tani/src/features/modul/application/services/relay_service.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/feature_data.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/group_relay.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul_feature.dart';
-import 'package:pak_tani/src/features/modul/presentation/controllers/modul_controller.dart';
-import 'package:pak_tani/src/features/modul/presentation/controllers/relay_controller.dart';
 
 class ModulDetailUiController extends GetxController {
-  final ModulController _modulController;
-  final RelayController _relayController;
-  ModulDetailUiController(this._modulController, this._relayController);
+  final ModulService _modulService;
+  final RelayService _relayService;
+  ModulDetailUiController(this._modulService, this._relayService);
 
-  Rx<Modul?> get modul => _modulController.selectedModul;
-  RxList<RelayGroup> get relayGroups => _relayController.relayGroups;
+  Rx<Modul?> get modul => _modulService.selectedModul;
+  RxList<RelayGroup> get relayGroups => _relayService.relayGroups;
 
   bool _pendingListUpdate = false;
   Modul? _lastUpdatedModul;
@@ -70,7 +70,9 @@ class ModulDetailUiController extends GetxController {
 
       await _initWsStream();
 
-      await _relayController.initRelayAndGroup(modul.value!.serialId);
+      await _relayService.loadRelaysAndAssignToRelayGroup(
+        modul.value!.serialId,
+      );
     } catch (e) {
       print("error at detail init: $e");
     } finally {
@@ -197,8 +199,8 @@ class ModulDetailUiController extends GetxController {
     );
 
     //update only the selected device to void rebuilding main modules
-    _modulController.selectedModul.value = updatedModul;
-    _modulController.selectedModul.refresh();
+    _modulService.selectedModul.value = updatedModul;
+    _modulService.selectedModul.refresh();
 
     _lastUpdatedModul = updatedModul;
     _pendingListUpdate = true;
@@ -207,12 +209,12 @@ class ModulDetailUiController extends GetxController {
   }
 
   Future<void> getDevice(String id) async {
-    await _modulController.getSelectedModul(id);
+    await _modulService.loadModul(id);
   }
 
   Future<void> deleteDevice() async {
     try {
-      await _modulController.deleteModul(modul.value!.serialId);
+      await _modulService.deleteModul(modul.value!.serialId);
       Get.back();
       Get.snackbar("success", "berhasil menghapus modul dari user ini");
     } catch (e) {
@@ -285,13 +287,13 @@ class ModulDetailUiController extends GetxController {
 
     try {
       isSubmitting.value = true;
-      await _modulController.editModul(
+      await _modulService.editModul(
         modul.value!.serialId,
         name: modulNameC.text.trim(),
         description: modulDescriptionC.text.trim(),
         imageFile: selectedImage.value,
       );
-      await _modulController.getSelectedModul(modul.value!.serialId);
+      await _modulService.loadModul(modul.value!.serialId);
 
       Get.back();
       Get.snackbar("Success", "Berhasil mengubah modul");
@@ -319,11 +321,11 @@ class ModulDetailUiController extends GetxController {
 
     try {
       isSubmitting.value = true;
-      await _modulController.editPasswordModul(
+      await _modulService.editModul(
         modul.value!.serialId,
         password: modulNewPassC.text.trim(),
       );
-      await _modulController.getSelectedModul(modul.value!.serialId);
+      await _modulService.loadModul(modul.value!.serialId);
 
       Get.back();
       Get.snackbar("Success", "Berhasil mengubah password modul");
@@ -406,11 +408,11 @@ class ModulDetailUiController extends GetxController {
     await _ws.value?.close(); // berhenti streaming saat dispose
 
     if (_pendingListUpdate && _lastUpdatedModul != null) {
-      final idx = _modulController.devices.indexWhere(
+      final idx = _modulService.moduls.indexWhere(
         (modul) => modul.serialId == _lastUpdatedModul!.serialId,
       );
       if (idx != -1) {
-        _modulController.devices[idx] = _lastUpdatedModul!;
+        _modulService.moduls[idx] = _lastUpdatedModul!;
       }
       _pendingListUpdate = false;
       _lastUpdatedModul = null;

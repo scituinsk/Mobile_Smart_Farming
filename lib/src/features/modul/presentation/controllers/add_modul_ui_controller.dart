@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pak_tani/src/features/modul/presentation/controllers/modul_controller.dart';
+import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 
 class AddModulUiController extends GetxController {
-  final ModulController _controller;
-  AddModulUiController(this._controller);
+  final ModulService _service;
+  AddModulUiController(this._service);
 
   late TextEditingController modulCodeController;
   late TextEditingController modulPasswordController;
@@ -13,7 +13,6 @@ class AddModulUiController extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     modulCodeController = TextEditingController();
     modulPasswordController = TextEditingController();
@@ -40,7 +39,7 @@ class AddModulUiController extends GetxController {
     if (isSubmitting.value) return;
     try {
       isSubmitting.value = true;
-      await _controller.addModul(
+      await _service.addModul(
         modulCodeController.text.trim(),
         modulPasswordController.text.trim(),
       );
