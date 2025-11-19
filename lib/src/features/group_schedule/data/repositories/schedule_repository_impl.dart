@@ -62,6 +62,7 @@ class ScheduleRepositoryImpl extends ScheduleRepository {
     String id, {
     String? time,
     int? duration,
+    bool? isActive,
     bool? repeatMonday,
     bool? repeatTuesday,
     bool? repeatWednesday,
@@ -75,6 +76,7 @@ class ScheduleRepositoryImpl extends ScheduleRepository {
         id,
         time: time,
         duration: duration,
+        isActive: isActive,
         repeatMonday: repeatMonday,
         repeatTuesday: repeatTuesday,
         repeatWednesday: repeatWednesday,

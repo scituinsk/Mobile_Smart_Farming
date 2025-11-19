@@ -59,12 +59,12 @@ class SolenoidSettingSheet {
                       Text("Total Selenoid Aktif", style: AppTheme.h3),
                       Obx(
                         () => IconButton(
-                          onPressed: controller.isSubmitting.value
+                          onPressed: controller.isSubmittingSequential.value
                               ? null
                               : () async {
                                   await controller.handleEditGroupSequential();
                                 },
-                          icon: controller.isSubmitting.value
+                          icon: controller.isSubmittingSequential.value
                               ? CircularProgressIndicator()
                               : Icon(
                                   LucideIcons.check,

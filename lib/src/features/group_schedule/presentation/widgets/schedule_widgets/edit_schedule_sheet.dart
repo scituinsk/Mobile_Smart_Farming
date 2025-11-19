@@ -3,12 +3,20 @@ import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/utils/time_of_day_parse_helper.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
+import 'package:pak_tani/src/features/group_schedule/domain/entities/schedule.dart';
+import 'package:pak_tani/src/features/group_schedule/domain/value_objects/week_day.dart';
+import 'package:pak_tani/src/features/group_schedule/presentation/controllers/group_schedule_ui_controller.dart';
 import 'package:pak_tani/src/features/group_schedule/presentation/widgets/schedule_widgets/build_day_chip.dart';
+import 'package:pak_tani/src/features/group_schedule/presentation/widgets/schedule_widgets/delete_schedule_dialog.dart';
 
 class EditScheduleSheet {
-  static void show(BuildContext context) {
-    showMaterialModalBottomSheet(
+  static void show(BuildContext context, Schedule schedule) async {
+    final controller = Get.find<GroupScheduleUiController>();
+
+    controller.initEditScheduleSheet(schedule);
+    await showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
@@ -39,24 +47,26 @@ class EditScheduleSheet {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    onPressed: () {
-                      Get.back();
-                    },
+                    onPressed: () =>
+                        DeleteScheduleDialog.show(context, schedule.id),
                     icon: Icon(
-                      LucideIcons.x,
-                      color: AppTheme.primaryColor,
+                      LucideIcons.trash2,
+                      color: AppTheme.errorColor,
                       size: 30,
                     ),
                   ),
                   Text("Ubah Penjadwalan", style: AppTheme.h4),
-                  IconButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    icon: Icon(
-                      LucideIcons.check,
-                      color: AppTheme.primaryColor,
-                      size: 30,
+                  Obx(
+                    () => IconButton(
+                      onPressed: () =>
+                          controller.handleEditSchedule(schedule.id),
+                      icon: controller.isSavingSchedule.value
+                          ? CircularProgressIndicator()
+                          : Icon(
+                              LucideIcons.check,
+                              color: AppTheme.primaryColor,
+                              size: 30,
+                            ),
                     ),
                   ),
                 ],
@@ -75,9 +85,27 @@ class EditScheduleSheet {
                             "Waktu Penjadwalan",
                             style: AppTheme.textDefault,
                           ),
-                          Text("16.30", style: AppTheme.largeTimeText),
+                          Obx(() {
+                            final time = controller.timeController.value;
+                            return Text(
+                              time != null
+                                  ? TimeOfDayParseHelper.formatTimeOfDay(time)
+                                  : "--:--",
+                              style: AppTheme.largeTimeText,
+                            );
+                          }),
                           FilledButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              final time = await showTimePicker(
+                                context: context,
+                                initialTime:
+                                    controller.timeController.value ??
+                                    TimeOfDay.now(),
+                              );
+                              if (time != null) {
+                                controller.timeController.value = time;
+                              }
+                            },
                             child: Text("Pilih Waktu"),
                           ),
                         ],
@@ -89,12 +117,14 @@ class EditScheduleSheet {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           MyTextField(
+                            controller: controller.scheduleDurationController,
                             title: "Durasi Penyiraman",
-                            hint: "Masukkan durasi",
+                            hint: "Masukkan durasi (menit)",
                             prefixIcon: Icon(
                               LucideIcons.clock,
                               color: AppTheme.secondaryColor,
                             ),
+                            keyboardType: TextInputType.number,
                           ),
 
                           // Ulangi Penyiraman Section
@@ -108,24 +138,21 @@ class EditScheduleSheet {
                               SizedBox(height: 16),
 
                               // Hari dalam seminggu
-                              Wrap(
-                                spacing: 15,
-                                runSpacing: 15,
-                                children: [
-                                  BuildDayChip(day: "Senin", isSelected: false),
-                                  BuildDayChip(
-                                    day: "Selasa",
-                                    isSelected: false,
-                                  ),
-                                  BuildDayChip(day: "Rabu", isSelected: false),
-                                  BuildDayChip(day: "Kamis", isSelected: false),
-                                  BuildDayChip(
-                                    day: "Jumat",
-                                    isSelected: true,
-                                  ), // Selected
-                                  BuildDayChip(day: "Sabtu", isSelected: false),
-                                  BuildDayChip(day: "Minggu", isSelected: true),
-                                ],
+                              Obx(
+                                () => Wrap(
+                                  spacing: 15,
+                                  runSpacing: 15,
+                                  children: WeekDay.values.map((day) {
+                                    final isSelected = controller.isDaySelected(
+                                      day,
+                                    );
+                                    return BuildDayChip(
+                                      day: day.long,
+                                      isSelected: isSelected,
+                                      onTap: () => controller.toggleDay(day),
+                                    );
+                                  }).toList(),
+                                ),
                               ),
                             ],
                           ),
@@ -139,6 +166,6 @@ class EditScheduleSheet {
           ),
         ),
       ),
-    );
+    ).then((_) => controller.disposeScheduleSheet());
   }
 }

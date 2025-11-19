@@ -127,7 +127,7 @@ abstract final class AppTheme {
       onPrimary: Colors.white,
       secondary: secondaryColor,
       onSecondary: Colors.white,
-      tertiary: ternaryColor,
+      tertiary: waterPumpColor,
       onTertiary: textColor,
       error: errorColor,
       onError: Colors.white,

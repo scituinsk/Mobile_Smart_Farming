@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_switch.dart';
 import 'package:pak_tani/src/features/group_schedule/domain/entities/schedule.dart';
+import 'package:pak_tani/src/features/group_schedule/presentation/controllers/group_schedule_ui_controller.dart';
 import 'package:pak_tani/src/features/group_schedule/presentation/widgets/schedule_widgets/edit_schedule_sheet.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ScheduleItem extends StatelessWidget {
   final Schedule schedule;
-  const ScheduleItem({super.key, required this.schedule});
+  ScheduleItem({super.key, required this.schedule});
+
+  final controller = Get.find<GroupScheduleUiController>();
 
   @override
   Widget build(BuildContext context) {
     final isSkeleton = Skeletonizer.of(context).enabled;
     return InkWell(
-      onTap: () => EditScheduleSheet.show(context),
+      onTap: () => EditScheduleSheet.show(context, schedule),
       borderRadius: BorderRadius.circular(20),
       child: Container(
         decoration: BoxDecoration(
@@ -51,11 +55,17 @@ class ScheduleItem extends StatelessWidget {
                     borderRadius: BorderRadius.circular(25),
                     width: 50,
                   )
-                : MySwitch(
-                    value: schedule.isActive,
-                    onChanged: (value) {},
-                    scale: 1.1,
-                  ),
+                : Obx(() {
+                    final index = controller.getScheduleIndex(schedule.id);
+                    return MySwitch(
+                      value: controller.schedules[index].isActive,
+                      onChanged: (value) => controller.handleEditStatusSchedule(
+                        schedule.id,
+                        value,
+                      ),
+                      scale: 1.1,
+                    );
+                  }),
           ],
         ),
       ),

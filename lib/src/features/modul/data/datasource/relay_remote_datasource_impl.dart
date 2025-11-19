@@ -73,7 +73,7 @@ class RelayRemoteDatasourceImpl implements RelayRemoteDatasource {
     int sequential,
   ) async {
     // kemungkinan akan ada perubahan
-    final Response response = await _apiService.put(
+    final Response response = await _apiService.patch(
       "/schedule/groups/$id/",
       data: {"name": name, "sequential": sequential},
     );

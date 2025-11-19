@@ -18,6 +18,7 @@ abstract class ScheduleRepository {
     String id, {
     String? time,
     int? duration,
+    bool? isActive,
     bool? repeatMonday,
     bool? repeatTuesday,
     bool? repeatWednesday,

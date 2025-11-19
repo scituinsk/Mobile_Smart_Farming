@@ -3,11 +3,17 @@ import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/utils/time_of_day_parse_helper.dart';
+import 'package:pak_tani/src/features/group_schedule/domain/value_objects/week_day.dart';
+import 'package:pak_tani/src/features/group_schedule/presentation/controllers/group_schedule_ui_controller.dart';
 import 'package:pak_tani/src/features/group_schedule/presentation/widgets/schedule_widgets/build_day_chip.dart';
 
 class AddScheduleSheet {
-  static void show(BuildContext context) {
-    showMaterialModalBottomSheet(
+  static void show(BuildContext context) async {
+    final controller = Get.find<GroupScheduleUiController>();
+
+    controller.initAddScheduleSheet();
+    await showMaterialModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
@@ -48,14 +54,16 @@ class AddScheduleSheet {
                     ),
                   ),
                   Text("Tambah Penjadwalan", style: AppTheme.h4),
-                  IconButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    icon: Icon(
-                      LucideIcons.check,
-                      color: AppTheme.primaryColor,
-                      size: 30,
+                  Obx(
+                    () => IconButton(
+                      onPressed: () => controller.handleAddNewSchedule(),
+                      icon: controller.isSavingSchedule.value
+                          ? CircularProgressIndicator()
+                          : Icon(
+                              LucideIcons.check,
+                              color: AppTheme.primaryColor,
+                              size: 30,
+                            ),
                     ),
                   ),
                 ],
@@ -74,9 +82,27 @@ class AddScheduleSheet {
                             "Waktu Penjadwalan",
                             style: AppTheme.textDefault,
                           ),
-                          Text("16.30", style: AppTheme.largeTimeText),
+                          Obx(() {
+                            final time = controller.timeController.value;
+                            return Text(
+                              time != null
+                                  ? TimeOfDayParseHelper.formatTimeOfDay(time)
+                                  : "--:--",
+                              style: AppTheme.largeTimeText,
+                            );
+                          }),
                           FilledButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              final time = await showTimePicker(
+                                context: context,
+                                initialTime:
+                                    controller.timeController.value ??
+                                    TimeOfDay.now(),
+                              );
+                              if (time != null) {
+                                controller.timeController.value = time;
+                              }
+                            },
                             child: Text("Pilih Waktu"),
                           ),
                         ],
@@ -92,18 +118,18 @@ class AddScheduleSheet {
                             children: [
                               Text(
                                 "Durasi penyiraman",
-                                style: AppTheme.textDefault.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                style: AppTheme.textMedium,
                               ),
                               SizedBox(height: 12),
                               TextField(
+                                controller:
+                                    controller.scheduleDurationController,
                                 decoration: InputDecoration(
                                   prefixIcon: Icon(
                                     LucideIcons.clock,
                                     color: AppTheme.secondaryColor,
                                   ),
-                                  hintText: "Masukkan durasi",
+                                  hintText: "Masukkan durasi (menit)",
                                   filled: true,
                                   fillColor: Colors.grey.shade200,
                                   border: OutlineInputBorder(
@@ -123,33 +149,59 @@ class AddScheduleSheet {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Ulangi penyiraman",
-                                style: AppTheme.textDefault.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Ulangi penyiraman",
+                                    style: AppTheme.textMedium,
+                                  ),
+                                  Row(
+                                    spacing: 10,
+                                    children: [
+                                      TextButton(
+                                        onPressed: controller.selectAllDays,
+                                        child: Text(
+                                          "Semua",
+                                          style: TextStyle(
+                                            color: AppTheme.primaryColor,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: controller.clearDays,
+                                        child: Text(
+                                          "Reset",
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                               SizedBox(height: 16),
 
                               // Hari dalam seminggu
-                              Wrap(
-                                spacing: 15,
-                                runSpacing: 15,
-                                children: [
-                                  BuildDayChip(day: "Senin", isSelected: false),
-                                  BuildDayChip(
-                                    day: "Selasa",
-                                    isSelected: false,
-                                  ),
-                                  BuildDayChip(day: "Rabu", isSelected: false),
-                                  BuildDayChip(day: "Kamis", isSelected: false),
-                                  BuildDayChip(
-                                    day: "Jumat",
-                                    isSelected: true,
-                                  ), // Selected
-                                  BuildDayChip(day: "Sabtu", isSelected: false),
-                                  BuildDayChip(day: "Minggu", isSelected: true),
-                                ],
+                              Obx(
+                                () => Wrap(
+                                  spacing: 15,
+                                  runSpacing: 15,
+                                  children: WeekDay.values.map((day) {
+                                    final isSelected = controller.isDaySelected(
+                                      day,
+                                    );
+                                    return BuildDayChip(
+                                      day: day.long,
+                                      isSelected: isSelected,
+                                      onTap: () => controller.toggleDay(day),
+                                    );
+                                  }).toList(),
+                                ),
                               ),
                             ],
                           ),
@@ -163,6 +215,6 @@ class AddScheduleSheet {
           ),
         ),
       ),
-    );
+    ).then((_) => controller.disposeScheduleSheet());
   }
 }

@@ -42,7 +42,7 @@ class ScheduleList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final bool isLoading = _controller.isLoadingSchedule.value;
+      final bool isLoading = _controller.isFetchingSchedule.value;
       final List<Schedule> schedules = isLoading
           ? _mockSchedules
           : _controller.schedules;

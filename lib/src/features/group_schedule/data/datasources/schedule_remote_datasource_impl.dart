@@ -35,6 +35,7 @@ class ScheduleRemoteDatasourceImpl extends ScheduleRemoteDatasource {
     final FormData formData = FormData.fromMap({
       "group": groupId,
       "time": time,
+      "is_active": true,
       if (duration != null) "duration": duration,
       if (repeatMonday != null) "repeat_monday": repeatMonday,
       if (repeatTuesday != null) "repeat_tuesday": repeatTuesday,
@@ -60,6 +61,7 @@ class ScheduleRemoteDatasourceImpl extends ScheduleRemoteDatasource {
     String id, {
     String? time,
     int? duration,
+    bool? isActive,
     bool? repeatMonday,
     bool? repeatTuesday,
     bool? repeatWednesday,
@@ -71,6 +73,7 @@ class ScheduleRemoteDatasourceImpl extends ScheduleRemoteDatasource {
     final FormData formData = FormData.fromMap({
       if (time != null) "time": time,
       if (duration != null) "duration": duration,
+      if (isActive != null) "is_active": isActive,
       if (repeatMonday != null) "repeat_monday": repeatMonday,
       if (repeatTuesday != null) "repeat_tuesday": repeatTuesday,
       if (repeatWednesday != null) "repeat_wednesday": repeatWednesday,
@@ -80,7 +83,7 @@ class ScheduleRemoteDatasourceImpl extends ScheduleRemoteDatasource {
       if (repeatSunday != null) "repeat_sunday": repeatSunday,
     });
 
-    final Response response = await _apiService.put(
+    final Response response = await _apiService.patch(
       "/schedule/alarms/$id/",
       data: formData,
     );
