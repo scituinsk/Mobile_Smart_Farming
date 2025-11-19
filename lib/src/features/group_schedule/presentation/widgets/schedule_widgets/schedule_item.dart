@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_switch.dart';
+import 'package:pak_tani/src/features/group_schedule/domain/entities/schedule.dart';
 import 'package:pak_tani/src/features/group_schedule/presentation/widgets/schedule_widgets/edit_schedule_sheet.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ScheduleItem extends StatelessWidget {
-  final int duration;
-  final String time;
-  final String day;
-  final bool status;
-  const ScheduleItem({
-    super.key,
-    required this.duration,
-    required this.time,
-    required this.day,
-    this.status = true,
-  });
+  final Schedule schedule;
+  const ScheduleItem({super.key, required this.schedule});
 
   @override
   Widget build(BuildContext context) {
+    final isSkeleton = Skeletonizer.of(context).enabled;
     return InkWell(
       onTap: () => EditScheduleSheet.show(context),
       borderRadius: BorderRadius.circular(20),
@@ -35,24 +29,33 @@ class ScheduleItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Durasi: $duration menit",
+                  "Durasi: ${schedule.duration ?? 0} menit",
                   style: AppTheme.text.copyWith(color: AppTheme.titleSecondary),
                 ),
 
                 Text(
-                  time,
+                  schedule.getFormattedTime(),
                   style: AppTheme.h1Rubik.copyWith(
                     color: AppTheme.primaryColor,
                   ),
                 ),
 
                 Text(
-                  day,
+                  schedule.getActiveDays(),
                   style: AppTheme.text.copyWith(color: AppTheme.secondaryColor),
                 ),
               ],
             ),
-            MySwitch(value: status, onChanged: (value) {}, scale: 1.1),
+            isSkeleton
+                ? Bone.button(
+                    borderRadius: BorderRadius.circular(25),
+                    width: 50,
+                  )
+                : MySwitch(
+                    value: schedule.isActive,
+                    onChanged: (value) {},
+                    scale: 1.1,
+                  ),
           ],
         ),
       ),

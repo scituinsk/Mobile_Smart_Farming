@@ -8,9 +8,9 @@ class ScheduleRemoteDatasourceImpl extends ScheduleRemoteDatasource {
   ScheduleRemoteDatasourceImpl(this._apiService);
 
   @override
-  Future<List<ScheduleModel>?> getListScheduleInGroup(int groupId) async {
+  Future<List<ScheduleModel>?> getListScheduleInGroup(String groupId) async {
     final Response response = await _apiService.get(
-      "/schedule/group/${groupId.toString()}/alarms/",
+      "/schedule/group/$groupId/alarms/",
     );
     final responseData = response.data["data"] as List<dynamic>;
 
@@ -21,7 +21,7 @@ class ScheduleRemoteDatasourceImpl extends ScheduleRemoteDatasource {
 
   @override
   Future<ScheduleModel> addScheduleInGroup(
-    int groupId, {
+    String groupId, {
     required String time,
     int? duration,
     bool? repeatMonday,
@@ -33,6 +33,7 @@ class ScheduleRemoteDatasourceImpl extends ScheduleRemoteDatasource {
     bool? repeatSunday,
   }) async {
     final FormData formData = FormData.fromMap({
+      "group": groupId,
       "time": time,
       if (duration != null) "duration": duration,
       if (repeatMonday != null) "repeat_monday": repeatMonday,
@@ -56,7 +57,7 @@ class ScheduleRemoteDatasourceImpl extends ScheduleRemoteDatasource {
 
   @override
   Future<ScheduleModel> editScheduleInGroup(
-    int id, {
+    String id, {
     String? time,
     int? duration,
     bool? repeatMonday,
@@ -80,7 +81,7 @@ class ScheduleRemoteDatasourceImpl extends ScheduleRemoteDatasource {
     });
 
     final Response response = await _apiService.put(
-      "/schedule/alarms/${id.toString()}/",
+      "/schedule/alarms/$id/",
       data: formData,
     );
 
@@ -90,7 +91,7 @@ class ScheduleRemoteDatasourceImpl extends ScheduleRemoteDatasource {
   }
 
   @override
-  Future<void> deleteSchedule(int id) async {
-    await _apiService.delete("/schedule/alarms/${id.toString()}/");
+  Future<void> deleteSchedule(String id) async {
+    await _apiService.delete("/schedule/alarms/$id/");
   }
 }

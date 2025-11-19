@@ -1,13 +1,18 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:pak_tani/src/features/group_schedule/application/services/schedule_service.dart';
+import 'package:pak_tani/src/features/group_schedule/domain/entities/schedule.dart';
 import 'package:pak_tani/src/features/modul/application/services/relay_service.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/group_relay.dart';
 
 class GroupScheduleUiController extends GetxController {
   final RelayService relayService;
-  GroupScheduleUiController(this.relayService);
+  final ScheduleService scheduleService;
+  GroupScheduleUiController(this.relayService, this.scheduleService);
 
   Rx<RelayGroup?> get selectedRelayGroup => relayService.selectedRelayGroup;
+  RxList<Schedule> get schedules => scheduleService.schedules;
+  RxBool get isLoadingSchedule => scheduleService.isLoading;
 
   RxInt relayCount = 0.obs;
   RxBool isSequential = false.obs;
@@ -23,10 +28,12 @@ class GroupScheduleUiController extends GetxController {
   void onInit() {
     super.onInit();
     relaySequentialCountController = TextEditingController();
-
     final groupId = Get.arguments;
-    relayService.selectRelayGroup(groupId);
 
+    relayService.selectRelayGroup(groupId);
+    scheduleService.loadSchedules(groupId);
+
+    //inisialisai infromasi group relay
     if (selectedRelayGroup.value != null) {
       if (selectedRelayGroup.value!.relays != null) {
         relayCount.value = selectedRelayGroup.value!.relays!.length;

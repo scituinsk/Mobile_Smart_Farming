@@ -1,3 +1,4 @@
+import 'package:pak_tani/src/core/utils/time_of_day_parse_helper.dart';
 import 'package:pak_tani/src/features/group_schedule/domain/entities/schedule.dart';
 
 class ScheduleModel extends Schedule {
@@ -23,7 +24,7 @@ class ScheduleModel extends Schedule {
       id: json["id"],
       groupId: json["group"],
       duration: json["duration"],
-      time: json["time"],
+      time: TimeOfDayParseHelper.parseTimeOfDay(json["time"] as String),
       isActive: json["is_active"],
       repeatMonday: json["repeat_monday"],
       repeatTuesday: json["repeat_tuesday"],
@@ -32,8 +33,8 @@ class ScheduleModel extends Schedule {
       repeatFriday: json["repeat_friday"],
       repeatSaturday: json["repeat_saturday"],
       repeatSunday: json["repeat_sunday"],
-      createdAt: json["created_at"],
-      updatedAt: json["updated_at"],
+      createdAt: DateTime.parse(json["created_at"] as String),
+      updatedAt: DateTime.parse(json["updated_at"] as String),
     );
   }
 
@@ -42,7 +43,7 @@ class ScheduleModel extends Schedule {
       "id": id,
       "group": groupId,
       "duration": duration,
-      "time": time,
+      "time": TimeOfDayParseHelper.formatTimeOfDay(time),
       "is_active": isActive,
       "repeat_monday": repeatMonday,
       "repeat_tuesday": repeatTuesday,

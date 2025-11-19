@@ -1,9 +1,9 @@
 import 'package:pak_tani/src/features/group_schedule/domain/entities/schedule.dart';
 
 abstract class ScheduleRepository {
-  Future<List<Schedule>?> getListSchedule(int groupId);
+  Future<List<Schedule>?> getListSchedule(String groupId);
   Future<Schedule> addSchedule(
-    int groupId, {
+    String groupId, {
     required String time,
     int? duration,
     bool? repeatMonday,
@@ -15,7 +15,7 @@ abstract class ScheduleRepository {
     bool? repeatSunday,
   });
   Future<Schedule> editSchedule(
-    int id, {
+    String id, {
     String? time,
     int? duration,
     bool? repeatMonday,
@@ -26,5 +26,5 @@ abstract class ScheduleRepository {
     bool? repeatSaturday,
     bool? repeatSunday,
   });
-  Future<void> deleteSchedule(int id);
+  Future<void> deleteSchedule(String id);
 }

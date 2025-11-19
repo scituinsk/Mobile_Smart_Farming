@@ -42,9 +42,7 @@ class ModulService extends GetxService {
       print("error loading devices(service): $e");
       rethrow;
     } finally {
-      print("sebelum loading selesai: ${isLoading.value}");
       isLoading.value = false;
-      print("loading devices selesai");
     }
   }
 

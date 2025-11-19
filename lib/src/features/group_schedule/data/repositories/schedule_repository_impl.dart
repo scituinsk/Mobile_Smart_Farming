@@ -8,7 +8,7 @@ class ScheduleRepositoryImpl extends ScheduleRepository {
   ScheduleRepositoryImpl(this._remoteDatasource);
 
   @override
-  Future<List<Schedule>?> getListSchedule(int groupId) async {
+  Future<List<Schedule>?> getListSchedule(String groupId) async {
     try {
       final listSchedule = await _remoteDatasource.getListScheduleInGroup(
         groupId,
@@ -25,7 +25,7 @@ class ScheduleRepositoryImpl extends ScheduleRepository {
 
   @override
   Future<Schedule> addSchedule(
-    int groupId, {
+    String groupId, {
     required String time,
     int? duration,
     bool? repeatMonday,
@@ -59,7 +59,7 @@ class ScheduleRepositoryImpl extends ScheduleRepository {
 
   @override
   Future<Schedule> editSchedule(
-    int id, {
+    String id, {
     String? time,
     int? duration,
     bool? repeatMonday,
@@ -92,7 +92,7 @@ class ScheduleRepositoryImpl extends ScheduleRepository {
   }
 
   @override
-  Future<void> deleteSchedule(int id) async {
+  Future<void> deleteSchedule(String id) async {
     try {
       await _remoteDatasource.deleteSchedule(id);
     } catch (e) {

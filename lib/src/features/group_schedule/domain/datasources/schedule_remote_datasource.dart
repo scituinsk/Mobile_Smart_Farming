@@ -1,9 +1,9 @@
 import 'package:pak_tani/src/features/group_schedule/data/models/schedule_model.dart';
 
 abstract class ScheduleRemoteDatasource {
-  Future<List<ScheduleModel>?> getListScheduleInGroup(int groupId);
+  Future<List<ScheduleModel>?> getListScheduleInGroup(String groupId);
   Future<ScheduleModel> addScheduleInGroup(
-    int groupId, {
+    String groupId, {
     required String time,
     int? duration,
     bool? repeatMonday,
@@ -15,7 +15,7 @@ abstract class ScheduleRemoteDatasource {
     bool? repeatSunday,
   });
   Future<ScheduleModel> editScheduleInGroup(
-    int id, {
+    String id, {
     String? time,
     int? duration,
     bool? repeatMonday,
@@ -26,5 +26,5 @@ abstract class ScheduleRemoteDatasource {
     bool? repeatSaturday,
     bool? repeatSunday,
   });
-  Future<void> deleteSchedule(int id);
+  Future<void> deleteSchedule(String id);
 }
