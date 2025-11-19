@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
@@ -40,7 +39,7 @@ class AddModulCodeInput extends StatelessWidget {
           borderRadius: 10,
           padding: 12,
           onPressed: () {
-            Get.toNamed(RouteNamed.qrScanPage);
+            controller.openQrScanner();
           },
         ),
       ],

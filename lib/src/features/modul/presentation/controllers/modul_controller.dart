@@ -3,7 +3,8 @@ import 'package:pak_tani/src/features/modul/application/services/modul_service.d
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 
 class ModulController extends GetxController {
-  final ModulService _modulServices = Get.find<ModulService>();
+  final ModulService _modulServices;
+  ModulController(this._modulServices);
 
   RxBool get isLoadingModul => _modulServices.isLoading;
 

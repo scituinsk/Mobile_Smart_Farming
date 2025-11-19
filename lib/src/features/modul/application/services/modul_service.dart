@@ -5,7 +5,8 @@ import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/domain/repositories/modul_repository.dart';
 
 class ModulService extends GetxService {
-  final ModulRepository _repository = Get.find<ModulRepository>();
+  final ModulRepository _repository;
+  ModulService(this._repository);
 
   final RxBool isLoading = false.obs;
 

@@ -1,0 +1,81 @@
+import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/widgets/custom_icon.dart';
+import 'package:pak_tani/src/features/relays/domain/models/group_relay.dart';
+import 'package:pak_tani/src/features/relays/domain/models/relay.dart';
+import 'package:pak_tani/src/features/relays/presentation/controllers/relay_ui_controller.dart';
+import 'package:pak_tani/src/features/relays/presentation/widgets/relay_item.dart';
+
+class RelayGroupList extends StatelessWidget {
+  RelayGroupList({super.key});
+
+  final RelayUiController controller = Get.find<RelayUiController>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Obx(() {
+        final groups = controller.relayGroups;
+
+        if (groups.isEmpty) {
+          return Center(
+            child: Text('No groups', style: TextStyle(color: Colors.grey)),
+          );
+        }
+        final lists = List.generate(groups.length, (listIndex) {
+          final group = groups[listIndex];
+          final items = (group.relays ?? <Relay>[])
+              .map(
+                (r) => DragAndDropItem(
+                  child: RelayItem(
+                    customIcon: MyCustomIcon.waterDrop,
+                    title: r.name,
+                    description: "pin ${r.pin}",
+                  ),
+                ),
+              )
+              .toList();
+
+          return DragAndDropList(
+            header: Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Text("Grub: ${group.name}", style: AppTheme.h4),
+            ),
+            children: items,
+          );
+        });
+
+        return DragAndDropLists(
+          children: lists,
+          onItemReorder:
+              (oldItemIndex, oldListIndex, newItemIndex, newListIndex) {
+                controller.moveRelayWithIndices(
+                  oldListIndex,
+                  oldItemIndex,
+                  newListIndex,
+                  newItemIndex,
+                );
+              },
+          onListReorder: (oldListIndex, newListIndex) {
+            final List<RelayGroup> copied = List.from(groups);
+            final moved = copied.removeAt(oldListIndex);
+            copied.insert(newListIndex, moved);
+            controller.relayGroups.assignAll(copied);
+          },
+          listPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+          listInnerDecoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8.0),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          lastItemTargetHeight: 8,
+          addLastItemTargetHeightToTop: true,
+          lastListTargetSize: 40,
+        );
+      }),
+    );
+  }
+}

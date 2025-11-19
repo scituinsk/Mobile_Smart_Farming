@@ -1,10 +1,6 @@
 import 'package:get/get.dart';
-import 'package:pak_tani/src/features/modul/presentation/controllers/add_modul_ui_controller.dart';
 
 class QrScanUiContoller extends GetxController {
-  final AddModulUiController addModulController;
-  QrScanUiContoller(this.addModulController);
-
   final RxBool isProcessingQR = false.obs;
 
   void processBarcode(String barcode) {
@@ -14,9 +10,15 @@ class QrScanUiContoller extends GetxController {
     }
 
     isProcessingQR.value = true;
-    addModulController.modulCodeController.text = barcode;
 
-    print("barcode detected: ${addModulController.modulCodeController.value}");
+    final callback = Get.arguments as Function(String)?;
+    if (callback != null) {
+      callback(barcode);
+    } else {
+      print("Warning: No callback provided for QR scan result");
+    }
+
+    print("barcode detected: $barcode");
 
     Get.back();
   }

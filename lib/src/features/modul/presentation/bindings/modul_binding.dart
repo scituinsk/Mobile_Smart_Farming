@@ -21,9 +21,15 @@ class ModulBinding extends Bindings {
       fenix: true,
     );
 
-    Get.lazyPut<ModulService>(() => ModulService(), fenix: true);
+    Get.lazyPut<ModulService>(
+      () => ModulService(Get.find<ModulRepository>()),
+      fenix: true,
+    );
 
-    Get.lazyPut<ModulController>(() => ModulController(), fenix: true);
+    Get.lazyPut<ModulController>(
+      () => ModulController(Get.find<ModulService>()),
+      fenix: true,
+    );
 
     print('✅ ModulBinding dependencies initialized');
   }

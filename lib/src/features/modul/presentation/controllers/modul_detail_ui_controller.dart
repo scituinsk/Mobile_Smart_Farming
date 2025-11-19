@@ -10,9 +10,9 @@ import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/services/web_socket_service.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
-import 'package:pak_tani/src/features/modul/application/services/relay_service.dart';
+import 'package:pak_tani/src/features/relays/application/services/relay_service.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/feature_data.dart';
-import 'package:pak_tani/src/features/modul/domain/entities/group_relay.dart';
+import 'package:pak_tani/src/features/relays/domain/models/group_relay.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul_feature.dart';
 
