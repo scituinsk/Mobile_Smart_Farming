@@ -9,12 +9,24 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/services/web_socket_service.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
+import 'package:pak_tani/src/features/relays/application/services/relay_service.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/feature_data.dart';
+import 'package:pak_tani/src/features/relays/domain/models/group_relay.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
-import 'package:pak_tani/src/features/modul/presentation/controllers/modul_controller.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/modul_feature.dart';
 
 class ModulDetailUiController extends GetxController {
-  final _controller = Get.find<ModulController>();
-  Rx<Modul?> get modul => _controller.selectedDevice;
+  final ModulService _modulService;
+  final RelayService _relayService;
+  ModulDetailUiController(this._modulService, this._relayService);
+
+  Rx<Modul?> get modul => _modulService.selectedModul;
+  RxList<RelayGroup> get relayGroups => _relayService.relayGroups;
+
+  bool _pendingListUpdate = false;
+  Modul? _lastUpdatedModul;
+
   final RxBool isLoading = false.obs;
 
   Rxn<File> selectedImage = Rxn<File>(null);
@@ -57,6 +69,10 @@ class ModulDetailUiController extends GetxController {
       _initFormController();
 
       await _initWsStream();
+
+      await _relayService.loadRelaysAndAssignToRelayGroup(
+        modul.value!.serialId,
+      );
     } catch (e) {
       print("error at detail init: $e");
     } finally {
@@ -118,9 +134,9 @@ class ModulDetailUiController extends GetxController {
           final json = jsonDecode(raw as String) as Map<String, dynamic>;
           _updateFeatureData(json);
 
-          print(
-            "T=${json['temperature_data']}, H=${json['humidity_data']}, B=${json['battery_data']}, W=${json['water_level_data']}",
-          );
+          // print(
+          //   "T=${json['temperature_data']}, H=${json['humidity_data']}, B=${json['battery_data']}, W=${json['water_level_data']}",
+          // );
         } catch (e) {
           print("parse error: $e | raw=$raw");
         }
@@ -138,28 +154,36 @@ class ModulDetailUiController extends GetxController {
     if (currentModul?.features == null) return;
 
     final updatedFeatures = currentModul!.features!.map((feature) {
-      String newData = feature.data;
+      List<FeatureData>? updatedFeatureData = feature.data != null
+          ? List.from(feature.data!)
+          : null;
 
+      List<dynamic>? wsFeatureData;
       switch (feature.name.toLowerCase()) {
         case 'temperature':
-          newData = wsData['temperature_data']?.toString() ?? feature.data;
+          wsFeatureData = wsData['temperature_data'] as List<dynamic>?;
           break;
         case 'humidity':
-          newData = wsData['humidity_data']?.toString() ?? feature.data;
+          wsFeatureData = wsData['humidity_data'] as List<dynamic>?;
           break;
         case 'water_level':
-          newData = wsData['water_level_data']?.toString() ?? feature.data;
+          wsFeatureData = wsData['water_level_data'] as List<dynamic>?;
           break;
         case 'battery':
-          newData = wsData['battery_data']?.toString() ?? feature.data;
+          wsFeatureData = wsData['battery_data'] as List<dynamic>?;
           break;
-        default:
-          newData = feature.data;
       }
 
-      return DeviceFeature(
+      if (wsFeatureData != null && wsFeatureData.isNotEmpty) {
+        updatedFeatureData = wsFeatureData.map((item) {
+          final itemMap = item as Map<String, dynamic>;
+          return FeatureData(name: itemMap["name"], data: itemMap["data"]);
+        }).toList();
+      }
+
+      return ModulFeature(
         name: feature.name,
-        data: newData,
+        data: updatedFeatureData,
         descriptions: feature.descriptions,
       );
     }).toList();
@@ -174,28 +198,23 @@ class ModulDetailUiController extends GetxController {
       image: currentModul.image,
     );
 
-    // Update selectedDevice
-    _controller.selectedDevice.value = updatedModul;
-    final idx = _controller.devices.indexWhere(
-      (device) => device.serialId == modul.value!.serialId,
-    );
-    if (idx != -1) {
-      _controller.devices[idx] = updatedModul;
-    }
+    //update only the selected device to void rebuilding main modules
+    _modulService.selectedModul.value = updatedModul;
+    _modulService.selectedModul.refresh();
 
-    // Force refresh dengan berbagai cara
-    _controller.selectedDevice.refresh();
-    _controller.update(); // Update parent controller juga
+    _lastUpdatedModul = updatedModul;
+    _pendingListUpdate = true;
+
     update();
   }
 
   Future<void> getDevice(String id) async {
-    await _controller.getSelectedModul(id);
+    await _modulService.loadModul(id);
   }
 
   Future<void> deleteDevice() async {
     try {
-      await _controller.deleteModul(modul.value!.serialId);
+      await _modulService.deleteModul(modul.value!.serialId);
       Get.back();
       Get.snackbar("success", "berhasil menghapus modul dari user ini");
     } catch (e) {
@@ -207,33 +226,46 @@ class ModulDetailUiController extends GetxController {
   Future<void> pickAndCropImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
 
-    //pick file
-    final XFile? pickedFile = await picker.pickImage(
-      source: source,
-      imageQuality: 100,
-    );
-
-    print("berhasil memilih file: $pickedFile");
-    if (pickedFile != null) {
-      print("memulai crop iamge:");
-      final CroppedFile? croppedFile = await ImageCropper().cropImage(
-        sourcePath: pickedFile.path,
-        aspectRatio: CropAspectRatio(ratioX: 590, ratioY: 390),
-        uiSettings: [
-          AndroidUiSettings(
-            toolbarTitle: "Crop Gambar",
-            toolbarColor: AppTheme.primaryColor,
-            toolbarWidgetColor: Colors.white,
-            initAspectRatio: CropAspectRatioPreset.original,
-            lockAspectRatio: true,
-            hideBottomControls: false,
-            aspectRatioPresets: [CropAspectRatioPreset.original],
-          ),
-        ],
-        compressQuality: 80,
+    try {
+      Get.dialog(
+        const Center(child: CircularProgressIndicator(color: Colors.white)),
+        barrierDismissible: false,
+        barrierColor: Colors.black54,
+        useSafeArea: false,
       );
-      if (croppedFile != null) {
-        selectedImage.value = File(croppedFile.path);
+
+      //pick file
+      final XFile? pickedFile = await picker.pickImage(
+        source: source,
+        imageQuality: 100,
+      );
+
+      print("berhasil memilih file: $pickedFile");
+      if (pickedFile != null) {
+        print("memulai crop iamge:");
+        final CroppedFile? croppedFile = await ImageCropper().cropImage(
+          sourcePath: pickedFile.path,
+          aspectRatio: CropAspectRatio(ratioX: 590, ratioY: 390),
+          uiSettings: [
+            AndroidUiSettings(
+              toolbarTitle: "Crop Gambar",
+              toolbarColor: AppTheme.primaryColor,
+              toolbarWidgetColor: Colors.white,
+              initAspectRatio: CropAspectRatioPreset.original,
+              lockAspectRatio: true,
+              hideBottomControls: false,
+              aspectRatioPresets: [CropAspectRatioPreset.original],
+            ),
+          ],
+          compressQuality: 80,
+        );
+        if (croppedFile != null) {
+          selectedImage.value = File(croppedFile.path);
+        }
+      }
+    } finally {
+      if (Get.isDialogOpen ?? false) {
+        Get.back();
       }
     }
   }
@@ -255,13 +287,13 @@ class ModulDetailUiController extends GetxController {
 
     try {
       isSubmitting.value = true;
-      await _controller.editModul(
+      await _modulService.editModul(
         modul.value!.serialId,
         name: modulNameC.text.trim(),
         description: modulDescriptionC.text.trim(),
         imageFile: selectedImage.value,
       );
-      await _controller.getSelectedModul(modul.value!.serialId);
+      await _modulService.loadModul(modul.value!.serialId);
 
       Get.back();
       Get.snackbar("Success", "Berhasil mengubah modul");
@@ -289,11 +321,11 @@ class ModulDetailUiController extends GetxController {
 
     try {
       isSubmitting.value = true;
-      await _controller.editPasswordModul(
+      await _modulService.editModul(
         modul.value!.serialId,
         password: modulNewPassC.text.trim(),
       );
-      await _controller.getSelectedModul(modul.value!.serialId);
+      await _modulService.loadModul(modul.value!.serialId);
 
       Get.back();
       Get.snackbar("Success", "Berhasil mengubah password modul");
@@ -347,6 +379,7 @@ class ModulDetailUiController extends GetxController {
     final v = value?.trim() ?? "";
     if (v.isEmpty) return "Nama tidak boleh kosong";
     if (v.length < 3) return "Nama modul minimal 3 karakter";
+    if (v.length >= 20) return "Nama modul maksimal 20 karakter";
     return null;
   }
 
@@ -373,6 +406,17 @@ class ModulDetailUiController extends GetxController {
     _ws.value?.send("STREAMING_OFF");
     await _sub?.cancel();
     await _ws.value?.close(); // berhenti streaming saat dispose
+
+    if (_pendingListUpdate && _lastUpdatedModul != null) {
+      final idx = _modulService.moduls.indexWhere(
+        (modul) => modul.serialId == _lastUpdatedModul!.serialId,
+      );
+      if (idx != -1) {
+        _modulService.moduls[idx] = _lastUpdatedModul!;
+      }
+      _pendingListUpdate = false;
+      _lastUpdatedModul = null;
+    }
 
     _disposeFormController();
     super.onClose();

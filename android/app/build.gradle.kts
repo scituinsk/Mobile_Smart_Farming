@@ -35,8 +35,19 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+
+            // enable R8/proguard and include our rules file
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                file("proguard-rules.pro")
+            )
         }
     }
+}
+
+dependencies {
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
 }
 
 flutter {

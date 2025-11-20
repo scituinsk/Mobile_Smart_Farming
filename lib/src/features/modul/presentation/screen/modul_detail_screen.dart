@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/config/app_config.dart';
+import 'package:pak_tani/src/core/theme/app_shadows.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/utils/modul_feature_helper.dart';
 import 'package:pak_tani/src/core/widgets/battery_status.dart';
 import 'package:pak_tani/src/core/widgets/expandable_button.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
@@ -19,7 +21,7 @@ class ModulDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ModulDetailUiController());
+    final controller = Get.find<ModulDetailUiController>();
 
     final mediaQueryWidth = Get.width;
     final mediaQueryHeight = Get.height;
@@ -97,12 +99,25 @@ class ModulDetailScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             MyBackButton(),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              spacing: 5,
-                              children: [
-                                Obx(
-                                  () => ExpandableButton(
+                            Obx(() {
+                              final batteryData = controller
+                                  .modul
+                                  .value
+                                  ?.features
+                                  ?.firstWhereOrNull(
+                                    (element) => element.name == "battery",
+                                  );
+
+                              final int? batteryStatus =
+                                  ModulFeatureHelper.getBatteryValue(
+                                    batteryData,
+                                  );
+
+                              return Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 5,
+                                children: [
+                                  ExpandableButton(
                                     width: 180,
                                     onExpandChanged: (isExpanded) =>
                                         controller.isTitleExpanded.value =
@@ -117,28 +132,11 @@ class ModulDetailScreen extends StatelessWidget {
                                       softWrap: true,
                                     ),
                                   ),
-                                ),
-                                Obx(() {
-                                  final content = controller
-                                      .modul
-                                      .value
-                                      ?.features
-                                      ?.firstWhereOrNull(
-                                        (element) => element.name == "battery",
-                                      );
-
-                                  if (content == null) {
-                                    return SizedBox.shrink();
-                                  }
-
-                                  final percent =
-                                      int.tryParse(content.data.toString()) ??
-                                      0;
-
-                                  return BatteryStatus(percent: percent);
-                                }),
-                              ],
-                            ),
+                                  if (batteryData != null)
+                                    BatteryStatus(percent: batteryStatus!),
+                                ],
+                              );
+                            }),
                             ModulDetailDropdownMenu(),
                           ],
                         ),
@@ -289,7 +287,7 @@ class ModulDetailScreen extends StatelessWidget {
                     child: controller.isTitleExpanded.value
                         ? BlurryContainer(
                             key: const ValueKey('expandedDescription'),
-                            blur: 10,
+                            blur: 6,
                             padding: EdgeInsetsGeometry.all(0),
                             child: Container(
                               decoration: BoxDecoration(
@@ -307,49 +305,19 @@ class ModulDetailScreen extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Stack(
-                                    children: [
-                                      // Outline hitam
-                                      Text(
-                                        controller.modul.value!.name,
-                                        style: AppTheme.h4.copyWith(
-                                          foreground: Paint()
-                                            ..style = PaintingStyle.stroke
-                                            ..strokeWidth = 1
-                                            ..color = Colors.black,
-                                        ),
-                                      ),
-                                      // Text putih di atas
-                                      Text(
-                                        controller.modul.value!.name,
-                                        style: AppTheme.h4.copyWith(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
+                                  Text(
+                                    controller.modul.value!.name,
+                                    style: AppTheme.h4.copyWith(
+                                      color: Colors.white,
+                                      shadows: AppShadows.blackFade,
+                                    ),
                                   ),
-                                  Stack(
-                                    children: [
-                                      // Outline hitam untuk deskripsi
-                                      Text(
-                                        controller.modul.value!.descriptions ??
-                                            "",
-                                        style: AppTheme.text.copyWith(
-                                          foreground: Paint()
-                                            ..style = PaintingStyle.stroke
-                                            ..strokeWidth = 0.8
-                                            ..color = Colors.black,
-                                        ),
-                                      ),
-                                      // Text putih di atas
-                                      Text(
-                                        controller.modul.value!.descriptions ??
-                                            "",
-                                        style: AppTheme.text.copyWith(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
+                                  Text(
+                                    controller.modul.value!.descriptions ?? "",
+                                    style: AppTheme.text.copyWith(
+                                      color: Colors.white,
+                                      shadows: AppShadows.blackFade,
+                                    ),
                                   ),
                                 ],
                               ),

@@ -13,28 +13,36 @@ class AuthService extends GetxService {
 
   // final AuthRepository _authRepository = Get.find<AuthRepository>();
 
-  final RxBool isLoading = true.obs;
+  final RxBool isLoading = false.obs;
   final RxBool isLoggedIn = false.obs;
   final Rx<User?> currentUser = Rx<User?>(null);
+  final RxBool isInitialized = false.obs;
 
   /// Indicates if the AuthService has completed its initialization
-  bool get isReady => !isLoading.value;
+  bool get isReady => isInitialized.value;
 
   @override
   Future<void> onInit() async {
     super.onInit();
-    await _checkAuthenticationStatus().timeout(
-      Duration(seconds: 10),
-      onTimeout: () {
-        print('⚠️ Auth initialization timeout');
-        isLoading.value = false;
-        isLoggedIn.value = false;
-      },
+    isInitialized.value = true;
+    print(
+      '✅ AuthService initialized (instance: $hashCode) - isReady: $isReady',
     );
   }
 
-  Future<void> _checkAuthenticationStatus() async {
+  void debugInfo() {
+    print('🔍 AuthService Debug Info:');
+    print('   - Instance hash: $hashCode');
+    print('   - isInitialized: ${isInitialized.value}');
+    print('   - isReady: $isReady');
+    print('   - isLoggedIn: ${isLoggedIn.value}');
+  }
+
+  Future<void> checkAuthenticationStatus() async {
+    if (isLoading.value) return;
+
     isLoading.value = true;
+    print('🔍 Checking authentication status...');
 
     try {
       final user = await _getUserUseCase.execute();

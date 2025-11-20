@@ -13,7 +13,7 @@ class AddModulScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final mediaQueryWidth = Get.width;
     final mediaQueryHeight = Get.height;
-    final controller = Get.put(AddModulUiController());
+    final controller = Get.find<AddModulUiController>();
 
     return Scaffold(
       appBar: AppBar(

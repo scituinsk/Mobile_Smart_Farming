@@ -26,7 +26,9 @@ class ModulList extends StatelessWidget {
           Expanded(
             child: Obx(() {
               // ✅ Show loading state
-              if (controller.isLoading.value) {
+              print("rebuild expanded");
+
+              if (controller.isLoadingModul.value) {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
-import 'package:pak_tani/src/core/di/dependency_injection.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -26,21 +25,27 @@ class _SplashScreenState extends State<SplashScreen> {
     try {
       statusMessage.value = 'Starting app...';
 
-      statusMessage.value = 'Loading dependencies...';
-      bool isReady = await DependencyInjection.waitUntilReady(
-        timeout: Duration(seconds: 15),
-      );
+      statusMessage.value = "Getting auth service...";
+      final authService = Get.find<AuthService>();
+      authService.debugInfo();
 
-      if (!isReady) {
-        throw Exception('❌ Dependencies initialization timeout');
+      if (!authService.isReady) {
+        print('❌ AuthService not ready, initializing...');
+        // Force wait maksimal 3 detik
+        int attempts = 0;
+        while (!authService.isReady && attempts < 30) {
+          await Future.delayed(Duration(milliseconds: 100));
+          attempts++;
+        }
+
+        if (!authService.isReady) {
+          throw Exception('AuthService failed to initialize');
+        }
       }
 
       statusMessage.value = 'Checking authentication...';
+      await authService.checkAuthenticationStatus();
 
-      // Get AuthService
-      final authService = Get.find<AuthService>();
-
-      //  Wait a bit to ensure UI is ready
       await Future.delayed(Duration(milliseconds: 500));
 
       //  Navigate based on auth status

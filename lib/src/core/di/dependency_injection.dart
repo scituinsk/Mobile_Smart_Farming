@@ -7,8 +7,9 @@ import 'package:pak_tani/src/features/auth/application/use_cases/get_user_use_ca
 import 'package:pak_tani/src/features/auth/application/use_cases/login_use_case.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/logout_use_case.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/register_use_case.dart';
-import 'package:pak_tani/src/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:pak_tani/src/features/auth/data/datasources/auth_remote_datasource_impl.dart';
 import 'package:pak_tani/src/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:pak_tani/src/features/auth/domain/datasources/auth_remote_datasource.dart';
 import 'package:pak_tani/src/features/auth/domain/repositories/auth_repository.dart';
 import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
 
@@ -122,29 +123,5 @@ class DependencyInjection {
     }
   }
 
-  /// ✅ Wait for all dependencies to be ready with timeout
-  static Future<bool> waitUntilReady({
-    Duration timeout = const Duration(seconds: 15),
-  }) async {
-    final stopwatch = Stopwatch()..start();
-
-    while (stopwatch.elapsed < timeout) {
-      if (isReady) {
-        print(
-          '✅ All dependencies are ready in ${stopwatch.elapsed.inMilliseconds}ms',
-        );
-        return true;
-      }
-
-      await Future.delayed(Duration(milliseconds: 100));
-
-      // Log progress every 2 seconds
-      if (stopwatch.elapsed.inSeconds % 2 == 0) {
-        print('⏳ Waiting for dependencies... ${stopwatch.elapsed.inSeconds}s');
-      }
-    }
-
-    print('⚠️ Dependency wait timeout after ${timeout.inSeconds}s');
-    return false;
-  }
+  //
 }

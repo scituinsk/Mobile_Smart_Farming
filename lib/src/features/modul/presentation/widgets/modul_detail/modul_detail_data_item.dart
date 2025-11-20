@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/utils/modul_feature_helper.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
-import 'package:pak_tani/src/core/widgets/my_display_chip.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/feature_data.dart';
+import 'package:pak_tani/src/features/modul/presentation/widgets/modul_detail/modul_feature_data_item.dart';
 
 class ModulDetailDataItem extends StatelessWidget {
   final MyCustomIcon myCustomIcon;
   final String title;
+  final String rawName;
   final String descriptions;
-  final String data;
+  final List<FeatureData>? data;
   final Color color;
 
   const ModulDetailDataItem({
     super.key,
     required this.myCustomIcon,
     required this.title,
+    required this.rawName,
     required this.data,
     required this.descriptions,
     this.color = Colors.white,
@@ -45,14 +49,16 @@ class ModulDetailDataItem extends StatelessWidget {
             ],
           ),
           Text(descriptions, style: AppTheme.textAction),
-          Align(
-            alignment: Alignment.centerRight,
-            child: MyDisplayChip(
-              backgroundColor: color.withValues(alpha: 0.2),
-              paddingHorizontal: 12,
-              child: Text(data, style: AppTheme.h3.copyWith(color: color)),
+          if (data != null)
+            ...data!.map(
+              (modulData) => ModulFeatureDataItem(
+                featureData: ModulFeatureHelper.getFeatureData(
+                  rawName,
+                  modulData,
+                )!,
+                color: ModulFeatureHelper.getFeatureColor(rawName),
+              ),
             ),
-          ),
         ],
       ),
     );
