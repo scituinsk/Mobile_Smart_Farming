@@ -40,6 +40,10 @@ class RelayService extends GetxService {
     }
   }
 
+  List<Relay> getUnassignedRelays() {
+    return relays.where((r) => r.groupId == null).toList();
+  }
+
   Future<void> loadRelaysAndAssignToRelayGroup(String serialId) async {
     isLoading.value = true;
     try {
