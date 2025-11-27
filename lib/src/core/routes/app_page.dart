@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/navigation/main_navigation.dart';
 import 'package:pak_tani/src/core/navigation/main_navigation_binding.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
+import 'package:pak_tani/src/features/modul/presentation/screen/qr_code_screen.dart';
 import 'package:pak_tani/src/features/schedule/presentation/bindings/schedule_screen_binding.dart';
 import 'package:pak_tani/src/features/modul/presentation/bindings/add_modul_screen_binding.dart';
 import 'package:pak_tani/src/features/modul/presentation/bindings/modul_detail_screen_binding.dart';
@@ -56,5 +57,6 @@ class AppPage {
       page: () => const RelayScreen(),
       binding: RelayScreenBinding(),
     ),
+    GetPage(name: RouteNamed.qrCodePage, page: () => QrCodeScreen()),
   ];
 }

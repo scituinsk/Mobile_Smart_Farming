@@ -50,6 +50,7 @@ class RelayScreen extends StatelessWidget {
         onPressed: () {
           RelayModals.showAddModal(context);
         },
+        backgroundColor: AppTheme.secondaryColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         child: Icon(LucideIcons.plus),
       ),
