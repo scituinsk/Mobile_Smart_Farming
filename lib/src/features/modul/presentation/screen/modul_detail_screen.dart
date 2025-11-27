@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/config/app_config.dart';
+import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_shadows.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/utils/modul_feature_helper.dart';
@@ -243,8 +244,13 @@ class ModulDetailScreen extends StatelessWidget {
                                                                 AppTheme
                                                                     .surfaceColor,
                                                             onPressed: () =>
-                                                                print(
-                                                                  "lihat qr",
+                                                                Get.toNamed(
+                                                                  RouteNamed
+                                                                      .qrCodePage,
+                                                                  arguments:
+                                                                      controller
+                                                                          .modul
+                                                                          .value,
                                                                 ),
                                                           )
                                                         : null,

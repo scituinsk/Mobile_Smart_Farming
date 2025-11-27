@@ -11,10 +11,12 @@ class MyTextField extends StatefulWidget {
   final TextStyle titleStyle;
   final Color fillColor;
   final bool obscureText;
+  final double gap;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
   final TextInputType keyboardType;
+  final FocusNode? focusNode;
 
   const MyTextField({
     super.key,
@@ -31,6 +33,8 @@ class MyTextField extends StatefulWidget {
     this.validator, // Tambahkan validator
     this.onChanged,
     this.keyboardType = TextInputType.text,
+    this.gap = 4,
+    this.focusNode,
   });
 
   @override
@@ -97,6 +101,7 @@ class _MyTextFieldState extends State<MyTextField> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: widget.gap,
       children: [
         Text(widget.title, style: widget.titleStyle),
         SizedBox(
@@ -119,6 +124,7 @@ class _MyTextFieldState extends State<MyTextField> {
               errorText: _errorText, // Tambahkan errorText
             ),
             onChanged: widget.onChanged,
+            focusNode: widget.focusNode,
           ),
         ),
       ],

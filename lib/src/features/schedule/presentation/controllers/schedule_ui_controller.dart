@@ -29,6 +29,7 @@ class ScheduleUiController extends GetxController {
   final isSubmittingSequential = false.obs;
 
   //schedule controller
+  late FocusNode scheduleDurationFocus;
   Rxn<TimeOfDay> timeController = Rxn<TimeOfDay>(null);
   late TextEditingController scheduleDurationController;
   final RxSet<WeekDay> selectedDays = <WeekDay>{}.obs;
@@ -69,10 +70,12 @@ class ScheduleUiController extends GetxController {
   }
 
   void initAddScheduleSheet() {
+    scheduleDurationFocus = FocusNode();
     scheduleDurationController = TextEditingController();
   }
 
   void initEditScheduleSheet(Schedule schedule) {
+    scheduleDurationFocus = FocusNode();
     timeController.value = schedule.time;
     scheduleDurationController = TextEditingController(
       text: schedule.duration.toString(),
@@ -81,6 +84,9 @@ class ScheduleUiController extends GetxController {
   }
 
   void disposeScheduleSheet() {
+    scheduleDurationFocus.unfocus();
+
+    scheduleDurationFocus.dispose();
     scheduleDurationController.dispose();
     timeController.value = null;
     clearDays();

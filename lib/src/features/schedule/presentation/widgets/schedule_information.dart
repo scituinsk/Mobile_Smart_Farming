@@ -123,7 +123,7 @@ class GroupScheduleInformation extends StatelessWidget {
                     );
                   }),
                   Text(
-                    "Total jumlah relay",
+                    "Jumlah relay pada grub ${controller.selectedRelayGroup.value!.name}",
                     style: AppTheme.textAction,
                     textAlign: TextAlign.center,
                   ),

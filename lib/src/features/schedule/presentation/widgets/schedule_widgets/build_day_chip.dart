@@ -21,14 +21,16 @@ class BuildDayChip extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryColor : Colors.grey.shade200,
+          color: isSelected ? AppTheme.primaryColor : Colors.transparent,
           borderRadius: BorderRadius.circular(5),
+          border: Border.all(color: AppTheme.primaryColor, width: 1.5),
         ),
         child: Text(
           day,
           style: TextStyle(
-            color: isSelected ? Colors.white : AppTheme.titleSecondary,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            color: isSelected ? Colors.white : AppTheme.primaryColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
           ),
         ),
       ),

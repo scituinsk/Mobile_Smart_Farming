@@ -73,6 +73,7 @@ abstract class ModulDetailDropdownMenuItems {
 
   static Future<void> _showImageSourceBottomSheet(BuildContext context) async {
     final controller = Get.find<ModulDetailUiController>();
+
     await showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(

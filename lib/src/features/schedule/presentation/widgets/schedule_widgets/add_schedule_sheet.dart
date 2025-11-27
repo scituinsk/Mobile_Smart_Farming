@@ -109,103 +109,110 @@ class AddScheduleSheet {
                       ),
 
                       // Durasi Penyiraman Section
-                      Column(
-                        spacing: 21,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Durasi penyiraman",
-                                style: AppTheme.textMedium,
-                              ),
-                              SizedBox(height: 12),
-                              TextField(
-                                controller:
-                                    controller.scheduleDurationController,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    LucideIcons.clock,
-                                    color: AppTheme.secondaryColor,
-                                  ),
-                                  hintText: "Masukkan durasi (menit)",
-                                  filled: true,
-                                  fillColor: Colors.grey.shade200,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  hintStyle: TextStyle(
-                                    color: AppTheme.onDefaultColor,
-                                  ),
+                      Container(
+                        padding: EdgeInsets.all(25),
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceColor,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Column(
+                          spacing: 21,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Durasi penyiraman",
+                                  style: AppTheme.textMedium,
                                 ),
-                                keyboardType: TextInputType.number,
-                              ),
-                            ],
-                          ),
-
-                          // Ulangi Penyiraman Section
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Ulangi penyiraman",
-                                    style: AppTheme.textMedium,
+                                SizedBox(height: 12),
+                                TextField(
+                                  controller:
+                                      controller.scheduleDurationController,
+                                  decoration: InputDecoration(
+                                    prefixIcon: Icon(
+                                      LucideIcons.clock,
+                                      color: AppTheme.secondaryColor,
+                                    ),
+                                    hintText: "Masukkan durasi (menit)",
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    hintStyle: TextStyle(
+                                      color: AppTheme.onDefaultColor,
+                                    ),
                                   ),
-                                  Row(
-                                    spacing: 10,
-                                    children: [
-                                      TextButton(
-                                        onPressed: controller.selectAllDays,
-                                        child: Text(
-                                          "Semua",
-                                          style: TextStyle(
-                                            color: AppTheme.primaryColor,
-                                            fontSize: 12,
+                                  keyboardType: TextInputType.number,
+                                  focusNode: controller.scheduleDurationFocus,
+                                ),
+                              ],
+                            ),
+
+                            // Ulangi Penyiraman Section
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              spacing: 6,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Ulangi penyiraman",
+                                      style: AppTheme.textMedium,
+                                    ),
+                                    Row(
+                                      spacing: 10,
+                                      children: [
+                                        TextButton(
+                                          onPressed: controller.selectAllDays,
+                                          child: Text(
+                                            "Semua",
+                                            style: TextStyle(
+                                              color: AppTheme.primaryColor,
+                                              fontSize: 12,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      TextButton(
-                                        onPressed: controller.clearDays,
-                                        child: Text(
-                                          "Reset",
-                                          style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 12,
+                                        TextButton(
+                                          onPressed: controller.clearDays,
+                                          child: Text(
+                                            "Reset",
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 12,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 16),
-
-                              // Hari dalam seminggu
-                              Obx(
-                                () => Wrap(
-                                  spacing: 15,
-                                  runSpacing: 15,
-                                  children: WeekDay.values.map((day) {
-                                    final isSelected = controller.isDaySelected(
-                                      day,
-                                    );
-                                    return BuildDayChip(
-                                      day: day.long,
-                                      isSelected: isSelected,
-                                      onTap: () => controller.toggleDay(day),
-                                    );
-                                  }).toList(),
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+
+                                // Hari dalam seminggu
+                                Obx(
+                                  () => Wrap(
+                                    spacing: 15,
+                                    runSpacing: 15,
+                                    children: WeekDay.values.map((day) {
+                                      final isSelected = controller
+                                          .isDaySelected(day);
+                                      return BuildDayChip(
+                                        day: day.long,
+                                        isSelected: isSelected,
+                                        onTap: () => controller.toggleDay(day),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

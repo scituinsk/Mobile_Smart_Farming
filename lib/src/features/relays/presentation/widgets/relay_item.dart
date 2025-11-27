@@ -2,28 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
+import 'package:pak_tani/src/features/relays/presentation/widgets/relay_modals.dart';
 
 class RelayItem extends StatelessWidget {
   final MyCustomIcon customIcon;
   final String title;
   final String description;
   final bool status;
+  final bool isEditMode;
   const RelayItem({
     super.key,
     required this.customIcon,
     required this.title,
     required this.description,
     this.status = false,
+    this.isEditMode = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.surfaceColor,
+        color: status
+            ? AppTheme.waterPumpColor.withValues(alpha: 0.1)
+            : AppTheme.temperatureColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(10),
+        border: BoxBorder.all(
+          color: status
+              ? AppTheme.waterPumpColor.withValues(alpha: 0.4)
+              : AppTheme.temperatureColor.withValues(alpha: 0.4),
+        ),
       ),
-      margin: EdgeInsets.fromLTRB(12, 10, 12, 10),
+      // margin: EdgeInsets.fromLTRB(12, 10, 12, 10),
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
       child: Row(
         spacing: 10,
@@ -47,24 +57,17 @@ class RelayItem extends StatelessWidget {
               ],
             ),
           ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Container(
-              width: 12,
-              height: 12,
-              decoration: BoxDecoration(
-                color: status ? Colors.lightGreenAccent : Colors.red,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: status ? Colors.lightGreenAccent : Colors.red,
-                    blurRadius: 2,
-                    spreadRadius: 1,
-                  ),
-                ],
-              ),
+          if (isEditMode)
+            MyIcon(
+              icon: Icons.edit_outlined,
+              backgroundColor: AppTheme.primaryColor,
+              iconColor: Colors.white,
+              iconSize: 19,
+              padding: 5,
+              onPressed: () {
+                RelayModals.showEditRelayModal(context);
+              },
             ),
-          ),
         ],
       ),
     );

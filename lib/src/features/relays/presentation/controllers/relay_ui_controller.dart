@@ -7,12 +7,12 @@ import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/relays/domain/models/relay.dart';
 
 class RelayUiController extends GetxController {
-  final RelayService _relayService;
+  final RelayService relayService;
 
   final ModulService _modulService;
-  RelayUiController(this._relayService, this._modulService);
+  RelayUiController(this.relayService, this._modulService);
 
-  RxList<RelayGroup> get relayGroups => _relayService.relayGroups;
+  RxList<RelayGroup> get relayGroups => relayService.relayGroups;
   Rx<Modul?> get selectedModul => _modulService.selectedModul;
   RxBool get isLoading => _modulService.isLoading;
 
@@ -37,7 +37,7 @@ class RelayUiController extends GetxController {
     if (isLoading.value) return;
     try {
       if (selectedModul.value != null) {
-        await _relayService.addRelayGroup(
+        await relayService.addRelayGroup(
           selectedModul.value!.id,
           groupName.text,
         );
@@ -66,79 +66,69 @@ class RelayUiController extends GetxController {
     int toListIndex,
     int toItemIndex,
   ) async {
-    if (relayGroups.isEmpty) return;
+    if (selectedModul.value == null) return;
 
-    final previous = relayGroups.toList();
+    final unassignedRelays = relayService.getUnassignedRelays();
+    final hasUnassignedList = unassignedRelays.isNotEmpty;
+
+    int? fromGroupId;
+    int? toGroupId;
+    Relay movingRelay;
 
     try {
-      final sourceGroup = relayGroups[fromListIndex];
-      final targetGroup = relayGroups[toListIndex];
+      if (hasUnassignedList) {
+        if (fromListIndex == 0) {
+          fromGroupId = null;
+          movingRelay = unassignedRelays[fromItemIndex];
+        } else {
+          final adjustedFromIndex = fromListIndex - 1;
+          fromGroupId = relayGroups[adjustedFromIndex].id;
+          movingRelay = relayGroups[adjustedFromIndex].relays![fromItemIndex];
+        }
 
-      final sourceRelays = List<Relay>.from(sourceGroup.relays ?? []);
-      if (fromListIndex < 0 || fromItemIndex >= sourceRelays.length) return;
-
-      final moving = sourceRelays.removeAt(fromItemIndex);
-
-      if (fromListIndex == toListIndex) {
-        final updatedList = sourceRelays;
-
-        final insertIndex = toItemIndex > updatedList.length
-            ? updatedList.length
-            : toItemIndex;
-        updatedList.insert(insertIndex, moving);
-        final updatedGroup = RelayGroup(
-          id: sourceGroup.id,
-          modulId: sourceGroup.modulId,
-          name: sourceGroup.name,
-          relays: updatedList,
-          sequential: sourceGroup.sequential,
-        );
-        relayGroups[fromListIndex] = updatedGroup;
+        if (toListIndex == 0) {
+          toGroupId = null;
+        } else {
+          final adjustedToIndex = toListIndex - 1;
+          toGroupId = relayGroups[adjustedToIndex].id;
+        }
       } else {
-        final movedRelay = Relay(
-          id: moving.id,
-          name: moving.name,
-          pin: moving.pin,
-          modulId: moving.modulId,
-          groupId: targetGroup.id,
+        fromGroupId = relayGroups[fromListIndex].id;
+        toGroupId = relayGroups[toListIndex].id;
+        movingRelay = relayGroups[fromListIndex].relays![fromItemIndex];
+      }
+      print(
+        "Moving relay ${movingRelay.name} (pin ${movingRelay.pin}) from group $fromGroupId to $toGroupId",
+      );
+
+      if (toGroupId == null) {
+        // Unassign relay (remove from group)
+        await relayService.editGroupForRelay(
+          selectedModul.value!.serialId,
+          movingRelay.pin,
+          0, // 0 = unassign (sesuaikan dengan API kamu)
         );
-
-        final targetRelays = List<Relay>.from(targetGroup.relays ?? []);
-        final insertIndex = toItemIndex > targetRelays.length
-            ? targetRelays.length
-            : toItemIndex;
-        targetRelays.insert(insertIndex, movedRelay);
-
-        final updatedSource = RelayGroup(
-          id: sourceGroup.id,
-          modulId: sourceGroup.modulId,
-          name: sourceGroup.name,
-          relays: sourceRelays,
-          sequential: sourceGroup.sequential,
+      } else {
+        // Assign/move to new group
+        await relayService.editGroupForRelay(
+          selectedModul.value!.serialId,
+          movingRelay.pin,
+          toGroupId,
         );
-
-        final updatedTarget = RelayGroup(
-          id: targetGroup.id,
-          modulId: targetGroup.modulId,
-          name: targetGroup.name,
-          relays: targetRelays,
-          sequential: targetGroup.sequential,
-        );
-
-        relayGroups[fromListIndex] = updatedSource;
-        relayGroups[toListIndex] = updatedTarget;
       }
 
-      await _relayService.editGroupForRelay(
-        _modulService.selectedModul.value!.serialId,
-        moving.pin,
-        targetGroup.id,
+      // ✅ Reload data untuk refresh UI
+      await relayService.loadRelaysAndAssignToRelayGroup(
+        selectedModul.value!.serialId,
       );
     } catch (e, st) {
-      // rollback on error
-      relayGroups.assignAll(previous);
       print("Failed to move relay: $e\n$st");
-      rethrow;
+      Get.snackbar("Error!", "Gagal memindahkan relay");
+
+      // Rollback sudah di-handle oleh reload
+      await relayService.loadRelaysAndAssignToRelayGroup(
+        selectedModul.value!.serialId,
+      );
     }
   }
 

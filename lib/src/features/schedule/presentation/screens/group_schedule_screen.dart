@@ -74,6 +74,7 @@ class ScheduleScreen extends StatelessWidget {
         onPressed: () {
           AddScheduleSheet.show(context);
         },
+        backgroundColor: AppTheme.secondaryColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
         child: Icon(LucideIcons.plus),
       ),

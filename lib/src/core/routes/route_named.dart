@@ -8,4 +8,5 @@ abstract class RouteNamed {
   static const mainPage = '/main_page';
   static const qrScanPage = '/qr_scan_page';
   static const relayPage = '/relay_page';
+  static const qrCodePage = '/qr_code_page';
 }

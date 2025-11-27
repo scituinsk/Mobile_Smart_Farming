@@ -5,7 +5,7 @@ class Relay extends Equatable {
   final String name;
   final int pin;
   final int modulId;
-  final int groupId;
+  final int? groupId;
   const Relay({
     required this.id,
     required this.name,
