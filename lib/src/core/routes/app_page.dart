@@ -54,7 +54,7 @@ class AppPage {
     ),
     GetPage(
       name: RouteNamed.relayPage,
-      page: () => const RelayScreen(),
+      page: () => RelayScreen(),
       binding: RelayScreenBinding(),
     ),
     GetPage(name: RouteNamed.qrCodePage, page: () => QrCodeScreen()),

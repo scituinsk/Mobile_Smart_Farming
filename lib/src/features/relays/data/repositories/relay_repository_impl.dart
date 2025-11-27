@@ -28,6 +28,9 @@ class RelayRepositoryImpl extends RelayRepository {
     int pin,
     String serialId, {
     String? name,
+    String? descriptions,
+    String? type,
+    bool? status,
     int? groupId,
   }) async {
     try {
@@ -35,6 +38,9 @@ class RelayRepositoryImpl extends RelayRepository {
         pin,
         serialId,
         name: name,
+        descriptions: descriptions,
+        type: type,
+        status: status,
         groupId: groupId,
       );
       return relay.toEntity();
@@ -131,6 +137,16 @@ class RelayRepositoryImpl extends RelayRepository {
     } catch (e) {
       print('error insertRelaysToGroupsRelay (local merge): $e');
       return groups;
+    }
+  }
+
+  @override
+  Future<void> deleteRelayGroup(String id) async {
+    try {
+      await remoteDatasource.deleteGroup(id);
+    } catch (e) {
+      print("error deleting relay group (repo): $e");
+      rethrow;
     }
   }
 }

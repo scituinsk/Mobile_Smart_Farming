@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/features/relays/domain/models/group_relay.dart';
 import 'package:pak_tani/src/features/relays/domain/models/relay.dart';
@@ -33,10 +32,11 @@ class RelayGroupList extends StatelessWidget {
                 (r) => DragAndDropItem(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: RelayItem(
-                      customIcon: MyCustomIcon.waterDrop,
-                      title: r.name,
-                      description: "pin ${r.pin}",
+                    child: Obx(
+                      () => RelayItem(
+                        relay: r,
+                        isEditMode: controller.isEditingRelay.value,
+                      ),
                     ),
                   ),
                 ),
@@ -80,11 +80,11 @@ class RelayGroupList extends StatelessWidget {
                   (r) => DragAndDropItem(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: RelayItem(
-                        customIcon: MyCustomIcon.waterDrop,
-                        title: r.name,
-                        description: "pin ${r.pin}",
-                        isEditMode: true,
+                      child: Obx(
+                        () => RelayItem(
+                          relay: r,
+                          isEditMode: controller.isEditingRelay.value,
+                        ),
                       ),
                     ),
                   ),
@@ -94,31 +94,35 @@ class RelayGroupList extends StatelessWidget {
             return DragAndDropList(
               header: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  spacing: 20,
-                  children: [
-                    Text("Group: ${group.name}", style: AppTheme.h4),
-                    MyIcon(
-                      icon: Icons.edit_outlined,
-                      onPressed: () {
-                        RelayModals.showEditGroupModal(context);
-                      },
-                      backgroundColor: AppTheme.primaryColor,
-                      iconColor: Colors.white,
-                      iconSize: 19,
-                      padding: 5,
-                    ),
-                    MyIcon(
-                      icon: Icons.delete,
-                      onPressed: () {
-                        RelayModals.showDeleteGroupModal(context);
-                      },
-                      backgroundColor: AppTheme.errorColor,
-                      iconColor: Colors.white,
-                      iconSize: 19,
-                      padding: 5,
-                    ),
-                  ],
+                child: Obx(
+                  () => Row(
+                    spacing: 20,
+                    children: [
+                      Text("Group: ${group.name}", style: AppTheme.h4),
+                      if (controller.isEditingGroup.value)
+                        MyIcon(
+                          icon: Icons.edit_outlined,
+                          onPressed: () {
+                            RelayModals.showEditGroupModal(context, group);
+                          },
+                          backgroundColor: AppTheme.primaryColor,
+                          iconColor: Colors.white,
+                          iconSize: 19,
+                          padding: 5,
+                        ),
+                      if (controller.isEditingGroup.value)
+                        MyIcon(
+                          icon: Icons.delete,
+                          onPressed: () {
+                            RelayModals.showDeleteGroupModal(context, group.id);
+                          },
+                          backgroundColor: AppTheme.errorColor,
+                          iconColor: Colors.white,
+                          iconSize: 19,
+                          padding: 5,
+                        ),
+                    ],
+                  ),
                 ),
               ),
               canDrag: false,
@@ -144,66 +148,68 @@ class RelayGroupList extends StatelessWidget {
           );
         }
 
-        return DragAndDropLists(
-          children: lists,
-          itemDragOnLongPress: false, // hanya handle yang bisa drag
+        return Obx(
+          () => DragAndDropLists(
+            children: lists,
+            itemDragOnLongPress: false,
 
-          itemDragHandle: false
-              ? DragHandle(
-                  verticalAlignment: DragHandleVerticalAlignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 23),
-                    child: Icon(
-                      LucideIcons.alignJustify,
-                      color: Colors.black,
-                      size: 20,
+            itemDragHandle: !controller.isEditingRelay.value
+                ? DragHandle(
+                    verticalAlignment: DragHandleVerticalAlignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 23),
+                      child: Icon(
+                        LucideIcons.alignJustify,
+                        color: Colors.black,
+                        size: 20,
+                      ),
                     ),
-                  ),
-                )
-              : null,
-          onItemReorder:
-              (oldItemIndex, oldListIndex, newItemIndex, newListIndex) {
-                controller.moveRelayWithIndices(
-                  oldListIndex,
-                  oldItemIndex,
-                  newListIndex,
-                  newItemIndex,
-                );
-              },
-          onListReorder: (oldListIndex, newListIndex) {
-            final hasUnassignedList = unassignedRelays.isNotEmpty;
+                  )
+                : null,
+            onItemReorder:
+                (oldItemIndex, oldListIndex, newItemIndex, newListIndex) {
+                  controller.moveRelayWithIndices(
+                    oldListIndex,
+                    oldItemIndex,
+                    newListIndex,
+                    newItemIndex,
+                  );
+                },
+            onListReorder: (oldListIndex, newListIndex) {
+              final hasUnassignedList = unassignedRelays.isNotEmpty;
 
-            // ✅ Skip if trying to reorder unassigned list
-            if (oldListIndex == 0 || newListIndex == 0) {
-              print("Cannot reorder unassigned list");
-              return;
-            }
+              // ✅ Skip if trying to reorder unassigned list
+              if (oldListIndex == 0 || newListIndex == 0) {
+                print("Cannot reorder unassigned list");
+                return;
+              }
 
-            final List<RelayGroup> copied = List.from(groups);
+              final List<RelayGroup> copied = List.from(groups);
 
-            // ✅ Adjust indices (karena unassigned ada di index 0)
-            final adjustedOld = hasUnassignedList
-                ? oldListIndex - 1
-                : oldListIndex;
-            final adjustedNew = hasUnassignedList
-                ? newListIndex - 1
-                : newListIndex;
+              // ✅ Adjust indices (karena unassigned ada di index 0)
+              final adjustedOld = hasUnassignedList
+                  ? oldListIndex - 1
+                  : oldListIndex;
+              final adjustedNew = hasUnassignedList
+                  ? newListIndex - 1
+                  : newListIndex;
 
-            final moved = copied.removeAt(adjustedOld);
-            copied.insert(adjustedNew, moved);
-            controller.relayGroups.assignAll(copied);
+              final moved = copied.removeAt(adjustedOld);
+              copied.insert(adjustedNew, moved);
+              controller.relayGroups.assignAll(copied);
 
-            print("Reordered groups: $adjustedOld → $adjustedNew");
-          },
-          listPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
-          listInnerDecoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8.0),
-            border: Border.all(color: Colors.grey.shade300),
+              print("Reordered groups:  → ");
+            },
+            listPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+            listInnerDecoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8.0),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            lastItemTargetHeight: 8,
+            addLastItemTargetHeightToTop: true,
+            lastListTargetSize: 40,
           ),
-          lastItemTargetHeight: 8,
-          addLastItemTargetHeightToTop: true,
-          lastListTargetSize: 40,
         );
       }),
     );

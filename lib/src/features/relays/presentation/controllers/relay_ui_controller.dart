@@ -14,16 +14,43 @@ class RelayUiController extends GetxController {
 
   RxList<RelayGroup> get relayGroups => relayService.relayGroups;
   Rx<Modul?> get selectedModul => _modulService.selectedModul;
-  RxBool get isLoading => _modulService.isLoading;
+  RxBool get isLoading => relayService.isLoading;
+
+  //edit status controller
+  final RxBool isEditingGroup = false.obs;
+  final RxBool isEditingRelay = false.obs;
 
   late TextEditingController groupName;
   final formKey = GlobalKey<FormState>();
-  // final RxBool isSubmitting = false.obs;
+
+  //edit relay controller
+  late TextEditingController relayNameC;
+  late TextEditingController relayDescC;
 
   @override
   void onInit() {
     super.onInit();
     groupName = TextEditingController();
+  }
+
+  void initEditRelayDialog(String name, String? descriptions) {
+    relayNameC = TextEditingController(text: name);
+    relayDescC = TextEditingController(text: descriptions);
+  }
+
+  void disposeEditRelayDialog() {
+    relayNameC.dispose();
+    relayDescC.dispose();
+  }
+
+  void setEditingGroup() {
+    if (!isEditingGroup.value) isEditingRelay.value = false;
+    isEditingGroup.value = !isEditingGroup.value;
+  }
+
+  void setEditingRelay() {
+    if (!isEditingRelay.value) isEditingGroup.value = false;
+    isEditingRelay.value = !isEditingRelay.value;
   }
 
   Future<void> handleAddRelayGroup() async {
@@ -43,7 +70,6 @@ class RelayUiController extends GetxController {
         );
         Get.back();
         Get.snackbar("Success!", "Berhasil menambahkan RelayGroup");
-        groupName.text = "";
       } else {
         throw Exception('Modul tidak ditemukan');
       }
@@ -52,11 +78,93 @@ class RelayUiController extends GetxController {
     }
   }
 
-  String? validateName(String? value) {
+  Future<void> handleEditRelayGroupName(int id) async {
+    final formState = formKey.currentState;
+    if (formState == null) return;
+    if (!formState.validate()) {
+      Get.snackbar("Form tidak valid", "Periksa kembali nama RelayGroup");
+      return;
+    }
+
+    if (isLoading.value) return;
+    try {
+      await relayService.editRelayGroup(id, name: groupName.text);
+
+      Get.closeAllSnackbars();
+      Navigator.of(Get.overlayContext!).pop();
+      Get.snackbar("Success!", "Berhasil mengubah nama grub relay");
+    } catch (e) {
+      Get.snackbar("Error!", e.toString());
+    }
+  }
+
+  Future<void> handleEditRelay(int pin, int id) async {
+    final formState = formKey.currentState;
+    if (formState == null) return;
+    if (!formState.validate()) {
+      Get.snackbar("Form tidak valid", "Periksa kembali form");
+      return;
+    }
+
+    if (isLoading.value) return;
+    try {
+      if (selectedModul.value == null) throw Exception("Modul tidak ditemukan");
+
+      await relayService.editRelay(
+        id,
+        selectedModul.value!.serialId,
+        pin,
+        name: relayNameC.text,
+        descriptions: relayDescC.text,
+      );
+
+      await relayService.loadRelaysAndAssignToRelayGroup(
+        selectedModul.value!.serialId,
+      );
+
+      Get.closeAllSnackbars();
+      Navigator.of(Get.overlayContext!).pop();
+      Get.snackbar("Success!", "Berhasil mengubah relay");
+    } catch (e) {
+      Get.snackbar("Error!", e.toString());
+    }
+  }
+
+  Future<void> deleteRelayGroup(int id) async {
+    try {
+      await relayService.deleteRelayGroup(id);
+
+      Get.closeAllSnackbars();
+      Navigator.of(Get.overlayContext!).pop();
+      Get.snackbar("Success!", "Berhasil menghapus grub relay");
+    } catch (e) {
+      print("error (ui controller): $e");
+      Get.snackbar("Error!", e.toString());
+    }
+  }
+
+  void initEditGroupDialog(RelayGroup relayGroup) {
+    groupName.text = relayGroup.name;
+  }
+
+  void disposeRelayGroupDialog() async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    groupName.text = "";
+  }
+
+  String? validateGroupName(String? value) {
     final v = value?.trim() ?? "";
     if (v.isEmpty) return "Nama Group tidak boleh kosong";
     if (v.length < 2) return "Nama Group minimal 2 karakter";
     if (v.length >= 20) return "Nama Group maksimal 20 karakter";
+    return null;
+  }
+
+  String? validateRelayName(String? value) {
+    final v = value?.trim() ?? "";
+    if (v.isEmpty) return "Nama Relay tidak boleh kosong";
+    if (v.length < 2) return "Nama Relay minimal 2 karakter";
+    if (v.length >= 20) return "Nama Relay maksimal 20 karakter";
     return null;
   }
 

@@ -71,22 +71,51 @@ class RelayService extends GetxService {
         groupId: groupId,
       );
 
-      final index = relays.indexWhere((element) => element.pin == pin);
-      print("move relays $index to $groupId");
-      relays[index] = relay;
+      final indexRelay = relays.indexWhere((element) => element.pin == pin);
+      relays[indexRelay] = relay;
     } catch (e) {
-      print("error editing modul(service): $e ");
+      print("error editing relay(service): $e ");
       rethrow;
     }
   }
 
+  Future<void> editRelay(
+    int id,
+    String serialId,
+    int pin, {
+    String? name,
+    String? descriptions,
+  }) async {
+    isLoading.value = true;
+
+    try {
+      final relay = await _repository.editRelay(
+        pin,
+        serialId,
+        name: name,
+        descriptions: descriptions,
+      );
+
+      final index = relays.indexWhere((element) => element.id == id);
+      relays[index] = relay;
+    } catch (e) {
+      print("error editing relay(service): $e ");
+      rethrow;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   Future<void> addRelayGroup(String modulId, String name) async {
+    isLoading.value = true;
     try {
       final relayGroup = await _repository.addRelayGroup(modulId, name);
       relayGroups.add(relayGroup);
     } catch (e) {
       print("error add relay group(service): $e");
       rethrow;
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -122,6 +151,19 @@ class RelayService extends GetxService {
       selectedRelayGroup.value = newRelayGroup;
     } catch (e) {
       print("Error editing relayGroup(service): $e");
+      rethrow;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> deleteRelayGroup(int id) async {
+    isLoading.value = true;
+    try {
+      await _repository.deleteRelayGroup(id.toString());
+      relayGroups.removeWhere((element) => element.id == id);
+    } catch (e) {
+      print("error removing modul: $e");
       rethrow;
     } finally {
       isLoading.value = false;
