@@ -31,7 +31,7 @@ class FirebaseCloudMessagingConfig {
 
     // initialize local notifications
     const AndroidInitializationSettings initAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('icon_notif');
     const InitializationSettings initSettings = InitializationSettings(
       android: initAndroid,
     );
@@ -70,7 +70,7 @@ class FirebaseCloudMessagingConfig {
               channelDescription: _highImportanceChannel.description,
               importance: Importance.max,
               priority: Priority.high,
-              icon: '@mipmap/ic_launcher',
+              icon: 'icon_notif',
             ),
           ),
         );
