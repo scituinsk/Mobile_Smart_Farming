@@ -13,10 +13,11 @@ class MyTextField extends StatefulWidget {
   final bool obscureText;
   final double gap;
   final TextEditingController? controller;
-  final String? Function(String?)? validator;
+  final FormFieldValidator<String>? validator;
   final void Function(String)? onChanged;
   final TextInputType keyboardType;
   final FocusNode? focusNode;
+  final AutovalidateMode autovalidateMode;
 
   const MyTextField({
     super.key,
@@ -35,6 +36,7 @@ class MyTextField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.gap = 4,
     this.focusNode,
+    this.autovalidateMode = AutovalidateMode.always,
   });
 
   @override
@@ -106,7 +108,9 @@ class _MyTextFieldState extends State<MyTextField> {
         Text(widget.title, style: widget.titleStyle),
         SizedBox(
           width: widget.fieldWidth,
-          child: TextField(
+          child: TextFormField(
+            validator: widget.validator,
+            autovalidateMode: widget.autovalidateMode,
             keyboardType: widget.keyboardType,
             controller: _controller,
             obscureText: _obscureText,

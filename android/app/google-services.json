@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "250072113422",
+    "project_id": "paktani-scit-uinsk",
+    "storage_bucket": "paktani-scit-uinsk.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:250072113422:android:fa41e706dadf1c5523775f",
+        "android_client_info": {
+          "package_name": "com.example.pak_tani"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBq1b9Ab3YRxZgEpAwEpAmgIYq_sKKx9lo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

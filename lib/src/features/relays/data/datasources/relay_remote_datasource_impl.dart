@@ -25,12 +25,18 @@ class RelayRemoteDatasourceImpl implements RelayRemoteDatasource {
     int pin,
     String serialId, {
     String? name,
+    String? descriptions,
+    String? type,
+    bool? status,
     int? groupId,
   }) async {
     Response response;
 
     final FormData formData = FormData.fromMap({
       if (name != null) "name": name,
+      if (descriptions != null) "descriptions": descriptions,
+      if (type != null) "type": type,
+      if (status != null) "status": status,
       if (groupId != null) "group": groupId,
     });
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/widgets/my_snackbar.dart';
+import 'package:pak_tani/src/features/relays/domain/value_objects/relay_type.dart';
 import 'package:pak_tani/src/features/schedule/application/services/schedule_service.dart';
 import 'package:pak_tani/src/features/schedule/domain/entities/schedule.dart';
 import 'package:pak_tani/src/features/schedule/domain/value_objects/week_day.dart';
@@ -18,6 +20,7 @@ class ScheduleUiController extends GetxController {
   RxBool get isDeletingSchedule => scheduleService.isDeleting;
 
   RxInt relayCount = 0.obs;
+  RxInt solenoidCount = 0.obs;
   RxBool isSequential = false.obs;
   RxInt sequentialCount = 0.obs;
 
@@ -33,6 +36,7 @@ class ScheduleUiController extends GetxController {
   Rxn<TimeOfDay> timeController = Rxn<TimeOfDay>(null);
   late TextEditingController scheduleDurationController;
   final RxSet<WeekDay> selectedDays = <WeekDay>{}.obs;
+  final GlobalKey<FormState> scheduleFormKey = GlobalKey<FormState>();
 
   @override
   void onInit() {
@@ -47,6 +51,9 @@ class ScheduleUiController extends GetxController {
     if (selectedRelayGroup.value != null) {
       if (selectedRelayGroup.value!.relays != null) {
         relayCount.value = selectedRelayGroup.value!.relays!.length;
+        solenoidCount.value = selectedRelayGroup.value!.relays!
+            .where((relay) => relay.type == RelayType.solenoid)
+            .length;
       }
 
       print("ada selected group");
@@ -85,7 +92,6 @@ class ScheduleUiController extends GetxController {
 
   void disposeScheduleSheet() {
     scheduleDurationFocus.unfocus();
-
     scheduleDurationFocus.dispose();
     scheduleDurationController.dispose();
     timeController.value = null;
@@ -94,16 +100,9 @@ class ScheduleUiController extends GetxController {
 
   Future<void> handleEditGroupSequential() async {
     final formState = sequentalFormKey.currentState;
-    if (formState == null) return;
-    if (!formState.validate()) {
-      Get.rawSnackbar(
-        title: 'Form tidak valid',
-        message: 'Periksa kembali kode modul dan password.',
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: const Color(0xFFE53935),
-        margin: const EdgeInsets.all(12),
-        borderRadius: 8,
-        duration: const Duration(seconds: 2),
+    if (formState == null || !formState.validate()) {
+      MySnackbar.error(
+        message: "Form tidak valid. Periksa kembali input Anda.",
       );
       return;
     }
@@ -120,7 +119,7 @@ class ScheduleUiController extends GetxController {
         isSequential.value = false;
         sequentialCount.value = 0;
         Get.back();
-        Get.snackbar("Success!", "Berhasil set mode normal");
+        MySnackbar.success(message: "Berhasil set mode normal");
       } else {
         await relayService.editRelayGroup(
           selectedRelayGroup.value!.id,
@@ -132,14 +131,14 @@ class ScheduleUiController extends GetxController {
 
         Get.back();
 
-        Get.snackbar(
-          "Success!",
-          "Berhasil set mode sequential ${relaySequentialCountController.text}",
+        MySnackbar.success(
+          message:
+              "Berhasil set mode sequential ${relaySequentialCountController.text}",
         );
       }
     } catch (e) {
       print("error edit group sequential: $e");
-      Get.snackbar("Error!", e.toString());
+      MySnackbar.error(message: e.toString());
     } finally {
       isSubmittingSequential.value = false;
     }
@@ -190,12 +189,20 @@ class ScheduleUiController extends GetxController {
   }
 
   Future<void> handleAddNewSchedule() async {
+    final formState = scheduleFormKey.currentState;
+    if (formState == null || !formState.validate()) {
+      MySnackbar.error(
+        message: "Form tidak valid. Periksa kembali input Anda.",
+      );
+      return;
+    }
+
     if (timeController.value == null) {
-      Get.snackbar("Error!", "Waktu belum dipilih");
+      MySnackbar.error(message: "Waktu belum dipilih");
       return;
     }
     if (selectedDays.isEmpty) {
-      Get.snackbar("Error!", "Pilih minimal 1 hari");
+      MySnackbar.error(message: "Pilih minimal 1 hari");
       return;
     }
     try {
@@ -216,19 +223,19 @@ class ScheduleUiController extends GetxController {
 
       Navigator.of(Get.overlayContext!).pop();
       await Future.delayed(const Duration(milliseconds: 150));
-      Get.snackbar("Success!", "Jadwal ditambahkan");
+      MySnackbar.success(message: "Jadwal ditambahkan");
     } catch (e) {
-      Get.snackbar("Error!", e.toString());
+      MySnackbar.error(message: e.toString());
     }
   }
 
   Future<void> handleEditSchedule(int id) async {
     if (timeController.value == null) {
-      Get.snackbar("Error!", "Waktu belum dipilih");
+      MySnackbar.error(message: "Waktu belum dipilih");
       return;
     }
     if (selectedDays.isEmpty) {
-      Get.snackbar("Error!", "Pilih minimal 1 hari");
+      MySnackbar.error(message: "Pilih minimal 1 hari");
       return;
     }
     try {
@@ -249,9 +256,9 @@ class ScheduleUiController extends GetxController {
 
       Navigator.of(Get.overlayContext!).pop();
       await Future.delayed(const Duration(milliseconds: 150));
-      Get.snackbar("Success!", "Jadwal ditambahkan");
+      MySnackbar.success(message: "Jadwal ditambahkan");
     } catch (e) {
-      Get.snackbar("Error!", e.toString());
+      MySnackbar.error(message: e.toString());
     }
   }
 
@@ -261,9 +268,9 @@ class ScheduleUiController extends GetxController {
       Get.closeAllSnackbars();
       Navigator.of(Get.overlayContext!).pop();
       Navigator.of(Get.overlayContext!).pop();
-      Get.snackbar("Success!", "Berhasi menghapus schedule");
+      MySnackbar.success(message: "Berhasi menghapus schedule");
     } catch (e) {
-      Get.snackbar("Error!", e.toString());
+      MySnackbar.error(message: e.toString());
     }
   }
 
@@ -275,7 +282,7 @@ class ScheduleUiController extends GetxController {
     try {
       await scheduleService.editStatusSchedule(id, isActive);
     } catch (e) {
-      Get.snackbar("Error!", e.toString());
+      MySnackbar.error(message: e.toString());
     }
   }
 
@@ -290,9 +297,30 @@ class ScheduleUiController extends GetxController {
         : int.tryParse(value.trim());
     if (v == null) return 'Jumlah Sequential tidak boleh kosong';
     if (v < 1) return 'Jumlah Sequential minimal 1';
-    if (v >= relayCount.value) {
+    if (v > solenoidCount.value) {
       return 'harus kurang dari jumlah total solenoid';
     }
+    return null;
+  }
+
+  String? validateDuration(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null;
+    }
+    final v = int.tryParse(value.trim());
+
+    if (v == null) {
+      return 'Harap masukkan angka yang valid.';
+    }
+
+    if (v < 0) {
+      return 'Durasi tidak boleh kurang dari 0.';
+    }
+
+    if (v > 720) {
+      return 'Durasi tidak boleh lebih dari 720.';
+    }
+
     return null;
   }
 }

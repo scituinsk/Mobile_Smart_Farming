@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/widgets/loading_dialog.dart';
+import 'package:pak_tani/src/core/widgets/my_snackbar.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 import 'package:pak_tani/src/features/relays/application/services/relay_service.dart';
 import 'package:pak_tani/src/features/relays/domain/models/group_relay.dart';
@@ -14,11 +16,20 @@ class RelayUiController extends GetxController {
 
   RxList<RelayGroup> get relayGroups => relayService.relayGroups;
   Rx<Modul?> get selectedModul => _modulService.selectedModul;
-  RxBool get isLoading => _modulService.isLoading;
+  RxBool get isLoading => relayService.isLoading;
+
+  //edit status controller
+  final RxBool isEditingGroup = false.obs;
+  final RxBool isEditingRelay = false.obs;
 
   late TextEditingController groupName;
   final formKey = GlobalKey<FormState>();
-  // final RxBool isSubmitting = false.obs;
+
+  //edit relay controller
+  late FocusNode relayNameFocus;
+  late FocusNode relayDescFocus;
+  late TextEditingController relayNameC;
+  late TextEditingController relayDescC;
 
   @override
   void onInit() {
@@ -26,11 +37,41 @@ class RelayUiController extends GetxController {
     groupName = TextEditingController();
   }
 
+  void initEditRelayDialog(String name, String? descriptions) {
+    relayNameFocus = FocusNode();
+    relayDescFocus = FocusNode();
+    relayNameC = TextEditingController(text: name);
+    relayDescC = TextEditingController(text: descriptions);
+  }
+
+  void disposeEditRelayDialog() {
+    relayNameFocus.unfocus();
+    relayDescFocus.unfocus();
+    relayNameFocus.dispose();
+    relayDescFocus.dispose();
+
+    relayNameC.dispose();
+    relayDescC.dispose();
+  }
+
+  void setEditingGroup() {
+    if (!isEditingGroup.value) isEditingRelay.value = false;
+    isEditingGroup.value = !isEditingGroup.value;
+  }
+
+  void setEditingRelay() {
+    if (!isEditingRelay.value) isEditingGroup.value = false;
+    isEditingRelay.value = !isEditingRelay.value;
+  }
+
   Future<void> handleAddRelayGroup() async {
     final formState = formKey.currentState;
     if (formState == null) return;
     if (!formState.validate()) {
-      Get.snackbar("From tidak valid", "Periksa kembali nama RelayGroup");
+      MySnackbar.error(
+        title: "From tidak valid",
+        message: "Periksa kembali nama RelayGroup",
+      );
       return;
     }
 
@@ -42,21 +83,114 @@ class RelayUiController extends GetxController {
           groupName.text,
         );
         Get.back();
-        Get.snackbar("Success!", "Berhasil menambahkan RelayGroup");
-        groupName.text = "";
+        MySnackbar.success(message: "Berhasil menambahkan RelayGroup");
       } else {
         throw Exception('Modul tidak ditemukan');
       }
     } catch (e) {
-      Get.snackbar("Error!", e.toString());
+      MySnackbar.error(message: e.toString());
     }
   }
 
-  String? validateName(String? value) {
+  Future<void> handleEditRelayGroupName(int id) async {
+    final formState = formKey.currentState;
+    if (formState == null) return;
+    if (!formState.validate()) {
+      MySnackbar.error(
+        title: "Form tidak valid",
+        message: "Periksa kembali nama RelayGroup",
+      );
+      return;
+    }
+
+    if (isLoading.value) return;
+    try {
+      await relayService.editRelayGroup(id, name: groupName.text);
+
+      Get.closeAllSnackbars();
+      Navigator.of(Get.overlayContext!).pop();
+      MySnackbar.success(message: "Berhasil mengubah nama grub relay");
+    } catch (e) {
+      MySnackbar.error(message: e.toString());
+    }
+  }
+
+  Future<void> handleEditRelay(int pin, int id) async {
+    final formState = formKey.currentState;
+    if (formState == null) return;
+    if (!formState.validate()) {
+      MySnackbar.error(
+        title: "Form tidak valid",
+        message: "Periksa kembali form",
+      );
+      return;
+    }
+
+    if (isLoading.value) return;
+    try {
+      if (selectedModul.value == null) throw Exception("Modul tidak ditemukan");
+
+      await relayService.editRelay(
+        id,
+        selectedModul.value!.serialId,
+        pin,
+        name: relayNameC.text,
+        descriptions: relayDescC.text,
+      );
+
+      await relayService.loadRelaysAndAssignToRelayGroup(
+        selectedModul.value!.serialId,
+      );
+
+      Get.closeAllSnackbars();
+      Navigator.of(Get.overlayContext!).pop();
+      MySnackbar.success(message: "Berhasil mengubah relay");
+    } catch (e) {
+      MySnackbar.error(message: e.toString());
+    }
+  }
+
+  Future<void> deleteRelayGroup(int id) async {
+    try {
+      await relayService.deleteRelayGroup(id);
+
+      Get.closeAllSnackbars();
+      Navigator.of(Get.overlayContext!).pop();
+      MySnackbar.success(message: "Berhasil menghapus grub relay");
+    } catch (e) {
+      print("error (ui controller): $e");
+      MySnackbar.error(message: e.toString());
+    }
+  }
+
+  void initEditGroupDialog(RelayGroup relayGroup) {
+    groupName.text = relayGroup.name;
+  }
+
+  void disposeRelayGroupDialog() async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    groupName.text = "";
+  }
+
+  String? validateGroupName(String? value) {
     final v = value?.trim() ?? "";
     if (v.isEmpty) return "Nama Group tidak boleh kosong";
     if (v.length < 2) return "Nama Group minimal 2 karakter";
     if (v.length >= 20) return "Nama Group maksimal 20 karakter";
+    return null;
+  }
+
+  String? validateRelayName(String? value) {
+    final v = value?.trim() ?? "";
+    if (v.isEmpty) return "Nama Relay tidak boleh kosong";
+    if (v.length < 2) return "Nama Relay minimal 2 karakter";
+    if (v.length >= 20) return "Nama Relay maksimal 20 karakter";
+    return null;
+  }
+
+  String? validateDescription(String? value) {
+    final v = value?.trim() ?? "";
+    if (v.length >= 1000) return "Nama modul maksimal 1000 karakter";
     return null;
   }
 
@@ -66,6 +200,7 @@ class RelayUiController extends GetxController {
     int toListIndex,
     int toItemIndex,
   ) async {
+    LoadingDialog.show();
     if (selectedModul.value == null) return;
 
     final unassignedRelays = relayService.getUnassignedRelays();
@@ -121,9 +256,10 @@ class RelayUiController extends GetxController {
       await relayService.loadRelaysAndAssignToRelayGroup(
         selectedModul.value!.serialId,
       );
+      LoadingDialog.hide();
     } catch (e, st) {
       print("Failed to move relay: $e\n$st");
-      Get.snackbar("Error!", "Gagal memindahkan relay");
+      MySnackbar.error(message: "Gagal memindahkan relay");
 
       // Rollback sudah di-handle oleh reload
       await relayService.loadRelaysAndAssignToRelayGroup(

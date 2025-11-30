@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:get/get.dart';
-import 'package:pak_tani/src/core/navigation/main_navigation_controller.dart';
+import 'package:pak_tani/src/core/controllers/main_navigation_controller.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 
 class MainNavigation extends GetView<MainNavigationController> {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CustomDialog {
-  static void show({
+  static Future<void> show({
     required BuildContext context,
     required Widget title,
     required Widget child,
@@ -10,8 +10,8 @@ class CustomDialog {
     double? widthChild,
     double? height,
     double dialogMargin = 5,
-  }) {
-    Get.dialog(
+  }) async {
+    await Get.dialog(
       Dialog(
         insetPadding: EdgeInsets.symmetric(
           vertical: 5,

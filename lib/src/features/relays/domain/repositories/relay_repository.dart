@@ -7,10 +7,14 @@ abstract class RelayRepository {
     int pin,
     String serialId, {
     String? name,
+    String? descriptions,
+    String? type,
+    bool? status,
     int? groupId,
   });
   Future<List<RelayGroup>> getRelayGroups(String serialId);
   Future<RelayGroup> editRelayGroup(int id, String name, int sequential);
+  Future<void> deleteRelayGroup(String id);
   Future<List<RelayGroup>> insertRelaysToRelayGroups(
     List<RelayGroup> groups,
     List<Relay> relays,

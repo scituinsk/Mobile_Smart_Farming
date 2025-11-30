@@ -7,6 +7,9 @@ abstract class RelayRemoteDatasource {
     int pin,
     String serialId, {
     String? name,
+    String? descriptions,
+    String? type,
+    bool? status,
     int? groupId,
   });
   Future<List<GroupRelayModel>> getListGroup(String serialId);

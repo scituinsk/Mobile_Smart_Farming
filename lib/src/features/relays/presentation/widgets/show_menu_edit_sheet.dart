@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
+import 'package:pak_tani/src/features/relays/presentation/controllers/relay_ui_controller.dart';
 
 class ShowMenuEditSheet {
   static void show(BuildContext context) async {
-    // final controller = Get.find<ModulDetailUiController>();
+    final controller = Get.find<RelayUiController>();
     await showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -21,41 +23,56 @@ class ShowMenuEditSheet {
             children: [
               Text('Pilih Menu Edit', style: AppTheme.h4),
               SizedBox(height: 20),
-              ListTile(
-                leading: Icon(LucideIcons.group, color: Colors.white),
-                title: Text(
-                  'Edit Group',
-                  style: AppTheme.textMedium.copyWith(color: Colors.white),
+              Obx(
+                () => ListTile(
+                  leading: Icon(
+                    LucideIcons.group,
+                    color: !controller.isEditingGroup.value
+                        ? AppTheme.primaryColor
+                        : Colors.white,
+                  ),
+                  title: Text(
+                    'Edit Group',
+                    style: AppTheme.textMedium.copyWith(
+                      color: !controller.isEditingGroup.value
+                          ? AppTheme.primaryColor
+                          : Colors.white,
+                    ),
+                  ),
+                  tileColor: controller.isEditingGroup.value
+                      ? AppTheme.primaryColor
+                      : AppTheme.surfaceColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  onTap: () => controller.setEditingGroup(),
                 ),
-                tileColor: AppTheme.primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                onTap: () async {
-                  // Get.back();
-                  // await controller.pickAndCropImage(ImageSource.camera);
-                },
               ),
               SizedBox(height: 20),
-              ListTile(
-                leading: CustomIcon(
-                  type: MyCustomIcon.solenoid,
-                  color: AppTheme.primaryColor,
-                ),
-                title: Text(
-                  'Edit Relay',
-                  style: AppTheme.textMedium.copyWith(
-                    color: AppTheme.primaryColor,
+              Obx(
+                () => ListTile(
+                  leading: CustomIcon(
+                    type: MyCustomIcon.solenoid,
+                    color: !controller.isEditingRelay.value
+                        ? AppTheme.primaryColor
+                        : Colors.white,
                   ),
+                  title: Text(
+                    'Edit Relay',
+                    style: AppTheme.textMedium.copyWith(
+                      color: !controller.isEditingRelay.value
+                          ? AppTheme.primaryColor
+                          : Colors.white,
+                    ),
+                  ),
+                  tileColor: controller.isEditingRelay.value
+                      ? AppTheme.primaryColor
+                      : AppTheme.surfaceColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  onTap: () => controller.setEditingRelay(),
                 ),
-                tileColor: AppTheme.surfaceColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                onTap: () async {
-                  // Get.back();
-                  // await controller.pickAndCropImage(ImageSource.gallery);
-                },
               ),
               SizedBox(height: 10),
             ],

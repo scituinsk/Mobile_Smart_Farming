@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
+import 'package:pak_tani/src/core/widgets/my_snackbar.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
 import 'package:pak_tani/src/features/auth/domain/entities/user.dart';
 
@@ -15,10 +16,10 @@ class AuthController extends GetxController {
       await _authService.login(email, password);
 
       Get.offAllNamed(RouteNamed.mainPage);
-      Get.snackbar("Success", "Login berhasil");
+      MySnackbar.success(message: "Login berhasil");
     } catch (e) {
       print("error login auth controller:  $e");
-      Get.snackbar("error", e.toString());
+      MySnackbar.error(message: e.toString());
     }
   }
 
@@ -40,11 +41,11 @@ class AuthController extends GetxController {
         password2: password2,
       );
 
-      Get.snackbar("Success", "Register berhasil! silahkan login");
+      MySnackbar.success(message: "Register berhasil! silahkan login");
       Get.back();
     } catch (e) {
       print(e);
-      Get.snackbar("Error", e.toString());
+      MySnackbar.error(message: e.toString());
     }
   }
 
@@ -53,9 +54,9 @@ class AuthController extends GetxController {
       await _authService.logout();
 
       Get.offAllNamed(RouteNamed.loginPage);
-      Get.snackbar("Success", "Logout berhasil");
+      MySnackbar.success(message: "Logout berhasil");
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      MySnackbar.error(message: e.toString());
     }
   }
 }

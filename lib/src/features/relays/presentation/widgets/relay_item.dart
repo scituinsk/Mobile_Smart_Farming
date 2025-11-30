@@ -1,34 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
+import 'package:pak_tani/src/features/relays/domain/models/relay.dart';
+import 'package:pak_tani/src/features/relays/domain/value_objects/relay_type.dart';
 import 'package:pak_tani/src/features/relays/presentation/widgets/relay_modals.dart';
 
 class RelayItem extends StatelessWidget {
-  final MyCustomIcon customIcon;
-  final String title;
-  final String description;
-  final bool status;
+  final Relay relay;
   final bool isEditMode;
-  const RelayItem({
-    super.key,
-    required this.customIcon,
-    required this.title,
-    required this.description,
-    this.status = false,
-    this.isEditMode = false,
-  });
+  const RelayItem({super.key, required this.relay, this.isEditMode = false});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: status
+        color: relay.status
             ? AppTheme.waterPumpColor.withValues(alpha: 0.1)
             : AppTheme.temperatureColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(10),
         border: BoxBorder.all(
-          color: status
+          color: relay.status
               ? AppTheme.waterPumpColor.withValues(alpha: 0.4)
               : AppTheme.temperatureColor.withValues(alpha: 0.4),
         ),
@@ -41,7 +32,7 @@ class RelayItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           MyIcon(
-            customIcon: customIcon,
+            customIcon: relay.type.icon1,
             backgroundColor: AppTheme.primaryColor,
             iconColor: Colors.white,
             iconSize: 30,
@@ -52,8 +43,13 @@ class RelayItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: AppTheme.h4),
-                Text(description, style: AppTheme.textAction, softWrap: true),
+                Text(relay.name, style: AppTheme.h4),
+                if (relay.descriptions != null)
+                  Text(
+                    relay.descriptions!,
+                    style: AppTheme.textAction,
+                    softWrap: true,
+                  ),
               ],
             ),
           ),
@@ -65,7 +61,7 @@ class RelayItem extends StatelessWidget {
               iconSize: 19,
               padding: 5,
               onPressed: () {
-                RelayModals.showEditRelayModal(context);
+                RelayModals.showEditRelayModal(context, relay);
               },
             ),
         ],

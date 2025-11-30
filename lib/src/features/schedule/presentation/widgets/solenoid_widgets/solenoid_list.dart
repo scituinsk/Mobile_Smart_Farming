@@ -38,10 +38,8 @@ class SolenoidList extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: selectedGroupRelay.length,
               itemBuilder: (context, index) {
-                return SolenoidItem(
-                  title: selectedGroupRelay[index].name,
-                  status: index % 2 == 0 ? true : false,
-                );
+                final relay = selectedGroupRelay[index];
+                return SolenoidItem(relay: relay);
               },
             ),
           );

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_dialog.dart';
 import 'package:pak_tani/src/core/widgets/my_filled_button.dart';
+import 'package:pak_tani/src/core/widgets/my_snackbar.dart';
 
 class SolenoidEmergencyDialog {
   static show(BuildContext context) {
@@ -48,7 +49,12 @@ class SolenoidEmergencyDialog {
                 ),
                 MyFilledButton(
                   title: "Konfirmasi",
-                  onPressed: () {},
+                  onPressed: () {
+                    MySnackbar.error(
+                      title: "Coming soon...",
+                      message: "fitur belum ada, sabar bang :)",
+                    );
+                  },
                   backgroundColor: AppTheme.errorColor,
                   textColor: Colors.white,
                 ),

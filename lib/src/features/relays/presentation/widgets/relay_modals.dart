@@ -4,6 +4,8 @@ import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_dialog.dart';
 import 'package:pak_tani/src/core/widgets/my_filled_button.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
+import 'package:pak_tani/src/features/relays/domain/models/group_relay.dart';
+import 'package:pak_tani/src/features/relays/domain/models/relay.dart';
 import 'package:pak_tani/src/features/relays/presentation/controllers/relay_ui_controller.dart';
 
 class RelayModals {
@@ -25,7 +27,7 @@ class RelayModals {
                 fieldWidth: 240,
                 title: "Nama Grub",
                 controller: controller.groupName,
-                validator: controller.validateName,
+                validator: controller.validateGroupName,
                 hint: "Ex: GreenH 1",
                 borderRadius: 10,
               ),
@@ -37,7 +39,6 @@ class RelayModals {
                   MyFilledButton(
                     onPressed: () {
                       Get.back();
-                      controller.groupName.text = "";
                     },
                     backgroundColor: AppTheme.surfaceColor,
                     title: "Batal",
@@ -47,7 +48,69 @@ class RelayModals {
                     final loading = controller.isLoading.value;
                     return FilledButton(
                       onPressed: !loading
-                          ? () => controller.handleAddRelayGroup()
+                          ? () async => await controller.handleAddRelayGroup()
+                          : null,
+                      child: loading
+                          ? CircularProgressIndicator(
+                              padding: EdgeInsets.all(5),
+                            )
+                          : Text("Simpan"),
+                    );
+                  }),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    ).then((_) => controller.disposeRelayGroupDialog());
+  }
+
+  static void showEditGroupModal(
+    BuildContext context,
+    RelayGroup relayGroup,
+  ) async {
+    RelayUiController controller = Get.find<RelayUiController>();
+
+    controller.initEditGroupDialog(relayGroup);
+    await CustomDialog.show(
+      widthTitle: 240,
+      context: context,
+      title: Text("Ubah Nama Grub", style: AppTheme.h4),
+      child: SingleChildScrollView(
+        child: Form(
+          key: controller.formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            spacing: 10,
+            children: [
+              MyTextField(
+                fieldWidth: 240,
+                title: "Nama Grub",
+                controller: controller.groupName,
+                validator: controller.validateGroupName,
+                hint: "Ex: GreenH 1",
+                borderRadius: 10,
+              ),
+              Row(
+                spacing: 10,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  MyFilledButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    backgroundColor: AppTheme.surfaceColor,
+                    title: "Batal",
+                    textColor: AppTheme.primaryColor,
+                  ),
+                  Obx(() {
+                    final loading = controller.isLoading.value;
+                    return FilledButton(
+                      onPressed: !loading
+                          ? () async => await controller
+                                .handleEditRelayGroupName(relayGroup.id)
                           : null,
                       child: loading
                           ? CircularProgressIndicator(
@@ -63,77 +126,19 @@ class RelayModals {
         ),
       ),
     );
+    controller.disposeRelayGroupDialog();
   }
 
-  static void showEditGroupModal(BuildContext context) {
+  static void showEditRelayModal(BuildContext context, Relay relay) async {
     RelayUiController controller = Get.find<RelayUiController>();
-
-    CustomDialog.show(
-      widthTitle: 240,
-      context: context,
-      title: Text("Ubah Nama Grub", style: AppTheme.h4),
-      child: SingleChildScrollView(
-        child: Form(
-          // key: controller.formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            spacing: 10,
-            children: [
-              MyTextField(
-                fieldWidth: 240,
-                title: "Nama Grub",
-                controller: controller.groupName,
-                validator: controller.validateName,
-                hint: "Ex: GreenH 1",
-                borderRadius: 10,
-              ),
-              Row(
-                spacing: 10,
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  MyFilledButton(
-                    onPressed: () {
-                      Get.back();
-                      controller.groupName.text = "";
-                    },
-                    backgroundColor: AppTheme.surfaceColor,
-                    title: "Batal",
-                    textColor: AppTheme.primaryColor,
-                  ),
-                  Obx(() {
-                    final loading = controller.isLoading.value;
-                    return FilledButton(
-                      // onPressed: !loading
-                      //     ? () => controller.handleAddRelayGroup()
-                      //     : null,
-                      onPressed: () {},
-                      child: loading
-                          ? CircularProgressIndicator(
-                              padding: EdgeInsets.all(5),
-                            )
-                          : Text("Simpan"),
-                    );
-                  }),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  static void showEditRelayModal(BuildContext context) {
-    RelayUiController controller = Get.find<RelayUiController>();
-
-    CustomDialog.show(
+    controller.initEditRelayDialog(relay.name, relay.descriptions);
+    await CustomDialog.show(
       widthTitle: 240,
       context: context,
       title: Text("Ubah Relay", style: AppTheme.h4),
       child: SingleChildScrollView(
         child: Form(
-          // key: controller.formKey,
+          key: controller.formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             spacing: 10,
@@ -141,18 +146,20 @@ class RelayModals {
               MyTextField(
                 fieldWidth: 240,
                 title: "Nama Relay",
-                // controller: controller.groupName,
-                // validator: controller.validateName,
+                controller: controller.relayNameC,
+                validator: controller.validateRelayName,
                 hint: "Ex: Solenoid 1",
                 borderRadius: 10,
+                focusNode: controller.relayNameFocus,
               ),
               MyTextField(
                 fieldWidth: 240,
                 title: "Deskripsi Relay",
-                // controller: controller.groupName,
-                // validator: controller.validateName,
+                controller: controller.relayDescC,
                 hint: "Masukkan Deskripsi",
                 borderRadius: 10,
+                validator: controller.validateDescription,
+                focusNode: controller.relayDescFocus,
               ),
               Row(
                 spacing: 10,
@@ -162,7 +169,6 @@ class RelayModals {
                   MyFilledButton(
                     onPressed: () {
                       Get.back();
-                      // controller.groupName.text = "";
                     },
                     backgroundColor: AppTheme.surfaceColor,
                     title: "Batal",
@@ -171,10 +177,10 @@ class RelayModals {
                   Obx(() {
                     final loading = controller.isLoading.value;
                     return FilledButton(
-                      // onPressed: !loading
-                      //     ? () => controller.handleAddRelayGroup()
-                      //     : null,
-                      onPressed: () {},
+                      onPressed: !loading
+                          ? () =>
+                                controller.handleEditRelay(relay.pin, relay.id)
+                          : null,
                       child: loading
                           ? CircularProgressIndicator(
                               padding: EdgeInsets.all(5),
@@ -188,10 +194,12 @@ class RelayModals {
           ),
         ),
       ),
-    );
+    ).then((_) => controller.disposeEditRelayDialog());
   }
 
-  static void showDeleteGroupModal(BuildContext context) {
+  static void showDeleteGroupModal(BuildContext context, int id) {
+    final controller = Get.find<RelayUiController>();
+
     CustomDialog.show(
       context: context,
       dialogMargin: 35,
@@ -235,14 +243,22 @@ class RelayModals {
                   backgroundColor: AppTheme.surfaceColor,
                   textColor: AppTheme.primaryColor,
                 ),
-                MyFilledButton(
-                  title: "Hapus",
-                  onPressed: () {
-                    Get.back();
-                  },
-                  backgroundColor: AppTheme.errorColor,
-                  textColor: Colors.white,
-                ),
+                Obx(() {
+                  final isLoading = controller.isLoading.value;
+                  return MyFilledButton(
+                    onPressed: isLoading
+                        ? null
+                        : () async => await controller.deleteRelayGroup(id),
+                    backgroundColor: AppTheme.errorColor,
+                    textColor: Colors.white,
+                    child: isLoading
+                        ? CircularProgressIndicator(
+                            color: Colors.white,
+                            padding: EdgeInsets.all(5),
+                          )
+                        : Text("Hapus"),
+                  );
+                }),
               ],
             ),
           ],

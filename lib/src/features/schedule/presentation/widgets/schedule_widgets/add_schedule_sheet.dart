@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/utils/time_of_day_parse_helper.dart';
+import 'package:pak_tani/src/core/widgets/my_text_field.dart';
 import 'package:pak_tani/src/features/schedule/domain/value_objects/week_day.dart';
 import 'package:pak_tani/src/features/schedule/presentation/controllers/schedule_ui_controller.dart';
 import 'package:pak_tani/src/features/schedule/presentation/widgets/schedule_widgets/build_day_chip.dart';
@@ -119,37 +120,24 @@ class AddScheduleSheet {
                           spacing: 21,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Durasi penyiraman",
-                                  style: AppTheme.textMedium,
+                            Form(
+                              key: controller.scheduleFormKey,
+                              child: MyTextField(
+                                title: "Durasi penyiraman",
+                                fillColor: Colors.white,
+                                controller:
+                                    controller.scheduleDurationController,
+                                prefixIcon: Icon(
+                                  LucideIcons.clock,
+                                  color: AppTheme.secondaryColor,
                                 ),
-                                SizedBox(height: 12),
-                                TextField(
-                                  controller:
-                                      controller.scheduleDurationController,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(
-                                      LucideIcons.clock,
-                                      color: AppTheme.secondaryColor,
-                                    ),
-                                    hintText: "Masukkan durasi (menit)",
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    hintStyle: TextStyle(
-                                      color: AppTheme.onDefaultColor,
-                                    ),
-                                  ),
-                                  keyboardType: TextInputType.number,
-                                  focusNode: controller.scheduleDurationFocus,
-                                ),
-                              ],
+
+                                hint: "Masukkan durasi (menit)",
+                                keyboardType: TextInputType.number,
+                                focusNode: controller.scheduleDurationFocus,
+                                validator: controller.validateDuration,
+                                gap: 10,
+                              ),
                             ),
 
                             // Ulangi Penyiraman Section
