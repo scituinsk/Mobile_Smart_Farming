@@ -57,31 +57,31 @@ class LoginForm extends StatelessWidget {
                   ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Obx(
-                        () => Checkbox(
-                          value: controller.rememberMe.value,
-                          onChanged: (value) => controller.toggleRememberMe(),
-                        ),
-                      ),
-                      Text("Ingat Saya"),
-                    ],
-                  ),
-                  GestureDetector(
-                    child: Text(
-                      "Lupa password?",
-                      style: AppTheme.text.copyWith(
-                        color: AppTheme.primaryColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Row(
+              //       mainAxisAlignment: MainAxisAlignment.start,
+              //       children: [
+              //         Obx(
+              //           () => Checkbox(
+              //             value: controller.rememberMe.value,
+              //             onChanged: (value) => controller.toggleRememberMe(),
+              //           ),
+              //         ),
+              //         Text("Ingat Saya"),
+              //       ],
+              //     ),
+              //     GestureDetector(
+              //       child: Text(
+              //         "Lupa password?",
+              //         style: AppTheme.text.copyWith(
+              //           color: AppTheme.primaryColor,
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
             ],
           ),
           Column(
@@ -97,7 +97,7 @@ class LoginForm extends StatelessWidget {
                           Get.toNamed(RouteNamed.registerPage);
                         },
                         child: Text(
-                          " Daftar akun",
+                          "Daftar akun",
                           style: AppTheme.text.copyWith(
                             color: AppTheme.primaryColor,
                             fontWeight: FontWeight.bold,

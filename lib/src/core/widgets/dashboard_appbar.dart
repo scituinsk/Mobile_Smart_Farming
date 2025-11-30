@@ -5,14 +5,12 @@ import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
-import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
 
 class DashboardAppbar extends StatelessWidget {
   const DashboardAppbar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final AuthController authController = Get.find<AuthController>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -24,10 +22,6 @@ class DashboardAppbar extends StatelessWidget {
             Text("PakTani", style: AppTheme.h3),
           ],
         ),
-        IconButton(
-          onPressed: authController.logout,
-          icon: Icon(Icons.logout),
-        ), //testing doang
         Row(
           spacing: 12,
           children: [

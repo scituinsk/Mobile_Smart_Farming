@@ -10,7 +10,7 @@ class SearchWidget extends StatelessWidget {
     return SizedBox(
       height: 50, // Kurangi tinggi TextField
       width: Get.width,
-      child: TextField(
+      child: TextFormField(
         decoration: InputDecoration(
           prefixIcon: Padding(
             padding: const EdgeInsets.all(10.0), // Sedikit kurangi padding ikon

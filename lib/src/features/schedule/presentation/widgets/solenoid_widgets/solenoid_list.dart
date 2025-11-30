@@ -39,7 +39,7 @@ class SolenoidList extends StatelessWidget {
               itemCount: selectedGroupRelay.length,
               itemBuilder: (context, index) {
                 final relay = selectedGroupRelay[index];
-                return SolenoidItem(title: relay.name, status: relay.status);
+                return SolenoidItem(relay: relay);
               },
             ),
           );

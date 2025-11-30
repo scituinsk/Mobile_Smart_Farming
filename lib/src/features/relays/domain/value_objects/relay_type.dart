@@ -32,10 +32,21 @@ enum RelayType {
 }
 
 extension RelayTypeLabel on RelayType {
-  MyCustomIcon get icon {
+  MyCustomIcon get icon1 {
     switch (this) {
       case RelayType.solenoid:
         return MyCustomIcon.waterDrop;
+      case RelayType.waterPump:
+        return MyCustomIcon.waterPump;
+      case RelayType.lamp:
+        return MyCustomIcon.lightBulb;
+    }
+  }
+
+  MyCustomIcon get icon2 {
+    switch (this) {
+      case RelayType.solenoid:
+        return MyCustomIcon.solenoid;
       case RelayType.waterPump:
         return MyCustomIcon.waterPump;
       case RelayType.lamp:

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
 import 'package:pak_tani/src/features/modul/presentation/bindings/modul_binding.dart';
 import 'package:pak_tani/src/features/modul/presentation/screen/moduls_screen.dart';
 
@@ -105,7 +106,7 @@ class MainNavigationController extends GetxController
             SizedBox(height: 20),
             Text('History Screen', style: Get.textTheme.headlineSmall),
             SizedBox(height: 20),
-            Text('Your activity history will appear here'),
+            Text('Coming soon....'),
           ],
         ),
       ),
@@ -113,6 +114,8 @@ class MainNavigationController extends GetxController
   }
 
   void _initializeProfileTab() {
+    final AuthController authController = Get.find<AuthController>();
+
     _screensCache[2] = Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
@@ -128,20 +131,22 @@ class MainNavigationController extends GetxController
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircleAvatar(radius: 50, child: Icon(Icons.person, size: 50)),
+            CircleAvatar(
+              radius: 50,
+              child: authController.currentUser.value!.image != null
+                  ? Image.network(authController.currentUser.value!.image!)
+                  : Icon(Icons.person, size: 55),
+            ),
             SizedBox(height: 20),
-            Text('John Doe', style: Get.textTheme.headlineSmall),
-            SizedBox(height: 10),
-            Text('john.doe@example.com'),
-            SizedBox(height: 30),
-            ElevatedButton(
-              onPressed: () => Get.snackbar('Info', 'Settings coming soon!'),
-              child: Text('Settings'),
+            Text(
+              authController.currentUser.value!.username,
+              style: Get.textTheme.headlineSmall,
             ),
             SizedBox(height: 10),
-            TextButton(
-              onPressed: () =>
-                  Get.snackbar('Info', 'Logout functionality coming soon!'),
+            Text(authController.currentUser.value!.email),
+            SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: () async => await authController.logout(),
               child: Text('Logout'),
             ),
           ],

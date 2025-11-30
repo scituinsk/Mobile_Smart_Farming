@@ -148,6 +148,7 @@ abstract class ModulDetailDropdownMenuItems {
                     controller: controller.modulDescriptionC,
                     hint: "Ex: Green house timur",
                     borderRadius: 10,
+                    validator: controller.validateDescription,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

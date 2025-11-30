@@ -32,7 +32,7 @@ class RelayItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           MyIcon(
-            customIcon: relay.type.icon,
+            customIcon: relay.type.icon1,
             backgroundColor: AppTheme.primaryColor,
             iconColor: Colors.white,
             iconSize: 30,

@@ -150,6 +150,7 @@ class RelayModals {
                 validator: controller.validateRelayName,
                 hint: "Ex: Solenoid 1",
                 borderRadius: 10,
+                focusNode: controller.relayNameFocus,
               ),
               MyTextField(
                 fieldWidth: 240,
@@ -157,6 +158,8 @@ class RelayModals {
                 controller: controller.relayDescC,
                 hint: "Masukkan Deskripsi",
                 borderRadius: 10,
+                validator: controller.validateDescription,
+                focusNode: controller.relayDescFocus,
               ),
               Row(
                 spacing: 10,

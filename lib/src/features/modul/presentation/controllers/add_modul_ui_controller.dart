@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
+import 'package:pak_tani/src/core/widgets/my_snackbar.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 
 class AddModulUiController extends GetxController {
@@ -55,9 +56,9 @@ class AddModulUiController extends GetxController {
         modulPasswordController.text.trim(),
       );
       Get.back();
-      Get.snackbar("Success", "Berhasil menambahkan modul");
+      MySnackbar.success(message: "Berhasil menambahkan modul");
     } catch (e) {
-      Get.snackbar("Error!", e.toString());
+      MySnackbar.error(message: e.toString());
     } finally {
       isSubmitting.value = false;
     }

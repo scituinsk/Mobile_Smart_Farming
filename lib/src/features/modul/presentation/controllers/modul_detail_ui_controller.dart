@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/services/web_socket_service.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/widgets/my_snackbar.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 import 'package:pak_tani/src/features/relays/application/services/relay_service.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/feature_data.dart';
@@ -216,10 +217,10 @@ class ModulDetailUiController extends GetxController {
     try {
       await _modulService.deleteModul(modul.value!.serialId);
       Get.back();
-      Get.snackbar("success", "berhasil menghapus modul dari user ini");
+      MySnackbar.success(message: "berhasil menghapus modul dari user ini");
     } catch (e) {
       print("error (ui controller): $e");
-      Get.snackbar("Error!", e.toString());
+      MySnackbar.error(message: e.toString());
     }
   }
 
@@ -274,11 +275,9 @@ class ModulDetailUiController extends GetxController {
     final formState = formKeyEdit.currentState;
     if (formState == null) return;
     if (!formState.validate()) {
-      Get.snackbar(
-        "Form tidak valid",
-        "Periksa kembali kode modul dan password",
-        backgroundColor: Colors.red.shade600,
-        duration: Duration(seconds: 2),
+      MySnackbar.error(
+        title: "Form tidak valid",
+        message: "Periksa kembali kode modul dan password",
       );
       return;
     }
@@ -296,9 +295,9 @@ class ModulDetailUiController extends GetxController {
       await _modulService.loadModul(modul.value!.serialId);
 
       Get.back();
-      Get.snackbar("Success", "Berhasil mengubah modul");
+      MySnackbar.success(message: "Berhasil mengubah modul");
     } catch (e) {
-      Get.snackbar("Error!", e.toString());
+      MySnackbar.error(message: e.toString());
     } finally {
       isSubmitting.value = false;
     }
@@ -328,9 +327,9 @@ class ModulDetailUiController extends GetxController {
       await _modulService.loadModul(modul.value!.serialId);
 
       Get.back();
-      Get.snackbar("Success", "Berhasil mengubah password modul");
+      MySnackbar.success(message: "Berhasil mengubah password modul");
     } catch (e) {
-      Get.snackbar("Error!", e.toString());
+      MySnackbar.error(message: e.toString());
     } finally {
       isSubmitting.value = false;
       modulNewPassC.text = "";
@@ -380,6 +379,12 @@ class ModulDetailUiController extends GetxController {
     if (v.isEmpty) return "Nama tidak boleh kosong";
     if (v.length < 3) return "Nama modul minimal 3 karakter";
     if (v.length >= 20) return "Nama modul maksimal 20 karakter";
+    return null;
+  }
+
+  String? validateDescription(String? value) {
+    final v = value?.trim() ?? "";
+    if (v.length >= 1000) return "Nama modul maksimal 1000 karakter";
     return null;
   }
 

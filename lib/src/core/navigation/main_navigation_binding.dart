@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:pak_tani/src/core/navigation/main_navigation_controller.dart';
+import 'package:pak_tani/src/core/controllers/main_navigation_controller.dart';
 
 class MainNavigationBinding extends Bindings {
   @override

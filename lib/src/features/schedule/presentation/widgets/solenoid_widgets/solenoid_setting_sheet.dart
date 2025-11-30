@@ -56,7 +56,7 @@ class SolenoidSettingSheet {
                           size: 30,
                         ),
                       ),
-                      Text("Total Selenoid Aktif", style: AppTheme.h3),
+                      Text("Total Selenoid", style: AppTheme.h3),
                       Obx(
                         () => IconButton(
                           onPressed: controller.isSubmittingSequential.value
@@ -82,7 +82,7 @@ class SolenoidSettingSheet {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          controller.relayCount.value.toString(),
+                          controller.solenoidCount.value.toString(),
                           style: AppTheme.largeTimeText,
                         ),
 

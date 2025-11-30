@@ -122,18 +122,23 @@ class EditScheduleSheet {
                           spacing: 21,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            MyTextField(
-                              controller: controller.scheduleDurationController,
-                              focusNode: controller.scheduleDurationFocus,
-                              title: "Durasi Penyiraman",
-                              hint: "Masukkan durasi (menit)",
-                              prefixIcon: Icon(
-                                LucideIcons.clock,
-                                color: AppTheme.secondaryColor,
+                            Form(
+                              key: controller.scheduleFormKey,
+                              child: MyTextField(
+                                controller:
+                                    controller.scheduleDurationController,
+                                focusNode: controller.scheduleDurationFocus,
+                                title: "Durasi Penyiraman",
+                                hint: "Masukkan durasi (menit)",
+                                prefixIcon: Icon(
+                                  LucideIcons.clock,
+                                  color: AppTheme.secondaryColor,
+                                ),
+                                keyboardType: TextInputType.number,
+                                fillColor: Colors.white,
+                                gap: 10,
+                                validator: controller.validateDuration,
                               ),
-                              keyboardType: TextInputType.number,
-                              fillColor: Colors.white,
-                              gap: 10,
                             ),
 
                             // Ulangi Penyiraman Section
