@@ -41,38 +41,45 @@ class ScheduleUiController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    relaySequentialCountController = TextEditingController();
-    final groupId = Get.arguments;
+    try {
+      relaySequentialCountController = TextEditingController();
+      final groupId = Get.arguments;
 
-    relayService.selectRelayGroup(groupId);
-    scheduleService.loadSchedules(groupId);
+      relayService.selectRelayGroup(groupId);
+      scheduleService.loadSchedules(groupId);
 
-    //inisialisai infromasi group relay
-    if (selectedRelayGroup.value != null) {
-      if (selectedRelayGroup.value!.relays != null) {
-        relayCount.value = selectedRelayGroup.value!.relays!.length;
-        solenoidCount.value = selectedRelayGroup.value!.relays!
-            .where((relay) => relay.type == RelayType.solenoid)
-            .length;
+      //inisialisai infromasi group relay
+      if (selectedRelayGroup.value != null) {
+        if (selectedRelayGroup.value!.relays != null) {
+          relayCount.value = selectedRelayGroup.value!.relays!.length;
+          solenoidCount.value = selectedRelayGroup.value!.relays!
+              .where((relay) => relay.type == RelayType.solenoid)
+              .length;
+        }
+
+        print("ada selected group");
+        sequentialCountController.value = selectedRelayGroup.value!.sequential;
+        sequentialCount.value = sequentialCountController.value;
+
+        print("jumlah sequential: ${sequentialCount.value}");
+
+        relaySequentialCountController.text = selectedRelayGroup
+            .value!
+            .sequential
+            .toString();
+
+        isSequentialController.value = sequentialCount.value != 0;
+        sequentialCount.value < relayCount.value;
+        isSequential.value = isSequentialController.value;
+
+        print("apakah sequential controller: ${isSequentialController.value}");
+        print("apakah sequential: ${isSequential.value}");
+      } else {
+        print("tidak ada selected group");
       }
-
-      print("ada selected group");
-      sequentialCountController.value = selectedRelayGroup.value!.sequential;
-      sequentialCount.value = sequentialCountController.value;
-
-      print("jumlah sequential: ${sequentialCount.value}");
-
-      relaySequentialCountController.text = selectedRelayGroup.value!.sequential
-          .toString();
-
-      isSequentialController.value = sequentialCount.value != 0;
-      sequentialCount.value < relayCount.value;
-      isSequential.value = isSequentialController.value;
-
-      print("apakah sequential controller: ${isSequentialController.value}");
-      print("apakah sequential: ${isSequential.value}");
-    } else {
-      print("tidak ada selected group");
+    } catch (e) {
+      print("error init schedule ui: ${e.toString()}");
+      MySnackbar.error(message: e.toString());
     }
   }
 

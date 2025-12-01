@@ -75,7 +75,9 @@ class ModulDetailUiController extends GetxController {
         modul.value!.serialId,
       );
     } catch (e) {
+      Get.back();
       print("error at detail init: $e");
+      MySnackbar.error(message: e.toString());
     } finally {
       isLoading.value = false;
     }

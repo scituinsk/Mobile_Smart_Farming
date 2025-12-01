@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pak_tani/firebase_options.dart';
@@ -10,15 +9,13 @@ import 'package:pak_tani/src/core/di/dependency_injection.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  await DependencyInjection.init();
 
+  // Minimal initialization for background isolate
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  await FirebaseCloudMessagingConfig.initialize();
+  await DependencyInjection.init();
 
-  FirebaseMessaging.onBackgroundMessage(
-    FirebaseCloudMessagingConfig.firebaseMessagingBackgroundHandler,
-  );
+  await FirebaseCloudMessagingConfig.initialize();
 
   await FirebaseCloudMessagingConfig.getToken();
 

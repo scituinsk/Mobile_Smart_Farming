@@ -36,14 +36,9 @@ class AddModulUiController extends GetxController {
     final formState = formKey.currentState;
     if (formState == null) return;
     if (!formState.validate()) {
-      Get.rawSnackbar(
-        title: 'Form tidak valid',
-        message: 'Periksa kembali kode modul dan password.',
-        snackPosition: SnackPosition.TOP,
-        backgroundColor: const Color(0xFFE53935),
-        margin: const EdgeInsets.all(12),
-        borderRadius: 8,
-        duration: const Duration(seconds: 2),
+      MySnackbar.error(
+        title: "Form tidak valid",
+        message: "Periksa kembali kode modul dan password.",
       );
       return;
     }
