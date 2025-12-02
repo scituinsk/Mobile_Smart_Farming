@@ -9,14 +9,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 class ScheduleList extends StatelessWidget {
   ScheduleList({super.key});
 
-  // final List<Map<String, dynamic>> schedules = const [
-  //   {"duration": 30, "time": "06:00", "day": "Sen, Rab, Jum"},
-  //   {"duration": 45, "time": "08:30", "day": "Sel, Kam, Sab"},
-  //   {"duration": 25, "time": "10:15", "day": "Sen, Rab, Jum"},
-  //   {"duration": 40, "time": "14:00", "day": "Setiap Hari"},
-  //   {"duration": 20, "time": "17:30", "day": "Sel, Kam, Min"},
-  //   {"duration": 35, "time": "19:45", "day": "Rab, Jum, Sab"},
-  // ];
   final _controller = Get.find<ScheduleUiController>();
 
   static final _mockSchedules = List.generate(

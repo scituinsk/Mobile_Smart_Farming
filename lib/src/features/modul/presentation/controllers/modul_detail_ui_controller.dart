@@ -69,11 +69,13 @@ class ModulDetailUiController extends GetxController {
 
       _initFormController();
 
-      await _initWsStream();
+      await _initFeatureWsStream();
 
       await _relayService.loadRelaysAndAssignToRelayGroup(
         modul.value!.serialId,
       );
+
+      await _initRelaysWsStream();
     } catch (e) {
       Get.back();
       print("error at detail init: $e");
@@ -118,7 +120,7 @@ class ModulDetailUiController extends GetxController {
     modulConfirmNewPassC.dispose();
   }
 
-  Future<void> _initWsStream() async {
+  Future<void> _initFeatureWsStream() async {
     final token = await _storage.readSecure("access_token");
     if (token == null || token.isEmpty) {
       print("token tidak ditemukan");
@@ -136,10 +138,6 @@ class ModulDetailUiController extends GetxController {
         try {
           final json = jsonDecode(raw as String) as Map<String, dynamic>;
           _updateFeatureData(json);
-
-          // print(
-          //   "T=${json['temperature_data']}, H=${json['humidity_data']}, B=${json['battery_data']}, W=${json['water_level_data']}",
-          // );
         } catch (e) {
           print("parse error: $e | raw=$raw");
         }
@@ -150,6 +148,36 @@ class ModulDetailUiController extends GetxController {
     );
 
     _ws.value?.send("STREAMING_ON");
+  }
+
+  Future<void> _initRelaysWsStream() async {
+    final token = await _storage.readSecure("access_token");
+    if (token == null || token.isEmpty) {
+      print("token tidak ditemukan");
+      return;
+    }
+
+    final handle = await _wsService.openDeviceStream(
+      token: token,
+      modulId: modulId,
+    );
+    _ws.value = handle;
+
+    _sub = handle.stream.listen(
+      (raw) {
+        try {
+          final json = jsonDecode(raw as String) as Map<String, dynamic>;
+          _updateRelayStatusFromWs(json);
+        } catch (e) {
+          print("parse error: $e | raw=$raw");
+        }
+      },
+      onError: (e) => print('WS error: $e'),
+      onDone: () => print('WS selesai'),
+      cancelOnError: false,
+    );
+
+    _ws.value?.send("STREAM_RELAY_ON");
   }
 
   void _updateFeatureData(Map<String, dynamic> wsData) {
@@ -208,6 +236,23 @@ class ModulDetailUiController extends GetxController {
     _lastUpdatedModul = updatedModul;
     _pendingListUpdate = true;
 
+    update();
+  }
+
+  void _updateRelayStatusFromWs(Map<String, dynamic> wsData) {
+    final Map<int, bool> statuses = {};
+
+    wsData.forEach((key, value) {
+      final int? pin = int.tryParse(key);
+      if (pin == null) return;
+
+      if (value == null) return;
+      statuses[pin] = value == 1;
+    });
+
+    if (statuses.isEmpty) return;
+
+    _relayService.applyRelayStatuses(statuses);
     update();
   }
 
@@ -411,6 +456,7 @@ class ModulDetailUiController extends GetxController {
   @override
   Future<void> onClose() async {
     _ws.value?.send("STREAMING_OFF");
+    _ws.value?.send("STREAM_RELAY_OFF");
     await _sub?.cancel();
     await _ws.value?.close(); // berhenti streaming saat dispose
 

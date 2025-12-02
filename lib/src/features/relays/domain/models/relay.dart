@@ -32,4 +32,26 @@ class Relay extends Equatable {
     modulId,
     groupId,
   ];
+
+  Relay copyWith({
+    int? id,
+    String? name,
+    String? descriptions,
+    RelayType? type,
+    bool? status,
+    int? pin,
+    int? modulId,
+    int? groupId,
+  }) {
+    return Relay(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      descriptions: descriptions ?? this.descriptions,
+      type: type ?? this.type,
+      status: status ?? this.status,
+      pin: pin ?? this.pin,
+      modulId: modulId ?? this.modulId,
+      groupId: groupId ?? this.groupId,
+    );
+  }
 }

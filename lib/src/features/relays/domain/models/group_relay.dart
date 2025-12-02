@@ -17,4 +17,20 @@ class RelayGroup extends Equatable {
 
   @override
   List<Object?> get props => [id, modulId, name, relays, sequential];
+
+  RelayGroup copyWith({
+    int? id,
+    int? modulId,
+    String? name,
+    List<Relay>? relays,
+    int? sequential,
+  }) {
+    return RelayGroup(
+      id: id ?? this.id,
+      modulId: modulId ?? this.modulId,
+      name: name ?? this.name,
+      relays: relays ?? this.relays,
+      sequential: sequential ?? this.sequential,
+    );
+  }
 }
