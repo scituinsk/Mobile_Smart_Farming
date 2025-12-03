@@ -393,7 +393,7 @@ class ScheduleUiController extends GetxController {
             print('WS: re-obtained handle, retry send');
             newHandle.send(payload);
           } else {
-            throw e;
+            rethrow;
           }
         } catch (e2) {
           print('WS send error (retry): $e2');
@@ -452,17 +452,13 @@ class ScheduleUiController extends GetxController {
         return;
       }
 
-      final int sequential = selectedRelayGroup.value!.sequential;
+      // final String relays = selectedRelayGroup.value!.relays!
+      //     .map((relay) => relay.pin)
+      //     .join(',');
 
-      final data = [
-        'check=0',
-        'relay=0',
-        'time=0',
-        'schedule=0',
-        'sequential=$sequential',
-      ].join('\n');
+      // final int sequential = selectedRelayGroup.value!.sequential;
 
-      await _sendToDevice(data);
+      await _sendToDevice("OFF");
 
       Get.closeAllSnackbars();
       Navigator.of(Get.overlayContext!).pop();
