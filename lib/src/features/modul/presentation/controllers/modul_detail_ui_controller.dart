@@ -34,7 +34,7 @@ class ModulDetailUiController extends GetxController {
 
   late String modulId;
 
-  final _ws = Rxn<DeviceWsHandle>();
+  final ws = Rxn<DeviceWsHandle>();
   StreamSubscription? _sub;
 
   final _storage = Get.find<StorageService>();
@@ -69,13 +69,10 @@ class ModulDetailUiController extends GetxController {
 
       _initFormController();
 
-      await _initFeatureWsStream();
-
       await _relayService.loadRelaysAndAssignToRelayGroup(
         modul.value!.serialId,
       );
-
-      await _initRelaysWsStream();
+      await _initWsStream();
     } catch (e) {
       Get.back();
       print("error at detail init: $e");
@@ -120,53 +117,30 @@ class ModulDetailUiController extends GetxController {
     modulConfirmNewPassC.dispose();
   }
 
-  Future<void> _initFeatureWsStream() async {
+  Future<void> _initWsStream() async {
     final token = await _storage.readSecure("access_token");
     if (token == null || token.isEmpty) {
       print("token tidak ditemukan");
       return;
     }
 
-    final handle = await _wsService.openDeviceStream(
-      token: token,
-      modulId: modulId,
-    );
-    _ws.value = handle;
+    final handle =
+        ws.value ??
+        await _wsService.getOrOpenDeviceStream(token: token, modulId: modulId);
+
+    if (ws.value == null) {
+      ws.value = handle;
+    }
+
+    await _sub?.cancel();
 
     _sub = handle.stream.listen(
       (raw) {
         try {
-          final json = jsonDecode(raw as String) as Map<String, dynamic>;
+          final json = jsonDecode(raw) as Map<String, dynamic>;
+
           _updateFeatureData(json);
-        } catch (e) {
-          print("parse error: $e | raw=$raw");
-        }
-      },
-      onError: (e) => print('WS error: $e'),
-      onDone: () => print('WS selesai'),
-      cancelOnError: false,
-    );
 
-    _ws.value?.send("STREAMING_ON");
-  }
-
-  Future<void> _initRelaysWsStream() async {
-    final token = await _storage.readSecure("access_token");
-    if (token == null || token.isEmpty) {
-      print("token tidak ditemukan");
-      return;
-    }
-
-    final handle = await _wsService.openDeviceStream(
-      token: token,
-      modulId: modulId,
-    );
-    _ws.value = handle;
-
-    _sub = handle.stream.listen(
-      (raw) {
-        try {
-          final json = jsonDecode(raw as String) as Map<String, dynamic>;
           _updateRelayStatusFromWs(json);
         } catch (e) {
           print("parse error: $e | raw=$raw");
@@ -176,8 +150,11 @@ class ModulDetailUiController extends GetxController {
       onDone: () => print('WS selesai'),
       cancelOnError: false,
     );
-
-    _ws.value?.send("STREAM_RELAY_ON");
+    try {
+      ws.value?.send("STREAMING_ON");
+    } catch (e) {
+      print('WS send STREAMING_ON failed: $e');
+    }
   }
 
   void _updateFeatureData(Map<String, dynamic> wsData) {
@@ -242,13 +219,57 @@ class ModulDetailUiController extends GetxController {
   void _updateRelayStatusFromWs(Map<String, dynamic> wsData) {
     final Map<int, bool> statuses = {};
 
-    wsData.forEach((key, value) {
-      final int? pin = int.tryParse(key);
-      if (pin == null) return;
+    final dynamic scheduleData = wsData["schedule_data"];
+    List<dynamic>? pinsList;
 
-      if (value == null) return;
-      statuses[pin] = value == 1;
-    });
+    if (scheduleData is List) {
+      for (var item in scheduleData) {
+        if (item is Map && item.containsKey("pins")) {
+          pinsList = (item["pins"] as List<dynamic>?);
+          break;
+        }
+      }
+    } else if (scheduleData is Map) {
+      pinsList = (scheduleData["pins"] as List<dynamic>?);
+    }
+
+    // 2) If we got a pins list, parse it: each item like {"10":"1"}
+    if (pinsList != null && pinsList.isNotEmpty) {
+      for (final item in pinsList) {
+        if (item is Map) {
+          item.forEach((k, v) {
+            final int? pin = int.tryParse(k.toString());
+            if (pin == null) return;
+
+            int? intVal;
+            if (v is int) {
+              intVal = v;
+            } else {
+              intVal = int.tryParse(v?.toString() ?? '');
+            }
+
+            if (intVal == null) return;
+            statuses[pin] = intVal == 1;
+          });
+        }
+      }
+    } else {
+      // 3) Fallback: maybe wsData itself is a map of pin->0/1 (legacy)
+      wsData.forEach((key, value) {
+        final int? pin = int.tryParse(key);
+        if (pin == null) return;
+
+        int? intVal;
+        if (value is int) {
+          intVal = value;
+        } else {
+          intVal = int.tryParse(value?.toString() ?? '');
+        }
+
+        if (intVal == null) return;
+        statuses[pin] = intVal == 1;
+      });
+    }
 
     if (statuses.isEmpty) return;
 
@@ -455,10 +476,14 @@ class ModulDetailUiController extends GetxController {
 
   @override
   Future<void> onClose() async {
-    _ws.value?.send("STREAMING_OFF");
-    _ws.value?.send("STREAM_RELAY_OFF");
+    try {
+      // beri tahu server kita stop streaming
+      ws.value?.send("STREAMING_OFF");
+    } catch (e) {
+      print('WS send STREAMING_OFF failed: $e');
+    }
+
     await _sub?.cancel();
-    await _ws.value?.close(); // berhenti streaming saat dispose
 
     if (_pendingListUpdate && _lastUpdatedModul != null) {
       final idx = _modulService.moduls.indexWhere(

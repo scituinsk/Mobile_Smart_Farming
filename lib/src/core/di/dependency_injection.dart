@@ -87,6 +87,8 @@ class DependencyInjection {
       print('   ✅ Presentation Controllers registered');
 
       print('✅ All dependencies initialized successfully!');
+
+      Get.put(WebSocketService(), permanent: true);
     } catch (e) {
       print('❌ Dependency injection failed: $e');
       rethrow;

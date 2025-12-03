@@ -233,4 +233,28 @@ class RelayService extends GetxService {
     }
     relayGroups.refresh();
   }
+
+  Future<void> turnOnAllRelayOnGroup(int id) async {
+    isLoading.value = true;
+    try {
+      await _repository.turnOnAllSolenoid(id.toString());
+    } catch (e) {
+      print("error turning on all relay schedule group: $e");
+      rethrow;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> turnOffAllRelayOnGroup(int id) async {
+    isLoading.value = true;
+    try {
+      await _repository.turnOffAllSolenoid(id.toString());
+    } catch (e) {
+      print("error turning off all relay schedule group: $e");
+      rethrow;
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

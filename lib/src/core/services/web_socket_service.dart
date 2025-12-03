@@ -9,16 +9,40 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 class DeviceWsHandle {
   final WebSocketChannel _channel;
-  final Stream<dynamic> stream;
+  final Stream<String> stream;
 
   DeviceWsHandle._(this._channel, this.stream);
 
-  void send(dynamic data) => _channel.sink.add(data);
-  Future<void> close() async => _channel.sink.close();
+  void send(dynamic data) {
+    try {
+      final payload = data is String ? data : data.toString();
+      print('DeviceWsHandle.send -> ${payload.replaceAll("\n", "\\n")}');
+      _channel.sink.add(payload);
+    } catch (e) {
+      print('DeviceWsHandle.send error: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> close() async {
+    await _channel.sink.close();
+  }
+
+  bool get isOpen {
+    try {
+      // web_socket_channel doesn't expose readyState; best-effort check
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
 }
 
 class WebSocketService extends GetxService {
   WebSocketChannel? _channel;
+
+  // cache device handles per modulId
+  final Map<String, DeviceWsHandle> _deviceHandles = {};
 
   //streams
   final _messageController = StreamController<WebsocketMessage>.broadcast();
@@ -39,6 +63,8 @@ class WebSocketService extends GetxService {
 
   @override
   void onClose() {
+    // close all device handles
+    closeAllDeviceStreams();
     super.onClose();
   }
 
@@ -85,23 +111,73 @@ class WebSocketService extends GetxService {
     }
   }
 
+  /// Open a device-specific stream (creates a new connection per modulId).
+  /// Returned stream is broadcast so many listeners (controllers) can listen safely.
   Future<DeviceWsHandle> openDeviceStream({
     required String token,
     required String modulId,
   }) async {
     final uri = _buildWsUri("/ws/device/$modulId/");
+    print('OPEN WS -> $uri');
     final ch = IOWebSocketChannel.connect(
       uri,
       headers: {"Authorization": "Bearer $token"},
     );
 
-    final mapped = ch.stream.map((event) {
-      if (event is List<int>) return utf8.decode(event);
-      if (event is String) return event;
-      return event?.toString() ?? '';
-    });
+    final mapped = ch.stream
+        .map((event) {
+          if (event is List<int>) return utf8.decode(event);
+          if (event is String) return event;
+          return event?.toString() ?? '';
+        })
+        .asBroadcastStream(
+          onListen: (sub) {
+            print('WS[$modulId] broadcast: listener added');
+          },
+        );
+
+    mapped.listen(
+      (msg) => print('WS[$modulId] <- $msg'),
+      onError: (err) => print('WS[$modulId] error: $err'),
+      onDone: () => print('WS[$modulId] done'),
+      cancelOnError: false,
+    );
 
     return DeviceWsHandle._(ch, mapped);
+  }
+
+  /// Get existing handle for modulId or open a new one and cache it.
+  Future<DeviceWsHandle> getOrOpenDeviceStream({
+    required String token,
+    required String modulId,
+  }) async {
+    final existing = _deviceHandles[modulId];
+    if (existing != null) return existing;
+
+    final handle = await openDeviceStream(token: token, modulId: modulId);
+    _deviceHandles[modulId] = handle;
+    return handle;
+  }
+
+  /// Close and remove a cached device stream
+  Future<void> closeDeviceStream(String modulId) async {
+    final h = _deviceHandles.remove(modulId);
+    if (h != null) {
+      try {
+        await h.close();
+      } catch (e) {
+        print('closeDeviceStream error: $e');
+      }
+    }
+  }
+
+  /// Close all cached device streams
+  Future<void> closeAllDeviceStreams() async {
+    final keys = _deviceHandles.keys.toList();
+    for (final k in keys) {
+      await closeDeviceStream(k);
+    }
+    _deviceHandles.clear();
   }
 
   void _setDisconnected() {
@@ -129,7 +205,7 @@ class WebSocketService extends GetxService {
   }
 
   Uri _buildWsUri(String path) {
-    final base = AppConfig.wsBaseUrl; // contoh: wss://api.example.com
+    final base = AppConfig.wsBaseUrl;
     final b = base.endsWith('/') ? base.substring(0, base.length - 1) : base;
     final p = path.startsWith('/') ? path : '/$path';
     return Uri.parse('$b$p');

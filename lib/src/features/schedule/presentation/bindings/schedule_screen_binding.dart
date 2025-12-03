@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/services/api_service.dart';
+import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 import 'package:pak_tani/src/features/schedule/application/services/schedule_service.dart';
 import 'package:pak_tani/src/features/schedule/data/datasources/schedule_remote_datasource_impl.dart';
 import 'package:pak_tani/src/features/schedule/data/repositories/schedule_repository_impl.dart';
@@ -24,6 +25,7 @@ class ScheduleScreenBinding extends Bindings {
       ScheduleUiController(
         Get.find<RelayService>(),
         Get.find<ScheduleService>(),
+        Get.find<ModulService>(),
       ),
     );
   }
