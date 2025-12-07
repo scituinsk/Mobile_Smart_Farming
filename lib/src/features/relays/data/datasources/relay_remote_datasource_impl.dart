@@ -92,4 +92,14 @@ class RelayRemoteDatasourceImpl implements RelayRemoteDatasource {
   Future<void> deleteGroup(String id) async {
     await _apiService.delete("/schedule/groups/$id/");
   }
+
+  @override
+  Future<void> turnOnAllSolenoid(String id) async {
+    await _apiService.get("/schedule/groups/$id/on");
+  }
+
+  @override
+  Future<void> turnOffAllSolenoid(String id) async {
+    await _apiService.get("/schedule/groups/$id/off");
+  }
 }

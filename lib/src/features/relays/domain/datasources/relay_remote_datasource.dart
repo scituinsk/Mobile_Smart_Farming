@@ -16,4 +16,6 @@ abstract class RelayRemoteDatasource {
   Future<GroupRelayModel> addGroup(String modulId, String name);
   Future<GroupRelayModel> editGroup(String id, String name, int sequential);
   Future<void> deleteGroup(String id);
+  Future<void> turnOnAllSolenoid(String id);
+  Future<void> turnOffAllSolenoid(String id);
 }

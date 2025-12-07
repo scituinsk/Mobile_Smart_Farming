@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/services/api_service.dart';
+import 'package:pak_tani/src/core/services/connectivity_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/services/web_socket_service.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
@@ -18,6 +19,8 @@ class DependencyInjection {
     print('🔄 Starting dependency injection...');
 
     try {
+      Get.put(ConnectivityService(), permanent: true);
+
       // ===== LAYER 1: CORE SERVICES =====
       print('   - Initializing StorageService...');
       final storageService = StorageService();
@@ -84,6 +87,8 @@ class DependencyInjection {
       print('   ✅ Presentation Controllers registered');
 
       print('✅ All dependencies initialized successfully!');
+
+      Get.put(WebSocketService(), permanent: true);
     } catch (e) {
       print('❌ Dependency injection failed: $e');
       rethrow;

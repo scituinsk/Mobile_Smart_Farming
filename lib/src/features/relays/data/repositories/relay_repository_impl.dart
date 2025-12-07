@@ -149,4 +149,24 @@ class RelayRepositoryImpl extends RelayRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<void> turnOffAllSolenoid(String id) async {
+    try {
+      await remoteDatasource.turnOffAllSolenoid(id);
+    } catch (e) {
+      print("error turning off all relay(repo): $e");
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> turnOnAllSolenoid(String id) async {
+    try {
+      await remoteDatasource.turnOnAllSolenoid(id);
+    } catch (e) {
+      print("error turning on all relay(repo): $e");
+      rethrow;
+    }
+  }
 }

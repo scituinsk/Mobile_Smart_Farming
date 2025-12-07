@@ -34,7 +34,7 @@ class ModulDetailUiController extends GetxController {
 
   late String modulId;
 
-  final _ws = Rxn<DeviceWsHandle>();
+  final ws = Rxn<DeviceWsHandle>();
   StreamSubscription? _sub;
 
   final _storage = Get.find<StorageService>();
@@ -69,13 +69,14 @@ class ModulDetailUiController extends GetxController {
 
       _initFormController();
 
-      await _initWsStream();
-
       await _relayService.loadRelaysAndAssignToRelayGroup(
         modul.value!.serialId,
       );
+      await _initWsStream();
     } catch (e) {
+      Get.back();
       print("error at detail init: $e");
+      MySnackbar.error(message: e.toString());
     } finally {
       isLoading.value = false;
     }
@@ -123,21 +124,24 @@ class ModulDetailUiController extends GetxController {
       return;
     }
 
-    final handle = await _wsService.openDeviceStream(
-      token: token,
-      modulId: modulId,
-    );
-    _ws.value = handle;
+    final handle =
+        ws.value ??
+        await _wsService.getOrOpenDeviceStream(token: token, modulId: modulId);
+
+    if (ws.value == null) {
+      ws.value = handle;
+    }
+
+    await _sub?.cancel();
 
     _sub = handle.stream.listen(
       (raw) {
         try {
-          final json = jsonDecode(raw as String) as Map<String, dynamic>;
+          final json = jsonDecode(raw) as Map<String, dynamic>;
+
           _updateFeatureData(json);
 
-          // print(
-          //   "T=${json['temperature_data']}, H=${json['humidity_data']}, B=${json['battery_data']}, W=${json['water_level_data']}",
-          // );
+          _updateRelayStatusFromWs(json);
         } catch (e) {
           print("parse error: $e | raw=$raw");
         }
@@ -146,8 +150,11 @@ class ModulDetailUiController extends GetxController {
       onDone: () => print('WS selesai'),
       cancelOnError: false,
     );
-
-    _ws.value?.send("STREAMING_ON");
+    try {
+      ws.value?.send("STREAMING_ON");
+    } catch (e) {
+      print('WS send STREAMING_ON failed: $e');
+    }
   }
 
   void _updateFeatureData(Map<String, dynamic> wsData) {
@@ -206,6 +213,67 @@ class ModulDetailUiController extends GetxController {
     _lastUpdatedModul = updatedModul;
     _pendingListUpdate = true;
 
+    update();
+  }
+
+  void _updateRelayStatusFromWs(Map<String, dynamic> wsData) {
+    final Map<int, bool> statuses = {};
+
+    final dynamic scheduleData = wsData["schedule_data"];
+    List<dynamic>? pinsList;
+
+    if (scheduleData is List) {
+      for (var item in scheduleData) {
+        if (item is Map && item.containsKey("pins")) {
+          pinsList = (item["pins"] as List<dynamic>?);
+          break;
+        }
+      }
+    } else if (scheduleData is Map) {
+      pinsList = (scheduleData["pins"] as List<dynamic>?);
+    }
+
+    // 2) If we got a pins list, parse it: each item like {"10":"1"}
+    if (pinsList != null && pinsList.isNotEmpty) {
+      for (final item in pinsList) {
+        if (item is Map) {
+          item.forEach((k, v) {
+            final int? pin = int.tryParse(k.toString());
+            if (pin == null) return;
+
+            int? intVal;
+            if (v is int) {
+              intVal = v;
+            } else {
+              intVal = int.tryParse(v?.toString() ?? '');
+            }
+
+            if (intVal == null) return;
+            statuses[pin] = intVal == 1;
+          });
+        }
+      }
+    } else {
+      // 3) Fallback: maybe wsData itself is a map of pin->0/1 (legacy)
+      wsData.forEach((key, value) {
+        final int? pin = int.tryParse(key);
+        if (pin == null) return;
+
+        int? intVal;
+        if (value is int) {
+          intVal = value;
+        } else {
+          intVal = int.tryParse(value?.toString() ?? '');
+        }
+
+        if (intVal == null) return;
+        statuses[pin] = intVal == 1;
+      });
+    }
+
+    if (statuses.isEmpty) return;
+
+    _relayService.applyRelayStatuses(statuses);
     update();
   }
 
@@ -408,9 +476,14 @@ class ModulDetailUiController extends GetxController {
 
   @override
   Future<void> onClose() async {
-    _ws.value?.send("STREAMING_OFF");
+    try {
+      // beri tahu server kita stop streaming
+      ws.value?.send("STREAMING_OFF");
+    } catch (e) {
+      print('WS send STREAMING_OFF failed: $e');
+    }
+
     await _sub?.cancel();
-    await _ws.value?.close(); // berhenti streaming saat dispose
 
     if (_pendingListUpdate && _lastUpdatedModul != null) {
       final idx = _modulService.moduls.indexWhere(

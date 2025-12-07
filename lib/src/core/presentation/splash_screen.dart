@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
+import 'package:pak_tani/src/core/services/connectivity_service.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
@@ -23,6 +24,18 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _initializeApp() async {
     try {
+      statusMessage.value = "Memeriksa koneksi...";
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      final connectivityService = Get.find<ConnectivityService>();
+      await connectivityService.checkInitialConnection();
+
+      if (!connectivityService.isConnected.value) {
+        statusMessage.value = "Tidak ada koneksi internet!";
+        _showRetryDialog();
+        return;
+      }
+
       statusMessage.value = 'Starting app...';
 
       statusMessage.value = "Getting auth service...";
@@ -59,10 +72,25 @@ class _SplashScreenState extends State<SplashScreen> {
         Get.offAllNamed(RouteNamed.loginPage);
       }
     } catch (e) {
-      statusMessage.value = 'Error occurred, redirecting...';
+      statusMessage.value = 'Error: ${e.toString()}';
       await Future.delayed(Duration(milliseconds: 500));
-      Get.offAllNamed(RouteNamed.loginPage);
+      _showRetryDialog();
     }
+  }
+
+  void _showRetryDialog() {
+    Get.defaultDialog(
+      title: "Koneksi Bermasalah",
+      middleText:
+          "Tidak dapat terhubung ke server. Pastikan Anda memiliki koneksi internet yang stabil.",
+      textConfirm: "Coba Lagi",
+      confirmTextColor: Colors.white,
+      onConfirm: () {
+        Get.back(); // Tutup dialog
+        _initializeApp(); // Coba inisialisasi ulang
+      },
+      barrierDismissible: false,
+    );
   }
 
   @override

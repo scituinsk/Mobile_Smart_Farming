@@ -5,12 +5,14 @@ import 'package:get/get.dart' hide Response, FormData, MultipartFile;
 import 'package:pak_tani/src/core/config/app_config.dart';
 import 'package:pak_tani/src/core/errors/api_exception.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
+import 'package:pak_tani/src/core/services/connectivity_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
 
 class ApiService extends GetxService {
   late Dio _dio;
   final StorageService _storage = Get.find<StorageService>();
+  final ConnectivityService _connectivity = Get.find<ConnectivityService>();
 
   //  Better refresh tracking
   bool _isRefreshing = false;
@@ -46,6 +48,21 @@ class ApiService extends GetxService {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          if (!_connectivity.isConnected.value) {
+            print("🚫 No interntet connection,  request to: ${options.path}");
+
+            return handler.reject(
+              DioException(
+                requestOptions: options,
+                type: DioExceptionType.connectionError,
+                error: NetworkException(
+                  message:
+                      "Tidak ada koneksi internet. Silahkan periksa jaringan anda",
+                ),
+              ),
+            );
+          }
+
           final requestId = '${options.method}-${options.path}';
 
           // ✅ Prevent duplicate requests
@@ -111,9 +128,9 @@ class ApiService extends GetxService {
 
           final statusCode = error.response?.statusCode;
           final path = error.requestOptions.path;
-          final message = error.response!.statusMessage;
+          final message = error.response?.statusMessage ?? error.message;
 
-          print('❌ Error: ${statusCode} ${path}');
+          print('❌ Error: $statusCode $path');
           print('❌ message: $message');
 
           // ✅ Handle 401 with better logic

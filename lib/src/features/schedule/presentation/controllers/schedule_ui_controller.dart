@@ -1,6 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/services/storage_service.dart';
+import 'package:pak_tani/src/core/services/web_socket_service.dart';
 import 'package:pak_tani/src/core/widgets/my_snackbar.dart';
+import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 import 'package:pak_tani/src/features/relays/domain/value_objects/relay_type.dart';
 import 'package:pak_tani/src/features/schedule/application/services/schedule_service.dart';
 import 'package:pak_tani/src/features/schedule/domain/entities/schedule.dart';
@@ -11,13 +16,21 @@ import 'package:pak_tani/src/features/relays/domain/models/group_relay.dart';
 class ScheduleUiController extends GetxController {
   final RelayService relayService;
   final ScheduleService scheduleService;
-  ScheduleUiController(this.relayService, this.scheduleService);
+  final ModulService modulService;
+  ScheduleUiController(
+    this.relayService,
+    this.scheduleService,
+    this.modulService,
+  );
 
   Rx<RelayGroup?> get selectedRelayGroup => relayService.selectedRelayGroup;
   RxList<Schedule> get schedules => scheduleService.schedules;
   RxBool get isFetchingSchedule => scheduleService.isFetching;
   RxBool get isSavingSchedule => scheduleService.isSaving;
   RxBool get isDeletingSchedule => scheduleService.isDeleting;
+
+  RxBool isLoadingTurnOn = false.obs;
+  RxBool isLoadingTurnOff = false.obs;
 
   RxInt relayCount = 0.obs;
   RxInt solenoidCount = 0.obs;
@@ -38,41 +51,80 @@ class ScheduleUiController extends GetxController {
   final RxSet<WeekDay> selectedDays = <WeekDay>{}.obs;
   final GlobalKey<FormState> scheduleFormKey = GlobalKey<FormState>();
 
+  final _ws = Rxn<DeviceWsHandle>();
+
+  // get service instance (use DI or Get.find if registered)
+  final WebSocketService _wsService = Get.find<WebSocketService>();
+
   @override
   void onInit() {
     super.onInit();
-    relaySequentialCountController = TextEditingController();
-    final groupId = Get.arguments;
+    try {
+      relaySequentialCountController = TextEditingController();
+      final groupId = Get.arguments;
 
-    relayService.selectRelayGroup(groupId);
-    scheduleService.loadSchedules(groupId);
+      relayService.selectRelayGroup(groupId);
+      scheduleService.loadSchedules(groupId);
 
-    //inisialisai infromasi group relay
-    if (selectedRelayGroup.value != null) {
-      if (selectedRelayGroup.value!.relays != null) {
-        relayCount.value = selectedRelayGroup.value!.relays!.length;
-        solenoidCount.value = selectedRelayGroup.value!.relays!
-            .where((relay) => relay.type == RelayType.solenoid)
-            .length;
+      //inisialisai infromasi group relay
+      if (selectedRelayGroup.value != null) {
+        if (selectedRelayGroup.value!.relays != null) {
+          relayCount.value = selectedRelayGroup.value!.relays!.length;
+          solenoidCount.value = selectedRelayGroup.value!.relays!
+              .where((relay) => relay.type == RelayType.solenoid)
+              .length;
+        }
+
+        print("ada selected group");
+        sequentialCountController.value = selectedRelayGroup.value!.sequential;
+        sequentialCount.value = sequentialCountController.value;
+
+        print("jumlah sequential: ${sequentialCount.value}");
+
+        relaySequentialCountController.text = selectedRelayGroup
+            .value!
+            .sequential
+            .toString();
+
+        isSequentialController.value = sequentialCount.value != 0;
+        sequentialCount.value < relayCount.value;
+        isSequential.value = isSequentialController.value;
+
+        print("apakah sequential controller: ${isSequentialController.value}");
+        print("apakah sequential: ${isSequential.value}");
+
+        _initWsHandle();
+      } else {
+        print("tidak ada selected group");
+      }
+    } catch (e) {
+      print("error init schedule ui: ${e.toString()}");
+      MySnackbar.error(message: e.toString());
+    }
+  }
+
+  Future<void> _initWsHandle() async {
+    try {
+      final serialId = modulService.selectedModul.value!.serialId;
+
+      // replace with your storage service to read token
+      final storage =
+          Get.find<StorageService>(); // <-- ganti dengan StorageService type
+      final token = await storage.readSecure("access_token");
+      if (token == null || token.isEmpty) {
+        print('WS: token not available');
+        return;
       }
 
-      print("ada selected group");
-      sequentialCountController.value = selectedRelayGroup.value!.sequential;
-      sequentialCount.value = sequentialCountController.value;
+      final handle = await _wsService.getOrOpenDeviceStream(
+        token: token,
+        modulId: serialId,
+      );
 
-      print("jumlah sequential: ${sequentialCount.value}");
-
-      relaySequentialCountController.text = selectedRelayGroup.value!.sequential
-          .toString();
-
-      isSequentialController.value = sequentialCount.value != 0;
-      sequentialCount.value < relayCount.value;
-      isSequential.value = isSequentialController.value;
-
-      print("apakah sequential controller: ${isSequentialController.value}");
-      print("apakah sequential: ${isSequential.value}");
-    } else {
-      print("tidak ada selected group");
+      // store handle to use for sending
+      _ws.value = handle;
+    } catch (e) {
+      print('init ws handle error: $e');
     }
   }
 
@@ -283,6 +335,139 @@ class ScheduleUiController extends GetxController {
       await scheduleService.editStatusSchedule(id, isActive);
     } catch (e) {
       MySnackbar.error(message: e.toString());
+    }
+  }
+
+  Future<void> _ensureWsHandle() async {
+    if (_ws.value != null) return;
+    try {
+      final serialId = modulService.selectedModul.value!.serialId;
+      final storage = Get.find<StorageService>();
+      final token = await storage.readSecure("access_token");
+      if (token == null || token.isEmpty) {
+        print('WS: token not available (ensure)');
+        return;
+      }
+      final handle = await _wsService.getOrOpenDeviceStream(
+        token: token,
+        modulId: serialId,
+      );
+      _ws.value = handle;
+      print('WS: handle obtained for modul $serialId');
+    } catch (e) {
+      print('WS: ensure handle failed: $e');
+    }
+  }
+
+  Future<void> _sendToDevice(String payload) async {
+    try {
+      // ensure we have a handle
+      await _ensureWsHandle();
+      final handle = _ws.value;
+      if (handle == null) {
+        MySnackbar.error(message: "Koneksi websocket tidak tersedia.");
+        print('WS: send aborted - no handle');
+        return;
+      }
+
+      // log payload
+      print('WS SEND: $payload');
+
+      // try send and await if channel expects future
+      try {
+        handle.send(payload);
+        // some implementations return Future or not; await if Future
+      } catch (e) {
+        print('WS send error (first attempt): $e');
+        // try reconnect once then resend
+        try {
+          final serialId = modulService.selectedModul.value!.serialId;
+          final storage = Get.find<StorageService>();
+          final token = await storage.readSecure("access_token");
+          if (token != null) {
+            final newHandle = await _wsService.getOrOpenDeviceStream(
+              token: token,
+              modulId: serialId,
+            );
+            _ws.value = newHandle;
+            print('WS: re-obtained handle, retry send');
+            newHandle.send(payload);
+          } else {
+            rethrow;
+          }
+        } catch (e2) {
+          print('WS send error (retry): $e2');
+          rethrow;
+        }
+      }
+    } catch (e) {
+      MySnackbar.error(message: "Gagal mengirim ke websocket: $e");
+    }
+  }
+
+  Future<void> handleTurnOnAllRelayInGroup() async {
+    isLoadingTurnOn.value = true;
+    try {
+      if (selectedRelayGroup.value == null ||
+          selectedRelayGroup.value!.relays == null ||
+          selectedRelayGroup.value!.relays!.isEmpty) {
+        MySnackbar.error(message: "Tidak ada relay dalam group ini.");
+        return;
+      }
+      final String relays = selectedRelayGroup.value!.relays!
+          .map((relay) => relay.pin)
+          .join(',');
+
+      final int sequential = selectedRelayGroup.value!.sequential;
+
+      final data = [
+        'check=0',
+        'relay=$relays',
+        'time=600',
+        'schedule=0',
+        'sequential=$sequential',
+      ].join('\n');
+
+      await _sendToDevice(data);
+
+      Get.closeAllSnackbars();
+      Navigator.of(Get.overlayContext!).pop();
+      MySnackbar.success(
+        message: "Berhasil menyalakan semua relay dalam group",
+      );
+    } catch (e) {
+      MySnackbar.error(message: e.toString());
+    } finally {
+      isLoadingTurnOn.value = false;
+    }
+  }
+
+  Future<void> handleTurnOffAllRelayInGroup() async {
+    isLoadingTurnOff.value = true;
+    try {
+      if (selectedRelayGroup.value == null ||
+          selectedRelayGroup.value!.relays == null ||
+          selectedRelayGroup.value!.relays!.isEmpty) {
+        MySnackbar.error(message: "Tidak ada relay dalam group ini.");
+        return;
+      }
+
+      // final String relays = selectedRelayGroup.value!.relays!
+      //     .map((relay) => relay.pin)
+      //     .join(',');
+
+      // final int sequential = selectedRelayGroup.value!.sequential;
+
+      await _sendToDevice("OFF");
+
+      Get.closeAllSnackbars();
+      Navigator.of(Get.overlayContext!).pop();
+
+      MySnackbar.success(message: "Berhasil mematikan semua relay dalam group");
+    } catch (e) {
+      MySnackbar.error(message: e.toString());
+    } finally {
+      isLoadingTurnOff.value = false;
     }
   }
 

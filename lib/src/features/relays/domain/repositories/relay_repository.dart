@@ -20,4 +20,6 @@ abstract class RelayRepository {
     List<Relay> relays,
   );
   Future<RelayGroup> addRelayGroup(String modulId, String name);
+  Future<void> turnOnAllSolenoid(String id);
+  Future<void> turnOffAllSolenoid(String id);
 }

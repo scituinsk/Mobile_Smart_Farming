@@ -188,4 +188,73 @@ class RelayService extends GetxService {
       isLoading.value = false;
     }
   }
+
+  void applyRelayStatuses(Map<int, bool> statuses) {
+    for (var gi = 0; gi < relayGroups.length; gi++) {
+      final group = relayGroups[gi];
+      final relays = group.relays;
+      if (relays == null) continue;
+
+      var changed = false;
+      final updatedRelays = <Relay>[];
+
+      for (var relay in relays) {
+        final int pin = relay.pin;
+        if (statuses.containsKey(pin)) {
+          final bool newState = statuses[pin]!;
+          Relay newRelay = relay;
+          try {
+            newRelay = relay.copyWith(status: newState);
+            changed = true;
+          } catch (e) {
+            newRelay = relay;
+          }
+          updatedRelays.add(newRelay);
+        } else {
+          updatedRelays.add(relay);
+        }
+      }
+      if (changed) {
+        try {
+          final newGroup = group.copyWith(relays: updatedRelays);
+          relayGroups[gi] = newGroup;
+          if (selectedRelayGroup.value?.id == newGroup.id) {
+            selectedRelayGroup.value = newGroup;
+            selectedRelayGroup.refresh();
+          }
+        } catch (e) {
+          relayGroups[gi] = group;
+          if (selectedRelayGroup.value?.id == group.id) {
+            selectedRelayGroup.value = relayGroups[gi];
+            selectedRelayGroup.refresh();
+          }
+        }
+      }
+    }
+    relayGroups.refresh();
+  }
+
+  Future<void> turnOnAllRelayOnGroup(int id) async {
+    isLoading.value = true;
+    try {
+      await _repository.turnOnAllSolenoid(id.toString());
+    } catch (e) {
+      print("error turning on all relay schedule group: $e");
+      rethrow;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> turnOffAllRelayOnGroup(int id) async {
+    isLoading.value = true;
+    try {
+      await _repository.turnOffAllSolenoid(id.toString());
+    } catch (e) {
+      print("error turning off all relay schedule group: $e");
+      rethrow;
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }
