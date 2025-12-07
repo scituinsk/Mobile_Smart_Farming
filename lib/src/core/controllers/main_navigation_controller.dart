@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
+import 'package:pak_tani/src/features/history/presentation/screens/history_screen.dart';
 import 'package:pak_tani/src/features/modul/presentation/bindings/modul_binding.dart';
 import 'package:pak_tani/src/features/modul/presentation/screen/moduls_screen.dart';
 
@@ -96,21 +97,7 @@ class MainNavigationController extends GetxController
   }
 
   void _initializeHistoryTab() {
-    _screensCache[1] = Scaffold(
-      appBar: AppBar(title: Text('History'), leading: SizedBox()),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.history, size: 100, color: Colors.orange),
-            SizedBox(height: 20),
-            Text('History Screen', style: Get.textTheme.headlineSmall),
-            SizedBox(height: 20),
-            Text('Coming soon....'),
-          ],
-        ),
-      ),
-    );
+    _screensCache[1] = HistoryScreen();
   }
 
   void _initializeProfileTab() {

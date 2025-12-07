@@ -4,7 +4,7 @@ import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
 import 'package:pak_tani/src/core/widgets/my_choice_chip.dart';
 import 'package:pak_tani/src/features/notification/presentation/widgets/notification_list.dart';
-import 'package:pak_tani/src/core/widgets/search_widget.dart';
+import 'package:pak_tani/src/features/notification/presentation/widgets/notification_search.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});

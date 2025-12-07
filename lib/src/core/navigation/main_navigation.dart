@@ -21,6 +21,7 @@ class MainNavigation extends GetView<MainNavigationController> {
           }
         },
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           body: BottomBar(
             fit: StackFit.expand,
             icon: (width, height) => Center(
@@ -96,9 +97,13 @@ class MainNavigation extends GetView<MainNavigationController> {
                     TabBar(
                       controller: controller.tabController,
                       tabs: [
-                        _buildCustomTab(Icons.home, 0, controller),
-                        _buildCustomTab(Icons.access_time, 1, controller),
-                        _buildCustomTab(Icons.person_rounded, 2, controller),
+                        _buildCustomTab(Icons.dashboard, 0, controller),
+                        _buildCustomTab(Icons.history, 1, controller),
+                        _buildCustomTab(
+                          Icons.person_outline_rounded,
+                          2,
+                          controller,
+                        ),
                       ],
                       indicatorColor: Colors.transparent,
                       dividerColor: Colors.transparent,

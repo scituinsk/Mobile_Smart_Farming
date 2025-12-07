@@ -17,6 +17,7 @@ enum MyCustomIcon {
   calendar,
   lightBulb,
   waterDrop,
+  search,
 }
 
 String iconAssets(MyCustomIcon type) {
@@ -51,6 +52,8 @@ String iconAssets(MyCustomIcon type) {
       return "assets/icons/lightbulb.svg";
     case MyCustomIcon.waterDrop:
       return "assets/icons/water_drop.svg";
+    case MyCustomIcon.search:
+      return "assets/icons/iconamoon-search.svg";
   }
 }
 
