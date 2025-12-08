@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
+import 'package:pak_tani/src/features/history/presentation/widgets/history_sheet.dart';
 
 class SearchHistoryWidget extends StatelessWidget {
   const SearchHistoryWidget({super.key});
@@ -42,12 +43,14 @@ class SearchHistoryWidget extends StatelessWidget {
                   MyIcon(
                     icon: Icons.swap_vert_rounded,
                     backgroundColor: AppTheme.surfaceColor,
-                    onPressed: () => print("object"),
+                    onPressed: () async =>
+                        await HistorySheet.showSortingSheet(context),
                   ),
                   MyIcon(
                     icon: Icons.filter_alt,
                     backgroundColor: AppTheme.surfaceColor,
-                    onPressed: () => print("object"),
+                    onPressed: () async =>
+                        await HistorySheet.showFilterSheet(context),
                   ),
                 ],
               ),
