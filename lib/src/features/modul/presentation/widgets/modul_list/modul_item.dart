@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/config/app_config.dart';
@@ -36,7 +37,7 @@ class ModulItem extends StatelessWidget {
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
           color: AppTheme.primaryColor,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
         ),
 
         // height: 240,
@@ -48,7 +49,7 @@ class ModulItem extends StatelessWidget {
           children: [
             ClipRRect(
               child: SizedBox(
-                height: 155,
+                height: 155.h,
                 width: double.infinity,
                 child: Stack(
                   children: [
@@ -59,17 +60,17 @@ class ModulItem extends StatelessWidget {
                       height: double.infinity,
                     ),
                     Positioned(
-                      top: 8,
-                      left: 8,
+                      top: 8.h,
+                      left: 8.w,
                       child: Container(
                         padding: EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
+                          horizontal: 8.w,
+                          vertical: 4.h,
                         ),
-                        constraints: BoxConstraints(maxWidth: 180),
+                        constraints: BoxConstraints(maxWidth: 180.w),
                         decoration: BoxDecoration(
                           color: AppTheme.surfaceColor,
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -77,8 +78,8 @@ class ModulItem extends StatelessWidget {
                           children: [
                             SvgPicture.asset(
                               'assets/icons/mdi-greenhouse.svg',
-                              width: 20,
-                              height: 20,
+                              width: 20.w,
+                              height: 20.h,
                             ),
                             Flexible(
                               child: Text(
@@ -97,8 +98,8 @@ class ModulItem extends StatelessWidget {
                     ),
                     batteryStatus != null
                         ? Positioned(
-                            top: 8,
-                            right: 8,
+                            top: 8.h,
+                            right: 8.w,
                             child: BatteryStatus(percent: batteryStatus),
                           )
                         : SizedBox.shrink(),
@@ -107,7 +108,7 @@ class ModulItem extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 12.h),
               child: _buildFeaturesRow(),
             ),
           ],
@@ -134,7 +135,7 @@ class ModulItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: features.map((feature) {
           return Padding(
-            padding: const EdgeInsets.only(right: 10),
+            padding: EdgeInsets.only(right: 10.w),
             child: ModulInformation(
               customIcon: ModulFeatureHelper.getFeatureIcon(feature.name),
               iconColor: ModulFeatureHelper.getFeatureColor(feature.name),

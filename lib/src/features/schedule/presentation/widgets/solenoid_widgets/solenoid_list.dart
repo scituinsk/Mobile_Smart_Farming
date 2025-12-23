@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
@@ -15,7 +16,7 @@ class SolenoidList extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 10,
+      spacing: 10.r,
       children: [
         Text("Status Relay", style: AppTheme.h4),
         Obx(() {
@@ -27,7 +28,7 @@ class SolenoidList extends StatelessWidget {
           final isTwoRow = selectedGroupRelay.length > 3;
 
           return SizedBox(
-            height: isTwoRow ? 170 : 80,
+            height: isTwoRow ? 170.h : 80.h,
             child: MasonryGridView.builder(
               gridDelegate: SliverSimpleGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: isTwoRow ? 2 : 1,

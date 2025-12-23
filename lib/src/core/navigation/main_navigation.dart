@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/controllers/main_navigation_controller.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
@@ -50,7 +51,7 @@ class MainNavigation extends GetView<MainNavigationController> {
             reverse: false,
             iconDecoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(500),
+              borderRadius: BorderRadius.circular(500.r),
             ),
             hideOnScroll: false,
             scrollOpposite: false,

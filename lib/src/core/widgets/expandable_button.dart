@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 
 class ExpandableButton extends StatefulWidget {
@@ -37,17 +38,17 @@ class _ExpandableButtonState extends State<ExpandableButton> {
         widget.onExpandChanged?.call(isExpanded);
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        constraints: BoxConstraints(maxWidth: widget.width),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+        constraints: BoxConstraints(maxWidth: widget.width.w),
 
         decoration: BoxDecoration(
           color: widget.backgroundColor,
-          borderRadius: BorderRadius.circular(widget.borderRadius),
+          borderRadius: BorderRadius.circular(widget.borderRadius.r),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
-          spacing: 2,
+          spacing: 2.r,
           children: [
             Flexible(child: widget.child),
             AnimatedRotation(
@@ -56,7 +57,7 @@ class _ExpandableButtonState extends State<ExpandableButton> {
               child: Icon(
                 Icons.keyboard_arrow_down,
                 color: widget.foregroundColor,
-                size: 20,
+                size: 20.r,
               ),
             ),
           ],

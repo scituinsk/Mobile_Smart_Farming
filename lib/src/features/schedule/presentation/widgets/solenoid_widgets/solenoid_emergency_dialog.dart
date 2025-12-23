@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_dialog.dart';
@@ -13,13 +14,13 @@ class SolenoidEmergencyDialog {
       dialogMargin: 15,
       widthTitle: double.infinity,
       title: Padding(
-        padding: const EdgeInsets.only(bottom: 5),
+        padding: EdgeInsets.only(bottom: 5.h),
         child: Column(
-          spacing: 8,
+          spacing: 8.r,
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(Icons.warning_rounded, color: AppTheme.errorColor, size: 38),
+            Icon(Icons.warning_rounded, color: AppTheme.errorColor, size: 38.r),
             Text("Peringatan!", style: AppTheme.h4),
             Text(
               'Fitur ini digunakan untuk keadaan darurat atau untuk percobaan/testing!',
@@ -30,9 +31,9 @@ class SolenoidEmergencyDialog {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 6),
+        padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 6.h),
         child: Column(
-          spacing: 20,
+          spacing: 20.r,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
@@ -41,7 +42,7 @@ class SolenoidEmergencyDialog {
               style: AppTheme.textDefault,
             ),
             Row(
-              spacing: 15,
+              spacing: 15.r,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 MyFilledButton(
@@ -61,7 +62,7 @@ class SolenoidEmergencyDialog {
                     textColor: Colors.white,
                     child: controller.isLoadingTurnOff.value
                         ? Container(
-                            margin: EdgeInsets.all(8),
+                            margin: EdgeInsets.all(8.r),
                             child: CircularProgressIndicator(
                               color: Colors.white,
                             ),
@@ -78,7 +79,7 @@ class SolenoidEmergencyDialog {
                     textColor: Colors.white,
                     child: controller.isLoadingTurnOn.value
                         ? Container(
-                            margin: EdgeInsets.all(8),
+                            margin: EdgeInsets.all(8.r),
                             child: CircularProgressIndicator(
                               color: Colors.white,
                             ),

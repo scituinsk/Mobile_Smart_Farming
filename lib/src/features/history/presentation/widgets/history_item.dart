@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_display_chip.dart';
@@ -26,11 +27,11 @@ class HistoryItem extends StatelessWidget {
         border: Border(
           bottom: BorderSide(
             color: AppTheme.titleSecondary.withValues(alpha: 0.3),
-            width: 1.2,
+            width: 1.2.w,
           ),
         ),
       ),
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.symmetric(vertical: 10.r),
       child: IntrinsicHeight(
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -45,11 +46,11 @@ class HistoryItem extends StatelessWidget {
                 iconSize: 26,
               ),
             ),
-            SizedBox(width: 20),
+            SizedBox(width: 20.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 8,
+                spacing: 8.r,
                 children: [
                   Text(title, style: AppTheme.h4),
                   MyDisplayChip(

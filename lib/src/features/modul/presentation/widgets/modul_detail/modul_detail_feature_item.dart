@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
@@ -20,17 +21,17 @@ class ModulDetailFeatureItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(10.r),
       onTap: onPressed,
       child: Container(
         decoration: BoxDecoration(
           color: AppTheme.primaryColor,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10.r),
         ),
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.all(10.r),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          spacing: 10,
+          spacing: 10.r,
           children: [
             myCustomIcon != null
                 ? CustomIcon(type: myCustomIcon!, color: Colors.white)

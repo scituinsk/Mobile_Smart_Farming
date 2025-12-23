@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
@@ -18,10 +19,10 @@ class AddModulScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leadingWidth: 70,
+        leadingWidth: 70.w,
         leading: Center(
           child: Padding(
-            padding: EdgeInsets.only(left: 25),
+            padding: EdgeInsets.only(left: 25.w),
             child: MyBackButton(),
           ),
         ),
@@ -37,7 +38,7 @@ class AddModulScreen extends StatelessWidget {
           ],
         ),
         centerTitle: true,
-        actionsPadding: EdgeInsets.only(right: 30),
+        actionsPadding: EdgeInsets.only(right: 30.w),
         actions: [
           IconButton(
             onPressed: () {
@@ -53,15 +54,15 @@ class AddModulScreen extends StatelessWidget {
       body: Container(
         width: mediaQueryWidth,
         height: mediaQueryHeight,
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
         child: Form(
           key: controller.formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            spacing: 30,
+            spacing: 30.r,
             children: [
               Column(
-                spacing: 20,
+                spacing: 20.r,
                 children: [
                   AddModulCodeInput(
                     title: "Kode Modul",
@@ -78,7 +79,7 @@ class AddModulScreen extends StatelessWidget {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
-                spacing: 8,
+                spacing: 8.r,
                 children: [
                   FilledButton(
                     onPressed: () {
@@ -99,7 +100,7 @@ class AddModulScreen extends StatelessWidget {
                           : () => controller.handleAddModul(),
                       child: controller.isSubmitting.value
                           ? Padding(
-                              padding: const EdgeInsets.all(5.0),
+                              padding: EdgeInsets.all(5.0.r),
                               child: CircularProgressIndicator(),
                             )
                           : Text('Tambah Modul'),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 abstract final class AppTheme {
@@ -24,97 +25,97 @@ abstract final class AppTheme {
   static const temperatureColor = Color(0xffBD0D00);
   static const waterLevelColor = Color(0xff0055A5);
 
-  static const h5 = TextStyle(
+  static final h5 = TextStyle(
     color: textColor,
 
-    fontSize: 14,
+    fontSize: 14.sp,
     fontWeight: FontWeight.w600,
   );
 
-  static const h4 = TextStyle(
+  static final h4 = TextStyle(
     color: textColor,
 
-    fontSize: 16,
+    fontSize: 16.sp,
     fontWeight: FontWeight.w600,
   );
 
-  static const h3 = TextStyle(
+  static final h3 = TextStyle(
     color: textColor,
-    fontSize: 20,
+    fontSize: 20.sp,
     fontWeight: FontWeight.bold,
   );
 
-  static const h2SemiBold = TextStyle(
+  static final h2SemiBold = TextStyle(
     color: textColor,
     fontFamily: 'Clash Display',
-    fontSize: 24,
+    fontSize: 24.sp,
     fontWeight: FontWeight.w600,
   );
 
-  static const h2 = TextStyle(
+  static final h2 = TextStyle(
     color: textColor,
-    fontSize: 24,
+    fontSize: 24.sp,
     fontWeight: FontWeight.bold,
   );
 
-  static const h2Medium = TextStyle(
+  static final h2Medium = TextStyle(
     color: textColor,
-    fontSize: 24,
+    fontSize: 24.sp,
     fontWeight: FontWeight.w500,
   );
 
-  static const h1 = TextStyle(
+  static final h1 = TextStyle(
     color: textColor,
     fontFamily: 'Clash Display',
-    fontSize: 37,
+    fontSize: 37.sp,
     fontWeight: FontWeight.bold,
   );
 
-  static const h1Rubik = TextStyle(
+  static final h1Rubik = TextStyle(
     color: textColor,
-    fontSize: 37,
+    fontSize: 37.sp,
     fontWeight: FontWeight.normal,
   );
 
-  static const largeTimeText = TextStyle(
+  static final largeTimeText = TextStyle(
     color: primaryColor,
-    fontSize: 60,
+    fontSize: 60.sp,
     fontWeight: FontWeight.w500,
   );
 
-  static const textAction = TextStyle(
+  static final textAction = TextStyle(
     color: onDefaultColor,
-    fontSize: 12,
+    fontSize: 12.sp,
     fontWeight: FontWeight.w500,
   );
 
-  static const textDefault = TextStyle(
+  static final textDefault = TextStyle(
     color: onDefaultColor,
-    fontSize: 14,
+    fontSize: 14.sp,
     fontWeight: FontWeight.w400,
   );
 
-  static const text = TextStyle(
+  static final text = TextStyle(
     color: textColor,
-    fontSize: 14,
+    fontSize: 14.sp,
     fontWeight: FontWeight.w400,
   );
 
-  static const textMedium = TextStyle(
+  static final textMedium = TextStyle(
     color: textColor,
-    fontSize: 14,
+    fontSize: 14.sp,
     fontWeight: FontWeight.w600,
   );
 
-  static const textSmall = TextStyle(
+  static final textSmall = TextStyle(
     color: textColor,
-    fontSize: 12,
+    fontSize: 12.sp,
     fontWeight: FontWeight.w400,
   );
 
-  static const textSmallMedium = TextStyle(
+  static final textSmallMedium = TextStyle(
     color: textColor,
-    fontSize: 12,
+    fontSize: 12.sp,
     fontWeight: FontWeight.w600,
   );
 

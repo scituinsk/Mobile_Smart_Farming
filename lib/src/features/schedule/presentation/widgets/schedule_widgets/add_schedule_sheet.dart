@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -18,11 +19,11 @@ class AddScheduleSheet {
       context: context,
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       builder: (context) => Container(
         height: MediaQuery.of(context).size.height * 0.75,
-        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 20.h),
         child: Padding(
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -32,12 +33,12 @@ class AddScheduleSheet {
             children: [
               // Handle bar di atas
               Container(
-                width: 100,
-                height: 8,
-                margin: EdgeInsets.only(bottom: 15),
+                width: 100.w,
+                height: 8.h,
+                margin: EdgeInsets.only(bottom: 15.h),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
               ),
               // Custom top bar
@@ -69,11 +70,11 @@ class AddScheduleSheet {
                   ),
                 ],
               ),
-              SizedBox(height: 5),
+              SizedBox(height: 5.h),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
-                    spacing: 33,
+                    spacing: 33.r,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Column(
@@ -111,13 +112,13 @@ class AddScheduleSheet {
 
                       // Durasi Penyiraman Section
                       Container(
-                        padding: EdgeInsets.all(25),
+                        padding: EdgeInsets.all(25.r),
                         decoration: BoxDecoration(
                           color: AppTheme.surfaceColor,
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(15.r),
                         ),
                         child: Column(
-                          spacing: 21,
+                          spacing: 21.r,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Form(
@@ -143,7 +144,7 @@ class AddScheduleSheet {
                             // Ulangi Penyiraman Section
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              spacing: 6,
+                              spacing: 6.r,
                               children: [
                                 Row(
                                   mainAxisAlignment:
@@ -154,7 +155,7 @@ class AddScheduleSheet {
                                       style: AppTheme.textMedium,
                                     ),
                                     Row(
-                                      spacing: 10,
+                                      spacing: 10.r,
                                       children: [
                                         TextButton(
                                           onPressed: controller.selectAllDays,
@@ -162,7 +163,7 @@ class AddScheduleSheet {
                                             "Semua",
                                             style: TextStyle(
                                               color: AppTheme.primaryColor,
-                                              fontSize: 12,
+                                              fontSize: 12.sp,
                                             ),
                                           ),
                                         ),
@@ -172,7 +173,7 @@ class AddScheduleSheet {
                                             "Reset",
                                             style: TextStyle(
                                               color: Colors.grey,
-                                              fontSize: 12,
+                                              fontSize: 12.sp,
                                             ),
                                           ),
                                         ),
@@ -184,8 +185,8 @@ class AddScheduleSheet {
                                 // Hari dalam seminggu
                                 Obx(
                                   () => Wrap(
-                                    spacing: 15,
-                                    runSpacing: 15,
+                                    spacing: 15.r,
+                                    runSpacing: 15.r,
                                     children: WeekDay.values.map((day) {
                                       final isSelected = controller
                                           .isDaySelected(day);

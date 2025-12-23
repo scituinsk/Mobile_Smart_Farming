@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/features/notification/presentation/widgets/notification_item.dart';
 
 class NotificationList extends StatelessWidget {
@@ -77,7 +78,7 @@ class NotificationList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView.builder(
-        padding: EdgeInsets.only(bottom: 60),
+        padding: EdgeInsets.only(bottom: 60.h),
         itemCount: notifications.length,
         itemBuilder: (context, index) => Column(
           children: [
@@ -87,7 +88,7 @@ class NotificationList extends StatelessWidget {
               isRead: notifications[index]["isRead"],
               type: notifications[index]["type"],
             ),
-            SizedBox(height: 5),
+            SizedBox(height: 5.h),
           ],
         ),
       ),

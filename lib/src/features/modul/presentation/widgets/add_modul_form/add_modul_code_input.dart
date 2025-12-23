@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
@@ -20,7 +21,7 @@ class AddModulCodeInput extends StatelessWidget {
     final controller = Get.find<AddModulUiController>();
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
-      spacing: 10,
+      spacing: 10.r,
       children: [
         Expanded(
           child: MyTextField(

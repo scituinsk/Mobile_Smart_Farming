@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
@@ -17,14 +18,14 @@ class DashboardAppbar extends StatelessWidget {
       children: [
         Row(
           mainAxisSize: MainAxisSize.min,
-          spacing: 12,
+          spacing: 12.r,
           children: [
             CustomIcon(type: MyCustomIcon.logoPrimary, size: 50),
             Text("PakTani", style: AppTheme.h3),
           ],
         ),
         Row(
-          spacing: 12,
+          spacing: 12.r,
           children: [
             MyIcon(
               icon: LucideIcons.search,

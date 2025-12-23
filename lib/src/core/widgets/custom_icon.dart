@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 enum MyCustomIcon {
@@ -67,8 +68,8 @@ class CustomIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       iconAssets(type),
-      width: size,
-      height: size,
+      width: size.w,
+      height: size.h,
       colorFilter: color != null
           ? ColorFilter.mode(color!, BlendMode.srcIn)
           : null,

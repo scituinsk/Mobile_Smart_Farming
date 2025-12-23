@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MyDisplayChip extends StatelessWidget {
   final Color backgroundColor;
@@ -22,25 +23,25 @@ class MyDisplayChip extends StatelessWidget {
         ? Container(
             decoration: BoxDecoration(
               color: backgroundColor,
-              borderRadius: BorderRadius.circular(99),
+              borderRadius: BorderRadius.circular(99.r),
             ),
             padding: EdgeInsets.symmetric(
-              vertical: paddingVertical,
-              horizontal: paddingHorizontal,
+              vertical: paddingVertical.h,
+              horizontal: paddingHorizontal.w,
             ),
             child: child,
           )
         : InkWell(
             onTap: onPressed,
-            borderRadius: BorderRadius.circular(99),
+            borderRadius: BorderRadius.circular(99.r),
             child: Container(
               decoration: BoxDecoration(
                 color: backgroundColor,
-                borderRadius: BorderRadius.circular(99),
+                borderRadius: BorderRadius.circular(99.r),
               ),
               padding: EdgeInsets.symmetric(
-                vertical: paddingVertical,
-                horizontal: paddingHorizontal,
+                vertical: paddingVertical.h,
+                horizontal: paddingHorizontal.w,
               ),
               child: child,
             ),

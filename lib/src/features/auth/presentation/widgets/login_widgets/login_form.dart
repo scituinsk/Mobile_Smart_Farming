@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
@@ -16,13 +17,13 @@ class LoginForm extends StatelessWidget {
     return Form(
       key: controller.formKey,
       child: Column(
-        spacing: 20,
+        spacing: 20.r,
         children: [
           Column(
-            spacing: 3,
+            spacing: 3.r,
             children: [
               Column(
-                spacing: 15,
+                spacing: 15.r,
                 children: [
                   MyTextField(
                     title: "Username atau Email",
@@ -85,7 +86,7 @@ class LoginForm extends StatelessWidget {
             ],
           ),
           Column(
-            spacing: 20,
+            spacing: 20.r,
             children: [
               RichText(
                 text: TextSpan(
@@ -129,15 +130,15 @@ class LoginForm extends StatelessWidget {
                           ? Colors.grey[400]
                           : AppTheme.primaryColor,
                       foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(vertical: 16),
+                      padding: EdgeInsets.symmetric(vertical: 16.h),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(8.r),
                       ),
                     ),
                     child: authController.isLoading.value
                         ? SizedBox(
-                            height: 20,
-                            width: 20,
+                            height: 20.h,
+                            width: 20.w,
                             child: CircularProgressIndicator(
                               color: Colors.white,
                               strokeWidth: 2,
@@ -146,7 +147,7 @@ class LoginForm extends StatelessWidget {
                         : Text(
                             'Login',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 16.sp,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

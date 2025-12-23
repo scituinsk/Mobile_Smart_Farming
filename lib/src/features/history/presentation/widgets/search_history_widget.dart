@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
@@ -10,14 +11,14 @@ class SearchHistoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      spacing: 12,
+      spacing: 12.r,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text("Cari Riwayat", style: AppTheme.h5),
         TextFormField(
           decoration: InputDecoration(
             prefixIcon: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: EdgeInsets.all(10.0.r),
               child: MyIcon(
                 customIcon: MyCustomIcon.search,
                 backgroundColor: Colors.transparent,
@@ -25,19 +26,16 @@ class SearchHistoryWidget extends StatelessWidget {
               ),
             ),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(100),
+              borderRadius: BorderRadius.circular(100.r),
               borderSide: BorderSide.none,
             ),
             fillColor: Colors.white,
             filled: true,
-            contentPadding: const EdgeInsets.symmetric(
-              vertical: 0,
-              horizontal: 16,
-            ),
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 16.w),
             suffixIcon: Padding(
-              padding: const EdgeInsets.only(right: 15),
+              padding: EdgeInsets.only(right: 15.w),
               child: Row(
-                spacing: 8,
+                spacing: 8.r,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   MyIcon(

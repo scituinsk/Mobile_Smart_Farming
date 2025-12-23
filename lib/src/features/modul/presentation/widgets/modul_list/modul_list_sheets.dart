@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
@@ -16,13 +17,13 @@ class ModulListSheets {
           child: Align(
             alignment: Alignment.topCenter,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+              padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 20.h),
               child: Material(
                 color: Colors.transparent,
                 child: TextFormField(
                   decoration: InputDecoration(
                     prefixIcon: Padding(
-                      padding: const EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(10.0.r),
                       child: MyIcon(
                         customIcon: MyCustomIcon.search,
                         backgroundColor: Colors.transparent,
@@ -30,20 +31,20 @@ class ModulListSheets {
                       ),
                     ),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(100),
+                      borderRadius: BorderRadius.circular(100.r),
                       borderSide: BorderSide.none,
                     ),
                     fillColor: Colors.white,
                     filled: true,
-                    contentPadding: const EdgeInsets.symmetric(
+                    contentPadding: EdgeInsets.symmetric(
                       vertical: 0,
-                      horizontal: 16,
+                      horizontal: 16.w,
                     ),
                     suffixIcon: Padding(
-                      padding: const EdgeInsets.only(
-                        right: 15,
-                        top: 5,
-                        bottom: 5,
+                      padding: EdgeInsets.only(
+                        right: 15.w,
+                        top: 5.h,
+                        bottom: 5.h,
                       ),
                       child: MyIcon(
                         icon: Icons.swap_vert_rounded,

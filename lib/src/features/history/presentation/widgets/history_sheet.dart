@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
@@ -13,22 +14,22 @@ class HistorySheet {
         bool selected = true;
         return Container(
           // color: Colors.white,
-          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 100,
-                height: 8,
-                margin: EdgeInsets.only(bottom: 15),
+                width: 100.w,
+                height: 8.h,
+                margin: EdgeInsets.only(bottom: 15.h),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
               ),
 
               Text('Urutkan Berdasarkan', style: AppTheme.h4),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
               ListTile(
                 leading: Icon(
                   LucideIcons.arrowDown,
@@ -43,7 +44,7 @@ class HistorySheet {
 
                 tileColor: AppTheme.surfaceColor,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
                 trailing: Radio<bool>(
                   value: true,
@@ -51,7 +52,7 @@ class HistorySheet {
                   onChanged: (value) => selected = false,
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
               ListTile(
                 leading: Icon(
                   LucideIcons.arrowUp,
@@ -65,7 +66,7 @@ class HistorySheet {
                 ),
                 tileColor: AppTheme.surfaceColor,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
                 trailing: Radio<bool>(
                   value: false,
@@ -73,7 +74,7 @@ class HistorySheet {
                   onChanged: (value) => selected = true,
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 10.h),
             ],
           ),
         );
@@ -109,30 +110,30 @@ class HistorySheet {
       builder: (context) {
         return Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 30.w),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                width: 100,
-                height: 8,
-                margin: EdgeInsets.only(bottom: 15),
+                width: 100.w,
+                height: 8.h,
+                margin: EdgeInsets.only(bottom: 15.h),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
               ),
               Text("Filter Berdasarkan", style: AppTheme.h4),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
-                spacing: 8,
+                spacing: 8.r,
                 children: [
                   Text("Pilih Modul", style: AppTheme.h5),
                   Wrap(
-                    spacing: 15,
-                    runSpacing: 15,
+                    spacing: 15.r,
+                    runSpacing: 15.r,
                     children: moduls.map((modul) {
                       return FilterSelectionChip(
                         title: modul["title"],
@@ -148,16 +149,16 @@ class HistorySheet {
                   ),
                 ],
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
-                spacing: 8,
+                spacing: 8.r,
                 children: [
                   Text("Pilih Grup Penjadwalan", style: AppTheme.h5),
                   Wrap(
-                    spacing: 15,
-                    runSpacing: 15,
+                    spacing: 15.r,
+                    runSpacing: 15.r,
                     children: modulGroup.map((group) {
                       return FilterSelectionChip(
                         title: group["title"],
@@ -173,7 +174,7 @@ class HistorySheet {
                   ),
                 ],
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 15.h),
               ListTile(
                 // leading: Icon(
                 //   LucideIcons.arrowDown,
@@ -188,11 +189,11 @@ class HistorySheet {
 
                 tileColor: AppTheme.surfaceColor,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
                 trailing: Checkbox(value: true, onChanged: (value) {}),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
               ListTile(
                 // leading: Icon(
                 //   LucideIcons.arrowUp,
@@ -206,11 +207,11 @@ class HistorySheet {
                 ),
                 tileColor: AppTheme.surfaceColor,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
                 trailing: Checkbox(value: false, onChanged: (value) {}),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
             ],
           ),
         );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -41,7 +42,7 @@ abstract class ModulDetailDropdownMenuItems {
   static Widget buildItem(MenuItem item) {
     return item == deleteIcon
         ? Row(
-            spacing: 15,
+            spacing: 10.r,
             children: [
               MyIcon(
                 icon: item.icon,
@@ -56,7 +57,8 @@ abstract class ModulDetailDropdownMenuItems {
             ],
           )
         : Row(
-            spacing: 15,
+            spacing: 10.r,
+
             children: [
               MyIcon(
                 icon: item.icon,
@@ -77,16 +79,16 @@ abstract class ModulDetailDropdownMenuItems {
     await showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       builder: (BuildContext context) {
         return Container(
-          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text('Pilih Sumber Gambar', style: AppTheme.h4),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
               ListTile(
                 leading: Icon(Icons.camera_alt, color: AppTheme.primaryColor),
                 title: Text('Kamera', style: AppTheme.text),
@@ -106,7 +108,7 @@ abstract class ModulDetailDropdownMenuItems {
                   await controller.pickAndCropImage(ImageSource.gallery);
                 },
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 10.h),
             ],
           ),
         );
@@ -121,7 +123,6 @@ abstract class ModulDetailDropdownMenuItems {
       case ModulDetailDropdownMenuItems.editIcon:
         controller.selectedImage.value = null;
         CustomDialog.show(
-          widthTitle: double.infinity,
           widthChild: double.infinity,
           dialogMargin: 20,
           context: context,
@@ -132,7 +133,7 @@ abstract class ModulDetailDropdownMenuItems {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 10,
+                spacing: 10.r,
                 children: [
                   MyTextField(
                     fieldWidth: double.infinity,
@@ -182,16 +183,16 @@ abstract class ModulDetailDropdownMenuItems {
                             return Container(
                               clipBehavior: Clip.hardEdge,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(12.r),
                               ),
-                              height: 164,
-                              width: 240,
+                              height: 164.h,
+                              width: 240.w,
                               child: Image(image: imageProvider),
                             );
                           }),
                           Positioned(
-                            right: 8,
-                            top: 8,
+                            right: 8.w,
+                            top: 8.h,
                             child: MyIcon(
                               icon: Icons.edit,
                               backgroundColor: AppTheme.primaryColor,
@@ -227,8 +228,8 @@ abstract class ModulDetailDropdownMenuItems {
                               : null,
                           child: loading
                               ? SizedBox(
-                                  width: 20,
-                                  height: 20,
+                                  width: 20.w,
+                                  height: 20.h,
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     color: Colors.white,
@@ -251,25 +252,25 @@ abstract class ModulDetailDropdownMenuItems {
           dialogMargin: 35,
           widthTitle: double.infinity,
           title: Padding(
-            padding: const EdgeInsets.only(bottom: 5),
+            padding: EdgeInsets.only(bottom: 5.h),
             child: Column(
-              spacing: 8,
+              spacing: 8.r,
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Icon(
                   Icons.delete_outline_rounded,
                   color: AppTheme.primaryColor,
-                  size: 38,
+                  size: 38.r,
                 ),
                 Text("Hapus Modul ini?", style: AppTheme.h4),
               ],
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 38),
+            padding: EdgeInsets.symmetric(horizontal: 38.w),
             child: Column(
-              spacing: 20,
+              spacing: 20.r,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
@@ -278,7 +279,7 @@ abstract class ModulDetailDropdownMenuItems {
                   style: AppTheme.textDefault,
                 ),
                 Row(
-                  spacing: 15,
+                  spacing: 15.r,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     MyFilledButton(
@@ -309,8 +310,8 @@ abstract class ModulDetailDropdownMenuItems {
       case ModulDetailDropdownMenuItems.editPasswordIcon:
         controller.isPasswordFormValid.value = false;
         CustomDialog.show(
-          widthTitle: 240,
-          // height: 300,
+          // widthTitle: 240,
+          dialogMargin: 40,
           context: context,
           title: Text("Edit password", style: AppTheme.h4),
           child: SingleChildScrollView(
@@ -318,10 +319,10 @@ abstract class ModulDetailDropdownMenuItems {
               key: controller.formKeyPassword,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
-                spacing: 10,
+                spacing: 10.r,
                 children: [
                   MyTextField(
-                    fieldWidth: 240,
+                    // fieldWidth: 240,
                     title: "Password baru",
                     controller: controller.modulNewPassC,
                     validator: controller.validatePassword,
@@ -329,7 +330,7 @@ abstract class ModulDetailDropdownMenuItems {
                     borderRadius: 10,
                   ),
                   MyTextField(
-                    fieldWidth: 240,
+                    // fieldWidth: 240,
                     title: "Konfirmasi password",
                     controller: controller.modulConfirmNewPassC,
                     validator: controller.validateConfirmPassword,
@@ -357,7 +358,7 @@ abstract class ModulDetailDropdownMenuItems {
                               : null,
                           child: loading
                               ? CircularProgressIndicator(
-                                  padding: EdgeInsets.all(5),
+                                  padding: EdgeInsets.all(5.r),
                                 )
                               : Text("Simpan"),
                         );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 
 class BuildDayChip extends StatelessWidget {
@@ -17,20 +18,20 @@ class BuildDayChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(5),
+      borderRadius: BorderRadius.circular(5.r),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
         decoration: BoxDecoration(
           color: isSelected ? AppTheme.primaryColor : Colors.transparent,
-          borderRadius: BorderRadius.circular(5),
-          border: Border.all(color: AppTheme.primaryColor, width: 1.5),
+          borderRadius: BorderRadius.circular(5.r),
+          border: Border.all(color: AppTheme.primaryColor, width: 1.5.w),
         ),
         child: Text(
           day,
           style: TextStyle(
             color: isSelected ? Colors.white : AppTheme.primaryColor,
             fontWeight: FontWeight.bold,
-            fontSize: 15,
+            fontSize: 15.sp,
           ),
         ),
       ),

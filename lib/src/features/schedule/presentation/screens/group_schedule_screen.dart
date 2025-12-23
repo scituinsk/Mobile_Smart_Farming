@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
@@ -26,7 +27,7 @@ class ScheduleScreen extends StatelessWidget {
         leadingWidth: 70,
         leading: Center(
           child: Padding(
-            padding: EdgeInsets.only(left: 25),
+            padding: EdgeInsets.only(left: 25.w),
             child: MyBackButton(),
           ),
         ),
@@ -42,7 +43,7 @@ class ScheduleScreen extends StatelessWidget {
           ],
         ),
         centerTitle: true,
-        actionsPadding: EdgeInsets.only(right: 30),
+        actionsPadding: EdgeInsets.only(right: 30.w),
         actions: [
           MyIcon(
             icon: Icons.warning,
@@ -53,18 +54,18 @@ class ScheduleScreen extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        minimum: EdgeInsets.only(bottom: 12),
+        minimum: EdgeInsets.only(bottom: 12.h),
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 30),
+          padding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 30.w),
           width: mediaQueryWidth,
           height: mediaQueryHeight,
           child: ListView(
             children: [
-              SizedBox(height: 10),
+              SizedBox(height: 10.h),
               GroupScheduleInformation(),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
               SolenoidList(),
-              SizedBox(height: 20),
+              SizedBox(height: 20.h),
               ScheduleList(),
             ],
           ),
@@ -75,7 +76,9 @@ class ScheduleScreen extends StatelessWidget {
           AddScheduleSheet.show(context);
         },
         backgroundColor: AppTheme.secondaryColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50.r),
+        ),
         child: Icon(LucideIcons.plus),
       ),
     );

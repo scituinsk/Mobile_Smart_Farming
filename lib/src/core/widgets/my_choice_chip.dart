@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 
 class MyChoiceChip extends StatelessWidget {
@@ -21,10 +22,10 @@ class MyChoiceChip extends StatelessWidget {
       backgroundColor: Colors.white,
       selectedColor: AppTheme.secondaryColor,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
         side: BorderSide(color: Colors.transparent),
       ),
-      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
@@ -16,10 +17,10 @@ class RegisterForm extends StatelessWidget {
     return Form(
       key: controller.formKey,
       child: Column(
-        spacing: 20,
+        spacing: 20.r,
         children: [
           Column(
-            spacing: 10,
+            spacing: 10.r,
             children: [
               MyTextField(
                 controller: controller.firstNameController,
@@ -97,7 +98,7 @@ class RegisterForm extends StatelessWidget {
             ],
           ),
           Column(
-            spacing: 20,
+            spacing: 20.r,
             children: [
               RichText(
                 text: TextSpan(
@@ -119,7 +120,7 @@ class RegisterForm extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(bottom: 15),
+                padding: EdgeInsets.only(bottom: 15.h),
                 width: double.infinity,
                 child: Obx(() {
                   final authController = Get.find<AuthController>();
