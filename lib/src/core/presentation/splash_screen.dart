@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/services/connectivity_service.dart';
@@ -103,13 +104,13 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             // App logo
             CustomIcon(type: MyCustomIcon.logoWhite, size: 100),
-            SizedBox(height: 24),
+            SizedBox(height: 24.h),
 
             // Loading indicator
             CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 16.h),
 
             // Status message
             Obx(
@@ -117,7 +118,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 statusMessage.value,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.center,

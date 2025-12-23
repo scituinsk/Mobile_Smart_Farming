@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
@@ -15,21 +16,21 @@ class DeleteScheduleDialog {
       dialogMargin: 35,
       widthTitle: double.infinity,
       title: Padding(
-        padding: const EdgeInsets.only(bottom: 5),
+        padding: EdgeInsets.only(bottom: 5.h),
         child: Column(
-          spacing: 8,
+          spacing: 8.r,
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(LucideIcons.trash2, color: AppTheme.errorColor, size: 38),
+            Icon(LucideIcons.trash2, color: AppTheme.errorColor, size: 38.r),
             Text("Hapus Schedule ini?", style: AppTheme.h4),
           ],
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 38),
+        padding: EdgeInsets.symmetric(horizontal: 38.w),
         child: Column(
-          spacing: 20,
+          spacing: 20.r,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
@@ -38,7 +39,7 @@ class DeleteScheduleDialog {
               style: AppTheme.textDefault,
             ),
             Row(
-              spacing: 15,
+              spacing: 15.r,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 MyFilledButton(
@@ -61,7 +62,7 @@ class DeleteScheduleDialog {
                     ),
                     child: controller.isDeletingSchedule.value
                         ? Container(
-                            margin: EdgeInsets.all(8),
+                            margin: EdgeInsets.all(8.r),
                             child: CircularProgressIndicator(
                               color: Colors.white,
                             ),

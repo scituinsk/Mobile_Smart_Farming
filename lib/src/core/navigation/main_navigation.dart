@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/controllers/main_navigation_controller.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
@@ -21,6 +22,7 @@ class MainNavigation extends GetView<MainNavigationController> {
           }
         },
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           body: BottomBar(
             fit: StackFit.expand,
             icon: (width, height) => Center(
@@ -49,7 +51,7 @@ class MainNavigation extends GetView<MainNavigationController> {
             reverse: false,
             iconDecoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(500),
+              borderRadius: BorderRadius.circular(500.r),
             ),
             hideOnScroll: false,
             scrollOpposite: false,
@@ -96,9 +98,13 @@ class MainNavigation extends GetView<MainNavigationController> {
                     TabBar(
                       controller: controller.tabController,
                       tabs: [
-                        _buildCustomTab(Icons.home, 0, controller),
-                        _buildCustomTab(Icons.access_time, 1, controller),
-                        _buildCustomTab(Icons.person_rounded, 2, controller),
+                        _buildCustomTab(Icons.dashboard, 0, controller),
+                        _buildCustomTab(Icons.history, 1, controller),
+                        _buildCustomTab(
+                          Icons.person_outline_rounded,
+                          2,
+                          controller,
+                        ),
                       ],
                       indicatorColor: Colors.transparent,
                       dividerColor: Colors.transparent,

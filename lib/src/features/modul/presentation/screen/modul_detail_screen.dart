@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:blurrycontainer/blurrycontainer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/config/app_config.dart';
@@ -42,7 +43,7 @@ class ModulDetailScreen extends StatelessWidget {
             return Stack(
               children: [
                 SizedBox(
-                  height: 318,
+                  height: 318.h,
                   child: Stack(
                     children: [
                       Obx(() {
@@ -76,8 +77,8 @@ class ModulDetailScreen extends StatelessWidget {
                       }),
 
                       Container(
-                        height: 318,
-                        width: mediaQueryWidth,
+                        height: 318.h,
+                        width: mediaQueryWidth.w,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
@@ -91,9 +92,9 @@ class ModulDetailScreen extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 18,
-                          horizontal: 15,
+                        padding: EdgeInsets.symmetric(
+                          vertical: 18.h,
+                          horizontal: 15.w,
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,10 +117,10 @@ class ModulDetailScreen extends StatelessWidget {
 
                               return Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                spacing: 5,
+                                spacing: 5.r,
                                 children: [
                                   ExpandableButton(
-                                    width: 180,
+                                    width: 180.w,
                                     onExpandChanged: (isExpanded) =>
                                         controller.isTitleExpanded.value =
                                             isExpanded,
@@ -143,9 +144,9 @@ class ModulDetailScreen extends StatelessWidget {
                         ),
                       ),
                       Positioned(
-                        bottom: 28,
-                        left: 15,
-                        right: 15,
+                        bottom: 28.h,
+                        left: 15.w,
+                        right: 15.w,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           mainAxisSize: MainAxisSize.max,
@@ -164,10 +165,10 @@ class ModulDetailScreen extends StatelessWidget {
                                         !controller.isQrVisible.value,
                                     child: AnimatedContainer(
                                       duration: Duration(milliseconds: 100),
-                                      height: 52,
+                                      height: 52.h,
                                       width: controller.isQrVisible.value
-                                          ? 350
-                                          : 320,
+                                          ? 350.w
+                                          : 320.w,
                                       curve: Curves.easeInOut,
                                       decoration: BoxDecoration(
                                         color: Color.lerp(
@@ -175,35 +176,33 @@ class ModulDetailScreen extends StatelessWidget {
                                           Colors.white,
                                           value,
                                         ),
-                                        borderRadius:
-                                            const BorderRadius.horizontal(
-                                              left: Radius.circular(20),
-                                              right: Radius.circular(20),
-                                            ),
+                                        borderRadius: BorderRadius.horizontal(
+                                          left: Radius.circular(20.r),
+                                          right: Radius.circular(20.r),
+                                        ),
                                         border: Border.all(
                                           color: Color.lerp(
                                             Colors.white.withValues(alpha: 0.3),
                                             Colors.transparent,
                                             value,
                                           )!,
-                                          width: 1,
+                                          width: 1.w,
                                         ),
                                       ),
                                       child: ClipRRect(
-                                        borderRadius:
-                                            const BorderRadius.horizontal(
-                                              left: Radius.circular(20),
-                                              right: Radius.circular(20),
-                                            ),
+                                        borderRadius: BorderRadius.horizontal(
+                                          left: Radius.circular(20.r),
+                                          right: Radius.circular(20.r),
+                                        ),
                                         child: BackdropFilter(
                                           filter: ImageFilter.blur(
                                             sigmaX: 10 * (1 - value),
                                             sigmaY: 10 * (1 - value),
                                           ),
                                           child: Container(
-                                            padding: const EdgeInsets.all(8),
+                                            padding: EdgeInsets.all(8.r),
                                             child: Row(
-                                              spacing: 6,
+                                              spacing: 6.r,
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Flexible(
@@ -218,7 +217,7 @@ class ModulDetailScreen extends StatelessWidget {
                                                         AppTheme.primaryColor,
                                                         value,
                                                       ),
-                                                      fontSize: 14,
+                                                      fontSize: 14.sp,
                                                       fontWeight:
                                                           FontWeight.w500,
                                                     ),
@@ -272,9 +271,9 @@ class ModulDetailScreen extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  left: 20,
-                  right: 20,
-                  top: 82,
+                  left: 20.w,
+                  right: 20.w,
+                  top: 82.h,
                   child: AnimatedSwitcher(
                     duration: Duration(milliseconds: 300),
                     switchInCurve: Curves.easeOut,
@@ -295,18 +294,19 @@ class ModulDetailScreen extends StatelessWidget {
                             key: const ValueKey('expandedDescription'),
                             blur: 6,
                             padding: EdgeInsetsGeometry.all(0),
+                            borderRadius: BorderRadius.circular(20.r),
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Colors.transparent,
                                 border: Border.all(
                                   color: Colors.white.withValues(alpha: 0.3),
-                                  width: 1,
+                                  width: 1.w,
                                 ),
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(20.r),
                               ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 9,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.w,
+                                vertical: 9.h,
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -332,7 +332,7 @@ class ModulDetailScreen extends StatelessWidget {
                         : const SizedBox.shrink(key: ValueKey('collapsed')),
                   ),
                 ),
-                Positioned.fill(top: 298, child: ModulDetailFeatureSection()),
+                Positioned.fill(top: 298.h, child: ModulDetailFeatureSection()),
               ],
             );
           }),

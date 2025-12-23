@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 
@@ -35,10 +36,10 @@ class MyIcon extends StatelessWidget {
         //     width: iconSize,
         //   )
         ? CustomIcon(type: customIcon!, size: iconSize, color: iconColor)
-        : Icon(icon, color: iconColor, size: iconSize, weight: iconWeight);
+        : Icon(icon, color: iconColor, size: iconSize.r, weight: iconWeight.r);
 
     Widget content = Container(
-      padding: EdgeInsets.all(padding),
+      padding: EdgeInsets.all(padding.r),
       child: iconChild,
     );
 
@@ -46,10 +47,10 @@ class MyIcon extends StatelessWidget {
       return Material(
         color: backgroundColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: BorderRadius.circular(borderRadius.r),
         ),
         child: InkWell(
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: BorderRadius.circular(borderRadius.r),
           onTap: onPressed,
           child: content,
         ),
@@ -59,9 +60,9 @@ class MyIcon extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(borderRadius),
+        borderRadius: BorderRadius.circular(borderRadius.r),
       ),
-      padding: EdgeInsets.all(padding),
+      padding: EdgeInsets.all(padding.r),
       child: iconChild,
     );
   }

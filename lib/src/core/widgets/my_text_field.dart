@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/widgets/my_icon.dart';
 
 class MyTextField extends StatefulWidget {
   final String title;
@@ -8,7 +10,7 @@ class MyTextField extends StatefulWidget {
   final Widget? suffixIcon;
   final double borderRadius;
   final double? fieldWidth;
-  final TextStyle titleStyle;
+  final TextStyle? titleStyle;
   final Color fillColor;
   final bool obscureText;
   final double gap;
@@ -27,11 +29,11 @@ class MyTextField extends StatefulWidget {
     this.suffixIcon,
     this.borderRadius = 8,
     this.fieldWidth,
-    this.titleStyle = AppTheme.h5,
+    this.titleStyle,
     this.fillColor = const Color(0xFFEEEEEE),
     this.obscureText = false,
     this.controller,
-    this.validator, // Tambahkan validator
+    this.validator,
     this.onChanged,
     this.keyboardType = TextInputType.text,
     this.gap = 4,
@@ -77,11 +79,10 @@ class _MyTextFieldState extends State<MyTextField> {
 
   Widget? _buildSuffixIcon() {
     if (widget.obscureText) {
-      return IconButton(
-        icon: Icon(
-          _obscureText ? Icons.visibility_off : Icons.visibility,
-          color: AppTheme.primaryColor,
-        ),
+      return MyIcon(
+        icon: _obscureText ? Icons.visibility_off : Icons.visibility,
+        backgroundColor: Colors.transparent,
+        borderRadius: 0,
         onPressed: () {
           setState(() {
             _obscureText = !_obscureText;
@@ -89,8 +90,11 @@ class _MyTextFieldState extends State<MyTextField> {
         },
       );
     } else if (_controller.text.isNotEmpty) {
-      return IconButton(
-        icon: const Icon(Icons.clear),
+      return MyIcon(
+        icon: Icons.clear,
+        backgroundColor: Colors.transparent,
+        borderRadius: 0,
+        iconColor: AppTheme.errorColor,
         onPressed: () {
           _controller.clear();
         },
@@ -103,12 +107,13 @@ class _MyTextFieldState extends State<MyTextField> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: widget.gap,
+      spacing: widget.gap.r,
       children: [
-        Text(widget.title, style: widget.titleStyle),
+        Text(widget.title, style: widget.titleStyle ?? AppTheme.h5),
         SizedBox(
-          width: widget.fieldWidth,
+          width: widget.fieldWidth?.w,
           child: TextFormField(
+            style: AppTheme.text,
             validator: widget.validator,
             autovalidateMode: widget.autovalidateMode,
             keyboardType: widget.keyboardType,
@@ -121,11 +126,11 @@ class _MyTextFieldState extends State<MyTextField> {
               filled: true,
               fillColor: widget.fillColor,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(widget.borderRadius),
+                borderRadius: BorderRadius.circular(widget.borderRadius.r),
                 borderSide: BorderSide.none,
               ),
               hintStyle: TextStyle(color: AppTheme.onDefaultColor),
-              errorText: _errorText, // Tambahkan errorText
+              errorText: _errorText,
             ),
             onChanged: widget.onChanged,
             focusNode: widget.focusNode,

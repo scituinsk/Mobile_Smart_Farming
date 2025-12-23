@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 enum MyCustomIcon {
@@ -17,6 +18,7 @@ enum MyCustomIcon {
   calendar,
   lightBulb,
   waterDrop,
+  search,
 }
 
 String iconAssets(MyCustomIcon type) {
@@ -51,6 +53,8 @@ String iconAssets(MyCustomIcon type) {
       return "assets/icons/lightbulb.svg";
     case MyCustomIcon.waterDrop:
       return "assets/icons/water_drop.svg";
+    case MyCustomIcon.search:
+      return "assets/icons/iconamoon-search.svg";
   }
 }
 
@@ -64,8 +68,8 @@ class CustomIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       iconAssets(type),
-      width: size,
-      height: size,
+      width: size.w,
+      height: size.h,
       colorFilter: color != null
           ? ColorFilter.mode(color!, BlendMode.srcIn)
           : null,

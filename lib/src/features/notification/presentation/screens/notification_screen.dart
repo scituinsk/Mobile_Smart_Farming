@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
 import 'package:pak_tani/src/core/widgets/my_choice_chip.dart';
 import 'package:pak_tani/src/features/notification/presentation/widgets/notification_list.dart';
-import 'package:pak_tani/src/core/widgets/search_widget.dart';
+import 'package:pak_tani/src/features/notification/presentation/widgets/notification_search.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
@@ -23,15 +24,15 @@ class NotificationScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 30),
+          padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 30.w),
           height: mediaQueryHeight,
           width: mediaQueryWidth,
           child: Column(
-            spacing: 12,
+            spacing: 12.r,
             children: [
               SearchWidget(),
               Row(
-                spacing: 10,
+                spacing: 10.r,
                 children: [
                   MyChoiceChip(selected: true, title: "Semua"),
                   MyChoiceChip(selected: false, title: "Belum Dibaca"),
@@ -54,7 +55,7 @@ class NotificationScreen extends StatelessWidget {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 6,
+                  spacing: 6.r,
                   children: [
                     Text("Semua Notifikasi", style: AppTheme.h5),
                     NotificationList(),

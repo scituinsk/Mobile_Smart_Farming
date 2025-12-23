@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
@@ -15,10 +16,10 @@ class GroupScheduleInformation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         boxShadow: const [
           BoxShadow(blurRadius: 6, color: Colors.black12, offset: Offset(0, 3)),
         ],
@@ -41,7 +42,7 @@ class GroupScheduleInformation extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  spacing: 6,
+                  spacing: 6.r,
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Text(
@@ -68,11 +69,11 @@ class GroupScheduleInformation extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppTheme.primaryColor,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(20.r),
                           ),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12.w,
+                            vertical: 6.h,
                           ),
                         ),
                         label: const Text(
@@ -95,9 +96,9 @@ class GroupScheduleInformation extends StatelessWidget {
 
             /// Garis pemisah vertikal
             Container(
-              width: 1,
+              width: 1.w,
               color: AppTheme.titleSecondary.withValues(alpha: 0.3),
-              margin: const EdgeInsets.symmetric(horizontal: 12),
+              margin: EdgeInsets.symmetric(horizontal: 12.w),
             ),
 
             /// Informasi tentang jumlah grup sequential

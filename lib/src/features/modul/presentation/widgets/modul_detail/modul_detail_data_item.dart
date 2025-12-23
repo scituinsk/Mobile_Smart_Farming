@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/utils/modul_feature_helper.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
@@ -27,18 +28,18 @@ class ModulDetailDataItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(10.r),
 
       decoration: BoxDecoration(
         color: AppTheme.surfaceColor,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(10.r),
       ),
       child: Column(
-        spacing: 8,
+        spacing: 8.r,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            spacing: 8,
+            spacing: 8.r,
             children: [
               MyIcon(
                 customIcon: myCustomIcon,

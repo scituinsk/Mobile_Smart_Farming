@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/features/relays/domain/models/relay.dart';
@@ -17,7 +18,7 @@ class RelayItem extends StatelessWidget {
         color: relay.status
             ? AppTheme.waterPumpColor.withValues(alpha: 0.1)
             : AppTheme.temperatureColor.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(10.r),
         border: BoxBorder.all(
           color: relay.status
               ? AppTheme.waterPumpColor.withValues(alpha: 0.4)
@@ -25,9 +26,9 @@ class RelayItem extends StatelessWidget {
         ),
       ),
       // margin: EdgeInsets.fromLTRB(12, 10, 12, 10),
-      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 16.w),
       child: Row(
-        spacing: 10,
+        spacing: 10.r,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

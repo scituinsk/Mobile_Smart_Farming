@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 
-class BuildDayChip extends StatelessWidget {
-  final String day;
+class FilterSelectionChip extends StatelessWidget {
+  final String title;
   final bool isSelected;
   final VoidCallback? onTap;
 
-  const BuildDayChip({
+  const FilterSelectionChip({
     super.key,
-    required this.day,
+    required this.title,
     required this.isSelected,
     this.onTap,
   });
@@ -20,18 +20,16 @@ class BuildDayChip extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(5.r),
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryColor : Colors.transparent,
+          color: isSelected ? AppTheme.primaryColor : AppTheme.surfaceColor,
           borderRadius: BorderRadius.circular(5.r),
-          border: Border.all(color: AppTheme.primaryColor, width: 1.5.w),
         ),
         child: Text(
-          day,
+          title,
           style: TextStyle(
-            color: isSelected ? Colors.white : AppTheme.primaryColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 15.sp,
+            color: isSelected ? Colors.white : AppTheme.titleSecondary,
+            fontSize: 14.sp,
           ),
         ),
       ),

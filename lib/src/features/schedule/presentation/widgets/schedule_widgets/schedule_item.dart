@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_switch.dart';
@@ -18,18 +19,18 @@ class ScheduleItem extends StatelessWidget {
     final isSkeleton = Skeletonizer.of(context).enabled;
     return InkWell(
       onTap: () => EditScheduleSheet.show(context, schedule),
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(20.r),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
         ),
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 18),
+        padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 18.w),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
-              spacing: 4,
+              spacing: 4.r,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -52,8 +53,8 @@ class ScheduleItem extends StatelessWidget {
             ),
             isSkeleton
                 ? Bone.button(
-                    borderRadius: BorderRadius.circular(25),
-                    width: 50,
+                    borderRadius: BorderRadius.circular(25.r),
+                    width: 50.w,
                   )
                 : Obx(() {
                     final index = controller.getScheduleIndex(schedule.id);

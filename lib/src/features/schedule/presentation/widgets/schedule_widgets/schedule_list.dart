@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/features/schedule/domain/entities/schedule.dart';
@@ -41,14 +42,14 @@ class ScheduleList extends StatelessWidget {
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 10,
+        spacing: 10.r,
         children: [
           Text("Daftar Penjadwalan", style: AppTheme.h4),
           if (schedules.isNotEmpty)
             Skeletonizer(
               enabled: isLoading,
               child: Column(
-                spacing: 20,
+                spacing: 20.r,
                 children: schedules.map((schedule) {
                   return ScheduleItem(schedule: schedule);
                 }).toList(),
@@ -63,7 +64,7 @@ class ScheduleList extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-          SizedBox(height: 45),
+          SizedBox(height: 45.h),
         ],
       );
     });

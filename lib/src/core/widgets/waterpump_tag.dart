@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 
 class WaterpumpTag extends StatelessWidget {
@@ -16,10 +17,10 @@ class WaterpumpTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1),
+      padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 1.h),
       decoration: BoxDecoration(
         color: isActive ? Color(0xff9AD16D) : Color(0xffFF8385),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: Text(
         isActive ? (activeLabel ?? 'Aktif') : (inactiveLabel ?? 'Non-aktif'),

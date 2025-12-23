@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
@@ -29,7 +30,7 @@ class NotificationItem extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: Colors.grey.shade300, width: 1),
+          bottom: BorderSide(color: Colors.grey.shade300, width: 1.w),
         ),
       ),
       child: ListTile(
@@ -42,7 +43,7 @@ class NotificationItem extends StatelessWidget {
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.end,
-          spacing: 4,
+          spacing: 4.r,
           children: [
             Text(
               time,
@@ -50,8 +51,8 @@ class NotificationItem extends StatelessWidget {
             ),
             if (!isRead)
               Container(
-                width: 8,
-                height: 8,
+                width: 8.w,
+                height: 8.h,
                 decoration: BoxDecoration(
                   color: AppTheme.primaryColor,
                   shape: BoxShape.circle,

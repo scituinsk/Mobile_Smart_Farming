@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 
 class MyFilledButton extends StatelessWidget {
@@ -22,6 +23,9 @@ class MyFilledButton extends StatelessWidget {
       onPressed: onPressed,
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.all(backgroundColor),
+        padding: WidgetStateProperty.all(
+          EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+        ),
       ),
       child: child ?? Text(title ?? "", style: TextStyle(color: textColor)),
     );
