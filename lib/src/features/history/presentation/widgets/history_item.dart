@@ -151,91 +151,93 @@ class _HistoryItemState extends State<HistoryItem>
           duration: const Duration(milliseconds: 220),
           firstChild: const SizedBox(width: double.infinity, height: 0),
           secondChild: _expanded
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 10.r,
-                  children: [
-                    Text("Detail Grub", style: AppTheme.textAction),
-                    FixedTimeline.tileBuilder(
-                      theme: TimelineThemeData(
-                        direction: Axis.vertical,
-                        nodePosition: 0,
-                        indicatorPosition: 0,
-                        connectorTheme: ConnectorThemeData(
-                          thickness: 1.5.r,
-                          indent: 3.r,
-                          color: Colors.grey.shade400,
+              ? Padding(
+                  padding: EdgeInsets.only(left: 66.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 10.r,
+                    children: [
+                      Text("Detail Grub", style: AppTheme.textAction),
+                      FixedTimeline.tileBuilder(
+                        theme: TimelineThemeData(
+                          direction: Axis.vertical,
+                          nodePosition: 0,
+                          indicatorPosition: 0,
+                          connectorTheme: ConnectorThemeData(
+                            thickness: 1.5.r,
+                            indent: 3.r,
+                            color: Colors.grey.shade400,
+                          ),
                         ),
-                      ),
-                      builder: TimelineTileBuilder.connected(
-                        itemCount: historyData.length + 1,
-                        connectionDirection: ConnectionDirection.before,
+                        builder: TimelineTileBuilder.connected(
+                          itemCount: historyData.length + 1,
+                          connectionDirection: ConnectionDirection.before,
 
-                        // Garis penghubung
-                        connectorBuilder: (context, index, type) {
-                          return const SolidLineConnector(color: Colors.grey);
-                        },
+                          // Garis penghubung
+                          connectorBuilder: (context, index, type) {
+                            return const SolidLineConnector(color: Colors.grey);
+                          },
 
-                        // Indikator Lingkaran (Node)
-                        indicatorBuilder: (context, index) {
-                          return OutlinedDotIndicator(
-                            size: 20.r,
-                            borderWidth: 5.w,
-                            color: AppTheme.primaryColor,
-                            backgroundColor: Colors.white,
-                          );
-                        },
-                        contentsBuilder: (context, index) {
-                          final bool isLast = index == historyData.length;
-                          if (isLast) {
-                            return Padding(
-                              padding: EdgeInsets.only(left: 15.0.w),
-                              child: Text(
-                                'Selesai',
-                                style: AppTheme.h4.copyWith(
-                                  color: AppTheme.surfaceDarker,
-                                ),
-                              ),
+                          // Indikator Lingkaran (Node)
+                          indicatorBuilder: (context, index) {
+                            return OutlinedDotIndicator(
+                              size: 20.r,
+                              borderWidth: 5.w,
+                              color: AppTheme.primaryColor,
+                              backgroundColor: Colors.white,
                             );
-                          }
-                          final item = historyData[index];
-                          final startTime = (item["timeStart"] as TimeOfDay)
-                              .format(context);
-                          final endTime = (item["timeEnd"] as TimeOfDay).format(
-                            context,
-                          );
-
-                          return Padding(
-                            padding: EdgeInsets.only(
-                              left: 15.0.w,
-                              bottom: 10.h,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  "$startTime - $endTime",
+                          },
+                          contentsBuilder: (context, index) {
+                            final bool isLast = index == historyData.length;
+                            if (isLast) {
+                              return Padding(
+                                padding: EdgeInsets.only(left: 15.0.w),
+                                child: Text(
+                                  'Selesai',
                                   style: AppTheme.h4.copyWith(
                                     color: AppTheme.surfaceDarker,
                                   ),
                                 ),
+                              );
+                            }
+                            final item = historyData[index];
+                            final startTime = (item["timeStart"] as TimeOfDay)
+                                .format(context);
+                            final endTime = (item["timeEnd"] as TimeOfDay)
+                                .format(context);
 
-                                SizedBox(height: 4.r),
-                                for (var solenoid in (item['relays'] as List))
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                left: 15.0.w,
+                                bottom: 10.h,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
                                   Text(
-                                    solenoid,
-                                    style: AppTheme.h5.copyWith(
-                                      color: AppTheme.primaryColor,
+                                    "$startTime - $endTime",
+                                    style: AppTheme.h4.copyWith(
+                                      color: AppTheme.surfaceDarker,
                                     ),
                                   ),
-                              ],
-                            ),
-                          );
-                        },
+
+                                  SizedBox(height: 4.r),
+                                  for (var solenoid in (item['relays'] as List))
+                                    Text(
+                                      solenoid,
+                                      style: AppTheme.h5.copyWith(
+                                        color: AppTheme.primaryColor,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 )
               : SizedBox.shrink(),
         ),
