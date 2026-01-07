@@ -11,6 +11,8 @@ abstract final class AppTheme {
   // static const sucessColor = Color(0xff298267);
   // static const defaultColor = Color(0xffE8E9F1);
   static const onDefaultColor = Color(0xff7C7C7C);
+  static const surfaceActive = Color(0xffC2C4C6);
+  static const surfaceDarker = Color(0xff555656);
 
   // static const iconColor = Color(0xff2897FF);
 
