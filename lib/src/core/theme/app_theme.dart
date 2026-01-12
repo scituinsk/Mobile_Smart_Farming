@@ -13,6 +13,7 @@ abstract final class AppTheme {
   static const onDefaultColor = Color(0xff7C7C7C);
   static const surfaceActive = Color(0xffC2C4C6);
   static const surfaceDarker = Color(0xff555656);
+  static const surfaceHover = Color(0xffDBDDDE);
 
   // static const iconColor = Color(0xff2897FF);
 
@@ -77,6 +78,13 @@ abstract final class AppTheme {
     color: textColor,
     fontSize: 37.sp,
     fontWeight: FontWeight.normal,
+  );
+
+  static final onboardingTitle = TextStyle(
+    color: primaryColor,
+    fontFamily: 'Clash Display',
+    fontSize: 36.sp,
+    fontWeight: FontWeight.w600,
   );
 
   static final largeTimeText = TextStyle(
