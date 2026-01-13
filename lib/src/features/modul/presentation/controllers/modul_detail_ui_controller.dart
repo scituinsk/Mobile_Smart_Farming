@@ -37,6 +37,8 @@ class ModulDetailUiController extends GetxController {
   final ws = Rxn<DeviceWsHandle>();
   StreamSubscription? _sub;
 
+  Timer? _streamTimer;
+
   final _storage = Get.find<StorageService>();
   final _wsService = Get.find<WebSocketService>();
 
@@ -150,11 +152,21 @@ class ModulDetailUiController extends GetxController {
       onDone: () => print('WS selesai'),
       cancelOnError: false,
     );
+    _streamTimer?.cancel();
+
     try {
-      ws.value?.send("STREAMING_ON");
+      ws.value?.send("GET_SENSOR");
     } catch (e) {
-      print('WS send STREAMING_ON failed: $e');
+      print('WS send GET_SENSOR failed: $e');
     }
+
+    _streamTimer = Timer.periodic(const Duration(seconds: 6), (timer) {
+      try {
+        ws.value?.send("GET_SENSOR");
+      } catch (e) {
+        print('WS send GET_SENSOR failed: $e');
+      }
+    });
   }
 
   void _updateFeatureData(Map<String, dynamic> wsData) {
@@ -476,12 +488,7 @@ class ModulDetailUiController extends GetxController {
 
   @override
   Future<void> onClose() async {
-    try {
-      // beri tahu server kita stop streaming
-      ws.value?.send("STREAMING_OFF");
-    } catch (e) {
-      print('WS send STREAMING_OFF failed: $e');
-    }
+    _streamTimer?.cancel();
 
     await _sub?.cancel();
 

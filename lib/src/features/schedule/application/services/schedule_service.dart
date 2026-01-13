@@ -51,7 +51,7 @@ class ScheduleService extends GetxService {
   }) async {
     isSaving.value = true;
     try {
-      final timeParse = TimeOfDayParseHelper.formatTimeOfDay(time);
+      final timeParse = TimeOfDayParseHelper.fromatTimeOfDayToUtcString(time);
       final newSchedule = await _repository.addSchedule(
         groupId.toString(),
         time: timeParse,
@@ -103,7 +103,7 @@ class ScheduleService extends GetxService {
     try {
       String? timeParse;
       if (time != null) {
-        timeParse = TimeOfDayParseHelper.formatTimeOfDay(time);
+        timeParse = TimeOfDayParseHelper.fromatTimeOfDayToUtcString(time);
       }
 
       final editedSchedule = await _repository.editSchedule(
