@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MyDisplayChip extends StatelessWidget {
   final Color backgroundColor;
@@ -6,6 +7,8 @@ class MyDisplayChip extends StatelessWidget {
   final double paddingHorizontal;
   final Widget child;
   final VoidCallback? onPressed;
+  final double? borderWidth;
+  final Color? borderColor;
 
   const MyDisplayChip({
     super.key,
@@ -14,6 +17,8 @@ class MyDisplayChip extends StatelessWidget {
     this.paddingVertical = 4,
     this.paddingHorizontal = 8,
     this.onPressed,
+    this.borderWidth,
+    this.borderColor,
   });
 
   @override
@@ -22,25 +27,33 @@ class MyDisplayChip extends StatelessWidget {
         ? Container(
             decoration: BoxDecoration(
               color: backgroundColor,
-              borderRadius: BorderRadius.circular(99),
+              borderRadius: BorderRadius.circular(99.r),
+              border: BoxBorder.all(
+                color: borderColor ?? Colors.white,
+                width: borderWidth?.r ?? 0,
+              ),
             ),
             padding: EdgeInsets.symmetric(
-              vertical: paddingVertical,
-              horizontal: paddingHorizontal,
+              vertical: paddingVertical.h,
+              horizontal: paddingHorizontal.w,
             ),
             child: child,
           )
         : InkWell(
             onTap: onPressed,
-            borderRadius: BorderRadius.circular(99),
+            borderRadius: BorderRadius.circular(99.r),
             child: Container(
               decoration: BoxDecoration(
                 color: backgroundColor,
-                borderRadius: BorderRadius.circular(99),
+                borderRadius: BorderRadius.circular(99.r),
+                border: BoxBorder.all(
+                  color: borderColor ?? Colors.white,
+                  width: borderWidth?.r ?? 0,
+                ),
               ),
               padding: EdgeInsets.symmetric(
-                vertical: paddingVertical,
-                horizontal: paddingHorizontal,
+                vertical: paddingVertical.h,
+                horizontal: paddingHorizontal.w,
               ),
               child: child,
             ),

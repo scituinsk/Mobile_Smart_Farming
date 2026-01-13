@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 
@@ -8,10 +9,10 @@ class RegisterLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      spacing: 8,
+      spacing: 8.r,
       children: [
         Column(
-          spacing: 2,
+          spacing: 2.r,
           children: [
             CustomIcon(type: MyCustomIcon.logoPrimary, size: 105),
             Text(

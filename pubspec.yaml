@@ -2,7 +2,7 @@ name: pak_tani
 description: "SCIT Project PAK Tani"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -62,6 +62,9 @@ dependencies:
   permission_handler: ^12.0.1
   connectivity_plus: ^7.0.0
   path_provider: ^2.1.5
+  flutter_screenutil: ^5.9.3
+  timelines_plus: ^1.0.8
+  linear_progress_bar: ^2.0.0+2
 
 dev_dependencies:
   flutter_test:
@@ -79,7 +82,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -93,8 +95,8 @@ flutter:
     - assets/image/
     - assets/icons/
     - assets/logo/
+    - assets/svgs/
     - .env
-
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -122,18 +124,19 @@ flutter:
     - family: Clash Display
       fonts:
         - asset: assets/fonts/clash_display/ClashDisplay-Extralight.otf
-          weight: 200   # ExtraBold
+          weight: 200 # ExtraBold
         - asset: assets/fonts/clash_display/ClashDisplay-Light.otf
-          weight: 300   # Light
+          weight: 300 # Light
         - asset: assets/fonts/clash_display/ClashDisplay-Regular.otf
-          weight: 400   # Regular
+          weight: 400 # Regular
         - asset: assets/fonts/clash_display/ClashDisplay-Medium.otf
-          weight: 500   # Medium
+          weight: 500 # Medium
         - asset: assets/fonts/clash_display/ClashDisplay-Semibold.otf
-          weight: 600   # SemiBold
+          weight: 600 # SemiBold
         - asset: assets/fonts/clash_display/ClashDisplay-Bold.otf
-          weight: 700   # Bold
-        
+          weight: 700 # Bold
+
+
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

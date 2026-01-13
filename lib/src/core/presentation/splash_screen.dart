@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/services/connectivity_service.dart';
+import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
@@ -15,11 +17,13 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   final RxString statusMessage = 'Initializing...'.obs;
+  late StorageService storageService;
 
   @override
   void initState() {
     super.initState();
     _initializeApp();
+    storageService = Get.find<StorageService>();
   }
 
   Future<void> _initializeApp() async {
@@ -69,7 +73,14 @@ class _SplashScreenState extends State<SplashScreen> {
       } else {
         statusMessage.value = 'Please login...';
         await Future.delayed(Duration(milliseconds: 300));
-        Get.offAllNamed(RouteNamed.loginPage);
+        // Get.offAllNamed(RouteNamed.loginPage);
+        final isFirstTime = storageService.readBool("is_first_time");
+        if (isFirstTime == null || isFirstTime == true) {
+          storageService.writeBool("is_first_time", false);
+          Get.offAllNamed(RouteNamed.onboardingPage);
+        } else {
+          Get.offAllNamed(RouteNamed.loginPage);
+        }
       }
     } catch (e) {
       statusMessage.value = 'Error: ${e.toString()}';
@@ -103,13 +114,13 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             // App logo
             CustomIcon(type: MyCustomIcon.logoWhite, size: 100),
-            SizedBox(height: 24),
+            SizedBox(height: 24.h),
 
             // Loading indicator
             CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 16.h),
 
             // Status message
             Obx(
@@ -117,7 +128,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 statusMessage.value,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.center,

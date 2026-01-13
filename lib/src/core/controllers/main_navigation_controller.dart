@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
+import 'package:pak_tani/src/features/history/presentation/screens/history_screen.dart';
 import 'package:pak_tani/src/features/modul/presentation/bindings/modul_binding.dart';
 import 'package:pak_tani/src/features/modul/presentation/screen/moduls_screen.dart';
 
@@ -96,21 +98,7 @@ class MainNavigationController extends GetxController
   }
 
   void _initializeHistoryTab() {
-    _screensCache[1] = Scaffold(
-      appBar: AppBar(title: Text('History'), leading: SizedBox()),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.history, size: 100, color: Colors.orange),
-            SizedBox(height: 20),
-            Text('History Screen', style: Get.textTheme.headlineSmall),
-            SizedBox(height: 20),
-            Text('Coming soon....'),
-          ],
-        ),
-      ),
-    );
+    _screensCache[1] = HistoryScreen();
   }
 
   void _initializeProfileTab() {
@@ -137,14 +125,14 @@ class MainNavigationController extends GetxController
                   ? Image.network(authController.currentUser.value!.image!)
                   : Icon(Icons.person, size: 55),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20.h),
             Text(
               authController.currentUser.value!.username,
               style: Get.textTheme.headlineSmall,
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 10.h),
             Text(authController.currentUser.value!.email),
-            SizedBox(height: 30),
+            SizedBox(height: 30.h),
             ElevatedButton(
               onPressed: () async => await authController.logout(),
               child: Text('Logout'),
@@ -162,7 +150,7 @@ class MainNavigationController extends GetxController
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(),
-            SizedBox(height: 16),
+            SizedBox(height: 16.h),
             Text('Loading...'),
           ],
         ),

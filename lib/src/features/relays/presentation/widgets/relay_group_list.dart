@@ -1,5 +1,6 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
@@ -18,7 +19,7 @@ class RelayGroupList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
       child: Obx(() {
         final groups = controller.relayGroups;
         final unassignedRelays = controller.relayService.getUnassignedRelays();
@@ -31,7 +32,7 @@ class RelayGroupList extends StatelessWidget {
               .map(
                 (r) => DragAndDropItem(
                   child: Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: EdgeInsets.all(8.0.r),
                     child: Obx(
                       () => RelayItem(
                         relay: r,
@@ -46,7 +47,7 @@ class RelayGroupList extends StatelessWidget {
           lists.add(
             DragAndDropList(
               header: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0.r),
                 child: Row(
                   children: [
                     Icon(
@@ -79,7 +80,7 @@ class RelayGroupList extends StatelessWidget {
                 .map(
                   (r) => DragAndDropItem(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0.r),
                       child: Obx(
                         () => RelayItem(
                           relay: r,
@@ -93,10 +94,10 @@ class RelayGroupList extends StatelessWidget {
 
             return DragAndDropList(
               header: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(8.0.r),
                 child: Obx(
                   () => Row(
-                    spacing: 20,
+                    spacing: 20.r,
                     children: [
                       Text("Group: ${group.name}", style: AppTheme.h4),
                       if (controller.isEditingGroup.value)
@@ -138,7 +139,7 @@ class RelayGroupList extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(LucideIcons.inbox, size: 64, color: Colors.grey.shade300),
-                const SizedBox(height: 16),
+                SizedBox(height: 16.h),
                 Text(
                   'Tidak ada relay',
                   style: TextStyle(color: Colors.grey.shade600),
@@ -157,11 +158,11 @@ class RelayGroupList extends StatelessWidget {
                 ? DragHandle(
                     verticalAlignment: DragHandleVerticalAlignment.center,
                     child: Padding(
-                      padding: const EdgeInsets.only(right: 23),
+                      padding: EdgeInsets.only(right: 23.w),
                       child: Icon(
                         LucideIcons.alignJustify,
                         color: Colors.black,
-                        size: 20,
+                        size: 20.r,
                       ),
                     ),
                   )
@@ -200,13 +201,13 @@ class RelayGroupList extends StatelessWidget {
 
               print("Reordered groups:  → ");
             },
-            listPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+            listPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8.h),
             listInnerDecoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(8.0.r),
               border: Border.all(color: Colors.grey.shade300),
             ),
-            lastItemTargetHeight: 8,
+            lastItemTargetHeight: 8.h,
             addLastItemTargetHeightToTop: true,
             lastListTargetSize: 40,
           ),

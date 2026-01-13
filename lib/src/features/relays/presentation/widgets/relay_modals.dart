@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_dialog.dart';
@@ -13,18 +14,19 @@ class RelayModals {
     RelayUiController controller = Get.find<RelayUiController>();
 
     CustomDialog.show(
-      widthTitle: 240,
+      // widthTitle: 240,
       context: context,
+      dialogMargin: 40,
       title: Text("Tambah Grub Baru", style: AppTheme.h4),
       child: SingleChildScrollView(
         child: Form(
           key: controller.formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
-            spacing: 10,
+            spacing: 10.r,
             children: [
               MyTextField(
-                fieldWidth: 240,
+                // fieldWidth: 240,
                 title: "Nama Grub",
                 controller: controller.groupName,
                 validator: controller.validateGroupName,
@@ -32,7 +34,7 @@ class RelayModals {
                 borderRadius: 10,
               ),
               Row(
-                spacing: 10,
+                spacing: 10.r,
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -52,7 +54,7 @@ class RelayModals {
                           : null,
                       child: loading
                           ? CircularProgressIndicator(
-                              padding: EdgeInsets.all(5),
+                              padding: EdgeInsets.all(5.r),
                             )
                           : Text("Simpan"),
                     );
@@ -74,18 +76,19 @@ class RelayModals {
 
     controller.initEditGroupDialog(relayGroup);
     await CustomDialog.show(
-      widthTitle: 240,
+      // widthTitle: 240,
       context: context,
+      dialogMargin: 40,
       title: Text("Ubah Nama Grub", style: AppTheme.h4),
       child: SingleChildScrollView(
         child: Form(
           key: controller.formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
-            spacing: 10,
+            spacing: 10.r,
             children: [
               MyTextField(
-                fieldWidth: 240,
+                // fieldWidth: 240,
                 title: "Nama Grub",
                 controller: controller.groupName,
                 validator: controller.validateGroupName,
@@ -93,7 +96,7 @@ class RelayModals {
                 borderRadius: 10,
               ),
               Row(
-                spacing: 10,
+                spacing: 10.r,
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -114,7 +117,7 @@ class RelayModals {
                           : null,
                       child: loading
                           ? CircularProgressIndicator(
-                              padding: EdgeInsets.all(5),
+                              padding: EdgeInsets.all(5.r),
                             )
                           : Text("Simpan"),
                     );
@@ -133,7 +136,8 @@ class RelayModals {
     RelayUiController controller = Get.find<RelayUiController>();
     controller.initEditRelayDialog(relay.name, relay.descriptions);
     await CustomDialog.show(
-      widthTitle: 240,
+      // widthTitle: 240,
+      dialogMargin: 40,
       context: context,
       title: Text("Ubah Relay", style: AppTheme.h4),
       child: SingleChildScrollView(
@@ -141,10 +145,10 @@ class RelayModals {
           key: controller.formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
-            spacing: 10,
+            spacing: 10.r,
             children: [
               MyTextField(
-                fieldWidth: 240,
+                // fieldWidth: 240,
                 title: "Nama Relay",
                 controller: controller.relayNameC,
                 validator: controller.validateRelayName,
@@ -153,7 +157,7 @@ class RelayModals {
                 focusNode: controller.relayNameFocus,
               ),
               MyTextField(
-                fieldWidth: 240,
+                // fieldWidth: 240,
                 title: "Deskripsi Relay",
                 controller: controller.relayDescC,
                 hint: "Masukkan Deskripsi",
@@ -162,7 +166,7 @@ class RelayModals {
                 focusNode: controller.relayDescFocus,
               ),
               Row(
-                spacing: 10,
+                spacing: 10.r,
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -183,7 +187,7 @@ class RelayModals {
                           : null,
                       child: loading
                           ? CircularProgressIndicator(
-                              padding: EdgeInsets.all(5),
+                              padding: EdgeInsets.all(5.r),
                             )
                           : Text("Simpan"),
                     );
@@ -205,9 +209,9 @@ class RelayModals {
       dialogMargin: 35,
       widthTitle: double.infinity,
       title: Padding(
-        padding: const EdgeInsets.only(bottom: 5),
+        padding: EdgeInsets.only(bottom: 5.h),
         child: Column(
-          spacing: 8,
+          spacing: 8.r,
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -221,9 +225,9 @@ class RelayModals {
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 38),
+        padding: EdgeInsets.symmetric(horizontal: 38.w),
         child: Column(
-          spacing: 20,
+          spacing: 20.r,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
@@ -232,7 +236,7 @@ class RelayModals {
               style: AppTheme.textDefault,
             ),
             Row(
-              spacing: 15,
+              spacing: 15.r,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 MyFilledButton(
@@ -254,7 +258,7 @@ class RelayModals {
                     child: isLoading
                         ? CircularProgressIndicator(
                             color: Colors.white,
-                            padding: EdgeInsets.all(5),
+                            padding: EdgeInsets.all(5.r),
                           )
                         : Text("Hapus"),
                   );

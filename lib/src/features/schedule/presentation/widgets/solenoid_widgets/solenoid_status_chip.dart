@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 
 class SolenoidStatusChip extends StatelessWidget {
@@ -11,10 +12,10 @@ class SolenoidStatusChip extends StatelessWidget {
         ? Container(
             decoration: BoxDecoration(
               color: Colors.transparent,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.lightGreenAccent, width: 1),
+              borderRadius: BorderRadius.circular(8.r),
+              border: Border.all(color: Colors.lightGreenAccent, width: 1.w),
             ),
-            padding: EdgeInsets.symmetric(vertical: 3, horizontal: 7),
+            padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 7.w),
             child: Text(
               "Aktif",
               style: AppTheme.textSmall.copyWith(color: Colors.green),
@@ -23,10 +24,10 @@ class SolenoidStatusChip extends StatelessWidget {
         : Container(
             decoration: BoxDecoration(
               color: Colors.transparent,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.red.shade200, width: 1),
+              borderRadius: BorderRadius.circular(8.r),
+              border: Border.all(color: Colors.red.shade200, width: 1.w),
             ),
-            padding: EdgeInsets.symmetric(vertical: 3, horizontal: 7),
+            padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 7.w),
             child: Text(
               "Tidak Aktif",
               style: AppTheme.textSmall.copyWith(color: Colors.red),

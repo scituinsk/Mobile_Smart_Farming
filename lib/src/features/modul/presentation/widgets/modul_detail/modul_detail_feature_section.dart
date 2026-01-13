@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
@@ -26,7 +27,7 @@ class ModulDetailFeatureSection extends StatelessWidget {
             topRight: Radius.circular(20),
           ),
         ),
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
+        padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 25.w),
         child: Obx(() {
           final modul = controller.modul.value!;
           final relayGroups = controller.relayGroups;

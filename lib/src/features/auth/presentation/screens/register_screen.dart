@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
 import 'package:pak_tani/src/features/auth/presentation/widgets/register_widgets/register_form.dart';
@@ -16,10 +17,10 @@ class RegisterScreen extends StatelessWidget {
       body: Container(
         width: mediaQueryWidth,
         height: mediaQueryHeight,
-        padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+        padding: EdgeInsets.fromLTRB(30.w, 0, 30.w, 0),
         child: SingleChildScrollView(
           child: Column(
-            spacing: 15,
+            spacing: 15.r,
             children: [RegisterLogo(), RegisterForm()],
           ),
         ),

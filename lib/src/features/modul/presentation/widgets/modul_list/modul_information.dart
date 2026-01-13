@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/utils/modul_feature_helper.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
@@ -29,13 +30,13 @@ class ModulInformation extends StatelessWidget {
         color: Colors.transparent,
         border: Border.all(
           color: Colors.white.withValues(alpha: 0.4),
-          width: 1,
+          width: 1.w,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
       child: Row(
-        spacing: 10,
+        spacing: 10.r,
         children: [
           MyIcon(
             padding: 3,

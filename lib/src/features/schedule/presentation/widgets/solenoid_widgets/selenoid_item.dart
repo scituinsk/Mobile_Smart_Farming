@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/features/relays/domain/models/relay.dart';
@@ -14,9 +15,9 @@ class SolenoidItem extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(10.r),
       ),
-      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 18),
+      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 18.w),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,12 +27,12 @@ class SolenoidItem extends StatelessWidget {
             color: relay.type == RelayType.lamp ? AppTheme.primaryColor : null,
             size: relay.type == RelayType.lamp ? 34 : 28,
           ),
-          SizedBox(width: 16),
+          SizedBox(width: 16.w),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(relay.name, style: AppTheme.text.copyWith(fontSize: 16)),
-              SizedBox(height: 4),
+              Text(relay.name, style: AppTheme.text.copyWith(fontSize: 16.sp)),
+              SizedBox(height: 4.h),
               // Wrap dengan Align untuk positioning
               SolenoidStatusChip(status: relay.status),
             ],

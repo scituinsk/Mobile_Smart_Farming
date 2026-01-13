@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
@@ -29,12 +30,14 @@ class ModulDetailDropdownMenu extends StatelessWidget {
           ModulDetailDropdownMenuItems.onChanged(context, value!);
         },
         dropdownStyleData: DropdownStyleData(
-          width: 180,
+          width: 180.w,
+          padding: EdgeInsets.all(0),
+          useSafeArea: true,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(17),
+            borderRadius: BorderRadius.circular(17.r),
             color: Colors.white,
           ),
-          offset: const Offset(-120, -10),
+          offset: Offset(-120.w, -10.h),
         ),
       ),
     );

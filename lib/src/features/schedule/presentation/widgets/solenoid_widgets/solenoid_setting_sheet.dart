@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -26,7 +27,7 @@ class SolenoidSettingSheet {
         ),
         child: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.fromLTRB(30, 20, 30, 0),
+            padding: EdgeInsets.fromLTRB(30.w, 20.h, 30.w, 0),
             child: Form(
               key: controller.sequentalFormKey,
               child: Column(
@@ -34,12 +35,12 @@ class SolenoidSettingSheet {
                 children: [
                   // Handle bar di atas
                   Container(
-                    width: 100,
-                    height: 8,
-                    margin: EdgeInsets.only(bottom: 20),
+                    width: 100.w,
+                    height: 8.h,
+                    margin: EdgeInsets.only(bottom: 20.h),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade300,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
                   // Custom top bar
@@ -75,10 +76,10 @@ class SolenoidSettingSheet {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 20.h),
                   Obx(
                     () => Column(
-                      spacing: 26,
+                      spacing: 26.r,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
@@ -87,7 +88,7 @@ class SolenoidSettingSheet {
                         ),
 
                         Column(
-                          spacing: 12,
+                          spacing: 12.r,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
@@ -129,11 +130,11 @@ class SolenoidSettingSheet {
                             validator: controller.validateSequential,
                             titleStyle: AppTheme.textMedium,
                             prefixIcon: Padding(
-                              padding: const EdgeInsets.all(12.0),
+                              padding: EdgeInsets.all(12.0.r),
                               child: CustomIcon(type: MyCustomIcon.solenoid),
                             ),
                           ),
-                        SizedBox(height: 18),
+                        SizedBox(height: 18.h),
                       ],
                     ),
                   ),

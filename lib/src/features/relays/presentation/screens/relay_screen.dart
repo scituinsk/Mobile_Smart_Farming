@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
@@ -20,11 +21,11 @@ class RelayScreen extends StatelessWidget {
         leadingWidth: 70,
         leading: Center(
           child: Padding(
-            padding: EdgeInsets.only(left: 10),
+            padding: EdgeInsets.only(left: 10.w),
             child: MyBackButton(),
           ),
         ),
-        actionsPadding: EdgeInsets.only(right: 30),
+        actionsPadding: EdgeInsets.only(right: 30.w),
         actions: [
           Obx(() {
             bool isEditing =
@@ -59,7 +60,9 @@ class RelayScreen extends StatelessWidget {
           RelayModals.showAddModal(context);
         },
         backgroundColor: AppTheme.secondaryColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(50.r),
+        ),
         child: Icon(LucideIcons.plus),
       ),
     );
