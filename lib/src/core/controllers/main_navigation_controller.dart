@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/config/firebase_cloud_messaging_config.dart';
 import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
 import 'package:pak_tani/src/features/history/presentation/screens/history_screen.dart';
 import 'package:pak_tani/src/features/modul/presentation/bindings/modul_binding.dart';
@@ -26,11 +27,19 @@ class MainNavigationController extends GetxController
   List<Widget> get screens => _screens;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
     _initializeControllers();
     _initializeTab(0);
     _updateScreensList(); // ✅ Initialize screens list
+    await _registerFCM();
+  }
+
+  Future<void> _registerFCM() async {
+    final String? fcmToken = await FirebaseCloudMessagingConfig.getToken();
+    if (fcmToken != null) {
+      await FirebaseCloudMessagingConfig.sendTokenAndDeviceInfo(fcmToken);
+    }
   }
 
   void _initializeControllers() {

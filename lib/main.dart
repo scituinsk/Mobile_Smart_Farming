@@ -17,7 +17,5 @@ void main() async {
 
   await FirebaseCloudMessagingConfig.initialize();
 
-  await FirebaseCloudMessagingConfig.getToken();
-
   runApp(const MyApp());
 }

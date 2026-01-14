@@ -1,9 +1,14 @@
 import 'dart:io';
 import 'dart:ui' as ui;
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart' hide FormData, Response;
+import 'package:pak_tani/src/core/services/api_service.dart';
+import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -19,89 +24,11 @@ const AndroidNotificationChannel _highImportanceChannel =
       importance: Importance.max,
     );
 
-@pragma('vm:entry-point')
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  final FlutterLocalNotificationsPlugin bgPlugin =
-      FlutterLocalNotificationsPlugin();
-  const AndroidInitializationSettings initAndroid =
-      AndroidInitializationSettings('icon_notif');
-  const InitializationSettings initSettings = InitializationSettings(
-    android: initAndroid,
-  );
-  await bgPlugin.initialize(initSettings);
-
-  // Ensure channel exists in background isolate
-  final androidImpl = bgPlugin
-      .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin
-      >();
-  await androidImpl?.createNotificationChannel(_highImportanceChannel);
-
-  final notification = message.notification;
-  final title = notification?.title ?? message.data['title'];
-  final body = notification?.body ?? message.data['body'];
-
-  if ((title == null || title.trim().isEmpty) &&
-      (body == null || body.trim().isEmpty)) {
-    print('FCM Background: Skipping empty notification.');
-    return;
-  }
-
-  final imageUrl =
-      (message.data['image'] as String?) ??
-      (notification?.android?.imageUrl?.toString());
-
-  String? imagePath;
-  if (imageUrl != null && imageUrl.isNotEmpty) {
-    final fileName = "notif_${DateTime.now().millisecondsSinceEpoch}.png";
-    imagePath = await FirebaseCloudMessagingConfig._downloadAndSaveFile(
-      imageUrl,
-      fileName,
-    );
-  }
-
-  AndroidNotificationDetails androidDetails;
-  if (imagePath != null) {
-    final bigPicture = FilePathAndroidBitmap(imagePath);
-    final largeIcon = FilePathAndroidBitmap(imagePath);
-    final bigStyle = BigPictureStyleInformation(
-      bigPicture,
-      largeIcon: largeIcon,
-      contentTitle: title,
-      summaryText: body,
-    );
-    androidDetails = AndroidNotificationDetails(
-      _highImportanceChannel.id,
-      _highImportanceChannel.name,
-      channelDescription: _highImportanceChannel.description,
-      importance: Importance.max,
-      priority: Priority.high,
-      icon: 'icon_notif',
-      styleInformation: bigStyle,
-      colorized: false,
-    );
-  } else {
-    androidDetails = AndroidNotificationDetails(
-      _highImportanceChannel.id,
-      _highImportanceChannel.name,
-      channelDescription: _highImportanceChannel.description,
-      importance: Importance.max,
-      priority: Priority.high,
-      icon: 'icon_notif',
-      colorized: false,
-    );
-  }
-
-  await bgPlugin.show(
-    DateTime.now().millisecondsSinceEpoch.remainder(100000),
-    title ?? "",
-    body ?? "",
-    NotificationDetails(android: androidDetails),
-  );
-}
-
 class FirebaseCloudMessagingConfig {
+  final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   static bool _initialized = false;
+
+  String? fcmToken;
 
   static Future<void> initialize() async {
     if (_initialized) {
@@ -141,11 +68,6 @@ class FirebaseCloudMessagingConfig {
         >();
     await androidImpl?.createNotificationChannel(_highImportanceChannel);
 
-    // register background handler only on Android (must be top-level & annotated)
-    // if (Platform.isAndroid) {
-    //   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
-    // }
-
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       print('FCM onMessage: ${message.data} ${message.notification}');
       final notification = message.notification;
@@ -177,9 +99,42 @@ class FirebaseCloudMessagingConfig {
     });
   }
 
-  static Future<void> getToken() async {
+  static Future<String?> getToken() async {
     String? token = await FirebaseMessaging.instance.getToken();
-    print("FCM Token: $token");
+    return token;
+  }
+
+  static Future<void> sendTokenAndDeviceInfo(String tokenFCM) async {
+    final apiService = Get.find<ApiService>();
+    final storageService = Get.find<StorageService>();
+
+    final isRegistered = storageService.readBool("is_notification_registered");
+    if (isRegistered == true) {
+      print("fcm sudah pernah didaftarkan");
+      return;
+    }
+
+    try {
+      final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+      final String androidName = androidInfo.device;
+      final String andoridId = androidInfo.id;
+
+      final formData = FormData.fromMap({
+        "registration_id": tokenFCM,
+        "device_id": andoridId,
+        "name": androidName,
+        "type": "android", // Bisa "ios", "web", atau "android"
+        "active": true,
+      });
+
+      await apiService.post("/devices/", data: formData);
+      storageService.writeBool("is_notification_registered", true);
+      print("berhasil mendaftarkan fcm");
+    } catch (e) {
+      print("error mendaftarkan fcm: $e");
+    }
   }
 
   static Future<String?> _downloadAndSaveFile(
