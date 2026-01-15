@@ -3,8 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/config/firebase_cloud_messaging_config.dart';
 import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
+import 'package:pak_tani/src/features/history/application/services/history_service.dart';
 import 'package:pak_tani/src/features/history/presentation/bindings/history_binding.dart';
 import 'package:pak_tani/src/features/history/presentation/screens/history_screen.dart';
+import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 import 'package:pak_tani/src/features/modul/presentation/bindings/modul_binding.dart';
 import 'package:pak_tani/src/features/modul/presentation/screen/moduls_screen.dart';
 
@@ -104,6 +106,9 @@ class MainNavigationController extends GetxController
       print("inisialisasi modul binding");
     }
 
+    final modulService = Get.find<ModulService>();
+    modulService.loadModuls();
+
     _screensCache[0] = ModulsScreen();
   }
 
@@ -112,6 +117,9 @@ class MainNavigationController extends GetxController
       HistoryBinding().dependencies();
       print("✅ init history binding");
     }
+
+    final historyService = Get.find<HistoryService>();
+    historyService.loadAllHistories();
 
     _screensCache[1] = HistoryScreen();
   }
@@ -185,8 +193,18 @@ class MainNavigationController extends GetxController
   }
 
   void _trackTabVisit(int index) {
-    final tabNames = ["Home", "Modul", "History", "Profile"];
+    final tabNames = ["Modul", "History", "Profile"];
     print("📊 User visited: ${tabNames[index]} tab");
+    switch (index) {
+      case 0:
+        final modulService = Get.find<ModulService>();
+        modulService.loadModuls();
+        break;
+      case 1:
+        final historyService = Get.find<HistoryService>();
+        historyService.loadAllHistories();
+        break;
+    }
   }
 
   void navigateToTab(int index) {

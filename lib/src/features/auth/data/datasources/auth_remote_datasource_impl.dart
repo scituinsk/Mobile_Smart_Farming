@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/config/firebase_cloud_messaging_config.dart';
 import 'package:pak_tani/src/core/services/api_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/features/auth/data/models/user_model.dart';
@@ -10,9 +12,11 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
 
   @override
   Future<UserModel> login(String email, String password) async {
+    final fcmToken = await FirebaseCloudMessagingConfig.getToken();
     final response = await _apiService.post(
       '/login',
       data: {'username': email, 'password': password},
+      options: Options(headers: {"X-FCM-TOKEN": fcmToken}),
     );
 
     final responseData = response.data['data'] as Map<String, dynamic>;
@@ -57,7 +61,12 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
 
   @override
   Future<void> logout(String refreshToken) async {
-    await _apiService.post('/logout', data: {'refresh': refreshToken});
+    final fcmToken = await FirebaseCloudMessagingConfig.getToken();
+    await _apiService.post(
+      '/logout',
+      data: {'refresh': refreshToken},
+      options: Options(headers: {"X-FCM-TOKEN": fcmToken}),
+    );
 
     //clear access and refresh token
     await _storageService.deleteSecure('access_token');

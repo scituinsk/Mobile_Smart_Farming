@@ -22,6 +22,7 @@ class HistoryRemoteDatasourceImpl extends HistoryRemoteDatasource {
     final Response response = await _apiService.get(
       "/iot/device/$modulId/logs/",
     );
+
     final responseData = response.data["data"] as List<dynamic>;
 
     return responseData

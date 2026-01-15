@@ -21,10 +21,15 @@ class HistoryModel extends History {
     return HistoryModel(
       id: json["id"],
       modulId: json["module"],
-      historyType: HistoryType.fromJson(json["type"]),
-      name: json["name"],
+      historyType: HistoryType.fromJson(
+        json["type"],
+        defaultValue: HistoryType.modul,
+      ),
+      name: json["name"] ?? "",
       message: json["data"]["message"],
-      alarmTime: TimeOfDayParseHelper.parseTimeOfDay(json["alarm_at"]),
+      alarmTime: json["alarm_at"] != null
+          ? TimeOfDayParseHelper.parseTimeOfDay(json["alarm_at"])
+          : null,
       scheduleHistories: json["data"]["pins"] != null
           ? (json["data"]["pins"] as List<dynamic>)
                 .map(

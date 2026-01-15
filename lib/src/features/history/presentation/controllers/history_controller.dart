@@ -11,12 +11,6 @@ class HistoryController extends GetxController {
 
   RxBool get isLoading => historyService.isLoading;
 
-  @override
-  void onInit() {
-    super.onInit();
-    historyService.loadAllHistories();
-  }
-
   Future<void> refreshHistoryList() async {
     try {
       await historyService.loadAllHistories(refresh: true);
