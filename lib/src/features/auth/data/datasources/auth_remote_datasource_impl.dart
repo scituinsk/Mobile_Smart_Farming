@@ -88,7 +88,7 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
 
   @override
   Future<UserModel?> getCurrentUser() async {
-    final response = await _apiService.get('/profile/me');
+    final response = await _apiService.get('/user/me');
 
     final responseData = response.data['data'] as Map<String, dynamic>;
 

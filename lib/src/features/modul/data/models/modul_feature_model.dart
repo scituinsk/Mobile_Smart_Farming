@@ -3,7 +3,11 @@ import 'package:pak_tani/src/features/modul/domain/entities/feature_data.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul_feature.dart';
 
 class ModulFeatureModel extends ModulFeature {
-  ModulFeatureModel({required super.name, super.descriptions, super.data});
+  const ModulFeatureModel({
+    required super.name,
+    super.descriptions,
+    super.data,
+  });
 
   factory ModulFeatureModel.fromJson(Map<String, dynamic> json) {
     final dataJson = json["data"];

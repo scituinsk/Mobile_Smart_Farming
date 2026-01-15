@@ -1,71 +1,83 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/utils/time_of_day_parse_helper.dart';
 import 'package:pak_tani/src/core/widgets/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_display_chip.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
+import 'package:pak_tani/src/features/history/domain/entities/history.dart';
+import 'package:pak_tani/src/features/history/domain/value_objects/history_type.dart';
+import 'package:pak_tani/src/features/modul/presentation/controllers/modul_controller.dart';
 import 'package:timelines_plus/timelines_plus.dart';
 
-final List<Map<String, dynamic>> historyData = [
-  {
-    "timeStart": TimeOfDay(hour: 10, minute: 00),
-    "timeEnd": TimeOfDay(hour: 10, minute: 10),
-    "relays": [
-      "solenoid 1",
-      "solenoid 2",
-      "solenoid 3",
-      "solenoid 3",
-      "solenoid 3",
-    ],
-  },
-  {
-    "timeStart": TimeOfDay(hour: 10, minute: 11),
-    "timeEnd": TimeOfDay(hour: 10, minute: 21),
-    "relays": ["solenoid 3", "solenoid 4"],
-  },
-];
-
 class HistoryItem extends StatefulWidget {
-  final String title;
-  final String time;
-  final String description;
-  final bool isExpandable;
-  final String date;
-  final String? modul;
-  final IconData? icon;
-  final MyCustomIcon? customIcon;
-  const HistoryItem({
-    super.key,
-    required this.title,
-    required this.time,
-    required this.description,
-    this.isExpandable = true,
-    required this.date,
-    this.modul,
-    this.icon = LucideIcons.calendarSync,
-    this.customIcon,
-  });
+  final History history;
+  const HistoryItem({super.key, required this.history});
 
   @override
   State<HistoryItem> createState() => _HistoryItemState();
 }
 
-class _HistoryItemState extends State<HistoryItem>
-    with SingleTickerProviderStateMixin {
+class _HistoryItemState extends State<HistoryItem> {
   bool _expanded = false;
+  late bool isExpandable;
+  late ModulController modulController;
+  late String modulName;
+  late String createdAt;
+
+  @override
+  void initState() {
+    super.initState();
+    modulController = Get.find<ModulController>();
+    isExpandable =
+        widget.history.historyType == HistoryType.schedule &&
+        (widget.history.scheduleHistories != null &&
+            widget.history.scheduleHistories!.isNotEmpty);
+    modulName = modulController.devices
+        .firstWhere((modul) => modul.id == widget.history.modulId.toString())
+        .name;
+    createdAt =
+        "${widget.history.createdAt.day}/${widget.history.createdAt.month}/${widget.history.createdAt.year}";
+  }
 
   void _toggle() {
-    if (!widget.isExpandable) return;
+    if (!isExpandable) return;
     setState(() => _expanded = !_expanded);
   }
 
   @override
   Widget build(BuildContext context) {
+    final schedules = widget.history.scheduleHistories ?? [];
+
+    final LinkedHashMap<String, List<String>> pins = LinkedHashMap();
+    final Map<String, Map<String, TimeOfDay>> times = {};
+
+    for (var schedule in schedules) {
+      final start = schedule.startTime;
+      final end = schedule.endTime;
+      final key =
+          "${TimeOfDayParseHelper.formatTimeOfDay(start)}-${TimeOfDayParseHelper.formatTimeOfDay(end)}";
+
+      pins.putIfAbsent(key, () => []).add(schedule.pinName);
+      times.putIfAbsent(key, () => {"start": start, "end": end});
+    }
+
+    final List<Map<String, dynamic>> groupedSchedules = pins.entries.map((e) {
+      final key = e.key;
+      return {
+        "start": times[key]!["start"] as TimeOfDay,
+        "end": times[key]!["end"] as TimeOfDay,
+        "pins": e.value,
+      };
+    }).toList();
+
     return Column(
       children: [
         InkWell(
-          onTap: widget.isExpandable ? _toggle : null,
+          onTap: isExpandable ? _toggle : null,
           child: Container(
             padding: EdgeInsets.symmetric(vertical: 10.r),
             child: IntrinsicHeight(
@@ -75,8 +87,9 @@ class _HistoryItemState extends State<HistoryItem>
                 children: [
                   Center(
                     child: MyIcon(
-                      icon: widget.icon ?? LucideIcons.calendarSync,
-                      customIcon: widget.customIcon,
+                      customIcon:
+                          widget.history.historyType?.icon ??
+                          MyCustomIcon.greenHouse,
                       backgroundColor: Colors.white,
                       iconColor: AppTheme.primaryColor,
                       padding: 10,
@@ -89,28 +102,35 @@ class _HistoryItemState extends State<HistoryItem>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       spacing: 8.r,
                       children: [
-                        Text(widget.title, style: AppTheme.h4),
-                        if (widget.modul != null)
+                        Text(
+                          widget.history.name ?? "default",
+                          style: AppTheme.h4,
+                        ),
+                        if (widget.history.historyType != HistoryType.modul)
                           MyDisplayChip(
                             backgroundColor: Colors.white,
                             borderWidth: 1,
                             borderColor: AppTheme.surfaceActive,
-                            child: Text(
-                              widget.modul!,
-                              style: AppTheme.textAction,
-                            ),
+                            child: Text(modulName, style: AppTheme.textAction),
                           ),
-                        Text(widget.description, style: AppTheme.textAction),
+                        Text(
+                          widget.history.message ??
+                              (widget.history.historyType ==
+                                      HistoryType.schedule
+                                  ? "Penjadwalan telah dimulai"
+                                  : ""),
+                          style: AppTheme.textAction,
+                        ),
                       ],
                     ),
                   ),
                   Column(
-                    mainAxisAlignment: widget.isExpandable
+                    mainAxisAlignment: isExpandable
                         ? MainAxisAlignment.spaceBetween
                         : MainAxisAlignment.end,
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      if (widget.isExpandable)
+                      if (isExpandable)
                         AnimatedRotation(
                           turns: _expanded ? 0.5 : 0.0,
                           duration: const Duration(milliseconds: 200),
@@ -124,13 +144,17 @@ class _HistoryItemState extends State<HistoryItem>
                       Column(
                         children: [
                           Text(
-                            widget.time,
+                            widget.history.alarmTime != null
+                                ? TimeOfDayParseHelper.formatTimeOfDay(
+                                    widget.history.alarmTime!,
+                                  )
+                                : "${widget.history.createdAt.hour}:${widget.history.createdAt.minute}",
                             style: AppTheme.textSmall.copyWith(
                               color: AppTheme.primaryColor,
                             ),
                           ),
                           Text(
-                            widget.date,
+                            createdAt,
                             style: AppTheme.textSmall.copyWith(
                               color: AppTheme.primaryColor,
                             ),
@@ -150,7 +174,7 @@ class _HistoryItemState extends State<HistoryItem>
               : CrossFadeState.showFirst,
           duration: const Duration(milliseconds: 220),
           firstChild: const SizedBox(width: double.infinity, height: 0),
-          secondChild: _expanded
+          secondChild: _expanded && groupedSchedules.isNotEmpty
               ? Padding(
                   padding: EdgeInsets.only(left: 66.w),
                   child: Column(
@@ -170,7 +194,7 @@ class _HistoryItemState extends State<HistoryItem>
                           ),
                         ),
                         builder: TimelineTileBuilder.connected(
-                          itemCount: historyData.length + 1,
+                          itemCount: groupedSchedules.length + 1,
                           connectionDirection: ConnectionDirection.before,
 
                           // Garis penghubung
@@ -188,7 +212,8 @@ class _HistoryItemState extends State<HistoryItem>
                             );
                           },
                           contentsBuilder: (context, index) {
-                            final bool isLast = index == historyData.length;
+                            final bool isLast =
+                                index == groupedSchedules.length;
                             if (isLast) {
                               return Padding(
                                 padding: EdgeInsets.only(left: 15.0.w),
@@ -200,11 +225,17 @@ class _HistoryItemState extends State<HistoryItem>
                                 ),
                               );
                             }
-                            final item = historyData[index];
-                            final startTime = (item["timeStart"] as TimeOfDay)
-                                .format(context);
-                            final endTime = (item["timeEnd"] as TimeOfDay)
-                                .format(context);
+                            final scheduleHistory = groupedSchedules[index];
+                            final startTime =
+                                (scheduleHistory["start"] as TimeOfDay).format(
+                                  context,
+                                );
+                            final endTime =
+                                (scheduleHistory["end"] as TimeOfDay).format(
+                                  context,
+                                );
+                            final pins =
+                                scheduleHistory["pins"] as List<String>;
 
                             return Padding(
                               padding: EdgeInsets.only(
@@ -223,7 +254,7 @@ class _HistoryItemState extends State<HistoryItem>
                                   ),
 
                                   SizedBox(height: 4.r),
-                                  for (var solenoid in (item['relays'] as List))
+                                  for (var solenoid in pins)
                                     Text(
                                       solenoid,
                                       style: AppTheme.h5.copyWith(

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/config/firebase_cloud_messaging_config.dart';
 import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
+import 'package:pak_tani/src/features/history/presentation/bindings/history_binding.dart';
 import 'package:pak_tani/src/features/history/presentation/screens/history_screen.dart';
 import 'package:pak_tani/src/features/modul/presentation/bindings/modul_binding.dart';
 import 'package:pak_tani/src/features/modul/presentation/screen/moduls_screen.dart';
@@ -107,6 +108,11 @@ class MainNavigationController extends GetxController
   }
 
   void _initializeHistoryTab() {
+    if (!Get.isRegistered<HistoryBinding>()) {
+      HistoryBinding().dependencies();
+      print("✅ init history binding");
+    }
+
     _screensCache[1] = HistoryScreen();
   }
 
