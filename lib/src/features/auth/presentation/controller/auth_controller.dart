@@ -15,7 +15,7 @@ class AuthController extends GetxController {
     try {
       await _authService.login(email, password);
 
-      Get.offAllNamed(RouteNamed.mainPage);
+      Get.offAllNamed(RouteNames.mainPage);
       MySnackbar.success(message: "Login berhasil");
     } catch (e) {
       print("error login auth controller:  $e");
@@ -53,7 +53,7 @@ class AuthController extends GetxController {
     try {
       await _authService.logout();
 
-      Get.offAllNamed(RouteNamed.loginPage);
+      Get.offAllNamed(RouteNames.loginPage);
       MySnackbar.success(message: "Logout berhasil");
     } catch (e) {
       MySnackbar.error(message: e.toString());

@@ -1,3 +1,8 @@
+/// App page routes.
+/// Defines all application routes using GetX GetPage for navigation.
+
+library;
+
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/navigation/main_navigation.dart';
 import 'package:pak_tani/src/core/navigation/main_navigation_binding.dart';
@@ -20,48 +25,71 @@ import 'package:pak_tani/src/features/relays/presentation/screens/relay_screen.d
 import 'package:pak_tani/src/features/notification/presentation/screens/notification_screen.dart';
 import 'package:pak_tani/src/features/schedule/presentation/screens/group_schedule_screen.dart';
 
+///App page class.
+///Contains all route definition for the application
 class AppPage {
+  /// List of all application pages/routes
+  /// Each GetPage defines a route name, page widget, and optional binding.
   static final pages = [
+    // Notification page
     GetPage(
-      name: RouteNamed.notificationPage,
+      name: RouteNames.notificationPage,
       page: () => const NotificationScreen(),
     ),
+    // Group schedule page
     GetPage(
-      name: RouteNamed.groupSchedulePage,
+      name: RouteNames.groupSchedulePage,
       page: () => const ScheduleScreen(),
       binding: ScheduleScreenBinding(),
     ),
 
+    // add modul page
     GetPage(
-      name: RouteNamed.addModulPage,
+      name: RouteNames.addModulPage,
       page: () => const AddModulScreen(),
       binding: AddModulScreenBinding(),
     ),
+
+    // detail modul page
     GetPage(
-      name: RouteNamed.detailModulPage,
+      name: RouteNames.detailModulPage,
       page: () => const ModulDetailScreen(),
       bindings: [RelayBinding(), ModulDetailScreenBinding()],
     ),
-    GetPage(name: RouteNamed.loginPage, page: () => const LoginScreen()),
-    GetPage(name: RouteNamed.registerPage, page: () => const RegisterScreen()),
+
+    // login page
+    GetPage(name: RouteNames.loginPage, page: () => const LoginScreen()),
+
+    // register page
+    GetPage(name: RouteNames.registerPage, page: () => const RegisterScreen()),
+
+    // main navigation page
     GetPage(
-      name: RouteNamed.mainPage,
+      name: RouteNames.mainPage,
       page: () => MainNavigation(),
       binding: MainNavigationBinding(),
     ),
+
+    // qr scan page
     GetPage(
-      name: RouteNamed.qrScanPage,
+      name: RouteNames.qrScanPage,
       page: () => const QrScannScreen(),
       binding: QrScanScreenBinding(),
     ),
+
+    // list of relays page
     GetPage(
-      name: RouteNamed.relayPage,
+      name: RouteNames.relayPage,
       page: () => RelayScreen(),
       binding: RelayScreenBinding(),
     ),
-    GetPage(name: RouteNamed.qrCodePage, page: () => QrCodeScreen()),
+
+    // modul serial id qr code page
+    GetPage(name: RouteNames.qrCodePage, page: () => QrCodeScreen()),
+
+    // on boarding page
     GetPage(
-      name: RouteNamed.onboardingPage,
+      name: RouteNames.onboardingPage,
       page: () => OnboardingScreen(),
       binding: OnboardScreenBinding(),
     ),

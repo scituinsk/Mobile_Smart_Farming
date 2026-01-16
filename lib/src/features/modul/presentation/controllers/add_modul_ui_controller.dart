@@ -22,7 +22,7 @@ class AddModulUiController extends GetxController {
 
   void openQrScanner() {
     Get.toNamed(
-      RouteNamed.qrScanPage,
+      RouteNames.qrScanPage,
       arguments: (String barcode) {
         modulCodeController.text = barcode;
         print("Barcode scanned: $barcode");

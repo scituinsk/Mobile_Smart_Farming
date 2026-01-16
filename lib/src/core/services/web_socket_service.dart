@@ -45,7 +45,7 @@ class WebSocketService extends GetxService {
   final Map<String, DeviceWsHandle> _deviceHandles = {};
 
   //streams
-  final _messageController = StreamController<WebsocketMessage>.broadcast();
+  final _messageController = StreamController<WebSocketMessage>.broadcast();
   final _connectionController = StreamController<bool>.broadcast();
 
   //state
@@ -58,13 +58,13 @@ class WebSocketService extends GetxService {
   final RxBool isConnected = false.obs;
 
   //public streams
-  Stream<WebsocketMessage> get messageStream => _messageController.stream;
+  Stream<WebSocketMessage> get messageStream => _messageController.stream;
   Stream<bool> get connectionStatus => _connectionController.stream;
 
   @override
-  void onClose() {
+  void onClose() async {
     // close all device handles
-    closeAllDeviceStreams();
+    await closeAllDeviceStreams();
     super.onClose();
   }
 

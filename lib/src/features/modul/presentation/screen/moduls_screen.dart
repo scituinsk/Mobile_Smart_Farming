@@ -33,7 +33,7 @@ class ModulsScreen extends StatelessWidget {
             right: 20.w,
             child: FloatingActionButton(
               onPressed: () {
-                Get.toNamed(RouteNamed.addModulPage);
+                Get.toNamed(RouteNames.addModulPage);
               },
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(50.r),

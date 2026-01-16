@@ -7,7 +7,7 @@ class StorageService extends GetxService {
   late FlutterSecureStorage _secureStorage;
 
   @override
-  Future<void> onInit() async {
+  void onInit() async {
     // TODO: implement onInit
     super.onInit();
     _prefs = await SharedPreferences.getInstance();

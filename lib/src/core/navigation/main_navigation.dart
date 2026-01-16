@@ -1,3 +1,9 @@
+/// Main Navigation screen.
+/// Display a floating bottom bar with animated tabs for modul, history, and profile.
+/// Users TabBarView for screen switching and handles back button for navigation or exit.
+
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_floating_bottom_bar/flutter_floating_bottom_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,6 +11,8 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/controllers/main_navigation_controller.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 
+/// Main navigation screen widget.
+/// Integrate with MainNavigationController for tab management and animation.
 class MainNavigation extends GetView<MainNavigationController> {
   const MainNavigation({super.key});
 
@@ -62,9 +70,9 @@ class MainNavigation extends GetView<MainNavigationController> {
             ),
             child: SizedBox(
               height: 60,
-              // ✅ Replace Obx with GetBuilder for animation
+              // Replace Obx with GetBuilder for animation
               child: GetBuilder<MainNavigationController>(
-                id: 'animation', // ✅ Specific ID for animation updates
+                id: 'animation', // Specific ID for animation updates
                 builder: (controller) => Stack(
                   children: [
                     Positioned(
@@ -121,16 +129,17 @@ class MainNavigation extends GetView<MainNavigationController> {
     );
   }
 
+  /// Builds a custom tab with animated icon color.
+  /// [icon] is the icon to display, [index] is the tab index, [controller] is the navigation controller.
+  /// Returns a SizedBox with centered animated icon.
   Widget _buildCustomTab(
     IconData icon,
     int index,
     MainNavigationController controller,
   ) {
-    // ✅ Use GetBuilder for individual tab icon animation
     return GetBuilder<MainNavigationController>(
       id: 'animation',
       builder: (controller) {
-        // ✅ Access animationValue.value correctly
         double distance = (controller.animationValue.value - index).abs();
         bool isTransitioning = distance <= 1.0;
 
@@ -142,9 +151,6 @@ class MainNavigation extends GetView<MainNavigationController> {
           iconColor =
               Color.lerp(Colors.grey, Colors.white, opacity) ?? Colors.grey;
         }
-
-        // ✅ Debug print untuk troubleshooting
-        // print('Tab $index: animValue=${controller.animationValue.value.toStringAsFixed(2)}, distance=${distance.toStringAsFixed(2)}, color=$iconColor');
 
         return SizedBox(
           height: 60,

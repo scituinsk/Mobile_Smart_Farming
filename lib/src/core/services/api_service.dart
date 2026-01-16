@@ -20,7 +20,7 @@ class ApiService extends GetxService {
   final Set<String> _pendingRequests = <String>{}; // Track pending requests
 
   @override
-  Future<void> onInit() async {
+  void onInit() async {
     super.onInit();
     await _initializeDio();
   }
@@ -274,8 +274,8 @@ class ApiService extends GetxService {
       print('❌ Logout error: $e');
     } finally {
       // ✅ Navigate to login
-      if (Get.currentRoute != RouteNamed.loginPage) {
-        Get.offAllNamed(RouteNamed.loginPage);
+      if (Get.currentRoute != RouteNames.loginPage) {
+        Get.offAllNamed(RouteNames.loginPage);
       }
     }
   }

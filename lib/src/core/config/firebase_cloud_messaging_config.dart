@@ -1,3 +1,9 @@
+/// Configuration class for Firebae Cloud Messaging (FCM) and local notifications.
+/// Handles intialization, token management, dan notification display.
+/// This ensures FCM is initialized only once per app session and manages device registration
+
+library;
+
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:device_info_plus/device_info_plus.dart';
@@ -12,24 +18,26 @@ import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+/// Global instance for local notification plugin
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-// buat channel sekali saja (Android 8+)
+/// Notification channel for high-importance notification (Android 8+)
 const AndroidNotificationChannel _highImportanceChannel =
     AndroidNotificationChannel(
-      'high_importance_channel', // id
-      'High Importance Notifications', // name
+      'high_importance_channel',
+      'High Importance Notifications',
       description: 'Channel for important notifications',
       importance: Importance.max,
     );
 
+/// configuration class for FCM and notification
 class FirebaseCloudMessagingConfig {
-  final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-  static bool _initialized = false;
+  static bool _initialized = false; //Flag to prevent re-initialization
 
-  String? fcmToken;
-
+  ///Initializes FCM and local notification only once.
+  ///This include requesting permissions, setting up channels, and listeners.
+  ///Call this in main() to ensure setup on app launch
   static Future<void> initialize() async {
     if (_initialized) {
       print("FCM: alredy initilasized, skipping");
@@ -39,16 +47,24 @@ class FirebaseCloudMessagingConfig {
 
     print("init notifikasi");
 
-    // request runtime permission (Android 13+)
+    await _requestNotificationPermission();
+    await _initializeLocalNotifications();
+    await _createNotificationChannel();
+    _setupMessageListeners();
+  }
+
+  /// Request notification permission on Android 13+
+  /// Ensures the app can display notification.
+  static Future<void> _requestNotificationPermission() async {
     if (Platform.isAndroid) {
-      // pastikan menambahkan permission_handler di pubspec.yaml
       final status = await Permission.notification.status;
       if (!status.isGranted) {
         await Permission.notification.request();
       }
     }
+  }
 
-    // initialize local notifications
+  static Future<void> _initializeLocalNotifications() async {
     const AndroidInitializationSettings initAndroid =
         AndroidInitializationSettings('icon_notif');
     const InitializationSettings initSettings = InitializationSettings(
@@ -57,29 +73,34 @@ class FirebaseCloudMessagingConfig {
     await flutterLocalNotificationsPlugin.initialize(
       initSettings,
       onDidReceiveNotificationResponse: (details) {
-        // handle notification tapped
+        // Handle notification tap, (e.g., navigate to a screen)
       },
     );
+  }
 
-    // buat channel Android secara eksplisit
+  /// Creates the notification channel on Android.
+  static Future<void> _createNotificationChannel() async {
     final androidImpl = flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin
         >();
     await androidImpl?.createNotificationChannel(_highImportanceChannel);
+  }
 
+  /// Sets up listeners for FCM messages.
+  static void _setupMessageListeners() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       print('FCM onMessage: ${message.data} ${message.notification}');
       final notification = message.notification;
 
-      // jika payload tidak memiliki notification, tampilkan menggunakan data yang ada
+      // Extract title and body from notification or data payload
       final title = notification?.title ?? message.data['title'];
       final body = notification?.body ?? message.data['body'];
-
       final imageUrl =
           (message.data['image'] as String?) ??
           (notification?.android?.imageUrl?.toString());
 
+      // skip local notification if app is not in foreground
       final isForeground =
           WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed;
       if (!isForeground) {
@@ -99,11 +120,15 @@ class FirebaseCloudMessagingConfig {
     });
   }
 
+  /// retrives the FCM token.
+  /// returns null if available.
   static Future<String?> getToken() async {
     String? token = await FirebaseMessaging.instance.getToken();
     return token;
   }
 
+  /// sends FCM token and device info to the server if not alredy registered.
+  /// Uses storage to track registrations status
   static Future<void> sendTokenAndDeviceInfo(String tokenFCM) async {
     final apiService = Get.find<ApiService>();
     final storageService = Get.find<StorageService>();
@@ -125,7 +150,7 @@ class FirebaseCloudMessagingConfig {
         "registration_id": tokenFCM,
         "device_id": andoridId,
         "name": androidName,
-        "type": "android", // Bisa "ios", "web", atau "android"
+        "type": "android", // can be "ios", "web", or "android"
         "active": true,
       });
 
@@ -137,6 +162,8 @@ class FirebaseCloudMessagingConfig {
     }
   }
 
+  ///Downloads and save an image file, optionally resizing it.
+  /// Returns the file path or null on failure
   static Future<String?> _downloadAndSaveFile(
     String url,
     String fileName, {
@@ -156,6 +183,7 @@ class FirebaseCloudMessagingConfig {
         return filePath;
       }
 
+      // Resize image for thumnail
       final codec = await ui.instantiateImageCodec(
         bytes,
         targetWidth: targetWidth,
@@ -176,6 +204,8 @@ class FirebaseCloudMessagingConfig {
     }
   }
 
+  /// Displays a local notification with optional image.
+  /// Skips if title and body are empty.
   static Future<void> _showNotificationWithImage({
     required String? title,
     required String? body,

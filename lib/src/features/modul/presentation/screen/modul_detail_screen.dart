@@ -244,7 +244,7 @@ class ModulDetailScreen extends StatelessWidget {
                                                                     .surfaceColor,
                                                             onPressed: () =>
                                                                 Get.toNamed(
-                                                                  RouteNamed
+                                                                  RouteNames
                                                                       .qrCodePage,
                                                                   arguments:
                                                                       controller

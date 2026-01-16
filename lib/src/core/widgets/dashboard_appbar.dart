@@ -37,7 +37,7 @@ class DashboardAppbar extends StatelessWidget {
             MyIcon(
               icon: Icons.notifications,
               iconColor: AppTheme.primaryColor,
-              onPressed: () => Get.toNamed(RouteNamed.notificationPage),
+              onPressed: () => Get.toNamed(RouteNames.notificationPage),
             ),
           ],
         ),

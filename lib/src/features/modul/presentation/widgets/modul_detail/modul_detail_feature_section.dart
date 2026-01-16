@@ -58,7 +58,7 @@ class ModulDetailFeatureSection extends StatelessWidget {
                   title: "Relay",
                   icon: Icons.settings,
                   onPressed: () {
-                    Get.toNamed(RouteNamed.relayPage);
+                    Get.toNamed(RouteNames.relayPage);
                   },
                 );
               }
@@ -71,7 +71,7 @@ class ModulDetailFeatureSection extends StatelessWidget {
                     myCustomIcon: MyCustomIcon.solenoid,
                     onPressed: () {
                       Get.toNamed(
-                        RouteNamed.groupSchedulePage,
+                        RouteNames.groupSchedulePage,
                         arguments: relayGroups[relayIndex].id,
                       );
                     },

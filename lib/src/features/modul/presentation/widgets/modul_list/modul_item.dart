@@ -32,7 +32,7 @@ class ModulItem extends StatelessWidget {
 
     return GestureDetector(
       onTap: () =>
-          Get.toNamed(RouteNamed.detailModulPage, arguments: modul.serialId),
+          Get.toNamed(RouteNames.detailModulPage, arguments: modul.serialId),
       child: Container(
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(

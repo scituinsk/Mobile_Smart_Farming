@@ -1,3 +1,9 @@
+/// Controller for main navigation.
+/// Handle animation, tabController, Initialization of main tabs, Loading screen,
+/// navigation function, and application life cycle
+
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -10,6 +16,7 @@ import 'package:pak_tani/src/features/modul/application/services/modul_service.d
 import 'package:pak_tani/src/features/modul/presentation/bindings/modul_binding.dart';
 import 'package:pak_tani/src/features/modul/presentation/screen/moduls_screen.dart';
 
+///Controller class for main navigation
 class MainNavigationController extends GetxController
     with GetTickerProviderStateMixin {
   late TabController tabController;
@@ -17,16 +24,12 @@ class MainNavigationController extends GetxController
 
   final RxInt currentPage = 0.obs;
   final RxDouble animationValue = 0.0.obs;
-  final RxBool isInitialized = false.obs;
 
-  // ✅ Use regular List for screens (not observable)
-  List<Widget> _screens = [];
-
-  // lazy loaded screens
+  final List<Widget> _screens = [];
   final Map<int, Widget?> _screensCache = {};
   final Set<int> _initializedTabs = {};
 
-  // ✅ Getter for screens
+  /// Getter for screens list.
   List<Widget> get screens => _screens;
 
   @override
@@ -34,10 +37,12 @@ class MainNavigationController extends GetxController
     super.onInit();
     _initializeControllers();
     _initializeTab(0);
-    _updateScreensList(); // ✅ Initialize screens list
+    _updateScreensList();
     await _registerFCM();
   }
 
+  /// Register FCM life cycle.
+  /// Ensures users send token and device info to server once they visit the main screen.
   Future<void> _registerFCM() async {
     final String? fcmToken = await FirebaseCloudMessagingConfig.getToken();
     if (fcmToken != null) {
@@ -45,6 +50,7 @@ class MainNavigationController extends GetxController
     }
   }
 
+  /// Initializes all controller used in this class
   void _initializeControllers() {
     tabController = TabController(length: 3, vsync: this);
     animationController = AnimationController(
@@ -52,13 +58,12 @@ class MainNavigationController extends GetxController
       duration: Duration(milliseconds: 300),
     );
 
-    // ✅ Add animation listener for smooth indicator
     tabController.animation!.addListener(() {
       animationValue.value = tabController.animation!.value;
-      // ✅ Update GetBuilder with specific ID
       update(['animation']);
     });
 
+    //Listener when tab index changing
     tabController.addListener(() {
       if (tabController.indexIsChanging) {
         _initializeTab(tabController.index);
@@ -66,64 +71,66 @@ class MainNavigationController extends GetxController
       }
     });
 
-    isInitialized.value = true;
     print("✅ Main navigation controller initialized");
   }
 
+  /// Initializes a tab based on its index.
+  /// Occurs only once when tab is first visited.
   void _initializeTab(int index) {
     if (_initializedTabs.contains(index)) return;
 
     print("🔄 Initializing tab $index...");
 
     switch (index) {
-      case 0: // home
+      case 0:
         _initializeModulTab();
         break;
-      case 1: // history
+      case 1:
         _initializeHistoryTab();
         break;
-      case 2: // profile
+      case 2:
         _initializeProfileTab();
         break;
     }
 
     _initializedTabs.add(index);
-    _updateScreensList(); // ✅ Update screens list after initialization
+    _updateScreensList();
     print("✅ Tab $index initialized");
   }
 
-  // ✅ Update screens list and trigger GetBuilder update
+  /// Update the screens list and triggers GetBuilder rebuild.
   void _updateScreensList() {
-    _screens = [_getScreen(0), _getScreen(1), _getScreen(2)];
-
-    // ✅ Trigger GetBuilder rebuild
+    _screens.clear();
+    _screens.addAll([_getScreen(0), _getScreen(1), _getScreen(2)]);
     update();
   }
 
+  /// Initialized the modul tab/screen.
+  /// Register modul binding if not alredy registered.
   void _initializeModulTab() {
     if (!Get.isRegistered<ModulBinding>()) {
       ModulBinding().dependencies();
       print("inisialisasi modul binding");
     }
-
     final modulService = Get.find<ModulService>();
     modulService.loadModuls();
 
     _screensCache[0] = ModulsScreen();
   }
 
+  /// Initialize the history tab/screen.
+  /// Register history binding if not alredy registered.
   void _initializeHistoryTab() {
     if (!Get.isRegistered<HistoryBinding>()) {
       HistoryBinding().dependencies();
       print("✅ init history binding");
     }
 
-    final historyService = Get.find<HistoryService>();
-    historyService.loadAllHistories();
-
     _screensCache[1] = HistoryScreen();
   }
 
+  /// Initialize the profile tab/screen
+  /// haven't done yet
   void _initializeProfileTab() {
     final AuthController authController = Get.find<AuthController>();
 
@@ -166,6 +173,8 @@ class MainNavigationController extends GetxController
     );
   }
 
+  /// Gets the screen widget for the given index.
+  /// Returns a loading screen if not initialized.
   Widget _getScreen(int index) {
     if (!_initializedTabs.contains(index)) {
       return Center(
@@ -183,18 +192,22 @@ class MainNavigationController extends GetxController
     return _screensCache[index] ?? Center(child: Text('Screen not available'));
   }
 
+  /// Handle tab change events.
+  /// Update current page and loads tab lifecycle.
   void _onTabChanged(int index) {
     print("🔄 Tab changed to: $index");
     currentPage.value = index;
-    _trackTabVisit(index);
+    final tabNames = ["Modul", "History", "Profile"];
+    print("📊 User visited: ${tabNames[index]} tab");
 
-    // ✅ Update GetBuilder for tab changes
+    _loadTabLifeCycle(index);
+
+    // Update GetBuilder for tab changes
     update();
   }
 
-  void _trackTabVisit(int index) {
-    final tabNames = ["Modul", "History", "Profile"];
-    print("📊 User visited: ${tabNames[index]} tab");
+  /// Loads lifecycle for the visited tab.
+  void _loadTabLifeCycle(int index) {
     switch (index) {
       case 0:
         final modulService = Get.find<ModulService>();
@@ -207,18 +220,27 @@ class MainNavigationController extends GetxController
     }
   }
 
+  /// Navigates to the specified tab index.
+  /// [index] must between 0 and 2
   void navigateToTab(int index) {
     if (index >= 0 && index < 3) {
       tabController.animateTo(index);
     }
   }
 
-  void navigateToHome() => navigateToTab(0);
+  /// Navigate to the modul tab.
+  void navigateToModul() => navigateToTab(0);
+
+  /// Navigate to the history tab.
   void navigateToHistory() => navigateToTab(1);
+
+  /// Navigate to the profile tab.
   void navigateToProfile() => navigateToTab(2);
 
+  /// Handle back button press.
+  /// Prevents accidental app exit y navigating to the first tab or showing a dialog.
   Future<bool> onWillPop() async {
-    final tabNames = ["Home", "Modul", "History", "Profile"];
+    final tabNames = ["Modul", "History", "Profile"];
     final currentTabName =
         (currentPage.value >= 0 && currentPage.value < tabNames.length)
         ? tabNames[currentPage.value]
@@ -227,9 +249,9 @@ class MainNavigationController extends GetxController
 
     // If we're not on the first tab, go to first tab
     if (currentPage.value != 0) {
-      print('🔄 Navigating to home tab');
-      navigateToHome();
-      return false; // Don't exit app
+      print('🔄 Navigating to modul tab');
+      navigateToModul();
+      return false;
     }
 
     // Show exit confirmation dialog
@@ -238,6 +260,7 @@ class MainNavigationController extends GetxController
     return shouldExit ?? false;
   }
 
+  /// Shows an exit confirmation dialog.
   Future<bool?> _showExitDialog() {
     return Get.dialog<bool>(
       AlertDialog(

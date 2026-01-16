@@ -95,7 +95,7 @@ class LoginForm extends StatelessWidget {
                     WidgetSpan(
                       child: GestureDetector(
                         onTap: () {
-                          Get.toNamed(RouteNamed.registerPage);
+                          Get.toNamed(RouteNames.registerPage);
                         },
                         child: Text(
                           "Daftar akun",
