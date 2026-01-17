@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/services/device_ws_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/services/web_socket_service.dart';
 import 'package:pak_tani/src/core/widgets/my_snackbar.dart';
@@ -51,7 +52,7 @@ class ScheduleUiController extends GetxController {
   final RxSet<WeekDay> selectedDays = <WeekDay>{}.obs;
   final GlobalKey<FormState> scheduleFormKey = GlobalKey<FormState>();
 
-  final _ws = Rxn<DeviceWsHandle>();
+  final _ws = Rxn<DeviceWsService>();
 
   // get service instance (use DI or Get.find if registered)
   final WebSocketService _wsService = Get.find<WebSocketService>();

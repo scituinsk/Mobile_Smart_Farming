@@ -16,7 +16,7 @@ import 'package:pak_tani/src/features/modul/application/services/modul_service.d
 import 'package:pak_tani/src/features/modul/presentation/bindings/modul_binding.dart';
 import 'package:pak_tani/src/features/modul/presentation/screen/moduls_screen.dart';
 
-///Controller class for main navigation
+///Controller class for main navigation.
 class MainNavigationController extends GetxController
     with GetTickerProviderStateMixin {
   late TabController tabController;
@@ -25,11 +25,19 @@ class MainNavigationController extends GetxController
   final RxInt currentPage = 0.obs;
   final RxDouble animationValue = 0.0.obs;
 
+  /// Keep list of screens.
+  /// Private variable that only used in this class.
   final List<Widget> _screens = [];
+
+  /// Used for lazy initialize screen.
+  /// Keep Map with int as screen index, and Widget as screen.
   final Map<int, Widget?> _screensCache = {};
+
+  /// Keep initialized tabs, set is used to make sure tabs didn't duplicated.
   final Set<int> _initializedTabs = {};
 
   /// Getter for screens list.
+  /// Used outside of this class
   List<Widget> get screens => _screens;
 
   @override
@@ -51,6 +59,8 @@ class MainNavigationController extends GetxController
   }
 
   /// Initializes all controller used in this class
+  /// Initialize TabController for tab, AnimationController for animation tab, listener to tabController animation,
+  /// and listener when tab controller changing tab.
   void _initializeControllers() {
     tabController = TabController(length: 3, vsync: this);
     animationController = AnimationController(
@@ -58,6 +68,7 @@ class MainNavigationController extends GetxController
       duration: Duration(milliseconds: 300),
     );
 
+    // listen to animation controller, update animation value to tab controller animation value
     tabController.animation!.addListener(() {
       animationValue.value = tabController.animation!.value;
       update(['animation']);
@@ -77,6 +88,7 @@ class MainNavigationController extends GetxController
   /// Initializes a tab based on its index.
   /// Occurs only once when tab is first visited.
   void _initializeTab(int index) {
+    // if tabs alredy initialized, return this function.
     if (_initializedTabs.contains(index)) return;
 
     print("🔄 Initializing tab $index...");
@@ -93,12 +105,14 @@ class MainNavigationController extends GetxController
         break;
     }
 
+    // add initialized tab to this variable
     _initializedTabs.add(index);
     _updateScreensList();
     print("✅ Tab $index initialized");
   }
 
   /// Update the screens list and triggers GetBuilder rebuild.
+  /// Used in _initializedTab and onInit.
   void _updateScreensList() {
     _screens.clear();
     _screens.addAll([_getScreen(0), _getScreen(1), _getScreen(2)]);
@@ -112,6 +126,8 @@ class MainNavigationController extends GetxController
       ModulBinding().dependencies();
       print("inisialisasi modul binding");
     }
+
+    // load all moduls
     final modulService = Get.find<ModulService>();
     modulService.loadModuls();
 
@@ -125,7 +141,6 @@ class MainNavigationController extends GetxController
       HistoryBinding().dependencies();
       print("✅ init history binding");
     }
-
     _screensCache[1] = HistoryScreen();
   }
 
