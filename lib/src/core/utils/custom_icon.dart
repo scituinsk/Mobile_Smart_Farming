@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+/// Enum representing various custom icon types used in the app.
+/// Each value corresponds to a specific SVG asset.
 enum MyCustomIcon {
   solenoid,
   greenHouse,
@@ -22,6 +24,9 @@ enum MyCustomIcon {
   calendarSync,
 }
 
+/// Returns the asset path for the given custom icon type.
+///
+/// This function maps each [MyCustomIcon] to its corresponding SVG file path.
 String iconAssets(MyCustomIcon type) {
   switch (type) {
     case MyCustomIcon.solenoid:
@@ -61,6 +66,9 @@ String iconAssets(MyCustomIcon type) {
   }
 }
 
+/// A stateless widget for displaying custom SVG icons.
+///
+/// This widget renders an SVG icon based on the provided [type], with optional [size] and [color].
 class CustomIcon extends StatelessWidget {
   final MyCustomIcon type;
   final double size;

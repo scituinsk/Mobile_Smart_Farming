@@ -10,7 +10,7 @@ import 'package:pak_tani/src/core/services/device_ws_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/services/web_socket_service.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/core/widgets/my_snackbar.dart';
+import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 import 'package:pak_tani/src/features/relays/application/services/relay_service.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/feature_data.dart';
@@ -492,6 +492,11 @@ class ModulDetailUiController extends GetxController {
     _streamTimer?.cancel();
 
     await _sub?.cancel();
+
+    if (ws.value != null) {
+      await _wsService.closeDeviceStream(modulId);
+      ws.value = null;
+    }
 
     if (_pendingListUpdate && _lastUpdatedModul != null) {
       final idx = _modulService.moduls.indexWhere(

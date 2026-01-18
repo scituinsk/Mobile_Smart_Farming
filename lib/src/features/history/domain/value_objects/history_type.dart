@@ -1,4 +1,4 @@
-import 'package:pak_tani/src/core/widgets/custom_icon.dart';
+import 'package:pak_tani/src/core/utils/custom_icon.dart';
 
 enum HistoryType {
   schedule("schedule", "schedule"),

@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 
+/// A stateles widget for displaying a water pump status tag.
+/// Renders a colored container with text indicating active or inactive state.
 class WaterpumpTag extends StatelessWidget {
+  ///  Indicates wether the water pump is active.
   final bool isActive;
+
+  /// Optional label for active state (defaults to "Aktif").
   final String? activeLabel;
+
+  /// Optional label for inactive state (defaults to "Non-aktif").
   final String? inactiveLabel;
 
   const WaterpumpTag({

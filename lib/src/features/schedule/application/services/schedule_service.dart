@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/utils/time_of_day_parse_helper.dart';
-import 'package:pak_tani/src/core/widgets/my_snackbar.dart';
+import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/schedule/domain/entities/schedule.dart';
 import 'package:pak_tani/src/features/schedule/domain/repositories/schedule_repository.dart';
 

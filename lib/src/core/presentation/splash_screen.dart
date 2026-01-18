@@ -10,7 +10,7 @@ import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/services/connectivity_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/core/widgets/custom_icon.dart';
+import 'package:pak_tani/src/core/utils/custom_icon.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
 
 /// Splash screen widget.

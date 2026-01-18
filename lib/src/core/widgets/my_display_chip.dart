@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+/// A stateless widget for a custom display chip.
+/// Display a text or widget with a filled background, optionally clickable.
 class MyDisplayChip extends StatelessWidget {
   final Color backgroundColor;
   final double paddingVertical;

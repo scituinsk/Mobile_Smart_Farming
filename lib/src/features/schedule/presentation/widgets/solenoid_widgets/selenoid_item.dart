@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/core/widgets/custom_icon.dart';
+import 'package:pak_tani/src/core/utils/custom_icon.dart';
 import 'package:pak_tani/src/features/relays/domain/models/relay.dart';
 import 'package:pak_tani/src/features/relays/domain/value_objects/relay_type.dart';
 import 'package:pak_tani/src/features/schedule/presentation/widgets/solenoid_widgets/solenoid_status_chip.dart';

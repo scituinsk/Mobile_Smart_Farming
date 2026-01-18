@@ -26,9 +26,6 @@ class ModulList extends StatelessWidget {
           // ✅ Reactive list
           Expanded(
             child: Obx(() {
-              // ✅ Show loading state
-              print("rebuild expanded");
-
               if (controller.isLoadingModul.value) {
                 return Center(
                   child: Column(
@@ -76,7 +73,6 @@ class ModulList extends StatelessWidget {
                   itemCount: controller.devices.length,
                   itemBuilder: (context, index) {
                     final device = controller.devices[index];
-                    print('🔄 Building device $index: ${device.name}');
 
                     return Column(
                       children: [

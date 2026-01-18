@@ -7,7 +7,6 @@ library;
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -146,15 +145,15 @@ class FirebaseCloudMessagingConfig {
       final String androidName = androidInfo.device;
       final String andoridId = androidInfo.id;
 
-      final formData = FormData.fromMap({
+      final Map<String, dynamic> data = {
         "registration_id": tokenFCM,
         "device_id": andoridId,
         "name": androidName,
         "type": "android", // can be "ios", "web", or "android"
         "active": true,
-      });
+      };
 
-      await apiService.post("/devices/", data: formData);
+      await apiService.post("/devices/", data: data);
       storageService.writeBool("is_notification_registered", true);
       print("berhasil mendaftarkan fcm");
     } catch (e) {

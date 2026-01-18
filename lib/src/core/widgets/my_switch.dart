@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// A stateless widget for a custom switch
+/// Wraps a standard Switch with custom theme data to modify appearance.
 class MySwitch extends StatelessWidget {
   final bool value;
   final ValueChanged<bool> onChanged;

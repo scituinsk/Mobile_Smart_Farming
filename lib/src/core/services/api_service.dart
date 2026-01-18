@@ -103,7 +103,6 @@ class ApiService extends GetxService {
             if (accessToken != null && accessToken.isNotEmpty) {
               options.headers['Authorization'] = 'Bearer $accessToken';
               print('✅ Added token to: ${options.path}');
-              print("Access token: $accessToken");
             } else {
               print('❌ No token for: ${options.path}');
 
@@ -174,13 +173,31 @@ class ApiService extends GetxService {
               // Retry original request with new token
               final newAccessToken = await _storage.readSecure('access_token');
               if (newAccessToken != null) {
-                //replace this request header authorization with new access token
-                error.requestOptions.headers['Authorization'] =
-                    'Bearer $newAccessToken';
+                // Create new options to avoid FromData finalization issues
+                final newOptions = error.requestOptions.copyWith(
+                  headers: {
+                    ...error.requestOptions.headers,
+                    'Authorization': 'Bearer $newAccessToken',
+                  },
+                );
 
-                // then retry original request and resolve this request
+                // If data is FormData, recreate it to avoid finalization
+                if (error.requestOptions.data is FormData) {
+                  final originalFormData =
+                      error.requestOptions.data as FormData;
+                  final newFormData = FormData();
+                  for (var entry in originalFormData.fields) {
+                    newFormData.fields.add(entry);
+                  }
+                  for (var file in originalFormData.files) {
+                    newFormData.files.add(file);
+                  }
+                  newOptions.data = newFormData;
+                }
+
+                // Retry with new options
                 try {
-                  final response = await _dio.fetch(error.requestOptions);
+                  final response = await _dio.fetch(newOptions);
                   return handler.resolve(response);
                 } catch (retryError) {
                   print('❌ Retry failed: $retryError');

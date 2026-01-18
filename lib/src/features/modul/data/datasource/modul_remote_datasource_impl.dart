@@ -50,7 +50,7 @@ class ModulRemoteDatasourceImpl implements ModulRemoteDatasource {
   }) async {
     Response response;
     if (imageFile != null) {
-      final formData = FormData.fromMap({
+      final FormData formData = FormData.fromMap({
         if (name != null) 'name': name,
         if (password != null) 'password': password,
         if (description != null) 'descriptions': description,

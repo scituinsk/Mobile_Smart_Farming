@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+/// A utility class for custom snackbars.
+/// Contains static methods to display success and error notifications.
 class MySnackbar {
+  /// Shows a success snackbar with a green background and check icon.
   static void success({
     String title = "Success!",
     required String message,
@@ -21,6 +24,7 @@ class MySnackbar {
     );
   }
 
+  ///Shows an error snackbar with a red background and error icon.
   static void error({String title = "Error!", required String message}) async {
     Get.snackbar(
       title,

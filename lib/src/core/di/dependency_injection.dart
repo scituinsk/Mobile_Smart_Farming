@@ -35,8 +35,6 @@ class DependencyInjection {
       await _initUseCases();
       await _initServices();
       await _initController();
-
-      print('✅ All dependencies initialized successfully!');
     } catch (e) {
       print('❌ Dependency injection failed: $e');
       rethrow;
@@ -46,17 +44,11 @@ class DependencyInjection {
   /// Initialize storage service, api service, and websocket service
   static Future<void> _initCoreServices() async {
     try {
-      print('   - Initializing StorageService...');
       Get.put<StorageService>(StorageService(), permanent: true);
-      print('   ✅ StorageService ready');
 
-      print('   - Initializing ApiService...');
       Get.put<ApiService>(ApiService(), permanent: true);
-      print('   ✅ ApiService ready');
 
-      print('   - Initializing websocket...');
       Get.put<WebSocketService>(WebSocketService(), permanent: true);
-      print('   ✅ wsService ready');
     } catch (e) {
       rethrow;
     }
@@ -65,11 +57,9 @@ class DependencyInjection {
   /// Initialize auth data source
   static Future<void> _initDataSources() async {
     try {
-      print('   - Registering Auth DataSources...');
       Get.lazyPut<AuthRemoteDatasource>(() {
         return AuthRemoteDatasourceImpl();
       }, fenix: true);
-      print('   ✅ Auth DataSources registered');
     } catch (e) {
       rethrow;
     }
@@ -78,13 +68,11 @@ class DependencyInjection {
   /// Initialize auth repository
   static Future<void> _initRepositories() async {
     try {
-      print('   - Registering Repositories...');
       Get.lazyPut<AuthRepository>(() {
         return AuthRepositoryImpl(
           remoteDatasource: Get.find<AuthRemoteDatasource>(),
         );
       }, fenix: true);
-      print('   ✅ Repositories registered');
     } catch (e) {
       rethrow;
     }
@@ -93,7 +81,6 @@ class DependencyInjection {
   /// Initialize login, register, logout, and user use cases.
   static Future<void> _initUseCases() async {
     try {
-      print('   - Registering Use Cases...');
       Get.lazyPut<LoginUseCase>(() => LoginUseCase(Get.find<AuthRepository>()));
       Get.lazyPut<RegisterUseCase>(
         () => RegisterUseCase(Get.find<AuthRepository>()),
@@ -104,7 +91,6 @@ class DependencyInjection {
       Get.lazyPut<GetUserUseCase>(
         () => GetUserUseCase(Get.find<AuthRepository>()),
       );
-      print('   ✅ Use Cases registered');
     } catch (e) {
       rethrow;
     }
@@ -113,17 +99,13 @@ class DependencyInjection {
   /// Initialize auth services
   static Future<void> _initServices() async {
     try {
-      print('   - Initializing AuthService...');
-
       // Use putAsync to ensure proper initialization sequence
       await Get.putAsync<AuthService>(() async {
-        final authService = AuthService();
+        final authService = AuthService(Get.find<WebSocketService>());
         // Wait for AuthService initialization to complete
         await authService.onInit();
         return authService;
       }, permanent: true);
-
-      print('   ✅ AuthService ready');
     } catch (e) {
       rethrow;
     }
@@ -132,9 +114,7 @@ class DependencyInjection {
   /// initialize auth controller
   static Future<void> _initController() async {
     try {
-      print('   - Registering Presentation Controllers...');
       Get.lazyPut<AuthController>(() => AuthController(), fenix: true);
-      print('   ✅ Presentation Controllers registered');
     } catch (e) {
       rethrow;
     }

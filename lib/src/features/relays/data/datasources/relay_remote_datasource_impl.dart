@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:get/get.dart' hide Response, FormData;
+import 'package:get/get.dart' hide Response;
 import 'package:pak_tani/src/core/services/api_service.dart';
 import 'package:pak_tani/src/features/relays/data/models/group_relay_model.dart';
 import 'package:pak_tani/src/features/relays/data/models/relay_model.dart';
@@ -32,17 +32,17 @@ class RelayRemoteDatasourceImpl implements RelayRemoteDatasource {
   }) async {
     Response response;
 
-    final FormData formData = FormData.fromMap({
+    final Map<String, dynamic> data = {
       if (name != null) "name": name,
       if (descriptions != null) "descriptions": descriptions,
       if (type != null) "type": type,
       if (status != null) "status": status,
       if (groupId != null) "group": groupId,
-    });
+    };
 
     response = await _apiService.patch(
       "/iot/device/$serialId/pin/$pin/",
-      data: formData,
+      data: data,
     );
 
     final responseData = response.data["data"] as Map<String, dynamic>;

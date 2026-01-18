@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
-import 'package:pak_tani/src/core/widgets/my_snackbar.dart';
+import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
 import 'package:pak_tani/src/features/auth/domain/entities/user.dart';
 
