@@ -6,6 +6,7 @@ import 'package:pak_tani/src/features/history/domain/entities/schedule_history.d
 class History extends Equatable {
   final int id;
   final int modulId;
+  final int? scheduleGroupId;
   final HistoryType? historyType;
   final String? name;
   final TimeOfDay? alarmTime;
@@ -16,6 +17,7 @@ class History extends Equatable {
   const History({
     required this.id,
     required this.modulId,
+    this.scheduleGroupId,
     this.historyType,
     this.name,
     this.alarmTime,

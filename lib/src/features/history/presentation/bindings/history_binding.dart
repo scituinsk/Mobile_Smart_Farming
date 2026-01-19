@@ -6,6 +6,7 @@ import 'package:pak_tani/src/features/history/data/repositories/history_reposito
 import 'package:pak_tani/src/features/history/domain/datasources/history_remote_datasource.dart';
 import 'package:pak_tani/src/features/history/domain/repositories/history_repository.dart';
 import 'package:pak_tani/src/features/history/presentation/controllers/history_controller.dart';
+import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 
 class HistoryBinding extends Bindings {
   @override
@@ -27,7 +28,10 @@ class HistoryBinding extends Bindings {
     );
 
     Get.lazyPut<HistoryController>(
-      () => HistoryController(Get.find<HistoryService>()),
+      () => HistoryController(
+        Get.find<HistoryService>(),
+        Get.find<ModulService>(),
+      ),
       fenix: true,
     );
 

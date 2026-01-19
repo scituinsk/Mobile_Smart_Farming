@@ -8,6 +8,7 @@ class HistoryModel extends History {
   const HistoryModel({
     required super.id,
     required super.modulId,
+    super.scheduleGroupId,
     super.historyType,
     super.name,
     super.alarmTime,
@@ -21,6 +22,7 @@ class HistoryModel extends History {
     return HistoryModel(
       id: json["id"],
       modulId: json["module"],
+      scheduleGroupId: json["schedule"],
       historyType: HistoryType.fromJson(
         json["type"],
         defaultValue: HistoryType.modul,
@@ -49,6 +51,7 @@ class HistoryModel extends History {
     return HistoryModel(
       id: history.id,
       modulId: history.modulId,
+      scheduleGroupId: history.scheduleGroupId,
       alarmTime: history.alarmTime,
       name: history.name,
       historyType: history.historyType,
@@ -63,6 +66,7 @@ class HistoryModel extends History {
     return History(
       id: id,
       modulId: modulId,
+      scheduleGroupId: scheduleGroupId,
       alarmTime: alarmTime,
       name: name,
       historyType: historyType,
