@@ -4,11 +4,13 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/config/app_config.dart';
+import 'package:pak_tani/src/core/controllers/main_navigation_controller.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/utils/custom_dialog.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_filled_button.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
+import 'package:pak_tani/src/features/history/presentation/controllers/history_controller.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_detail_ui_controller.dart';
 
 class MenuItem {
@@ -372,7 +374,12 @@ abstract class ModulDetailDropdownMenuItems {
         );
         break;
       case ModulDetailDropdownMenuItems.modulLogs:
-        print("belum ada apa-apa");
+        final mainNavController = Get.find<MainNavigationController>();
+        final historyController = Get.find<HistoryController>();
+
+        historyController.modulIdArg = controller.modul.value;
+        mainNavController.navigateToHistory();
+        Get.back();
     }
   }
 }

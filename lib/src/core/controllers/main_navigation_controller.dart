@@ -10,7 +10,9 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/config/firebase_cloud_messaging_config.dart';
 import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
 import 'package:pak_tani/src/features/history/application/services/history_service.dart';
+import 'package:pak_tani/src/features/history/domain/value_objects/history_type.dart';
 import 'package:pak_tani/src/features/history/presentation/bindings/history_binding.dart';
+import 'package:pak_tani/src/features/history/presentation/controllers/history_controller.dart';
 import 'package:pak_tani/src/features/history/presentation/screens/history_screen.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 import 'package:pak_tani/src/features/modul/presentation/bindings/modul_binding.dart';
@@ -222,7 +224,7 @@ class MainNavigationController extends GetxController
   }
 
   /// Loads lifecycle for the visited tab.
-  void _loadTabLifeCycle(int index) {
+  void _loadTabLifeCycle(int index) async {
     switch (index) {
       case 0:
         final modulService = Get.find<ModulService>();
@@ -230,7 +232,19 @@ class MainNavigationController extends GetxController
         break;
       case 1:
         final historyService = Get.find<HistoryService>();
-        historyService.loadAllHistories();
+        final historyController = Get.find<HistoryController>();
+        await historyService.loadAllHistories();
+
+        if (historyController.modulIdArg != null) {
+          historyController.selectedFilterHistoryTypes.addAll([
+            HistoryType.modul,
+            HistoryType.schedule,
+          ]);
+          historyController.selectedFilterModuls.add(
+            historyController.modulIdArg!,
+          );
+          historyController.applyFilter();
+        }
         break;
     }
   }

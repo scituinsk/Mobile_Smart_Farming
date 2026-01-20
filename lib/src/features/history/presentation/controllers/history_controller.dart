@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/utils/my_snackbar.dart';
@@ -22,13 +24,15 @@ class HistoryController extends GetxController {
   RxList<Map<String, dynamic>> get allScheduleGroups =>
       historyService.allGroupSchedule;
   RxList<Modul> get moduls => modulService.moduls;
+  RxList<Map<String, dynamic>> selectedModulGorups =
+      <Map<String, dynamic>>[].obs;
 
   //controller for sorting
   RxBool isAscending = true.obs;
-  RxBool isDescending = false.obs;
 
   /// list of group Ids that is selected
-  RxList<int> selectedFilterScheduleGroups = <int>[].obs;
+  RxList<Map<String, dynamic>> selectedFilterScheduleGroups =
+      <Map<String, dynamic>>[].obs;
 
   /// list of moduls that is selected
   RxList<Modul> selectedFilterModuls = <Modul>[].obs;
@@ -48,10 +52,40 @@ class HistoryController extends GetxController {
   ///controller for checkbox modul filter
   RxBool isModulSelectedAll = false.obs;
 
+  /// Loading state for showing loading indicator
+  RxBool get isLoading => historyService.isLoading;
+
+  final RxString searchText = "".obs;
+  late TextEditingController searchTextController;
+  late FocusNode searchFocus;
+  final RxBool isSearchFocused = false.obs;
+
+  Timer? debounce;
+
+  Modul? modulIdArg;
+
+  @override
+  void onInit() {
+    super.onInit();
+    searchTextController = TextEditingController();
+    searchFocus = FocusNode();
+    searchFocus.addListener(() {
+      isSearchFocused.value = searchFocus.hasFocus;
+    });
+  }
+
+  @override
+  void onClose() {
+    debounce?.cancel();
+    searchFocus.dispose();
+    searchTextController.dispose();
+    super.onClose();
+  }
+
   /// Function for check is there [id] in [selectedFilterScheduleGroups].
   /// Return [bool] for scheduleGroup filter toogle.
   bool isScheduleGroupSelected(int id) =>
-      selectedFilterScheduleGroups.contains(id);
+      selectedFilterScheduleGroups.any((group) => group["id"] == id);
 
   /// Function for check is there modul with [id] in [selectedFilterModuls].
   /// Return [bool] for modul filter toogle.
@@ -63,18 +97,23 @@ class HistoryController extends GetxController {
   bool isHistoryTypeSelected(HistoryType historyType) =>
       selectedFilterHistoryTypes.contains(historyType);
 
-  /// Loading state for showing loading indicator
-  RxBool get isLoading => historyService.isLoading;
-
   /// Refresh all history.
   /// Calling [loadAllHistory] function from [HistoryService].
   Future<void> refreshHistoryList() async {
     try {
       await historyService.loadAllHistories(refresh: true);
+      applyFilter();
     } catch (e) {
       print("error: $e");
       MySnackbar.error(message: e.toString());
     }
+  }
+
+  void filterSelectedModulGroups() {
+    final modulIds = selectedFilterModuls.map((m) => m.id).toList();
+    selectedModulGorups.value = allScheduleGroups
+        .where((group) => modulIds.contains(group["modulId"].toString()))
+        .toList();
   }
 
   /// Function for toogle select all modul filter check box.
@@ -86,8 +125,10 @@ class HistoryController extends GetxController {
       isModulSelectedAll.value = value;
     } else {
       selectedFilterModuls.clear();
+      selectedFilterScheduleGroups.clear();
       isModulSelectedAll.value = value;
     }
+    filterSelectedModulGroups();
   }
 
   /// Function for toogle select all schedule group filter check box.
@@ -95,9 +136,7 @@ class HistoryController extends GetxController {
     if (value == null) return;
     if (value) {
       selectedFilterScheduleGroups.clear();
-      selectedFilterScheduleGroups.assignAll(
-        allScheduleGroups.map((element) => element["id"]),
-      );
+      selectedFilterScheduleGroups.assignAll(selectedModulGorups);
       isScheduleGroupSelectedAll.value = value;
     } else {
       selectedFilterScheduleGroups.clear();
@@ -112,9 +151,23 @@ class HistoryController extends GetxController {
   void selectModulFilter(Modul selectedModul) {
     if (selectedFilterModuls.contains(selectedModul)) {
       selectedFilterModuls.remove(selectedModul);
+      selectedFilterScheduleGroups.removeWhere(
+        (group) => selectedModul.id == group["modulId"].toString(),
+      );
     } else {
       selectedFilterModuls.add(selectedModul);
     }
+    filterSelectedModulGroups();
+    isModulSelectedAll.value =
+        selectedFilterModuls.length == moduls.length &&
+        selectedFilterModuls.every((modul) => moduls.contains(modul));
+
+    isScheduleGroupSelectedAll.value =
+        selectedFilterScheduleGroups.length == selectedModulGorups.length &&
+        selectedFilterScheduleGroups.every(
+          (group) => selectedModulGorups.contains(group),
+        ) &&
+        selectedModulGorups.isNotEmpty;
   }
 
   /// Function for toogle schedule group filter.
@@ -122,11 +175,22 @@ class HistoryController extends GetxController {
   /// add [id] to [selectedFilterScheduleGroups] when there's no [id] in [selectedFilterScheduleGroups]
   /// and remove [id] from [selectedFilterScheduleGroups] when there's [id] in [selectedFilterScheduleGroups]
   void selectScheduleGroupFilter(int id) {
-    if (selectedFilterScheduleGroups.contains(id)) {
-      selectedFilterScheduleGroups.remove(id);
+    final isSelected = selectedFilterScheduleGroups.any(
+      (group) => group["id"] == id,
+    );
+    if (isSelected) {
+      selectedFilterScheduleGroups.removeWhere((group) => group["id"] == id);
     } else {
-      selectedFilterScheduleGroups.add(id);
+      final group = allScheduleGroups.firstWhere((group) => group["id"] == id);
+      if (group.isNotEmpty) {
+        selectedFilterScheduleGroups.add(group);
+      }
     }
+    isScheduleGroupSelectedAll.value =
+        selectedFilterScheduleGroups.length == selectedModulGorups.length &&
+        selectedFilterScheduleGroups.every(
+          (group) => selectedModulGorups.contains(group),
+        );
   }
 
   /// Function for toogle historyType modul filter check box.
@@ -139,6 +203,11 @@ class HistoryController extends GetxController {
       selectedFilterHistoryTypes.add(HistoryType.modul);
     } else {
       selectedFilterHistoryTypes.remove(HistoryType.modul);
+      if (selectedFilterHistoryTypes.isEmpty) {
+        selectedFilterModuls.clear();
+        isScheduleGroupSelectedAll.value = false;
+        isModulSelectedAll.value = false;
+      }
     }
   }
 
@@ -152,6 +221,13 @@ class HistoryController extends GetxController {
       selectedFilterHistoryTypes.add(HistoryType.schedule);
     } else {
       selectedFilterHistoryTypes.remove(HistoryType.schedule);
+      selectedFilterScheduleGroups.clear();
+      clearDatePicker();
+      if (selectedFilterHistoryTypes.isEmpty) {
+        selectedFilterModuls.clear();
+        isModulSelectedAll.value = false;
+      }
+      isScheduleGroupSelectedAll.value = false;
     }
   }
 
@@ -209,5 +285,56 @@ class HistoryController extends GetxController {
   void clearDatePicker() {
     pickedStartDate.value = null;
     pickedEndDate.value = null;
+  }
+
+  void resetFilter() {
+    selectedFilterModuls.clear();
+    selectedFilterScheduleGroups.clear();
+    selectedFilterHistoryTypes.clear();
+
+    isScheduleGroupSelectedAll.value = false;
+    isModulSelectedAll.value = false;
+    clearDatePicker();
+  }
+
+  void applyFilter() {
+    historyService.filterHistories(
+      selectedFilterModuls.map((element) => element.id).toList(),
+      selectedFilterScheduleGroups.map((group) => group["id"] as int).toList(),
+      selectedFilterHistoryTypes,
+      pickedStartDate.value,
+      pickedEndDate.value,
+    );
+
+    if (isAscending.value) {
+      historyService.sortHistoriesAsc();
+    } else {
+      historyService.sortHistoriesDesc();
+    }
+    Get.back();
+  }
+
+  void sortingHistories(bool? value) {
+    if (value == null) return;
+    isAscending.value = value;
+    if (value) {
+      historyService.sortHistoriesAsc();
+    } else {
+      historyService.sortHistoriesDesc();
+    }
+  }
+
+  void onHistorySerach() {
+    if (debounce?.isActive ?? false) debounce!.cancel();
+    debounce = Timer(const Duration(milliseconds: 300), () {
+      historyService.searchHistories(searchText.value);
+    });
+  }
+
+  void clearSearch() {
+    searchText.value = "";
+    searchTextController.clear();
+    historyService.searchHistories(searchText.value);
+    searchFocus.unfocus();
   }
 }

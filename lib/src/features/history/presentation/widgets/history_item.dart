@@ -26,7 +26,6 @@ class _HistoryItemState extends State<HistoryItem> {
   late bool isExpandable;
   late ModulController modulController;
   late String modulName;
-  late String createdAt;
 
   @override
   void initState() {
@@ -39,8 +38,6 @@ class _HistoryItemState extends State<HistoryItem> {
     modulName = modulController.devices
         .firstWhere((modul) => modul.id == widget.history.modulId.toString())
         .name;
-    createdAt =
-        "${widget.history.createdAt.day}/${widget.history.createdAt.month}/${widget.history.createdAt.year}";
   }
 
   void _toggle() {
@@ -64,6 +61,8 @@ class _HistoryItemState extends State<HistoryItem> {
       pins.putIfAbsent(key, () => []).add(schedule.pinName);
       times.putIfAbsent(key, () => {"start": start, "end": end});
     }
+    final createdAt =
+        "${widget.history.createdAt.day}/${widget.history.createdAt.month}/${widget.history.createdAt.year}";
 
     final List<Map<String, dynamic>> groupedSchedules = pins.entries.map((e) {
       final key = e.key;

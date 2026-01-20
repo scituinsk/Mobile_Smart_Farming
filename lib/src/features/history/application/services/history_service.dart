@@ -66,6 +66,7 @@ class HistoryService extends GetxService {
             uniqueIds.add(history.scheduleGroupId!);
             allGroupSchedule.add({
               "id": history.scheduleGroupId,
+              "modulId": history.modulId,
               "name": history.name,
             });
           }
@@ -173,46 +174,100 @@ class HistoryService extends GetxService {
 
   /// Applies combined filters for modul IDs, schedule IDs, history types, and created date range to filteredHistories.
   ///
+  /// New rules:
+  /// - If historyTypes has 2 types (modul and schedule), split histories into modul and schedule groups.
+  /// - If historyTypes has 1 type, use only histories of that type.
+  /// - If historyTypes is null or empty, split all histories into modul and schedule groups.
+  /// - Filter modul and schedule groups by modulIds (if provided).
+  /// - For schedule groups, apply additional filters by scheduleIds, startDate, and endDate.
+  /// - Combine the filtered groups and assign to filteredHistories.
+  ///
   /// [modulIds] List of modul IDs to filter by. If null or empty, no modul filtering is applied.
   /// [scheduleIds] List of schedule group IDs to filter by. If null or empty, no schedule filtering is applied.
-  /// [historyTypes] List of HistoryType to filter by. If null or empty, no type filtering is applied.
-  /// [startDate] Start date for createdAt filter (inclusive). If null, no lower bound.
-  /// [endDate] End date for createdAt filter (inclusive). If null, no upper bound.
+  /// [historyTypes] List of HistoryType to determine which types to process. If null/empty, process all.
+  /// [startDate] Start date for createdAt filter (inclusive, applied only to schedule histories). If null, no lower bound.
+  /// [endDate] End date for createdAt filter (inclusive, applied only to schedule histories). If null, no upper bound.
   void filterHistories(
-    List<int>? modulIds,
+    List<String>? modulIds,
     List<int>? scheduleIds,
     List<HistoryType>? historyTypes,
     DateTime? startDate,
     DateTime? endDate,
   ) {
     try {
-      filteredHistories.assignAll(
-        histories.where((history) {
-          bool matchModul =
-              modulIds == null ||
-              modulIds.isEmpty ||
-              modulIds.contains(history.modulId);
-          bool matchSchedule =
-              scheduleIds == null ||
-              scheduleIds.isEmpty ||
-              (history.scheduleGroupId != null &&
-                  scheduleIds.contains(history.scheduleGroupId));
-          bool matchType =
-              historyTypes == null ||
-              historyTypes.isEmpty ||
-              historyTypes.contains(history.historyType);
-          bool matchDate = true;
-          if (startDate != null || endDate != null) {
-            bool afterStart =
-                startDate == null ||
-                history.createdAt.compareTo(startDate) >= 0;
-            bool beforeEnd =
-                endDate == null || history.createdAt.compareTo(endDate) <= 0;
-            matchDate = afterStart && beforeEnd;
-          }
-          return matchModul && matchSchedule && matchType && matchDate;
-        }),
-      );
+      List<History> modulHistories = [];
+      List<History> scheduleHistories = [];
+
+      if (historyTypes == null || historyTypes.isEmpty) {
+        // Jika historyTypes null/empty, pisahkan semua histories menjadi modul dan schedule
+        modulHistories = histories
+            .where((h) => h.historyType == HistoryType.modul)
+            .toList();
+        scheduleHistories = histories
+            .where((h) => h.historyType == HistoryType.schedule)
+            .toList();
+      } else if (historyTypes.length == 1) {
+        // Jika hanya satu tipe, gunakan hanya histories dengan tipe itu
+        if (historyTypes.contains(HistoryType.modul)) {
+          modulHistories = histories
+              .where((h) => h.historyType == HistoryType.modul)
+              .toList();
+        } else if (historyTypes.contains(HistoryType.schedule)) {
+          scheduleHistories = histories
+              .where((h) => h.historyType == HistoryType.schedule)
+              .toList();
+        }
+      } else if (historyTypes.length >= 2) {
+        // Jika ada 2 tipe atau lebih, pisahkan menjadi modul dan schedule
+        modulHistories = histories
+            .where((h) => h.historyType == HistoryType.modul)
+            .toList();
+        scheduleHistories = histories
+            .where((h) => h.historyType == HistoryType.schedule)
+            .toList();
+      }
+
+      // Filter modulHistories dengan modulIds
+      List<History> filteredModul = modulHistories;
+      if (modulIds != null && modulIds.isNotEmpty) {
+        filteredModul = modulHistories
+            .where((h) => modulIds.contains(h.modulId.toString()))
+            .toList();
+      }
+
+      // Filter scheduleHistories dengan modulIds
+      List<History> filteredSchedule = scheduleHistories;
+      if (modulIds != null && modulIds.isNotEmpty) {
+        filteredSchedule = scheduleHistories
+            .where((h) => modulIds.contains(h.modulId.toString()))
+            .toList();
+      }
+
+      // Filter scheduleHistories tambahan dengan scheduleIds
+      if (scheduleIds != null && scheduleIds.isNotEmpty) {
+        filteredSchedule = filteredSchedule
+            .where(
+              (h) =>
+                  h.scheduleGroupId != null &&
+                  scheduleIds.contains(h.scheduleGroupId),
+            )
+            .toList();
+      }
+
+      // Filter scheduleHistories dengan startDate dan endDate
+      if (startDate != null || endDate != null) {
+        filteredSchedule = filteredSchedule.where((h) {
+          bool afterStart =
+              startDate == null || h.createdAt.compareTo(startDate) >= 0;
+          bool beforeEnd =
+              endDate == null || h.createdAt.compareTo(endDate) <= 0;
+          return afterStart && beforeEnd;
+        }).toList();
+      }
+
+      // Gabungkan hasil filter dan assign ke filteredHistories
+      final combined = [...filteredModul, ...filteredSchedule];
+      filteredHistories.assignAll(combined);
     } catch (e) {
       print("error applying combined filters: $e");
     }
