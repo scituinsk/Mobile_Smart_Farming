@@ -35,7 +35,7 @@ class ScheduleScreen extends StatelessWidget {
           children: [
             Text(controller.selectedRelayGroup.value!.name, style: AppTheme.h3),
             Text(
-              "Atur penjadwalan group",
+              "Atur penjadwalan grup",
               style: AppTheme.textSmall.copyWith(
                 color: AppTheme.titleSecondary,
               ),

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:get/get.dart';
-import 'package:pak_tani/src/core/widgets/my_snackbar.dart';
+import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/domain/repositories/modul_repository.dart';
 
@@ -13,13 +13,6 @@ class ModulService extends GetxService {
 
   final RxList<Modul> moduls = <Modul>[].obs;
   final Rx<Modul?> selectedModul = Rx<Modul?>(null);
-
-  @override
-  void onInit() {
-    // TODO: implement onInit
-    super.onInit();
-    loadModuls();
-  }
 
   Future<void> loadModuls({bool refresh = false}) async {
     if (refresh) {

@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+/// An abstract final class containing app-wide theme constants.
+/// This class cannot be instantiated and serves as a namespace of colors, text styles, and theme configuration.
 abstract final class AppTheme {
+  // main color for UI
   static const primaryColor = Color(0xff326765);
   static const secondaryColor = Color(0xff3288C6);
   static const ternaryColor = Color(0xff97008B);
@@ -10,27 +13,26 @@ abstract final class AppTheme {
   static const errorColor = Color(0xffC70000);
   // static const sucessColor = Color(0xff298267);
   // static const defaultColor = Color(0xffE8E9F1);
+
+  // gray color for gray text based on UI design team
   static const onDefaultColor = Color(0xff7C7C7C);
   static const surfaceActive = Color(0xffC2C4C6);
   static const surfaceDarker = Color(0xff555656);
   static const surfaceHover = Color(0xffDBDDDE);
 
-  // static const iconColor = Color(0xff2897FF);
-
+  // main text color
   static const textColor = Color(0xff000000);
   static const titleSecondary = Color(0xff7C7C7C);
-  // static const defaultTextColor = Color(0xff8F9098);
 
+  // color for custom icon
   static const solenoidColor = Color(0xffFFAAF8);
   static const waterPumpColor = Color(0xff9AD16D);
-
   static const humidityColor = Color(0xff158694);
   static const temperatureColor = Color(0xffBD0D00);
   static const waterLevelColor = Color(0xff0055A5);
 
   static final h5 = TextStyle(
     color: textColor,
-
     fontSize: 14.sp,
     fontWeight: FontWeight.w600,
   );
@@ -129,6 +131,8 @@ abstract final class AppTheme {
     fontWeight: FontWeight.w600,
   );
 
+  /// Light theme data for the app, using Rubik font and custom color scheme.
+  /// This theme applies Material Design with the defined colors and integrates google fonts.
   static ThemeData light = ThemeData(
     // useMaterial3: true,
     textTheme: GoogleFonts.rubikTextTheme(),

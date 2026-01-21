@@ -4,8 +4,9 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/config/app_config.dart';
+import 'package:pak_tani/src/core/controllers/main_navigation_controller.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/core/widgets/custom_dialog.dart';
+import 'package:pak_tani/src/core/utils/custom_dialog.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_filled_button.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
@@ -140,14 +141,14 @@ abstract class ModulDetailDropdownMenuItems {
                     title: "Nama Modul",
                     validator: controller.validateName,
                     controller: controller.modulNameC,
-                    hint: "Ex: Green House A",
+                    hint: "Ex: Greenhouse A",
                     borderRadius: 10,
                   ),
                   MyTextField(
                     fieldWidth: double.infinity,
                     title: "Deskripsi Modul",
                     controller: controller.modulDescriptionC,
-                    hint: "Ex: Green house timur",
+                    hint: "Ex: Greenhouse timur",
                     borderRadius: 10,
                     validator: controller.validateDescription,
                   ),
@@ -372,7 +373,11 @@ abstract class ModulDetailDropdownMenuItems {
         );
         break;
       case ModulDetailDropdownMenuItems.modulLogs:
-        print("belum ada apa-apa");
+        Get.back();
+
+        final mainNavController = Get.find<MainNavigationController>();
+        mainNavController.modulIdArg = controller.modul.value;
+        mainNavController.navigateToHistory();
     }
   }
 }

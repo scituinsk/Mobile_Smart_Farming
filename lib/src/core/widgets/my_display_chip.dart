@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+/// A stateless widget for a custom display chip.
+/// Display a text or widget with a filled background, optionally clickable.
 class MyDisplayChip extends StatelessWidget {
   final Color backgroundColor;
   final double paddingVertical;
@@ -9,6 +11,7 @@ class MyDisplayChip extends StatelessWidget {
   final VoidCallback? onPressed;
   final double? borderWidth;
   final Color? borderColor;
+  final double borderRadius;
 
   const MyDisplayChip({
     super.key,
@@ -19,6 +22,7 @@ class MyDisplayChip extends StatelessWidget {
     this.onPressed,
     this.borderWidth,
     this.borderColor,
+    this.borderRadius = 99,
   });
 
   @override
@@ -27,7 +31,7 @@ class MyDisplayChip extends StatelessWidget {
         ? Container(
             decoration: BoxDecoration(
               color: backgroundColor,
-              borderRadius: BorderRadius.circular(99.r),
+              borderRadius: BorderRadius.circular(borderRadius.r),
               border: BoxBorder.all(
                 color: borderColor ?? Colors.white,
                 width: borderWidth?.r ?? 0,
@@ -41,11 +45,11 @@ class MyDisplayChip extends StatelessWidget {
           )
         : InkWell(
             onTap: onPressed,
-            borderRadius: BorderRadius.circular(99.r),
+            borderRadius: BorderRadius.circular(borderRadius.r),
             child: Container(
               decoration: BoxDecoration(
                 color: backgroundColor,
-                borderRadius: BorderRadius.circular(99.r),
+                borderRadius: BorderRadius.circular(borderRadius.r),
                 border: BoxBorder.all(
                   color: borderColor ?? Colors.white,
                   width: borderWidth?.r ?? 0,

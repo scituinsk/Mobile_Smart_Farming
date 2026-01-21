@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/core/widgets/custom_icon.dart';
+import 'package:pak_tani/src/core/utils/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
 
 class ModulDetailFeatureItem extends StatelessWidget {

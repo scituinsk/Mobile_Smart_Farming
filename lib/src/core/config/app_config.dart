@@ -1,5 +1,12 @@
+/// Configuration class for environtment variables (ENV).
+/// Provides centralized access to app settings loaded from .env file.
+/// Uses flutter_dotenv to retrive values safely.
+
+library;
+
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+/// Configuration class for app environtment settings.
 class AppConfig {
   static String get baseUrl => dotenv.env['BASE_URL']!;
   static String get apiBaseUrl => dotenv.env['API_BASE_URL']!;

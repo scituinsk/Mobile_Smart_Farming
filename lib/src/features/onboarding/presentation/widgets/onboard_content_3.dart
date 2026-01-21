@@ -42,7 +42,7 @@ class OnboardContent3 extends StatelessWidget {
             height: 50.h,
             padding: EdgeInsets.symmetric(horizontal: 30.w),
             child: FilledButton(
-              onPressed: () => Get.offAllNamed(RouteNamed.loginPage),
+              onPressed: () => Get.offAllNamed(RouteNames.loginPage),
               child: Text("Mulai Aplikasi"),
             ),
           ),

@@ -1,7 +1,14 @@
+/// A stateful widget that displays an expandable button with animaion.
+/// The button toggles between expanded and collapsed stetes, rotating an arrow icon on tap.
+
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 
+/// A stateful widget for an expandable button
+/// Toggles expandison state on tap, with an animated rotating arrow icon.
 class ExpandableButton extends StatefulWidget {
   final Color backgroundColor;
   final Color foregroundColor;
@@ -9,6 +16,8 @@ class ExpandableButton extends StatefulWidget {
   final double width;
   final Widget child;
 
+  /// Callback function called when the expansion state changes.
+  /// Recives a boolean indicating if the button is expanded.
   final Function(bool isExpanded)? onExpandChanged;
 
   const ExpandableButton({

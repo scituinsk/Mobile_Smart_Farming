@@ -1,3 +1,8 @@
+/// Dependency injection for app initialization.
+/// Put all permanent and starter controllers, services, and datasources.
+
+library;
+
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/services/api_service.dart';
 import 'package:pak_tani/src/core/services/connectivity_service.dart';
@@ -14,48 +19,68 @@ import 'package:pak_tani/src/features/auth/domain/datasources/auth_remote_dataso
 import 'package:pak_tani/src/features/auth/domain/repositories/auth_repository.dart';
 import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
 
+/// Dependency class for dependency injection.
 class DependencyInjection {
+  /// Initializes services, controllers, and datasources.
+  /// This includes core service, datasources, repositories, use cases, business service, and presentation controllers.
   static Future<void> init() async {
     print('🔄 Starting dependency injection...');
 
     try {
       Get.put(ConnectivityService(), permanent: true);
 
-      // ===== LAYER 1: CORE SERVICES =====
-      print('   - Initializing StorageService...');
-      final storageService = StorageService();
-      await storageService.onInit();
-      Get.put<StorageService>(storageService, permanent: true);
-      print('   ✅ StorageService ready');
+      await _initCoreServices();
+      await _initDataSources();
+      await _initRepositories();
+      await _initUseCases();
+      await _initServices();
+      await _initController();
+    } catch (e) {
+      print('❌ Dependency injection failed: $e');
+      rethrow;
+    }
+  }
 
-      print('   - Initializing ApiService...');
-      final apiService = ApiService();
-      await apiService.onInit();
-      Get.put<ApiService>(apiService, permanent: true);
-      print('   ✅ ApiService ready');
+  /// Initialize storage service, api service, and websocket service
+  static Future<void> _initCoreServices() async {
+    try {
+      Get.put<StorageService>(StorageService(), permanent: true);
 
-      print('   - Initializing websocket...');
+      Get.put<ApiService>(ApiService(), permanent: true);
+
       Get.put<WebSocketService>(WebSocketService(), permanent: true);
-      print('   ✅ wsService ready');
+    } catch (e) {
+      rethrow;
+    }
+  }
 
-      // ===== LAYER 2: DATA SOURCES =====
-      print('   - Registering Auth DataSources...');
+  /// Initialize auth data source
+  static Future<void> _initDataSources() async {
+    try {
       Get.lazyPut<AuthRemoteDatasource>(() {
         return AuthRemoteDatasourceImpl();
       }, fenix: true);
-      print('   ✅ Auth DataSources registered');
+    } catch (e) {
+      rethrow;
+    }
+  }
 
-      // ===== LAYER 3: REPOSITORIES =====
-      print('   - Registering Repositories...');
+  /// Initialize auth repository
+  static Future<void> _initRepositories() async {
+    try {
       Get.lazyPut<AuthRepository>(() {
         return AuthRepositoryImpl(
           remoteDatasource: Get.find<AuthRemoteDatasource>(),
         );
       }, fenix: true);
-      print('   ✅ Repositories registered');
+    } catch (e) {
+      rethrow;
+    }
+  }
 
-      // ===== LAYER 4: USE CASES =====
-      print('   - Registering Use Cases...');
+  /// Initialize login, register, logout, and user use cases.
+  static Future<void> _initUseCases() async {
+    try {
       Get.lazyPut<LoginUseCase>(() => LoginUseCase(Get.find<AuthRepository>()));
       Get.lazyPut<RegisterUseCase>(
         () => RegisterUseCase(Get.find<AuthRepository>()),
@@ -66,67 +91,32 @@ class DependencyInjection {
       Get.lazyPut<GetUserUseCase>(
         () => GetUserUseCase(Get.find<AuthRepository>()),
       );
-      print('   ✅ Use Cases registered');
-
-      // ===== LAYER 5: BUSINESS SERVICES =====
-      print('   - Initializing AuthService...');
-
-      // ✅ Use putAsync to ensure proper initialization sequence
-      await Get.putAsync<AuthService>(() async {
-        final authService = AuthService();
-        // ✅ Wait for AuthService initialization to complete
-        await authService.onInit();
-        return authService;
-      }, permanent: true);
-
-      print('   ✅ AuthService ready');
-
-      // ===== LAYER 6: PRESENTATION CONTROLLERS =====
-      print('   - Registering Presentation Controllers...');
-      Get.lazyPut<AuthController>(() => AuthController(), fenix: true);
-      print('   ✅ Presentation Controllers registered');
-
-      print('✅ All dependencies initialized successfully!');
-
-      Get.put(WebSocketService(), permanent: true);
     } catch (e) {
-      print('❌ Dependency injection failed: $e');
       rethrow;
     }
   }
 
-  static bool get isReady {
+  /// Initialize auth services
+  static Future<void> _initServices() async {
     try {
-      // ✅ Check core dependencies
-      Get.find<StorageService>();
-      Get.find<ApiService>();
-
-      // ✅ Check if AuthService exists and is ready
-      if (!Get.isRegistered<AuthService>()) {
-        print('⏳ AuthService not registered yet');
-        return false;
-      }
-
-      final authService = Get.find<AuthService>();
-
-      // ✅ Check if AuthService is still initializing
-      if (authService.isLoading.value) {
-        print('⏳ AuthService still initializing...');
-        return false;
-      }
-
-      // ✅ Check if AuthService initialization is complete
-      if (!authService.isReady) {
-        print('⏳ AuthService not ready yet');
-        return false;
-      }
-
-      return true;
+      // Use putAsync to ensure proper initialization sequence
+      await Get.putAsync<AuthService>(() async {
+        final authService = AuthService(Get.find<WebSocketService>());
+        // Wait for AuthService initialization to complete
+        await authService.onInit();
+        return authService;
+      }, permanent: true);
     } catch (e) {
-      print('❌ Dependency check failed: $e');
-      return false;
+      rethrow;
     }
   }
 
-  //
+  /// initialize auth controller
+  static Future<void> _initController() async {
+    try {
+      Get.lazyPut<AuthController>(() => AuthController(), fenix: true);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

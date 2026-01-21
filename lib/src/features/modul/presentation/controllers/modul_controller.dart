@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:pak_tani/src/core/widgets/my_snackbar.dart';
+import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 

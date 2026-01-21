@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/core/widgets/custom_icon.dart';
+import 'package:pak_tani/src/core/utils/custom_icon.dart';
 
+/// A stateless widget for a custom Icon with filled background.
+/// Display icon with a filled background, customable color, size, border radius, padding, icon or MyCustomIcon, and optionally clickable.
 class MyIcon extends StatelessWidget {
   final IconData icon;
   final Color iconColor;
@@ -11,7 +13,7 @@ class MyIcon extends StatelessWidget {
   final Color backgroundColor;
   final double padding;
   final MyCustomIcon? customIcon;
-  final VoidCallback? onPressed; // Tambahkan opsi onPressed
+  final VoidCallback? onPressed;
   final double borderRadius;
 
   const MyIcon({
@@ -30,11 +32,6 @@ class MyIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget iconChild = customIcon != null
-        // ? SvgPicture.asset(
-        //     iconAssets(customIcon!),
-        //     height: iconSize,
-        //     width: iconSize,
-        //   )
         ? CustomIcon(type: customIcon!, size: iconSize, color: iconColor)
         : Icon(icon, color: iconColor, size: iconSize.r, weight: iconWeight.r);
 

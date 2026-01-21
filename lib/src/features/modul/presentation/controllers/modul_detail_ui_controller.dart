@@ -6,10 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pak_tani/src/core/services/device_ws_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/services/web_socket_service.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/core/widgets/my_snackbar.dart';
+import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 import 'package:pak_tani/src/features/relays/application/services/relay_service.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/feature_data.dart';
@@ -34,7 +35,7 @@ class ModulDetailUiController extends GetxController {
 
   late String modulId;
 
-  final ws = Rxn<DeviceWsHandle>();
+  final ws = Rxn<DeviceWsService>();
   StreamSubscription? _sub;
 
   Timer? _streamTimer;
@@ -152,8 +153,8 @@ class ModulDetailUiController extends GetxController {
       onDone: () => print('WS selesai'),
       cancelOnError: false,
     );
-    _streamTimer?.cancel();
 
+    _streamTimer?.cancel();
     try {
       ws.value?.send("GET_SENSOR");
     } catch (e) {
@@ -491,6 +492,11 @@ class ModulDetailUiController extends GetxController {
     _streamTimer?.cancel();
 
     await _sub?.cancel();
+
+    if (ws.value != null) {
+      await _wsService.closeDeviceStream(modulId);
+      ws.value = null;
+    }
 
     if (_pendingListUpdate && _lastUpdatedModul != null) {
       final idx = _modulService.moduls.indexWhere(

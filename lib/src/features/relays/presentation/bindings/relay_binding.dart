@@ -25,6 +25,6 @@ class RelayBinding extends Bindings {
       fenix: true,
     );
 
-    print('✅ ModulBinding dependencies initialized');
+    print('✅ RelayBinding dependencies initialized');
   }
 }

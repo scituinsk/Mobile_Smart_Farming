@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/services/web_socket_service.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/get_user_use_case.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/login_use_case.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/logout_use_case.dart';
@@ -6,6 +7,9 @@ import 'package:pak_tani/src/features/auth/application/use_cases/register_use_ca
 import 'package:pak_tani/src/features/auth/domain/entities/user.dart';
 
 class AuthService extends GetxService {
+  final WebSocketService _wsService;
+  AuthService(this._wsService);
+
   final LoginUseCase _loginUseCase = Get.find<LoginUseCase>();
   final RegisterUseCase _registerUseCase = Get.find<RegisterUseCase>();
   final LogoutUseCase _logoutUseCase = Get.find<LogoutUseCase>();
@@ -109,6 +113,9 @@ class AuthService extends GetxService {
 
   Future<void> logout() async {
     try {
+      // Close all modul sream before log out
+      await _wsService.closeAllDeviceStreams();
+
       await _logoutUseCase.execute();
       currentUser.value = null;
       isLoggedIn.value = false;

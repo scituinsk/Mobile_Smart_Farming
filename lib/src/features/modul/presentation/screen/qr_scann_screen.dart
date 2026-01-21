@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ai_barcode_scanner/ai_barcode_scanner.dart';
-import 'package:pak_tani/src/core/widgets/my_snackbar.dart';
+import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/qr_scan_ui_contoller.dart';
 
 class QrScannScreen extends StatelessWidget {

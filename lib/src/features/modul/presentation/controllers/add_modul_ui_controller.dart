@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
-import 'package:pak_tani/src/core/widgets/my_snackbar.dart';
+import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 
 class AddModulUiController extends GetxController {
@@ -22,7 +22,7 @@ class AddModulUiController extends GetxController {
 
   void openQrScanner() {
     Get.toNamed(
-      RouteNamed.qrScanPage,
+      RouteNames.qrScanPage,
       arguments: (String barcode) {
         modulCodeController.text = barcode;
         print("Barcode scanned: $barcode");

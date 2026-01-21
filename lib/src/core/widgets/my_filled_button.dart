@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 
+/// A stateless widget for a custom filled button.
+/// Display button with filled background and text or widget child.
 class MyFilledButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String? title;

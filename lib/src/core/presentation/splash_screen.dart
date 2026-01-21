@@ -1,3 +1,8 @@
+/// Splash screen.
+/// Displays quick splash screen while waiting app initialization, checking access and refresh token,
+
+library;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -5,9 +10,11 @@ import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/services/connectivity_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/core/widgets/custom_icon.dart';
+import 'package:pak_tani/src/core/utils/custom_icon.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
 
+/// Splash screen widget.
+/// Handles app initialization, connectivity check, authentication status, and navigation to appropriate page.
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -26,6 +33,8 @@ class _SplashScreenState extends State<SplashScreen> {
     storageService = Get.find<StorageService>();
   }
 
+  /// Initializes the app by checking connectivity, auth service, and authentication status.
+  /// Navigates to the appropriate page based on auth status or shows retry dialog on error.
   Future<void> _initializeApp() async {
     try {
       statusMessage.value = "Memeriksa koneksi...";
@@ -48,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
       if (!authService.isReady) {
         print('❌ AuthService not ready, initializing...');
-        // Force wait maksimal 3 detik
+        // Force wait max 3 seconds
         int attempts = 0;
         while (!authService.isReady && attempts < 30) {
           await Future.delayed(Duration(milliseconds: 100));
@@ -69,17 +78,16 @@ class _SplashScreenState extends State<SplashScreen> {
       if (authService.isLoggedIn.value) {
         statusMessage.value = 'Welcome back!';
         await Future.delayed(Duration(milliseconds: 300));
-        Get.offAllNamed(RouteNamed.mainPage);
+        Get.offAllNamed(RouteNames.mainPage);
       } else {
         statusMessage.value = 'Please login...';
         await Future.delayed(Duration(milliseconds: 300));
-        // Get.offAllNamed(RouteNamed.loginPage);
         final isFirstTime = storageService.readBool("is_first_time");
         if (isFirstTime == null || isFirstTime == true) {
           storageService.writeBool("is_first_time", false);
-          Get.offAllNamed(RouteNamed.onboardingPage);
+          Get.offAllNamed(RouteNames.onboardingPage);
         } else {
-          Get.offAllNamed(RouteNamed.loginPage);
+          Get.offAllNamed(RouteNames.loginPage);
         }
       }
     } catch (e) {
@@ -89,6 +97,8 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
+  /// Shows a retry dialog for connectiono issues.
+  /// Allows user to retry initialization.
   void _showRetryDialog() {
     Get.defaultDialog(
       title: "Koneksi Bermasalah",
@@ -97,7 +107,7 @@ class _SplashScreenState extends State<SplashScreen> {
       textConfirm: "Coba Lagi",
       confirmTextColor: Colors.white,
       onConfirm: () {
-        Get.back(); // Tutup dialog
+        Get.back();
         _initializeApp(); // Coba inisialisasi ulang
       },
       barrierDismissible: false,

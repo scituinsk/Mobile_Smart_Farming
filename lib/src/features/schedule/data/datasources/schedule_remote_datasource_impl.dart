@@ -32,7 +32,7 @@ class ScheduleRemoteDatasourceImpl extends ScheduleRemoteDatasource {
     bool? repeatSaturday,
     bool? repeatSunday,
   }) async {
-    final FormData formData = FormData.fromMap({
+    final Map<String, dynamic> data = {
       "group": groupId,
       "time": time,
       "is_active": true,
@@ -44,11 +44,11 @@ class ScheduleRemoteDatasourceImpl extends ScheduleRemoteDatasource {
       if (repeatFriday != null) "repeat_friday": repeatFriday,
       if (repeatSaturday != null) "repeat_saturday": repeatSaturday,
       if (repeatSunday != null) "repeat_sunday": repeatSunday,
-    });
+    };
 
     final Response response = await _apiService.post(
       "/schedule/alarms/",
-      data: formData,
+      data: data,
     );
 
     final responseData = response.data["data"] as Map<String, dynamic>;
@@ -70,7 +70,7 @@ class ScheduleRemoteDatasourceImpl extends ScheduleRemoteDatasource {
     bool? repeatSaturday,
     bool? repeatSunday,
   }) async {
-    final FormData formData = FormData.fromMap({
+    final Map<String, dynamic> data = {
       if (time != null) "time": time,
       if (duration != null) "duration": duration,
       if (isActive != null) "is_active": isActive,
@@ -81,11 +81,11 @@ class ScheduleRemoteDatasourceImpl extends ScheduleRemoteDatasource {
       if (repeatFriday != null) "repeat_friday": repeatFriday,
       if (repeatSaturday != null) "repeat_saturday": repeatSaturday,
       if (repeatSunday != null) "repeat_sunday": repeatSunday,
-    });
+    };
 
     final Response response = await _apiService.patch(
       "/schedule/alarms/$id/",
-      data: formData,
+      data: data,
     );
 
     final responseData = response.data["data"] as Map<String, dynamic>;

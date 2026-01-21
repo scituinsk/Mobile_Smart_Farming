@@ -4,48 +4,22 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/config/app_config.dart';
 import 'package:pak_tani/src/core/models/websocket_message.dart';
+import 'package:pak_tani/src/core/services/device_ws_service.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-class DeviceWsHandle {
-  final WebSocketChannel _channel;
-  final Stream<String> stream;
-
-  DeviceWsHandle._(this._channel, this.stream);
-
-  void send(dynamic data) {
-    try {
-      final payload = data is String ? data : data.toString();
-      print('DeviceWsHandle.send -> ${payload.replaceAll("\n", "\\n")}');
-      _channel.sink.add(payload);
-    } catch (e) {
-      print('DeviceWsHandle.send error: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> close() async {
-    await _channel.sink.close();
-  }
-
-  bool get isOpen {
-    try {
-      // web_socket_channel doesn't expose readyState; best-effort check
-      return true;
-    } catch (_) {
-      return false;
-    }
-  }
-}
-
+/// Service class for managing WebSocket connections.
+/// This class handles the main WebSocket connection, device-specific stream,
+/// reconnection logic, and caching of device handles.
+/// It uses GetX for state management and provides streams for messages and connection status.
 class WebSocketService extends GetxService {
   WebSocketChannel? _channel;
 
   // cache device handles per modulId
-  final Map<String, DeviceWsHandle> _deviceHandles = {};
+  final Map<String, DeviceWsService> _deviceHandles = {};
 
   //streams
-  final _messageController = StreamController<WebsocketMessage>.broadcast();
+  final _messageController = StreamController<WebSocketMessage>.broadcast();
   final _connectionController = StreamController<bool>.broadcast();
 
   //state
@@ -58,34 +32,39 @@ class WebSocketService extends GetxService {
   final RxBool isConnected = false.obs;
 
   //public streams
-  Stream<WebsocketMessage> get messageStream => _messageController.stream;
+  Stream<WebSocketMessage> get messageStream => _messageController.stream;
   Stream<bool> get connectionStatus => _connectionController.stream;
 
   @override
-  void onClose() {
+  void onClose() async {
     // close all device handles
-    closeAllDeviceStreams();
+    await closeAllDeviceStreams();
     super.onClose();
   }
 
-  Future<void> connect(String token) async {
+  /// Connects to the WebSocket server using the access token.
+  /// If alredy connected, does noting.
+  /// Sets up listeners for messages, errors, and connection closure.
+  /// Handles reconnection on failure.
+  Future<void> connect(String accessToken) async {
     if (_isConnected) {
       print("web socket alredy connected");
       return;
     }
 
     try {
-      _currentToken = token;
+      _currentToken = accessToken;
       final wsUrl = Uri.parse(AppConfig.wsBaseUrl);
 
       _channel = IOWebSocketChannel.connect(
         wsUrl,
-        headers: {"Authorization": "Bearer $token"},
+        headers: {"Authorization": "Bearer $accessToken"},
       );
 
       _channel!.stream.listen(
         (event) {
-          // _messageController.add(event);
+          final message = WebSocketMessage.fromJson(jsonDecode(event));
+          _messageController.add(message);
           print("ws data: $event");
         },
         onError: (error) {
@@ -111,9 +90,10 @@ class WebSocketService extends GetxService {
     }
   }
 
-  /// Open a device-specific stream (creates a new connection per modulId).
-  /// Returned stream is broadcast so many listeners (controllers) can listen safely.
-  Future<DeviceWsHandle> openDeviceStream({
+  /// Open a modul-specific stream (creates a new connection per modulId).
+  /// Creates a new connection and returns a DeviceWsService instance.
+  /// The stream is broadcast and handles message decoding.
+  Future<DeviceWsService> openDeviceStream({
     required String token,
     required String modulId,
   }) async {
@@ -143,11 +123,11 @@ class WebSocketService extends GetxService {
       cancelOnError: false,
     );
 
-    return DeviceWsHandle._(ch, mapped);
+    return DeviceWsService(ch, mapped);
   }
 
-  /// Get existing handle for modulId or open a new one and cache it.
-  Future<DeviceWsHandle> getOrOpenDeviceStream({
+  /// Retrives an existing device stream for the modulId or opens a new one and caches it.
+  Future<DeviceWsService> getOrOpenDeviceStream({
     required String token,
     required String modulId,
   }) async {
@@ -159,7 +139,7 @@ class WebSocketService extends GetxService {
     return handle;
   }
 
-  /// Close and remove a cached device stream
+  /// Close and remove a cached device stream for the given modulId.
   Future<void> closeDeviceStream(String modulId) async {
     final h = _deviceHandles.remove(modulId);
     if (h != null) {
@@ -180,6 +160,7 @@ class WebSocketService extends GetxService {
     _deviceHandles.clear();
   }
 
+  /// Sets the connection state to disconnected and cancles timers.
   void _setDisconnected() {
     _isConnected = false;
     isConnected.value = false;
@@ -187,6 +168,7 @@ class WebSocketService extends GetxService {
     _pingTimer?.cancel();
   }
 
+  /// Handles reconnection by schedulling a reconnect attempt after 5 seconds.
   void _handleReconnect() {
     _reconnectTimer?.cancel();
     if (_currentToken == null) return;
@@ -196,6 +178,7 @@ class WebSocketService extends GetxService {
     });
   }
 
+  /// Disconnects from the WebSocket server and cleans up resources.
   void disconnect() {
     _reconnectTimer?.cancel();
     _pingTimer?.cancel();
@@ -204,6 +187,7 @@ class WebSocketService extends GetxService {
     _setDisconnected();
   }
 
+  /// Builds a WebSocket URI by combining the base URL with the given path.
   Uri _buildWsUri(String path) {
     final base = AppConfig.wsBaseUrl;
     final b = base.endsWith('/') ? base.substring(0, base.length - 1) : base;

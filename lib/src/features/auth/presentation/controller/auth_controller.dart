@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
-import 'package:pak_tani/src/core/widgets/my_snackbar.dart';
+import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
 import 'package:pak_tani/src/features/auth/domain/entities/user.dart';
 
@@ -15,7 +15,7 @@ class AuthController extends GetxController {
     try {
       await _authService.login(email, password);
 
-      Get.offAllNamed(RouteNamed.mainPage);
+      Get.offAllNamed(RouteNames.mainPage);
       MySnackbar.success(message: "Login berhasil");
     } catch (e) {
       print("error login auth controller:  $e");
@@ -53,7 +53,7 @@ class AuthController extends GetxController {
     try {
       await _authService.logout();
 
-      Get.offAllNamed(RouteNamed.loginPage);
+      Get.offAllNamed(RouteNames.loginPage);
       MySnackbar.success(message: "Logout berhasil");
     } catch (e) {
       MySnackbar.error(message: e.toString());

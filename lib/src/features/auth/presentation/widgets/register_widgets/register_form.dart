@@ -106,7 +106,7 @@ class RegisterForm extends StatelessWidget {
                     WidgetSpan(child: Text("Sudah punya akun?")),
                     WidgetSpan(
                       child: GestureDetector(
-                        onTap: () => Get.toNamed(RouteNamed.loginPage),
+                        onTap: () => Get.toNamed(RouteNames.loginPage),
                         child: Text(
                           " Login disini",
                           style: AppTheme.text.copyWith(
