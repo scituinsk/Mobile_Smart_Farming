@@ -22,6 +22,7 @@ enum MyCustomIcon {
   waterDrop,
   search,
   calendarSync,
+  server,
 }
 
 /// Returns the asset path for the given custom icon type.
@@ -63,6 +64,8 @@ String iconAssets(MyCustomIcon type) {
       return "assets/icons/iconamoon-search.svg";
     case MyCustomIcon.calendarSync:
       return "assets/icons/calendar-sync.svg";
+    case MyCustomIcon.server:
+      return "assets/icons/server.svg";
   }
 }
 
