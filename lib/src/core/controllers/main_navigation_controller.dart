@@ -9,12 +9,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/config/firebase_cloud_messaging_config.dart';
 import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
-import 'package:pak_tani/src/features/history/application/services/history_service.dart';
-import 'package:pak_tani/src/features/history/domain/value_objects/history_type.dart';
 import 'package:pak_tani/src/features/history/presentation/bindings/history_binding.dart';
 import 'package:pak_tani/src/features/history/presentation/controllers/history_controller.dart';
 import 'package:pak_tani/src/features/history/presentation/screens/history_screen.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/presentation/bindings/modul_binding.dart';
 import 'package:pak_tani/src/features/modul/presentation/screen/moduls_screen.dart';
 
@@ -41,6 +40,9 @@ class MainNavigationController extends GetxController
   /// Getter for screens list.
   /// Used outside of this class
   List<Widget> get screens => _screens;
+
+  /// Argument Modul id
+  Modul? modulIdArg;
 
   @override
   void onInit() async {
@@ -231,20 +233,19 @@ class MainNavigationController extends GetxController
         modulService.loadModuls();
         break;
       case 1:
-        final historyService = Get.find<HistoryService>();
         final historyController = Get.find<HistoryController>();
-        await historyService.loadAllHistories();
+        historyController.resetFilter();
 
-        if (historyController.modulIdArg != null) {
-          historyController.selectedFilterHistoryTypes.addAll([
-            HistoryType.modul,
-            HistoryType.schedule,
-          ]);
-          historyController.selectedFilterModuls.add(
-            historyController.modulIdArg!,
+        if (modulIdArg != null) {
+          await historyController.refreshHistoryList(
+            isNavigating: true,
+            modulArgs: modulIdArg,
           );
-          historyController.applyFilter();
+          modulIdArg = null;
+        } else {
+          await historyController.refreshHistoryList();
         }
+
         break;
     }
   }
@@ -253,6 +254,7 @@ class MainNavigationController extends GetxController
   /// [index] must between 0 and 2
   void navigateToTab(int index) {
     if (index >= 0 && index < 3) {
+      _initializeTab(index);
       tabController.animateTo(index);
     }
   }

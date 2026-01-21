@@ -10,7 +10,9 @@ import 'package:pak_tani/src/features/history/presentation/widgets/filter_select
 import 'package:pak_tani/src/features/history/presentation/widgets/filter_time_button_widget.dart';
 import 'package:pak_tani/src/features/history/presentation/widgets/sorting_tile.dart';
 
+///A class for history screen bottom sheet.
 class HistorySheet {
+  /// Show shorting history bottom sheet
   static Future<void> showSortingSheet(BuildContext context) async {
     final controller = Get.find<HistoryController>();
     await showModalBottomSheet(
@@ -58,11 +60,11 @@ class HistorySheet {
     );
   }
 
+  /// show filter history bottom sheet
   static Future<void> showFilterSheet(BuildContext context) async {
     final controller = Get.find<HistoryController>();
 
     await showMaterialModalBottomSheet(
-      // useSafeArea: true,
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -113,7 +115,7 @@ class HistorySheet {
                     ),
                     ListTile(
                       title: Text(
-                        'Histori Penjadwalan Grub',
+                        'Histori Penjadwalan Grup',
                         style: AppTheme.textMedium.copyWith(
                           color: AppTheme.primaryColor,
                         ),
@@ -175,11 +177,11 @@ class HistorySheet {
                             Text("Pilih Grup Penjadwalan", style: AppTheme.h5),
                             SizedBox(height: 8.h),
                             Obx(() {
-                              if (controller.selectedModulGorups.isNotEmpty) {
+                              if (controller.selectedModulGroups.isNotEmpty) {
                                 return Wrap(
                                   spacing: 15.r,
                                   runSpacing: 15.r,
-                                  children: controller.selectedModulGorups.map((
+                                  children: controller.selectedModulGroups.map((
                                     group,
                                   ) {
                                     return FilterSelectionChip(
@@ -209,7 +211,7 @@ class HistorySheet {
                                 );
                               }
                             }),
-                            if (controller.selectedModulGorups.isNotEmpty)
+                            if (controller.selectedModulGroups.isNotEmpty)
                               Row(
                                 children: [
                                   Obx(

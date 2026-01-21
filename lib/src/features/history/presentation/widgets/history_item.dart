@@ -13,6 +13,7 @@ import 'package:pak_tani/src/features/history/domain/value_objects/history_type.
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_controller.dart';
 import 'package:timelines_plus/timelines_plus.dart';
 
+/// A statefull class for displaying history per item.
 class HistoryItem extends StatefulWidget {
   final History history;
   const HistoryItem({super.key, required this.history});
@@ -116,9 +117,13 @@ class _HistoryItemState extends State<HistoryItem> {
                           widget.history.message ??
                               (widget.history.historyType ==
                                       HistoryType.schedule
-                                  ? "Penjadwalan telah dimulai"
-                                  : ""),
-                          style: AppTheme.textAction,
+                                  ? "IoT gagal menjalankan penjadwalan"
+                                  : "IoT gagal menjalankan tugas"),
+                          style: AppTheme.textAction.copyWith(
+                            color: widget.history.message == null
+                                ? AppTheme.errorColor
+                                : AppTheme.onDefaultColor,
+                          ),
                         ),
                       ],
                     ),
@@ -180,7 +185,7 @@ class _HistoryItemState extends State<HistoryItem> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 10.r,
                     children: [
-                      Text("Detail Grub", style: AppTheme.textAction),
+                      Text("Detail Grup", style: AppTheme.textAction),
                       FixedTimeline.tileBuilder(
                         theme: TimelineThemeData(
                           direction: Axis.vertical,

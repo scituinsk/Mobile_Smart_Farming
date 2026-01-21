@@ -124,7 +124,7 @@ class GroupScheduleInformation extends StatelessWidget {
                     );
                   }),
                   Text(
-                    "Jumlah relay pada grub ${controller.selectedRelayGroup.value!.name}",
+                    "Jumlah relay pada grup ${controller.selectedRelayGroup.value!.name}",
                     style: AppTheme.textAction,
                     textAlign: TextAlign.center,
                   ),

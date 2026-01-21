@@ -10,7 +10,6 @@ import 'package:pak_tani/src/core/utils/custom_dialog.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_filled_button.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
-import 'package:pak_tani/src/features/history/presentation/controllers/history_controller.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_detail_ui_controller.dart';
 
 class MenuItem {
@@ -142,14 +141,14 @@ abstract class ModulDetailDropdownMenuItems {
                     title: "Nama Modul",
                     validator: controller.validateName,
                     controller: controller.modulNameC,
-                    hint: "Ex: Green House A",
+                    hint: "Ex: Greenhouse A",
                     borderRadius: 10,
                   ),
                   MyTextField(
                     fieldWidth: double.infinity,
                     title: "Deskripsi Modul",
                     controller: controller.modulDescriptionC,
-                    hint: "Ex: Green house timur",
+                    hint: "Ex: Greenhouse timur",
                     borderRadius: 10,
                     validator: controller.validateDescription,
                   ),
@@ -374,12 +373,11 @@ abstract class ModulDetailDropdownMenuItems {
         );
         break;
       case ModulDetailDropdownMenuItems.modulLogs:
-        final mainNavController = Get.find<MainNavigationController>();
-        final historyController = Get.find<HistoryController>();
-
-        historyController.modulIdArg = controller.modul.value;
-        mainNavController.navigateToHistory();
         Get.back();
+
+        final mainNavController = Get.find<MainNavigationController>();
+        mainNavController.modulIdArg = controller.modul.value;
+        mainNavController.navigateToHistory();
     }
   }
 }

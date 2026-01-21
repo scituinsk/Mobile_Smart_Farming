@@ -24,11 +24,13 @@ class HistoryController extends GetxController {
   RxList<Map<String, dynamic>> get allScheduleGroups =>
       historyService.allGroupSchedule;
   RxList<Modul> get moduls => modulService.moduls;
-  RxList<Map<String, dynamic>> selectedModulGorups =
+
+  /// Schedule groups that belong to selected modules
+  RxList<Map<String, dynamic>> selectedModulGroups =
       <Map<String, dynamic>>[].obs;
 
   //controller for sorting
-  RxBool isAscending = true.obs;
+  RxBool isAscending = false.obs;
 
   /// list of group Ids that is selected
   RxList<Map<String, dynamic>> selectedFilterScheduleGroups =
@@ -62,8 +64,6 @@ class HistoryController extends GetxController {
 
   Timer? debounce;
 
-  Modul? modulIdArg;
-
   @override
   void onInit() {
     super.onInit();
@@ -79,6 +79,7 @@ class HistoryController extends GetxController {
     debounce?.cancel();
     searchFocus.dispose();
     searchTextController.dispose();
+    print("dispose history controller");
     super.onClose();
   }
 
@@ -97,21 +98,51 @@ class HistoryController extends GetxController {
   bool isHistoryTypeSelected(HistoryType historyType) =>
       selectedFilterHistoryTypes.contains(historyType);
 
+  /// Refreshes the history list by loading all histories from the [HistoryService].
+  ///
+  /// If [isNavigating] is true, it adds [HistoryType.modul] and [HistoryType.schedule]
+  /// to the selected filter history types, and adds the provided [modulArgs] to the
+  /// selected filter modules. Then applies the filter and updates the UI.
+  ///
+  /// Throws an exception if loading histories fails, displaying an error snackbar.
+  ///
+  /// Parameters:
+  /// - [isNavigating]: Optional boolean indicating if navigation is occurring.
+  /// - [modulArgs]: Optional [Modul] object to add to filters if navigating.
   /// Refresh all history.
   /// Calling [loadAllHistory] function from [HistoryService].
-  Future<void> refreshHistoryList() async {
+  Future<void> refreshHistoryList({
+    bool? isNavigating,
+    Modul? modulArgs,
+  }) async {
     try {
       await historyService.loadAllHistories(refresh: true);
+      if (isNavigating != null) {
+        if (isNavigating) {
+          selectedFilterHistoryTypes.addAll([
+            HistoryType.modul,
+            HistoryType.schedule,
+          ]);
+          selectedFilterModuls.add(modulArgs!);
+        }
+      }
       applyFilter();
+      update();
     } catch (e) {
       print("error: $e");
       MySnackbar.error(message: e.toString());
     }
   }
 
+  /// Filters the selected module groups based on the currently selected filter modules.
+  ///
+  /// This method retrieves the IDs of the selected filter modules, then filters
+  /// the `allScheduleGroups` list to include only those groups whose `modulId`
+  /// (converted to string) matches any of the selected module IDs. The filtered
+  /// list is then assigned to `selectedModulGroups.value`.
   void filterSelectedModulGroups() {
     final modulIds = selectedFilterModuls.map((m) => m.id).toList();
-    selectedModulGorups.value = allScheduleGroups
+    selectedModulGroups.value = allScheduleGroups
         .where((group) => modulIds.contains(group["modulId"].toString()))
         .toList();
   }
@@ -136,7 +167,7 @@ class HistoryController extends GetxController {
     if (value == null) return;
     if (value) {
       selectedFilterScheduleGroups.clear();
-      selectedFilterScheduleGroups.assignAll(selectedModulGorups);
+      selectedFilterScheduleGroups.assignAll(selectedModulGroups);
       isScheduleGroupSelectedAll.value = value;
     } else {
       selectedFilterScheduleGroups.clear();
@@ -163,11 +194,11 @@ class HistoryController extends GetxController {
         selectedFilterModuls.every((modul) => moduls.contains(modul));
 
     isScheduleGroupSelectedAll.value =
-        selectedFilterScheduleGroups.length == selectedModulGorups.length &&
+        selectedFilterScheduleGroups.length == selectedModulGroups.length &&
         selectedFilterScheduleGroups.every(
-          (group) => selectedModulGorups.contains(group),
+          (group) => selectedModulGroups.contains(group),
         ) &&
-        selectedModulGorups.isNotEmpty;
+        selectedModulGroups.isNotEmpty;
   }
 
   /// Function for toogle schedule group filter.
@@ -187,9 +218,9 @@ class HistoryController extends GetxController {
       }
     }
     isScheduleGroupSelectedAll.value =
-        selectedFilterScheduleGroups.length == selectedModulGorups.length &&
+        selectedFilterScheduleGroups.length == selectedModulGroups.length &&
         selectedFilterScheduleGroups.every(
-          (group) => selectedModulGorups.contains(group),
+          (group) => selectedModulGroups.contains(group),
         );
   }
 
@@ -287,6 +318,11 @@ class HistoryController extends GetxController {
     pickedEndDate.value = null;
   }
 
+  /// reset filter controller.
+  ///
+  /// clear [selectedFilterModuls], [selectedFilterScheduleGroups], [selectedFilterHistoryTypes].
+  /// Set [isScheduleGroupSelectedAll] and [isModulSelectedAll] to false.
+  /// Clear date picker
   void resetFilter() {
     selectedFilterModuls.clear();
     selectedFilterScheduleGroups.clear();
@@ -297,7 +333,11 @@ class HistoryController extends GetxController {
     clearDatePicker();
   }
 
+  /// Apply all filter that been selected
   void applyFilter() {
+    print(
+      "selected history type: ${selectedFilterHistoryTypes.map((element) => element.label)}",
+    );
     historyService.filterHistories(
       selectedFilterModuls.map((element) => element.id).toList(),
       selectedFilterScheduleGroups.map((group) => group["id"] as int).toList(),
@@ -314,6 +354,7 @@ class HistoryController extends GetxController {
     Get.back();
   }
 
+  /// Function onChange for sorting histories
   void sortingHistories(bool? value) {
     if (value == null) return;
     isAscending.value = value;
@@ -324,6 +365,7 @@ class HistoryController extends GetxController {
     }
   }
 
+  /// Function debounce for searching history
   void onHistorySerach() {
     if (debounce?.isActive ?? false) debounce!.cancel();
     debounce = Timer(const Duration(milliseconds: 300), () {
@@ -331,6 +373,7 @@ class HistoryController extends GetxController {
     });
   }
 
+  /// Function for clear search button
   void clearSearch() {
     searchText.value = "";
     searchTextController.clear();
