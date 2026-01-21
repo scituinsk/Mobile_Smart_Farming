@@ -2,10 +2,19 @@ import 'package:pak_tani/src/features/notification/domain/datasources/notificati
 import 'package:pak_tani/src/features/notification/domain/entities/notification_item.dart';
 import 'package:pak_tani/src/features/notification/domain/repositories/notification_repository.dart';
 
+/// Concrete implementation of [NotificationRepository].
+///
+/// Bridges the domain-level repository interface to a remote datasource
+/// (`NotificationRemoteDatasource`). Responsible for converting remote
+/// models into domain entities and forwarding read operations to the
+/// datasource while handling errors.
 class NotificationRepositoryImpl extends NotificationRepository {
   final NotificationRemoteDatasource _remoteDatasource;
   NotificationRepositoryImpl(this._remoteDatasource);
 
+  /// Retrieves the full list of notifications from the remote datasource
+  /// and converts each `NotificationItemModel` into the domain
+  /// `NotificationItem` entity.
   @override
   Future<List<NotificationItem>?> getListAllNotifications() async {
     try {
@@ -23,6 +32,7 @@ class NotificationRepositoryImpl extends NotificationRepository {
     }
   }
 
+  /// Marks all notifications as read via the remote datasource.
   @override
   Future<void> markReadAllNotifications() async {
     try {
@@ -33,6 +43,9 @@ class NotificationRepositoryImpl extends NotificationRepository {
     }
   }
 
+  /// Marks a single notification as read by forwarding the call to the
+  /// remote datasource and converting the returned model to the domain
+  /// entity.
   @override
   Future<NotificationItem> markReadNotification(int id) async {
     try {

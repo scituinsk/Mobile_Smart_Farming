@@ -18,6 +18,11 @@ import 'package:pak_tani/src/features/auth/data/repositories/auth_repository_imp
 import 'package:pak_tani/src/features/auth/domain/datasources/auth_remote_datasource.dart';
 import 'package:pak_tani/src/features/auth/domain/repositories/auth_repository.dart';
 import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
+import 'package:pak_tani/src/features/notification/application/services/notification_service.dart';
+import 'package:pak_tani/src/features/notification/data/datasources/notification_remote_datasource_impl.dart';
+import 'package:pak_tani/src/features/notification/data/repositories/notification_repository_impl.dart';
+import 'package:pak_tani/src/features/notification/domain/datasources/notification_remote_datasource.dart';
+import 'package:pak_tani/src/features/notification/domain/repositories/notification_repository.dart';
 
 /// Dependency class for dependency injection.
 class DependencyInjection {
@@ -60,6 +65,10 @@ class DependencyInjection {
       Get.lazyPut<AuthRemoteDatasource>(() {
         return AuthRemoteDatasourceImpl();
       }, fenix: true);
+      Get.lazyPut<NotificationRemoteDatasource>(
+        () => NotificationRemoteDatasourceImpl(Get.find<ApiService>()),
+        fenix: true,
+      );
     } catch (e) {
       rethrow;
     }
@@ -73,6 +82,12 @@ class DependencyInjection {
           remoteDatasource: Get.find<AuthRemoteDatasource>(),
         );
       }, fenix: true);
+      Get.lazyPut<NotificationRepository>(
+        () => NotificationRepositoryImpl(
+          Get.find<NotificationRemoteDatasource>(),
+        ),
+        fenix: true,
+      );
     } catch (e) {
       rethrow;
     }
@@ -106,6 +121,10 @@ class DependencyInjection {
         await authService.onInit();
         return authService;
       }, permanent: true);
+      Get.lazyPut<NotificationService>(
+        () => NotificationService(Get.find<NotificationRepository>()),
+        fenix: true,
+      );
     } catch (e) {
       rethrow;
     }

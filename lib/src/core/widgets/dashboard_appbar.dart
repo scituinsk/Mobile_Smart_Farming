@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:pak_tani/src/core/controllers/main_navigation_controller.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/utils/custom_icon.dart';
@@ -13,6 +14,7 @@ class DashboardAppbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mainCotroller = Get.find<MainNavigationController>();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -34,10 +36,18 @@ class DashboardAppbar extends StatelessWidget {
                 await ModulListSheets.showSearchField(context);
               },
             ),
-            MyIcon(
-              icon: Icons.notifications,
-              iconColor: AppTheme.primaryColor,
-              onPressed: () => Get.toNamed(RouteNames.notificationPage),
+            Obx(
+              () => Badge(
+                label: Text(
+                  mainCotroller.unreadNotificationCount.value.toString(),
+                ),
+                isLabelVisible: mainCotroller.unreadNotificationCount.value > 0,
+                child: MyIcon(
+                  icon: Icons.notifications,
+                  iconColor: AppTheme.primaryColor,
+                  onPressed: () => Get.toNamed(RouteNames.notificationPage),
+                ),
+              ),
             ),
           ],
         ),

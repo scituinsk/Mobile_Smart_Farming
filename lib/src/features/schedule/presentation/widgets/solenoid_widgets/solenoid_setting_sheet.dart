@@ -57,7 +57,7 @@ class SolenoidSettingSheet {
                           size: 30,
                         ),
                       ),
-                      Text("Total Selenoid", style: AppTheme.h3),
+                      Text("Total Solenoid", style: AppTheme.h3),
                       Obx(
                         () => IconButton(
                           onPressed: controller.isSubmittingSequential.value

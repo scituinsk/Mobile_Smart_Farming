@@ -14,6 +14,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart' hide FormData, Response;
 import 'package:pak_tani/src/core/services/api_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
+import 'package:pak_tani/src/features/notification/application/services/notification_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -90,6 +91,9 @@ class FirebaseCloudMessagingConfig {
   static void _setupMessageListeners() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       print('FCM onMessage: ${message.data} ${message.notification}');
+      final notificationService = Get.find<NotificationService>();
+      notificationService.loadAllNotificationItems();
+
       final notification = message.notification;
 
       // Extract title and body from notification or data payload

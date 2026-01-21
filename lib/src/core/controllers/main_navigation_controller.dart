@@ -16,10 +16,14 @@ import 'package:pak_tani/src/features/modul/application/services/modul_service.d
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/presentation/bindings/modul_binding.dart';
 import 'package:pak_tani/src/features/modul/presentation/screen/moduls_screen.dart';
+import 'package:pak_tani/src/features/notification/application/services/notification_service.dart';
 
 ///Controller class for main navigation.
 class MainNavigationController extends GetxController
     with GetTickerProviderStateMixin {
+  final NotificationService _notificationService;
+  MainNavigationController(this._notificationService);
+
   late TabController tabController;
   late AnimationController animationController;
 
@@ -43,6 +47,8 @@ class MainNavigationController extends GetxController
 
   /// Argument Modul id
   Modul? modulIdArg;
+
+  RxInt get unreadNotificationCount => _notificationService.unreadCount;
 
   @override
   void onInit() async {

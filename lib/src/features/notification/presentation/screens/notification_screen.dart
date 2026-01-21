@@ -3,17 +3,25 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
-import 'package:pak_tani/src/core/widgets/my_choice_chip.dart';
+import 'package:pak_tani/src/core/widgets/my_display_chip.dart';
+import 'package:pak_tani/src/features/notification/presentation/controllers/notification_screen_controller.dart';
 import 'package:pak_tani/src/features/notification/presentation/widgets/notification_list.dart';
-import 'package:pak_tani/src/features/notification/presentation/widgets/notification_search.dart';
 
 class NotificationScreen extends StatelessWidget {
+  /// Notification screen widget.
+  ///
+  /// Displays the notification list with controls to filter between all and
+  /// unread notifications, and a button to mark all notifications as read.
+  /// The UI observes `NotificationScreenController` for state changes and
+  /// actions (loading, filtering, marking read).
   const NotificationScreen({super.key});
 
   @override
+  /// Builds the notification screen UI and wires controller interactions.
   Widget build(BuildContext context) {
     final mediaQueryWidth = Get.width;
     final mediaQueryHeight = Get.height;
+    final controller = Get.find<NotificationScreenController>();
 
     return Scaffold(
       appBar: AppBar(
@@ -30,15 +38,54 @@ class NotificationScreen extends StatelessWidget {
           child: Column(
             spacing: 12.r,
             children: [
-              SearchWidget(),
               Row(
                 spacing: 10.r,
                 children: [
-                  MyChoiceChip(selected: true, title: "Semua"),
-                  MyChoiceChip(selected: false, title: "Belum Dibaca"),
+                  Obx(
+                    () => MyDisplayChip(
+                      backgroundColor: !controller.isShowUnread.value
+                          ? AppTheme.secondaryColor
+                          : Colors.white,
+                      paddingHorizontal: 14,
+                      paddingVertical: 7,
+                      child: Text(
+                        "Semua",
+                        style: AppTheme.text.copyWith(
+                          color: !controller.isShowUnread.value
+                              ? Colors.white
+                              : AppTheme.secondaryColor,
+                        ),
+                      ),
+                      onPressed: () {
+                        controller.isShowUnread.value = false;
+                        controller.filterNotification();
+                      },
+                    ),
+                  ),
+                  Obx(
+                    () => MyDisplayChip(
+                      backgroundColor: controller.isShowUnread.value
+                          ? AppTheme.secondaryColor
+                          : Colors.white,
+                      paddingHorizontal: 14,
+                      paddingVertical: 7,
+                      child: Text(
+                        "Belum Dibaca",
+                        style: AppTheme.text.copyWith(
+                          color: controller.isShowUnread.value
+                              ? Colors.white
+                              : AppTheme.secondaryColor,
+                        ),
+                      ),
+                      onPressed: () {
+                        controller.isShowUnread.value = true;
+                        controller.filterNotification();
+                      },
+                    ),
+                  ),
                   Expanded(
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: controller.markReadAllNotification,
                       child: Text(
                         "Tandai semua dibaca",
                         style: AppTheme.textSmall.copyWith(
