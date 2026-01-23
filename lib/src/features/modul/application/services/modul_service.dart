@@ -130,4 +130,17 @@ class ModulService extends GetxService {
       isLoading.value = false;
     }
   }
+
+  Future<void> deleteLocalModul(String serialId) async {
+    isLoading.value = true;
+    try {
+      await _repository.deleteLocalModul(serialId);
+      moduls.removeWhere((element) => element.serialId == serialId);
+    } catch (e) {
+      print("error delete local modul (service): $e");
+      rethrow;
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

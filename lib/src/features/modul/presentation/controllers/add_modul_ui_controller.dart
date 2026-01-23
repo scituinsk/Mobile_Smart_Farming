@@ -16,7 +16,9 @@ class AddModulUiController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    modulCodeController = TextEditingController();
+    final serialId = Get.arguments;
+    print("arguments: $serialId");
+    modulCodeController = TextEditingController(text: serialId);
     modulPasswordController = TextEditingController();
   }
 

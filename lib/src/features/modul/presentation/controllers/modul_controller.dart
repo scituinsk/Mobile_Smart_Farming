@@ -19,4 +19,14 @@ class ModulController extends GetxController {
       MySnackbar.error(message: e.toString());
     }
   }
+
+  void deleteLocalModul(String serialId) async {
+    try {
+      await _modulServices.deleteLocalModul(serialId);
+      Get.back();
+      MySnackbar.success(message: "Berhasil menghapus modul");
+    } catch (e) {
+      MySnackbar.error(message: e.toString());
+    }
+  }
 }

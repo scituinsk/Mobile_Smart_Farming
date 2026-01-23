@@ -13,7 +13,7 @@ class MySnackbar {
     Get.snackbar(
       title,
       message,
-      snackPosition: SnackPosition.TOP,
+      snackPosition: SnackPosition.BOTTOM,
       backgroundColor: const Color(0xFF2E7D32),
       colorText: Colors.white,
       icon: const Icon(Icons.check_circle, color: Colors.white),
@@ -29,7 +29,7 @@ class MySnackbar {
     Get.snackbar(
       title,
       message,
-      snackPosition: SnackPosition.TOP,
+      snackPosition: SnackPosition.BOTTOM,
       backgroundColor: const Color(0xFFD32F2F),
       colorText: Colors.white,
       icon: const Icon(Icons.error_outline, color: Colors.white),

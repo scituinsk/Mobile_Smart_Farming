@@ -11,6 +11,7 @@ class ModulModel extends Modul {
     super.features,
     required super.createdAt,
     super.image,
+    super.isLocked,
   });
 
   factory ModulModel.fromJson(Map<String, dynamic> json) {
@@ -31,6 +32,7 @@ class ModulModel extends Modul {
           : null,
       createdAt: json['created_at'] ?? DateTime.now(),
       image: json['image'] ?? "",
+      isLocked: false,
     );
   }
 
@@ -55,6 +57,7 @@ class ModulModel extends Modul {
       features: modul.features,
       createdAt: modul.createdAt,
       image: modul.image,
+      isLocked: modul.isLocked,
     );
   }
 
@@ -67,6 +70,7 @@ class ModulModel extends Modul {
       features: features,
       createdAt: createdAt,
       image: image,
+      isLocked: isLocked,
     );
   }
 }

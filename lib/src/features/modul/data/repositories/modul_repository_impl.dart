@@ -1,24 +1,30 @@
 import 'dart:io';
 
+import 'package:pak_tani/src/features/modul/domain/datasources/modul_local_datasource.dart';
 import 'package:pak_tani/src/features/modul/domain/datasources/modul_remote_datasource.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/domain/repositories/modul_repository.dart';
 
 class ModulRepositoryImpl implements ModulRepository {
   final ModulRemoteDatasource remoteDatasource;
+  final ModulLocalDatasource localDatasource;
 
-  ModulRepositoryImpl({required this.remoteDatasource});
+  ModulRepositoryImpl({
+    required this.remoteDatasource,
+    required this.localDatasource,
+  });
 
   @override
   Future<List<Modul>?>? getListModul() async {
-    // TODO: implement getListDevices
     try {
       final listModul = await remoteDatasource.getListModuls();
 
       if (listModul != null) {
-        return listModul.map((modul) => modul.toEntity()).toList();
+        final entities = listModul.map((modul) => modul.toEntity()).toList();
+        await localDatasource.saveModuls(entities);
+        return localDatasource.mergeModuls(entities);
       }
-      return null;
+      return localDatasource.mergeModuls([]);
     } catch (e) {
       print("error get list modul(repository): $e");
       rethrow;
@@ -40,9 +46,9 @@ class ModulRepositoryImpl implements ModulRepository {
   }
 
   @override
-  Future<Modul?> addModulToUSer(String id, String password) async {
+  Future<Modul?> addModulToUSer(String serialId, String password) async {
     try {
-      final modul = await remoteDatasource.addModulToUser(id, password);
+      final modul = await remoteDatasource.addModulToUser(serialId, password);
       if (modul == null) {
         return null;
       }
@@ -55,7 +61,7 @@ class ModulRepositoryImpl implements ModulRepository {
 
   @override
   Future<Modul?> editModul(
-    String id, {
+    String serialId, {
     String? name,
     String? password,
     String? description,
@@ -63,7 +69,7 @@ class ModulRepositoryImpl implements ModulRepository {
   }) async {
     try {
       final modul = await remoteDatasource.editModul(
-        id,
+        serialId,
         name: name,
         description: description,
         imageFile: imageFile,
@@ -78,11 +84,22 @@ class ModulRepositoryImpl implements ModulRepository {
   }
 
   @override
-  Future<void> deleteModulFromUser(String id) async {
+  Future<void> deleteModulFromUser(String serialId) async {
     try {
-      await remoteDatasource.deleteModulFromUser(id);
+      await remoteDatasource.deleteModulFromUser(serialId);
+      await localDatasource.deleteModul(serialId);
     } catch (e) {
       print("error deleting modul(repository): $e");
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteLocalModul(String serialId) async {
+    try {
+      await localDatasource.deleteModul(serialId);
+    } catch (e) {
+      print("Error deleting local modul(repository): $e");
       rethrow;
     }
   }

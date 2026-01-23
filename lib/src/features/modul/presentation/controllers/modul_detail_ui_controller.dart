@@ -77,6 +77,7 @@ class ModulDetailUiController extends GetxController {
       );
       await _initWsStream();
     } catch (e) {
+      _modulService.loadModuls(refresh: true);
       Get.back();
       print("error at detail init: $e");
       MySnackbar.error(message: e.toString());
@@ -217,6 +218,7 @@ class ModulDetailUiController extends GetxController {
       features: updatedFeatures,
       createdAt: currentModul.createdAt,
       image: currentModul.image,
+      isLocked: currentModul.isLocked,
     );
 
     //update only the selected device to void rebuilding main modules

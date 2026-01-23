@@ -155,59 +155,63 @@ class ApiService extends GetxService {
 
           // ✅ Handle 401 with better logic
           if (statusCode == 401 && !_isAuthEndpoint(path)) {
-            print('🔄 Handling 401 for non-auth endpoint: $path');
+            if (error.response?.data["data"] != "unauthorized") {
+              print('🔄 Handling 401 for non-auth endpoint: $path');
 
-            // Wait for ongoing refresh or start new one
-            bool refreshSuccess = false;
-            if (_isRefreshing && _refreshCompleter != null) {
-              print('⏳ Waiting for ongoing refresh...');
-              refreshSuccess = await _refreshCompleter!.future;
-            } else {
-              print('🔄 Starting new token refresh...');
-              refreshSuccess = await _performTokenRefresh();
-            }
-
-            if (refreshSuccess) {
-              print('✅ Token refreshed, retrying: $path');
-
-              // Retry original request with new token
-              final newAccessToken = await _storage.readSecure('access_token');
-              if (newAccessToken != null) {
-                // Create new options to avoid FromData finalization issues
-                final newOptions = error.requestOptions.copyWith(
-                  headers: {
-                    ...error.requestOptions.headers,
-                    'Authorization': 'Bearer $newAccessToken',
-                  },
-                );
-
-                // If data is FormData, recreate it to avoid finalization
-                if (error.requestOptions.data is FormData) {
-                  final originalFormData =
-                      error.requestOptions.data as FormData;
-                  final newFormData = FormData();
-                  for (var entry in originalFormData.fields) {
-                    newFormData.fields.add(entry);
-                  }
-                  for (var file in originalFormData.files) {
-                    newFormData.files.add(file);
-                  }
-                  newOptions.data = newFormData;
-                }
-
-                // Retry with new options
-                try {
-                  final response = await _dio.fetch(newOptions);
-                  return handler.resolve(response);
-                } catch (retryError) {
-                  print('❌ Retry failed: $retryError');
-                  return handler.next(error);
-                }
+              // Wait for ongoing refresh or start new one
+              bool refreshSuccess = false;
+              if (_isRefreshing && _refreshCompleter != null) {
+                print('⏳ Waiting for ongoing refresh...');
+                refreshSuccess = await _refreshCompleter!.future;
+              } else {
+                print('🔄 Starting new token refresh...');
+                refreshSuccess = await _performTokenRefresh();
               }
-            } else {
-              // if token refresh with refreh token failed, then do log out.
-              print('❌ Token refresh failed, logging out...');
-              await _handleLogout();
+
+              if (refreshSuccess) {
+                print('✅ Token refreshed, retrying: $path');
+
+                // Retry original request with new token
+                final newAccessToken = await _storage.readSecure(
+                  'access_token',
+                );
+                if (newAccessToken != null) {
+                  // Create new options to avoid FromData finalization issues
+                  final newOptions = error.requestOptions.copyWith(
+                    headers: {
+                      ...error.requestOptions.headers,
+                      'Authorization': 'Bearer $newAccessToken',
+                    },
+                  );
+
+                  // If data is FormData, recreate it to avoid finalization
+                  if (error.requestOptions.data is FormData) {
+                    final originalFormData =
+                        error.requestOptions.data as FormData;
+                    final newFormData = FormData();
+                    for (var entry in originalFormData.fields) {
+                      newFormData.fields.add(entry);
+                    }
+                    for (var file in originalFormData.files) {
+                      newFormData.files.add(file);
+                    }
+                    newOptions.data = newFormData;
+                  }
+
+                  // Retry with new options
+                  try {
+                    final response = await _dio.fetch(newOptions);
+                    return handler.resolve(response);
+                  } catch (retryError) {
+                    print('❌ Retry failed: $retryError');
+                    return handler.next(error);
+                  }
+                }
+              } else {
+                // if token refresh with refreh token failed, then do log out.
+                print('❌ Token refresh failed, logging out...');
+                await _handleLogout();
+              }
             }
           }
 

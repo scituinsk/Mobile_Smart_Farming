@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
-import 'package:pak_tani/src/core/widgets/dashboard_appbar.dart';
+import 'package:pak_tani/src/features/modul/presentation/widgets/dashboard_appbar.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/modul_list/modul_list.dart';
 
 class ModulsScreen extends StatelessWidget {

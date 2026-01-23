@@ -6,6 +6,10 @@ library;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/feature_data.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/modul_feature.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Service class for Storage service.
@@ -16,7 +20,7 @@ class StorageService extends GetxService {
   ///Instance of flutter secure storage
   late FlutterSecureStorage _secureStorage;
 
-  // init shared preferences dand flutter secure storage
+  // init shared preferences, flutter secure storage, and hive
   @override
   void onInit() async {
     super.onInit();
@@ -24,6 +28,11 @@ class StorageService extends GetxService {
     _secureStorage = FlutterSecureStorage(
       aOptions: AndroidOptions(encryptedSharedPreferences: true),
     );
+
+    await Hive.initFlutter();
+    Hive.registerAdapter(ModulAdapter());
+    Hive.registerAdapter(ModulFeatureAdapter());
+    Hive.registerAdapter(FeatureDataAdapter());
   }
 
   /// Write string with key to shared preferences

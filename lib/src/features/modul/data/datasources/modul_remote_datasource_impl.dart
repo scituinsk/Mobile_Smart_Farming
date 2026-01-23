@@ -21,17 +21,17 @@ class ModulRemoteDatasourceImpl implements ModulRemoteDatasource {
   }
 
   @override
-  Future<ModulModel?> getModul(String id) async {
-    final response = await _apiService.get('/iot/device/$id/');
+  Future<ModulModel?> getModul(String serialId) async {
+    final response = await _apiService.get('/iot/device/$serialId/');
     final responseData = await response.data['data'] as Map<String, dynamic>;
 
     return ModulModel.fromJson(responseData);
   }
 
   @override
-  Future<ModulModel?> addModulToUser(String id, String password) async {
+  Future<ModulModel?> addModulToUser(String serialId, String password) async {
     final response = await _apiService.post(
-      '/iot/device/$id/',
+      '/iot/device/$serialId/',
       data: {"password": password},
     );
 
@@ -42,7 +42,7 @@ class ModulRemoteDatasourceImpl implements ModulRemoteDatasource {
 
   @override
   Future<ModulModel?> editModul(
-    String id, {
+    String serialId, {
     String? name,
     String? password,
     String? description,
@@ -61,7 +61,7 @@ class ModulRemoteDatasourceImpl implements ModulRemoteDatasource {
       });
 
       response = await _apiService.patch(
-        '/iot/device/$id/',
+        '/iot/device/$serialId/',
         data: formData,
         options: Options(headers: {'Content-Type': 'multipart/form-data'}),
       );
@@ -72,14 +72,17 @@ class ModulRemoteDatasourceImpl implements ModulRemoteDatasource {
       if (password != null) requestData['password'] = password;
       if (description != null) requestData['descriptions'] = description;
 
-      response = await _apiService.patch('/iot/device/$id/', data: requestData);
+      response = await _apiService.patch(
+        '/iot/device/$serialId/',
+        data: requestData,
+      );
     }
     final responseData = response.data['data'] as Map<String, dynamic>;
     return ModulModel.fromJson(responseData);
   }
 
   @override
-  Future<void> deleteModulFromUser(String id) async {
-    await _apiService.delete('/iot/device/$id/');
+  Future<void> deleteModulFromUser(String serialId) async {
+    await _apiService.delete('/iot/device/$serialId/');
   }
 }
