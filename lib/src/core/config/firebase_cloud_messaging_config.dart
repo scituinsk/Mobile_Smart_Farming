@@ -51,6 +51,12 @@ class FirebaseCloudMessagingConfig {
     await _initializeLocalNotifications();
     await _createNotificationChannel();
     _setupMessageListeners();
+
+    final RemoteMessage? initialMessage = await FirebaseMessaging.instance
+        .getInitialMessage();
+    if (initialMessage != null) {
+      _handleNotificationTap(initialMessage);
+    }
   }
 
   /// Request notification permission on Android 13+
@@ -275,6 +281,30 @@ class FirebaseCloudMessagingConfig {
       title ?? "",
       body ?? "",
       NotificationDetails(android: androidDetails),
+    );
+  }
+
+  static void _handleNotificationTap(RemoteMessage message) {
+    final storageService = Get.find<StorageService>();
+    final String? serialId = message.data["serial_id"];
+    final int? schedule = int.tryParse(
+      message.data["schedule"]?.toString() ?? '',
+    );
+
+    if (serialId != null) {
+      storageService.write("notification_serial_id", serialId);
+      if (schedule != null) {
+        storageService.writeInt("notification_schedule", schedule);
+      }
+      print("data notifikasi tersimpan");
+    }
+    print("data notifikasi: ${message.data}");
+    print(
+      "serial_id data: ${message.data["serial_id"]} | tipe data: ${message.data["serial_id"].runtimeType}",
+    );
+
+    print(
+      "schedule data: ${message.data["schedule"]} | tipe data: ${message.data["schedule"].runtimeType}",
     );
   }
 }

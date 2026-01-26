@@ -36,7 +36,7 @@ class ModulItem extends StatelessWidget {
           ? () => ModulLockedDialog.show(context, modul.serialId)
           : () => Get.toNamed(
               RouteNames.detailModulPage,
-              arguments: modul.serialId,
+              arguments: {"serial_id": modul.serialId},
             ),
       child: Stack(
         children: [

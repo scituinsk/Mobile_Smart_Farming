@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/services/device_ws_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/services/web_socket_service.dart';
@@ -33,7 +34,9 @@ class ModulDetailUiController extends GetxController {
 
   Rxn<File> selectedImage = Rxn<File>(null);
 
-  late String modulId;
+  late Map<String, dynamic> arguments;
+  late String serialId;
+  late int? scheduleGroupId;
 
   final ws = Rxn<DeviceWsService>();
   StreamSubscription? _sub;
@@ -66,8 +69,10 @@ class ModulDetailUiController extends GetxController {
     super.onInit();
     isLoading.value = true;
     try {
-      modulId = await Get.arguments;
-      await getDevice(modulId);
+      arguments = await Get.arguments;
+      serialId = arguments["serial_id"];
+      scheduleGroupId = arguments["schedule"];
+      await getDevice(serialId);
       print("selected device: ${modul.value!.name}");
 
       _initFormController();
@@ -76,6 +81,11 @@ class ModulDetailUiController extends GetxController {
         modul.value!.serialId,
       );
       await _initWsStream();
+      if (scheduleGroupId != null) {
+        if (scheduleGroupId! > 0) {
+          Get.toNamed(RouteNames.groupSchedulePage, arguments: scheduleGroupId);
+        }
+      }
     } catch (e) {
       _modulService.loadModuls(refresh: true);
       Get.back();
@@ -130,7 +140,7 @@ class ModulDetailUiController extends GetxController {
 
     final handle =
         ws.value ??
-        await _wsService.getOrOpenDeviceStream(token: token, modulId: modulId);
+        await _wsService.getOrOpenDeviceStream(token: token, modulId: serialId);
 
     if (ws.value == null) {
       ws.value = handle;
@@ -496,7 +506,7 @@ class ModulDetailUiController extends GetxController {
     await _sub?.cancel();
 
     if (ws.value != null) {
-      await _wsService.closeDeviceStream(modulId);
+      await _wsService.closeDeviceStream(serialId);
       ws.value = null;
     }
 

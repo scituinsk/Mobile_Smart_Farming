@@ -78,7 +78,20 @@ class _SplashScreenState extends State<SplashScreen> {
       if (authService.isLoggedIn.value) {
         statusMessage.value = 'Welcome back!';
         await Future.delayed(Duration(milliseconds: 300));
-        Get.offAllNamed(RouteNames.mainPage);
+
+        final serialId = storageService.read("notification_serial_id");
+        final schedule = storageService.readInt("notification_schedule");
+        Map<String, dynamic>? argument;
+        if (serialId != null) {
+          argument = {"serial_id": serialId};
+          if (schedule != null) {
+            argument = {"serial_id": serialId, "schedule": schedule};
+          }
+        }
+        print("ke main screen bawa arguments: $argument");
+        Get.offAllNamed(RouteNames.mainPage, arguments: argument);
+        await storageService.delete("notification_serial_id");
+        await storageService.delete("notification_schedule");
       } else {
         statusMessage.value = 'Please login...';
         await Future.delayed(Duration(milliseconds: 300));

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/config/firebase_cloud_messaging_config.dart';
+import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
 import 'package:pak_tani/src/features/history/presentation/bindings/history_binding.dart';
 import 'package:pak_tani/src/features/history/presentation/controllers/history_controller.dart';
@@ -48,11 +49,14 @@ class MainNavigationController extends GetxController
   /// Argument Modul id
   Modul? modulIdArg;
 
+  late Map<String, dynamic>? notificationArguments;
+
   RxInt get unreadNotificationCount => _notificationService.unreadCount;
 
   @override
   void onInit() async {
     super.onInit();
+    notificationArguments = Get.arguments;
     _initializeControllers();
     _initializeTab(0);
     _updateScreensList();
@@ -131,17 +135,21 @@ class MainNavigationController extends GetxController
 
   /// Initialized the modul tab/screen.
   /// Register modul binding if not alredy registered.
-  void _initializeModulTab() {
+  void _initializeModulTab() async {
     if (!Get.isRegistered<ModulBinding>()) {
       ModulBinding().dependencies();
       print("inisialisasi modul binding");
     }
+    _screensCache[0] = ModulsScreen();
 
     // load all moduls
+    print("load modul init");
     final modulService = Get.find<ModulService>();
-    modulService.loadModuls();
-
-    _screensCache[0] = ModulsScreen();
+    await modulService.loadModuls();
+    if (notificationArguments != null) {
+      print("notif argument: $notificationArguments");
+      Get.toNamed(RouteNames.detailModulPage, arguments: notificationArguments);
+    }
   }
 
   /// Initialize the history tab/screen.
@@ -235,8 +243,9 @@ class MainNavigationController extends GetxController
   void _loadTabLifeCycle(int index) async {
     switch (index) {
       case 0:
+        print("load modul lifecycle");
         final modulService = Get.find<ModulService>();
-        modulService.loadModuls();
+        await modulService.loadModuls();
         break;
       case 1:
         final historyController = Get.find<HistoryController>();
