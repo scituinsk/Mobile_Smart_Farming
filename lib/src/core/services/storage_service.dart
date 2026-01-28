@@ -26,7 +26,7 @@ class StorageService extends GetxService {
     super.onInit();
     _prefs = await SharedPreferences.getInstance();
     _secureStorage = FlutterSecureStorage(
-      aOptions: AndroidOptions(encryptedSharedPreferences: true),
+      aOptions: AndroidOptions(resetOnError: true),
     );
 
     await Hive.initFlutter();

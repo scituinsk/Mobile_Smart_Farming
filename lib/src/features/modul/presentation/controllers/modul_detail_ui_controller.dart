@@ -4,13 +4,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/services/device_ws_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/services/web_socket_service.dart';
-import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 import 'package:pak_tani/src/features/relays/application/services/relay_service.dart';
@@ -314,53 +311,6 @@ class ModulDetailUiController extends GetxController {
     } catch (e) {
       print("error (ui controller): $e");
       MySnackbar.error(message: e.toString());
-    }
-  }
-
-  Future<void> pickAndCropImage(ImageSource source) async {
-    final ImagePicker picker = ImagePicker();
-
-    try {
-      Get.dialog(
-        const Center(child: CircularProgressIndicator(color: Colors.white)),
-        barrierDismissible: false,
-        barrierColor: Colors.black54,
-        useSafeArea: false,
-      );
-
-      //pick file
-      final XFile? pickedFile = await picker.pickImage(
-        source: source,
-        imageQuality: 100,
-      );
-
-      print("berhasil memilih file: $pickedFile");
-      if (pickedFile != null) {
-        print("memulai crop iamge:");
-        final CroppedFile? croppedFile = await ImageCropper().cropImage(
-          sourcePath: pickedFile.path,
-          aspectRatio: CropAspectRatio(ratioX: 590, ratioY: 390),
-          uiSettings: [
-            AndroidUiSettings(
-              toolbarTitle: "Crop Gambar",
-              toolbarColor: AppTheme.primaryColor,
-              toolbarWidgetColor: Colors.white,
-              initAspectRatio: CropAspectRatioPreset.original,
-              lockAspectRatio: true,
-              hideBottomControls: false,
-              aspectRatioPresets: [CropAspectRatioPreset.original],
-            ),
-          ],
-          compressQuality: 80,
-        );
-        if (croppedFile != null) {
-          selectedImage.value = File(croppedFile.path);
-        }
-      }
-    } finally {
-      if (Get.isDialogOpen ?? false) {
-        Get.back();
-      }
     }
   }
 

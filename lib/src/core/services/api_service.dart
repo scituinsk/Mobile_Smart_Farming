@@ -235,7 +235,7 @@ class ApiService extends GetxService {
 
     try {
       print('🔄 Getting refresh token...');
-      final refreshToken = await _storage.readSecure('refresh_token');
+      final refreshToken = await await _storage.readSecure('refresh_token');
 
       if (refreshToken == null || refreshToken.isEmpty) {
         print('❌ No refresh token found');

@@ -23,6 +23,9 @@ enum MyCustomIcon {
   search,
   calendarSync,
   server,
+  instagram,
+  whatsapp,
+  gmail,
 }
 
 /// Returns the asset path for the given custom icon type.
@@ -66,6 +69,13 @@ String iconAssets(MyCustomIcon type) {
       return "assets/icons/calendar-sync.svg";
     case MyCustomIcon.server:
       return "assets/icons/server.svg";
+    case MyCustomIcon.instagram:
+      return "assets/icons/instagram_logo.svg";
+
+    case MyCustomIcon.whatsapp:
+      return "assets/icons/whatsapp_logo.svg";
+    case MyCustomIcon.gmail:
+      return "assets/icons/gmail_logo.svg";
   }
 }
 

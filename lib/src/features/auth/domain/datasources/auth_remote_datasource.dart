@@ -1,4 +1,4 @@
-import 'package:pak_tani/src/features/auth/data/models/user_model.dart';
+import 'package:pak_tani/src/features/profile/data/models/user_model.dart';
 
 abstract class AuthRemoteDatasource {
   Future<UserModel> login(String email, String password);

@@ -39,4 +39,23 @@ class MySnackbar {
       dismissDirection: DismissDirection.horizontal,
     );
   }
+
+  ///Shows a warning snackbar with an orange background and warning icon.
+  static void warning({
+    String title = "Warning!",
+    required String message,
+  }) async {
+    Get.snackbar(
+      title,
+      message,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: const Color.fromARGB(255, 211, 93, 47),
+      colorText: Colors.white,
+      icon: const Icon(Icons.warning, color: Colors.white),
+      margin: EdgeInsets.all(16.r),
+      borderRadius: 8,
+      duration: const Duration(seconds: 4),
+      dismissDirection: DismissDirection.horizontal,
+    );
+  }
 }

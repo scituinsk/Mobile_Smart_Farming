@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/features/relays/domain/models/group_relay.dart';
 import 'package:pak_tani/src/features/relays/domain/models/relay.dart';
@@ -169,6 +170,14 @@ class RelayGroupList extends StatelessWidget {
                 : null,
             onItemReorder:
                 (oldItemIndex, oldListIndex, newItemIndex, newListIndex) {
+                  if (newListIndex == 0 && oldListIndex != 0) {
+                    print("Cannot move relay from group to unassigned");
+                    MySnackbar.warning(
+                      message: "Relay harus diletakkan di group!",
+                    );
+                    return;
+                  }
+
                   controller.moveRelayWithIndices(
                     oldListIndex,
                     oldItemIndex,

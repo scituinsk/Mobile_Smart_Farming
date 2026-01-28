@@ -167,7 +167,7 @@ class ModulDetailScreen extends StatelessWidget {
                                       duration: Duration(milliseconds: 100),
                                       height: 52.h,
                                       width: controller.isQrVisible.value
-                                          ? 350.w
+                                          ? 365.w
                                           : 320.w,
                                       curve: Curves.easeInOut,
                                       decoration: BoxDecoration(
@@ -202,7 +202,9 @@ class ModulDetailScreen extends StatelessWidget {
                                           child: Container(
                                             padding: EdgeInsets.all(8.r),
                                             child: Row(
-                                              spacing: 6.r,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Flexible(
@@ -222,6 +224,7 @@ class ModulDetailScreen extends StatelessWidget {
                                                           FontWeight.w500,
                                                     ),
                                                     maxLines: 1,
+                                                    textAlign: TextAlign.center,
                                                   ),
                                                 ),
 

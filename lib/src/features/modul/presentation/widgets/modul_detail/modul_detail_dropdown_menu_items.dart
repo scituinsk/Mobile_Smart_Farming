@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/config/app_config.dart';
 import 'package:pak_tani/src/core/controllers/main_navigation_controller.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/utils/custom_dialog.dart';
+import 'package:pak_tani/src/core/utils/image_utils.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_filled_button.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
@@ -72,49 +72,6 @@ abstract class ModulDetailDropdownMenuItems {
               ),
             ],
           );
-  }
-
-  static Future<void> _showImageSourceBottomSheet(BuildContext context) async {
-    final controller = Get.find<ModulDetailUiController>();
-
-    await showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-      ),
-      builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Pilih Sumber Gambar', style: AppTheme.h4),
-              SizedBox(height: 20.h),
-              ListTile(
-                leading: Icon(Icons.camera_alt, color: AppTheme.primaryColor),
-                title: Text('Kamera', style: AppTheme.text),
-                onTap: () async {
-                  Get.back();
-                  await controller.pickAndCropImage(ImageSource.camera);
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.photo_library,
-                  color: AppTheme.primaryColor,
-                ),
-                title: Text('Galeri', style: AppTheme.text),
-                onTap: () async {
-                  Get.back();
-                  await controller.pickAndCropImage(ImageSource.gallery);
-                },
-              ),
-              SizedBox(height: 10.h),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   static void onChanged(BuildContext context, MenuItem item) {
@@ -199,8 +156,14 @@ abstract class ModulDetailDropdownMenuItems {
                               backgroundColor: AppTheme.primaryColor,
                               iconColor: Colors.white,
                               padding: 6,
-                              onPressed: () {
-                                _showImageSourceBottomSheet(context);
+                              onPressed: () async {
+                                final croppedImage =
+                                    await ImageUtils.showImageSourceAndPick(
+                                      context,
+                                    );
+                                if (croppedImage != null) {
+                                  controller.selectedImage.value = croppedImage;
+                                }
                               },
                             ),
                           ),
