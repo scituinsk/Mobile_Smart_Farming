@@ -20,12 +20,12 @@ class MenuItem {
 
 abstract class ModulDetailDropdownMenuItems {
   static const modulLogs = MenuItem(
-    text: "Riwayat Modul",
+    text: "Riwayat Perangkat",
     icon: LucideIcons.scrollText,
   );
-  static const editIcon = MenuItem(text: "Edit Modul", icon: Icons.edit);
+  static const editIcon = MenuItem(text: "Edit Perangkat", icon: Icons.edit);
   static const deleteIcon = MenuItem(
-    text: "Delete Modul",
+    text: "Hapus Perangkat",
     icon: Icons.delete_rounded,
   );
   static const editPasswordIcon = MenuItem(
@@ -84,7 +84,13 @@ abstract class ModulDetailDropdownMenuItems {
           widthChild: double.infinity,
           dialogMargin: 20,
           context: context,
-          title: Text("Edit Modul", style: AppTheme.h4),
+          title: Row(
+            spacing: 10.w,
+            children: [
+              Icon(LucideIcons.squarePen, color: AppTheme.primaryColor),
+              Text("Edit Perangkat", style: AppTheme.h4),
+            ],
+          ),
           child: SingleChildScrollView(
             child: Form(
               key: controller.formKeyEdit,
@@ -95,7 +101,7 @@ abstract class ModulDetailDropdownMenuItems {
                 children: [
                   MyTextField(
                     fieldWidth: double.infinity,
-                    title: "Nama Modul",
+                    title: "Nama Perangkat",
                     validator: controller.validateName,
                     controller: controller.modulNameC,
                     hint: "Ex: Greenhouse A",
@@ -103,7 +109,7 @@ abstract class ModulDetailDropdownMenuItems {
                   ),
                   MyTextField(
                     fieldWidth: double.infinity,
-                    title: "Deskripsi Modul",
+                    title: "Deskripsi Perangkat",
                     controller: controller.modulDescriptionC,
                     hint: "Ex: Greenhouse timur",
                     borderRadius: 10,
@@ -112,7 +118,7 @@ abstract class ModulDetailDropdownMenuItems {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Gambar Modul", style: AppTheme.h4),
+                      Text("Gambar Perangkat", style: AppTheme.h4),
                       Stack(
                         children: [
                           Obx(() {
@@ -223,11 +229,11 @@ abstract class ModulDetailDropdownMenuItems {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.delete_outline_rounded,
-                  color: AppTheme.primaryColor,
+                  LucideIcons.trash2,
+                  color: AppTheme.errorColor,
                   size: 38.r,
                 ),
-                Text("Hapus Modul ini?", style: AppTheme.h4),
+                Text("Hapus Perangkat dari akun?", style: AppTheme.h4),
               ],
             ),
           ),
@@ -238,7 +244,7 @@ abstract class ModulDetailDropdownMenuItems {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Item modul ini akan dihapus dari daftar modul.",
+                  "Perangkat ini akan dihapus dari daftar Perangkat di akun ini.",
                   textAlign: TextAlign.center,
                   style: AppTheme.textDefault,
                 ),
@@ -252,7 +258,7 @@ abstract class ModulDetailDropdownMenuItems {
                         Get.back();
                       },
                       backgroundColor: AppTheme.surfaceColor,
-                      textColor: AppTheme.primaryColor,
+                      textColor: AppTheme.surfaceDarker,
                     ),
                     MyFilledButton(
                       title: "Hapus",
@@ -274,10 +280,15 @@ abstract class ModulDetailDropdownMenuItems {
       case ModulDetailDropdownMenuItems.editPasswordIcon:
         controller.isPasswordFormValid.value = false;
         CustomDialog.show(
-          // widthTitle: 240,
           dialogMargin: 40,
           context: context,
-          title: Text("Edit password", style: AppTheme.h4),
+          title: Row(
+            spacing: 10.w,
+            children: [
+              Icon(Icons.lock_outline, color: AppTheme.primaryColor),
+              Text("Edit password", style: AppTheme.h4),
+            ],
+          ),
           child: SingleChildScrollView(
             child: Form(
               key: controller.formKeyPassword,

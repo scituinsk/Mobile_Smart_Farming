@@ -127,6 +127,7 @@ class ModulItem extends StatelessWidget {
           if (modul.isLocked!)
             Positioned.fill(
               child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
                 decoration: BoxDecoration(
                   color: Colors.black.withValues(
                     alpha: 0.5,
@@ -144,11 +145,18 @@ class ModulItem extends StatelessWidget {
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                        'Locked', // Tulisan
+                        'Perangkat terkunci', // Tulisan
                         style: AppTheme.textMedium.copyWith(
                           color: Colors.white,
                           fontSize: 16.sp,
                         ),
+                      ),
+                      Text(
+                        "Masukkan ulang password Perangkat yang baru untuk mengakses Perangkat!",
+                        style: AppTheme.textAction.copyWith(
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),
@@ -166,8 +174,7 @@ class ModulItem extends StatelessWidget {
           (feature) =>
               feature.name == "temperature" ||
               feature.name == "humidity" ||
-              feature.name == "water_level" ||
-              feature.name == "schedule",
+              feature.name == "water_level",
         )
         .toList();
 

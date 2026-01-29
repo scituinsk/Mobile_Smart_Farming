@@ -26,6 +26,8 @@ enum MyCustomIcon {
   instagram,
   whatsapp,
   gmail,
+  notifEmpty,
+  modulEmpty,
 }
 
 /// Returns the asset path for the given custom icon type.
@@ -71,6 +73,10 @@ String iconAssets(MyCustomIcon type) {
       return "assets/icons/server.svg";
     case MyCustomIcon.instagram:
       return "assets/icons/instagram_logo.svg";
+    case MyCustomIcon.modulEmpty:
+      return "assets/svgs/modul_empty.svg";
+    case MyCustomIcon.notifEmpty:
+      return "assets/svgs/notif_empty.svg";
 
     case MyCustomIcon.whatsapp:
       return "assets/icons/whatsapp_logo.svg";

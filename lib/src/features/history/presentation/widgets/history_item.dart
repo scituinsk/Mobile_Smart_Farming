@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
-import 'package:pak_tani/src/core/utils/time_of_day_parse_helper.dart';
+import 'package:pak_tani/src/core/utils/time_parser_helper.dart';
 import 'package:pak_tani/src/core/utils/custom_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_display_chip.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
@@ -57,7 +57,7 @@ class _HistoryItemState extends State<HistoryItem> {
       final start = schedule.startTime;
       final end = schedule.endTime;
       final key =
-          "${TimeOfDayParseHelper.formatTimeOfDay(start)}-${TimeOfDayParseHelper.formatTimeOfDay(end)}";
+          "${TimeParserHelper.formatTimeOfDay(start)}-${TimeParserHelper.formatTimeOfDay(end)}";
 
       pins.putIfAbsent(key, () => []).add(schedule.pinName);
       times.putIfAbsent(key, () => {"start": start, "end": end});
@@ -149,7 +149,7 @@ class _HistoryItemState extends State<HistoryItem> {
                         children: [
                           Text(
                             widget.history.alarmTime != null
-                                ? TimeOfDayParseHelper.formatTimeOfDay(
+                                ? TimeParserHelper.formatTimeOfDay(
                                     widget.history.alarmTime!,
                                   )
                                 : "${widget.history.createdAt.hour}:${widget.history.createdAt.minute}",

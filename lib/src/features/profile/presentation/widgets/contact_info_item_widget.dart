@@ -19,7 +19,7 @@ class ContactInfoItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: url != null ? () => _launchURL(url!) : null,
+      onTap: url != null ? () async => await _launchURL(url!) : null,
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -41,10 +41,10 @@ class ContactInfoItemWidget extends StatelessWidget {
 
   Future<void> _launchURL(String url) async {
     final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      throw "Could not launch $url";
-    }
+    // if (await canLaunchUrl(uri)) {
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+    // } else {
+    // print("could't launch url: $uri");
+    // }
   }
 }

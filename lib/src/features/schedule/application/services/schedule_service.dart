@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pak_tani/src/core/utils/time_of_day_parse_helper.dart';
+import 'package:pak_tani/src/core/utils/time_parser_helper.dart';
 import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/schedule/domain/entities/schedule.dart';
 import 'package:pak_tani/src/features/schedule/domain/repositories/schedule_repository.dart';
@@ -51,7 +51,7 @@ class ScheduleService extends GetxService {
   }) async {
     isSaving.value = true;
     try {
-      final timeParse = TimeOfDayParseHelper.fromatTimeOfDayToUtcString(time);
+      final timeParse = TimeParserHelper.fromatTimeOfDayToUtcString(time);
       final newSchedule = await _repository.addSchedule(
         groupId.toString(),
         time: timeParse,
@@ -103,7 +103,7 @@ class ScheduleService extends GetxService {
     try {
       String? timeParse;
       if (time != null) {
-        timeParse = TimeOfDayParseHelper.fromatTimeOfDayToUtcString(time);
+        timeParse = TimeParserHelper.fromatTimeOfDayToUtcString(time);
       }
 
       final editedSchedule = await _repository.editSchedule(

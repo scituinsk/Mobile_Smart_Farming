@@ -1,4 +1,4 @@
-import 'package:pak_tani/src/core/utils/time_of_day_parse_helper.dart';
+import 'package:pak_tani/src/core/utils/time_parser_helper.dart';
 import 'package:pak_tani/src/features/history/data/models/schedule_history_model.dart';
 import 'package:pak_tani/src/features/history/domain/entities/history.dart';
 import 'package:pak_tani/src/features/history/domain/entities/schedule_history.dart';
@@ -30,7 +30,7 @@ class HistoryModel extends History {
       name: json["name"] ?? "",
       message: json["data"]["message"],
       alarmTime: json["alarm_at"] != null
-          ? TimeOfDayParseHelper.parseTimeOfDay(json["alarm_at"])
+          ? TimeParserHelper.parseTimeOfDay(json["alarm_at"])
           : null,
       scheduleHistories: json["data"]["pins"] != null
           ? (json["data"]["pins"] as List<dynamic>)

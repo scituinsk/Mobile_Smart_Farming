@@ -24,6 +24,9 @@ class FilterSelectionChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected ? AppTheme.primaryColor : AppTheme.surfaceColor,
           borderRadius: BorderRadius.circular(5.r),
+          border: BoxBorder.all(
+            color: isSelected ? Colors.transparent : AppTheme.surfaceHover,
+          ),
         ),
         child: Text(
           title,

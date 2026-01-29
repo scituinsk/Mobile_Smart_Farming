@@ -31,6 +31,7 @@ class LoadingDialog {
       ),
       barrierColor: Colors.black.withValues(alpha: 0.3),
       barrierDismissible: false,
+      routeSettings: RouteSettings(name: "loading"),
     );
   }
 

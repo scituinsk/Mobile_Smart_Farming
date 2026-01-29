@@ -28,9 +28,9 @@ class AddModulScreen extends StatelessWidget {
         ),
         title: Column(
           children: [
-            Text("Tambah Modul", style: AppTheme.h3),
+            Text("Tambah Perangkat", style: AppTheme.h3),
             Text(
-              "Kelola modul sensor & perangkat",
+              "Tambahkan perangkat ke akun ini",
               style: AppTheme.textSmall.copyWith(
                 color: AppTheme.titleSecondary,
               ),
@@ -65,11 +65,11 @@ class AddModulScreen extends StatelessWidget {
                 spacing: 20.r,
                 children: [
                   AddModulCodeInput(
-                    title: "Kode Modul",
+                    title: "Kode Perangkat",
                     hintText: "Ex: 018bd6f8-7d8b-7132-842b-3247e",
                   ),
                   MyTextField(
-                    title: "Password Modul",
+                    title: "Password Perangkat",
                     hint: "Ex: paktani1",
                     fillColor: Colors.white,
                     controller: controller.modulPasswordController,
@@ -99,11 +99,12 @@ class AddModulScreen extends StatelessWidget {
                           ? null
                           : () => controller.handleAddModul(),
                       child: controller.isSubmitting.value
-                          ? Padding(
-                              padding: EdgeInsets.all(5.0.r),
+                          ? SizedBox(
+                              height: 25.h,
+                              width: 25.w,
                               child: CircularProgressIndicator(),
                             )
-                          : Text('Tambah Modul'),
+                          : Text('Tambahkan Perangkat'),
                     ),
                   ),
                 ],

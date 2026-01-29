@@ -5,6 +5,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/config/firebase_cloud_messaging_config.dart';
@@ -285,8 +286,11 @@ class MainNavigationController extends GetxController
 
     // Show exit confirmation dialog
     final shouldExit = await _showExitDialog();
-    print('🔄 Should exit: $shouldExit');
-    return shouldExit ?? false;
+    if (shouldExit == true) {
+      SystemNavigator.pop();
+      return false;
+    }
+    return false;
   }
 
   /// Shows an exit confirmation dialog.

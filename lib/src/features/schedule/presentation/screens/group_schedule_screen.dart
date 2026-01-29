@@ -59,15 +59,18 @@ class ScheduleScreen extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 30.w),
           width: mediaQueryWidth,
           height: mediaQueryHeight,
-          child: ListView(
-            children: [
-              SizedBox(height: 10.h),
-              GroupScheduleInformation(),
-              SizedBox(height: 20.h),
-              SolenoidList(),
-              SizedBox(height: 20.h),
-              ScheduleList(),
-            ],
+          child: RefreshIndicator(
+            onRefresh: controller.handleRefreshSchedule,
+            child: ListView(
+              children: [
+                SizedBox(height: 10.h),
+                GroupScheduleInformation(),
+                SizedBox(height: 20.h),
+                SolenoidList(),
+                SizedBox(height: 20.h),
+                ScheduleList(),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,4 +1,4 @@
-/// A utility class for parsing and formatting TimeOfDay objects.
+/// A utility class for parsing and formatting Time.
 /// This class povides static methods o convert between string representations and TimeOfDay,
 /// handling local and UTC time conversions for accurate time management in the app.
 
@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 /// A helper class for TimeOfDay parsing and formatting utilities.
 /// Contains methods to parse strings into TimeOfDay, format TimeOfDay to strings,
 /// and convert TimeOfDay to UTC strings.
-class TimeOfDayParseHelper {
+class TimeParserHelper {
   /// Parses a time string with format HH:MM into a TimeOfDay object.
   /// [timeString] is in UTC time and convert to local time.
   /// Defaults to 00:00 if parsing fails.
@@ -49,5 +49,11 @@ class TimeOfDayParseHelper {
     final hh = utcDt.hour.toString().padLeft(2, '0');
     final mm = utcDt.minute.toString().padLeft(2, '0');
     return '$hh:$mm';
+  }
+
+  static String formatDateTimeToString(DateTime time) {
+    final hh = time.hour.toString().padLeft(2, "0");
+    final mm = time.minute.toString().padLeft(2, "0");
+    return "$hh:$mm";
   }
 }

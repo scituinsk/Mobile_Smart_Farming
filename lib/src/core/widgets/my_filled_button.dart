@@ -26,7 +26,7 @@ class MyFilledButton extends StatelessWidget {
       style: ButtonStyle(
         backgroundColor: WidgetStateProperty.all(backgroundColor),
         padding: WidgetStateProperty.all(
-          EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+          EdgeInsets.symmetric(horizontal: 20.w),
         ),
       ),
       child: child ?? Text(title ?? "", style: TextStyle(color: textColor)),

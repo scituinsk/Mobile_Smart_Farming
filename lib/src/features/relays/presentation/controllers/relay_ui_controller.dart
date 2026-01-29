@@ -64,6 +64,21 @@ class RelayUiController extends GetxController {
     isEditingRelay.value = !isEditingRelay.value;
   }
 
+  Future<void> handleReloadRelays() async {
+    if (isLoading.value) return;
+    try {
+      if (selectedModul.value == null) {
+        throw Exception("Tidak ada Perangkat yang dipilih");
+      }
+      await relayService.loadRelaysAndAssignToRelayGroup(
+        selectedModul.value!.serialId,
+      );
+    } catch (e) {
+      print("error reload relays (controller): $e");
+      MySnackbar.error(message: e.toString());
+    }
+  }
+
   Future<void> handleAddRelayGroup() async {
     final formState = formKey.currentState;
     if (formState == null) return;
@@ -81,6 +96,9 @@ class RelayUiController extends GetxController {
         await relayService.addRelayGroup(
           selectedModul.value!.id,
           groupName.text,
+        );
+        await relayService.loadRelaysAndAssignToRelayGroup(
+          selectedModul.value!.serialId,
         );
         Get.back();
         MySnackbar.success(message: "Berhasil menambahkan RelayGroup");
@@ -128,7 +146,8 @@ class RelayUiController extends GetxController {
 
     if (isLoading.value) return;
     try {
-      if (selectedModul.value == null) throw Exception("Modul tidak ditemukan");
+      if (selectedModul.value == null)
+        throw Exception("Perangkat tidak ditemukan");
 
       await relayService.editRelay(
         id,
@@ -190,7 +209,7 @@ class RelayUiController extends GetxController {
 
   String? validateDescription(String? value) {
     final v = value?.trim() ?? "";
-    if (v.length >= 1000) return "Nama modul maksimal 1000 karakter";
+    if (v.length >= 1000) return "Nama Perangkat maksimal 1000 karakter";
     return null;
   }
 
@@ -256,7 +275,9 @@ class RelayUiController extends GetxController {
       await relayService.loadRelaysAndAssignToRelayGroup(
         selectedModul.value!.serialId,
       );
+      LoadingDialog.hide();
     } catch (e, st) {
+      LoadingDialog.hide();
       print("Failed to move relay: $e\n$st");
       MySnackbar.error(message: "Gagal memindahkan relay");
 
@@ -264,8 +285,6 @@ class RelayUiController extends GetxController {
       await relayService.loadRelaysAndAssignToRelayGroup(
         selectedModul.value!.serialId,
       );
-    } finally {
-      LoadingDialog.hide();
     }
   }
 

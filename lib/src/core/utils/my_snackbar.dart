@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/theme/app_theme.dart';
 
 /// A utility class for custom snackbars.
 /// Contains static methods to display success and error notifications.
@@ -49,7 +50,7 @@ class MySnackbar {
       title,
       message,
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: const Color.fromARGB(255, 211, 93, 47),
+      backgroundColor: AppTheme.warningColor,
       colorText: Colors.white,
       icon: const Icon(Icons.warning, color: Colors.white),
       margin: EdgeInsets.all(16.r),

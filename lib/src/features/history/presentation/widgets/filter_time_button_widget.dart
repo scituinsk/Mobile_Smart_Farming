@@ -33,7 +33,7 @@ class FilterTimeButtonWidget extends StatelessWidget {
       backgroundColor: AppTheme.surfaceColor,
       borderRadius: 5,
       child: Row(
-        spacing: 10.r,
+        spacing: 4.w,
         children: [
           dateValue != null ? Text(dateString!) : Text("Pilih tanggal"),
           Icon(Icons.calendar_month_rounded, color: AppTheme.primaryColor),

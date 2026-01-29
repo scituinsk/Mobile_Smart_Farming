@@ -1,4 +1,4 @@
-import 'package:pak_tani/src/core/utils/time_of_day_parse_helper.dart';
+import 'package:pak_tani/src/core/utils/time_parser_helper.dart';
 import 'package:pak_tani/src/features/history/domain/entities/schedule_history.dart';
 
 class ScheduleHistoryModel extends ScheduleHistory {
@@ -10,9 +10,9 @@ class ScheduleHistoryModel extends ScheduleHistory {
 
   factory ScheduleHistoryModel.fromJson(Map<String, dynamic> json) {
     return ScheduleHistoryModel(
-      startTime: TimeOfDayParseHelper.parseTimeOfDay(json["start"]),
-      endTime: TimeOfDayParseHelper.parseTimeOfDay(json["end"]),
-      pinName: json["pin"],
+      startTime: TimeParserHelper.parseTimeOfDay(json["start"]),
+      endTime: TimeParserHelper.parseTimeOfDay(json["end"]),
+      pinName: json["pin"].toString(),
     );
   }
 

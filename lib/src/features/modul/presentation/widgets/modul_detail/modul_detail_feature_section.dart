@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
+import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/utils/modul_feature_helper.dart';
 import 'package:pak_tani/src/core/utils/custom_icon.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul_feature.dart';
@@ -54,12 +55,45 @@ class ModulDetailFeatureSection extends StatelessWidget {
             crossAxisSpacing: 8,
             itemBuilder: (context, index) {
               if (index == 0) {
-                return ModulDetailFeatureItem(
-                  title: "Relay",
-                  icon: Icons.settings,
-                  onPressed: () {
+                return InkWell(
+                  borderRadius: BorderRadius.circular(10.r),
+                  onTap: () {
                     Get.toNamed(RouteNames.relayPage);
                   },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppTheme.primaryColor,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    padding: EdgeInsets.all(10.r),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          spacing: 10.r,
+                          children: [
+                            Icon(Icons.settings, color: Colors.white, size: 28),
+                            Expanded(
+                              child: Text(
+                                "Pengaturan Relay",
+                                style: AppTheme.h4.copyWith(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          "Atur group relay untuk mengatur penjadwalan",
+                          style: AppTheme.textAction.copyWith(
+                            color: AppTheme.surfaceColor,
+                            fontSize: 11.sp,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
                 );
               }
 

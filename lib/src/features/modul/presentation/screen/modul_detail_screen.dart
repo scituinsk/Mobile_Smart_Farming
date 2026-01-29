@@ -37,7 +37,15 @@ class ModulDetailScreen extends StatelessWidget {
           height: mediaQueryHeight,
           child: Obx(() {
             if (controller.isLoading.value) {
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    Text("Memuat perangkat..."),
+                  ],
+                ),
+              );
             }
 
             return Stack(
@@ -311,24 +319,12 @@ class ModulDetailScreen extends StatelessWidget {
                                 horizontal: 16.w,
                                 vertical: 9.h,
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    controller.modul.value!.name,
-                                    style: AppTheme.h4.copyWith(
-                                      color: Colors.white,
-                                      shadows: AppShadows.blackFade,
-                                    ),
-                                  ),
-                                  Text(
-                                    controller.modul.value!.descriptions ?? "",
-                                    style: AppTheme.text.copyWith(
-                                      color: Colors.white,
-                                      shadows: AppShadows.blackFade,
-                                    ),
-                                  ),
-                                ],
+                              child: Text(
+                                controller.modul.value!.descriptions ?? "",
+                                style: AppTheme.text.copyWith(
+                                  color: Colors.white,
+                                  shadows: AppShadows.blackFade,
+                                ),
                               ),
                             ),
                           )
