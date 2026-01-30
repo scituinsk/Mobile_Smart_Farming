@@ -30,7 +30,7 @@ class ProfileController extends GetxController
   RxBool get isLoadingSubmit => profileService.isLoadingSubmit;
   RxMap<String, dynamic> get contacts => profileService.contacts;
 
-  void handleLogOut() async {
+  Future<void> handleLogOut() async {
     LoadingDialog.show();
     try {
       await authService.logout();

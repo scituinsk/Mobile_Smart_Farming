@@ -151,7 +151,18 @@ abstract class ModulDetailDropdownMenuItems {
                               ),
                               height: 164.h,
                               width: 240.w,
-                              child: Image(image: imageProvider),
+                              child: Image(
+                                image: imageProvider,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    },
+                              ),
                             );
                           }),
                           Positioned(
@@ -182,9 +193,7 @@ abstract class ModulDetailDropdownMenuItems {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       MyFilledButton(
-                        onPressed: () {
-                          Get.back();
-                        },
+                        onPressed: () => Get.back(),
                         backgroundColor: Colors.white,
                         title: "Batal",
                         textColor: AppTheme.primaryColor,

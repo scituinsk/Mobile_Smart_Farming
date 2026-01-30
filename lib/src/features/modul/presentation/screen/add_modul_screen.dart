@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_back_button.dart';
-import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/add_modul_ui_controller.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/add_modul_form/add_modul_code_input.dart';
@@ -39,17 +38,6 @@ class AddModulScreen extends StatelessWidget {
         ),
         centerTitle: true,
         actionsPadding: EdgeInsets.only(right: 30.w),
-        actions: [
-          IconButton(
-            onPressed: () {
-              MySnackbar.error(
-                title: "Coming soon...",
-                message: "Fitur belum ada, sabar bang :)",
-              );
-            },
-            icon: Icon(Icons.info, color: AppTheme.primaryColor, size: 28),
-          ),
-        ],
       ),
       body: Container(
         width: mediaQueryWidth,

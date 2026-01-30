@@ -31,6 +31,14 @@ class PhotoProfileWidget extends StatelessWidget {
                           fit: BoxFit.cover,
                           width: 100.w,
                           height: 100.h,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                                color: AppTheme.primaryColor,
+                              ),
+                            );
+                          },
                         ),
                       )
                     : Icon(

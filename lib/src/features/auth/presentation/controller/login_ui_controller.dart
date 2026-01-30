@@ -8,7 +8,6 @@ class LoginUiController extends GetxController {
   late GlobalKey<FormState> formKey;
 
   final RxBool isFormValid = false.obs;
-  final RxBool rememberMe = false.obs;
 
   @override
   void onInit() {
@@ -37,7 +36,12 @@ class LoginUiController extends GetxController {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
-    isFormValid.value = email.isNotEmpty && password.isNotEmpty;
+    // Tambahkan validasi lengkap
+    final emailError = validateEmailandUsername(email);
+    final passwordError = validatePassword(password);
+
+    isFormValid.value = emailError == null && passwordError == null;
+    print("is valid: ${isFormValid.value}");
   }
 
   void handleLogin() {
@@ -50,8 +54,21 @@ class LoginUiController extends GetxController {
   }
 
   // ✅ Add email validation
-  String? validateEmail(String? value) {
+  String? validateEmailandUsername(String? value) {
     if (value?.isEmpty ?? true) return 'Email atau username tidak boleh kosong';
+
+    // Check if it looks like an email
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
+    if (emailRegex.hasMatch(value!)) {
+      // Validate as email
+      if (!emailRegex.hasMatch(value)) return 'Format email tidak valid';
+    } else {
+      // Validate as username (e.g., length and characters)
+      if (value.length < 3) return 'Username minimal 3 karakter';
+      if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value))
+        return 'Username hanya boleh berisi huruf, angka, dan underscore';
+    }
+
     return null;
   }
 
@@ -59,9 +76,5 @@ class LoginUiController extends GetxController {
     if (value?.isEmpty ?? true) return 'Password tidak boleh kosong';
     if (value!.length < 6) return 'Password minimal 6 karakter';
     return null;
-  }
-
-  void toggleRememberMe() {
-    rememberMe.value = !rememberMe.value;
   }
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/config/app_config.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/utils/custom_icon.dart';
 import 'package:pak_tani/src/core/utils/modul_feature_helper.dart';
 import 'package:pak_tani/src/core/widgets/battery_status.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/feature_data.dart';
@@ -65,6 +65,14 @@ class ModulItem extends StatelessWidget {
                           fit: BoxFit.cover,
                           width: double.infinity,
                           height: double.infinity,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            );
+                          },
                         ),
                         Positioned(
                           top: 8.h,
@@ -83,10 +91,9 @@ class ModulItem extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SvgPicture.asset(
-                                  'assets/icons/mdi-greenhouse.svg',
-                                  width: 20.w,
-                                  height: 20.h,
+                                CustomIcon(
+                                  type: MyCustomIcon.greenHouse,
+                                  size: 20,
                                 ),
                                 Flexible(
                                   child: Text(

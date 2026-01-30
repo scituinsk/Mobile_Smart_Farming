@@ -51,7 +51,7 @@ class ModulDetailScreen extends StatelessWidget {
             return Stack(
               children: [
                 SizedBox(
-                  height: 318.h,
+                  height: mediaQueryHeight * 35 / 100,
                   child: Stack(
                     children: [
                       Obx(() {
@@ -78,27 +78,11 @@ class ModulDetailScreen extends StatelessWidget {
                             if (loadingProgress == null) {
                               return child;
                             }
-
                             return Center(child: CircularProgressIndicator());
                           },
                         );
                       }),
 
-                      Container(
-                        height: 318.h,
-                        width: mediaQueryWidth.w,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              Colors.black.withValues(alpha: 0.7),
-                            ],
-                            stops: [0.4, 1.0], // Atur posisi transisi gradient
-                          ),
-                        ),
-                      ),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           vertical: 18.h,
@@ -230,6 +214,13 @@ class ModulDetailScreen extends StatelessWidget {
                                                       fontSize: 14.sp,
                                                       fontWeight:
                                                           FontWeight.w500,
+                                                      shadows:
+                                                          controller
+                                                              .isQrVisible
+                                                              .value
+                                                          ? null
+                                                          : AppShadows
+                                                                .blackFade,
                                                     ),
                                                     maxLines: 1,
                                                     textAlign: TextAlign.center,
@@ -331,7 +322,10 @@ class ModulDetailScreen extends StatelessWidget {
                         : const SizedBox.shrink(key: ValueKey('collapsed')),
                   ),
                 ),
-                Positioned.fill(top: 298.h, child: ModulDetailFeatureSection()),
+                Positioned.fill(
+                  top: mediaQueryHeight * 32.5 / 100,
+                  child: ModulDetailFeatureSection(),
+                ),
               ],
             );
           }),

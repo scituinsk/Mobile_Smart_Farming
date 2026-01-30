@@ -7,6 +7,7 @@ import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/features/profile/presentation/controllers/profile_controller.dart';
 import 'package:pak_tani/src/features/profile/presentation/widgets/contact_info_widget.dart';
 import 'package:pak_tani/src/features/profile/presentation/widgets/edit_profile_widget.dart';
+import 'package:pak_tani/src/features/profile/presentation/widgets/logout_dialog.dart';
 import 'package:pak_tani/src/features/profile/presentation/widgets/photo_profile_widget.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -44,7 +45,7 @@ class ProfileScreen extends StatelessWidget {
                       icon: LucideIcons.logOut,
                       iconColor: Colors.white,
                       backgroundColor: AppTheme.errorColor,
-                      onPressed: controller.handleLogOut,
+                      onPressed: () => LogoutDialog.show(context),
                     ),
                   ),
                 ],
