@@ -63,9 +63,9 @@ extension HistoryTypeIcon on NotificationType {
       case NotificationType.system:
         return MyCustomIcon.server;
       case NotificationType.batteryMax:
-        return MyCustomIcon.batteryMax;
+        return MyCustomIcon.battery_4;
       case NotificationType.batteryLow:
-        return MyCustomIcon.batteryLow;
+        return MyCustomIcon.battery_1;
     }
   }
 }

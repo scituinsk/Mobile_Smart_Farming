@@ -57,11 +57,13 @@ class RelayUiController extends GetxController {
   void setEditingGroup() {
     if (!isEditingGroup.value) isEditingRelay.value = false;
     isEditingGroup.value = !isEditingGroup.value;
+    Get.back();
   }
 
   void setEditingRelay() {
     if (!isEditingRelay.value) isEditingGroup.value = false;
     isEditingRelay.value = !isEditingRelay.value;
+    Get.back();
   }
 
   Future<void> handleReloadRelays() async {
