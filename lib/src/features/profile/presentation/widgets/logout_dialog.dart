@@ -32,7 +32,7 @@ class LogoutDialog {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "Kamu akan keluar dari akun ini dan harus login ulang untuk mengkakses aplikasi lagi.\nYakin keluar akun?",
+              "Kamu akan keluar dari akun ini dan harus login ulang untuk mengakses aplikasi lagi.\nYakin keluar akun?",
               textAlign: TextAlign.center,
               style: AppTheme.textDefault,
             ),

@@ -146,7 +146,7 @@ class RegisterForm extends StatelessWidget {
                       child: GestureDetector(
                         onTap: () => Get.back(),
                         child: Text(
-                          " Login disini",
+                          " Login di sini",
                           style: AppTheme.text.copyWith(
                             color: AppTheme.primaryColor,
                             fontWeight: FontWeight.bold,

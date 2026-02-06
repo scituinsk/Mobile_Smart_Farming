@@ -59,7 +59,9 @@ class ModulDetailScreen extends StatelessWidget {
                         late ImageProvider imageProvider;
                         if (modul != null) {
                           imageProvider = modul.image != null
-                              ? NetworkImage((AppConfig.baseUrl + modul.image!))
+                              ? NetworkImage(
+                                  (AppConfig.imageUrl + modul.image!),
+                                )
                               : const AssetImage(
                                   'assets/image/default_modul.jpg',
                                 );

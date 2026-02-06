@@ -20,7 +20,7 @@ class ModulItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     late ImageProvider imageProvider = modul.image != null
-        ? NetworkImage((AppConfig.baseUrl + modul.image!))
+        ? NetworkImage((AppConfig.imageUrl + modul.image!))
         : const AssetImage('assets/image/default_modul.jpg');
 
     final batteryFeature = (modul.features ?? [])

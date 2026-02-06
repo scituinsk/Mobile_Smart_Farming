@@ -164,6 +164,7 @@ class RegisterUiController extends GetxController {
 
       await authController.register(
         firstName: firstNameController.text.trim(),
+        lastName: lastNameController.text.trim(),
         username: usernameController.text.trim(),
         email: emailController.text.trim(),
         password1: passwordController.text,

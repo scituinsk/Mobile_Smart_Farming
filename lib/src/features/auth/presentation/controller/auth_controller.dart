@@ -39,8 +39,8 @@ class AuthController extends GetxController {
         password2: password2,
       );
 
-      MySnackbar.success(message: "Register berhasil! silahkan login");
       Get.back();
+      MySnackbar.success(message: "Register berhasil! silahkan login");
     } catch (e) {
       print(e);
       MySnackbar.error(message: e.toString());

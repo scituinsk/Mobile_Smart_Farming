@@ -130,7 +130,7 @@ abstract class ModulDetailDropdownMenuItems {
                               if (modul != null) {
                                 imageProvider = modul.image != null
                                     ? NetworkImage(
-                                        (AppConfig.baseUrl + modul.image!),
+                                        (AppConfig.imageUrl + modul.image!),
                                       )
                                     : const AssetImage(
                                         'assets/image/default_modul.jpg',

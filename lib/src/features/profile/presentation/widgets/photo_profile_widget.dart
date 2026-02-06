@@ -25,7 +25,7 @@ class PhotoProfileWidget extends StatelessWidget {
                     ? ClipOval(
                         child: Image(
                           image: NetworkImage(
-                            (AppConfig.baseUrl +
+                            (AppConfig.imageUrl +
                                 controller.currentUser.value!.image!),
                           ),
                           fit: BoxFit.cover,

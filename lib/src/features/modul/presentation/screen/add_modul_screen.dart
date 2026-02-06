@@ -39,65 +39,67 @@ class AddModulScreen extends StatelessWidget {
         centerTitle: true,
         actionsPadding: EdgeInsets.only(right: 30.w),
       ),
-      body: Container(
-        width: mediaQueryWidth,
-        height: mediaQueryHeight,
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
-        child: Form(
-          key: controller.formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 30.r,
-            children: [
-              Column(
-                spacing: 20.r,
-                children: [
-                  AddModulCodeInput(
-                    title: "Kode Perangkat",
-                    hintText: "Ex: 018bd6f8-7d8b-7132-842b-3247e",
-                  ),
-                  MyTextField(
-                    title: "Password Perangkat",
-                    hint: "Ex: paktani1",
-                    fillColor: Colors.white,
-                    controller: controller.modulPasswordController,
-                    validator: controller.validatePassword,
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                spacing: 8.r,
-                children: [
-                  FilledButton(
-                    onPressed: () {
-                      Get.back();
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(Colors.white),
+      body: SafeArea(
+        child: Container(
+          width: mediaQueryWidth,
+          height: mediaQueryHeight,
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+          child: Form(
+            key: controller.formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 30.r,
+              children: [
+                Column(
+                  spacing: 20.r,
+                  children: [
+                    AddModulCodeInput(
+                      title: "Kode Perangkat",
+                      hintText: "Ex: 018bd6f8-7d8b-7132-842b-3247e",
                     ),
-                    child: Text(
-                      "Batal",
-                      style: TextStyle(color: AppTheme.primaryColor),
+                    MyTextField(
+                      title: "Password Perangkat",
+                      hint: "Ex: paktani1",
+                      fillColor: Colors.white,
+                      controller: controller.modulPasswordController,
+                      validator: controller.validatePassword,
                     ),
-                  ),
-                  Obx(
-                    () => FilledButton(
-                      onPressed: controller.isSubmitting.value
-                          ? null
-                          : () => controller.handleAddModul(),
-                      child: controller.isSubmitting.value
-                          ? SizedBox(
-                              height: 25.h,
-                              width: 25.w,
-                              child: CircularProgressIndicator(),
-                            )
-                          : Text('Tambahkan Perangkat'),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  spacing: 8.r,
+                  children: [
+                    FilledButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(Colors.white),
+                      ),
+                      child: Text(
+                        "Batal",
+                        style: TextStyle(color: AppTheme.primaryColor),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    Obx(
+                      () => FilledButton(
+                        onPressed: controller.isSubmitting.value
+                            ? null
+                            : () => controller.handleAddModul(),
+                        child: controller.isSubmitting.value
+                            ? SizedBox(
+                                height: 25.h,
+                                width: 25.w,
+                                child: CircularProgressIndicator(),
+                              )
+                            : Text('Tambahkan Perangkat'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
