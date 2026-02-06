@@ -5,11 +5,12 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/config/firebase_cloud_messaging_config.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
-import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
+import 'package:pak_tani/src/core/utils/loading_dialog.dart';
 import 'package:pak_tani/src/features/history/presentation/bindings/history_binding.dart';
 import 'package:pak_tani/src/features/history/presentation/controllers/history_controller.dart';
 import 'package:pak_tani/src/features/history/presentation/screens/history_screen.dart';
@@ -18,6 +19,10 @@ import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/presentation/bindings/modul_binding.dart';
 import 'package:pak_tani/src/features/modul/presentation/screen/moduls_screen.dart';
 import 'package:pak_tani/src/features/notification/application/services/notification_service.dart';
+import 'package:pak_tani/src/features/profile/application/services/profile_service.dart';
+import 'package:pak_tani/src/features/profile/presentation/bindings/profile_bindings.dart';
+import 'package:pak_tani/src/features/profile/presentation/controllers/profile_controller.dart';
+import 'package:pak_tani/src/features/profile/presentation/screens/profile_screen.dart';
 
 ///Controller class for main navigation.
 class MainNavigationController extends GetxController
@@ -165,45 +170,11 @@ class MainNavigationController extends GetxController
   /// Initialize the profile tab/screen
   /// haven't done yet
   void _initializeProfileTab() {
-    final AuthController authController = Get.find<AuthController>();
-
-    _screensCache[2] = Scaffold(
-      appBar: AppBar(
-        title: Text('Profile'),
-        leading: SizedBox(),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () => Get.snackbar('Info', 'Settings coming soon!'),
-          ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 50,
-              child: authController.currentUser.value!.image != null
-                  ? Image.network(authController.currentUser.value!.image!)
-                  : Icon(Icons.person, size: 55),
-            ),
-            SizedBox(height: 20.h),
-            Text(
-              authController.currentUser.value!.username,
-              style: Get.textTheme.headlineSmall,
-            ),
-            SizedBox(height: 10.h),
-            Text(authController.currentUser.value!.email),
-            SizedBox(height: 30.h),
-            ElevatedButton(
-              onPressed: () async => await authController.logout(),
-              child: Text('Logout'),
-            ),
-          ],
-        ),
-      ),
-    );
+    if (!Get.isRegistered<ModulBinding>()) {
+      ProfileBindings().dependencies();
+      print("✅ init profile binding");
+    }
+    _screensCache[2] = ProfileScreen();
   }
 
   /// Gets the screen widget for the given index.
@@ -243,11 +214,15 @@ class MainNavigationController extends GetxController
   void _loadTabLifeCycle(int index) async {
     switch (index) {
       case 0:
+        FocusManager.instance.primaryFocus?.unfocus();
+
         print("load modul lifecycle");
         final modulService = Get.find<ModulService>();
         await modulService.loadModuls();
         break;
       case 1:
+        FocusManager.instance.primaryFocus?.unfocus();
+
         final historyController = Get.find<HistoryController>();
         historyController.resetFilter();
 
@@ -262,6 +237,15 @@ class MainNavigationController extends GetxController
         }
 
         break;
+      case 2:
+        FocusManager.instance.primaryFocus?.unfocus();
+
+        final profileService = Get.find<ProfileService>();
+        final profileController = Get.find<ProfileController>();
+        LoadingDialog.show();
+        await profileService.loadUserProfile();
+        profileController.refreshTextControllerAndFocusNode();
+        LoadingDialog.hide();
     }
   }
 
@@ -302,8 +286,11 @@ class MainNavigationController extends GetxController
 
     // Show exit confirmation dialog
     final shouldExit = await _showExitDialog();
-    print('🔄 Should exit: $shouldExit');
-    return shouldExit ?? false;
+    if (shouldExit == true) {
+      SystemNavigator.pop();
+      return false;
+    }
+    return false;
   }
 
   /// Shows an exit confirmation dialog.

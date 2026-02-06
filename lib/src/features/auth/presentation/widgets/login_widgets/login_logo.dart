@@ -15,25 +15,20 @@ class LoginLogo extends StatelessWidget {
           spacing: 5.r,
           children: [
             CustomIcon(type: MyCustomIcon.logoPrimary, size: 105),
-            Text(
-              "PAKTani",
-              style: AppTheme.h2.copyWith(color: AppTheme.primaryColor),
-            ),
+            Text("PAKTani", style: AppTheme.h2.copyWith()),
           ],
         ),
-        RichText(
-          text: TextSpan(
-            style: AppTheme.text,
-            children: [
-              WidgetSpan(
-                child: Text(
-                  "Masuk ",
-                  style: AppTheme.text.copyWith(color: AppTheme.primaryColor),
-                ),
-              ),
-              WidgetSpan(child: Text("ke akun anda")),
-            ],
-          ),
+        Column(
+          children: [
+            Text(
+              "Masuk Akun",
+              style: AppTheme.h4.copyWith(color: AppTheme.primaryColor),
+            ),
+            Text(
+              "Masukkan email dan password anda.",
+              style: AppTheme.textAction,
+            ),
+          ],
         ),
       ],
     );

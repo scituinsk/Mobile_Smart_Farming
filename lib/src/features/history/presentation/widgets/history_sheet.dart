@@ -3,11 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/widgets/my_checkbox.dart';
 import 'package:pak_tani/src/core/widgets/my_display_chip.dart';
 import 'package:pak_tani/src/features/history/domain/value_objects/history_type.dart';
 import 'package:pak_tani/src/features/history/presentation/controllers/history_controller.dart';
 import 'package:pak_tani/src/features/history/presentation/widgets/filter_selection_chip.dart';
 import 'package:pak_tani/src/features/history/presentation/widgets/filter_time_button_widget.dart';
+import 'package:pak_tani/src/features/history/presentation/widgets/history_filter_tile.dart';
 import 'package:pak_tani/src/features/history/presentation/widgets/sorting_tile.dart';
 
 ///A class for history screen bottom sheet.
@@ -67,13 +69,13 @@ class HistorySheet {
     await showMaterialModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       backgroundColor: Colors.white,
       builder: (context) {
         return Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 30.w),
+          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 25.w),
           child: Obx(
             () => Column(
               mainAxisSize: MainAxisSize.min,
@@ -89,52 +91,31 @@ class HistorySheet {
                 ),
                 Text("Filter Berdasarkan", style: AppTheme.h4),
                 SizedBox(height: 20.h),
-                Column(
-                  spacing: 20.r,
-                  children: [
-                    ListTile(
-                      title: Text(
-                        'Histori Perangkat',
-                        style: AppTheme.textMedium.copyWith(
-                          color: AppTheme.primaryColor,
-                        ),
+                Obx(() {
+                  final isSelectedModul = controller.isHistoryTypeSelected(
+                    HistoryType.modul,
+                  );
+                  final isSelectedSchedule = controller.isHistoryTypeSelected(
+                    HistoryType.schedule,
+                  );
+                  return Column(
+                    spacing: 20.r,
+                    children: [
+                      HistoryFilterTile(
+                        value: isSelectedModul,
+                        onChanged: controller.selectModulHistoryType,
+                        title: "History Perangkat",
                       ),
 
-                      tileColor: AppTheme.surfaceColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
+                      HistoryFilterTile(
+                        value: isSelectedSchedule,
+                        onChanged: controller.selectScheduleHistoryType,
+                        title: "History Penjadwalan Grup",
                       ),
-                      trailing: Obx(
-                        () => Checkbox(
-                          value: controller.isHistoryTypeSelected(
-                            HistoryType.modul,
-                          ),
-                          onChanged: controller.selectModulHistoryType,
-                        ),
-                      ),
-                    ),
-                    ListTile(
-                      title: Text(
-                        'Histori Penjadwalan Grup',
-                        style: AppTheme.textMedium.copyWith(
-                          color: AppTheme.primaryColor,
-                        ),
-                      ),
-                      tileColor: AppTheme.surfaceColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      trailing: Obx(
-                        () => Checkbox(
-                          value: controller.isHistoryTypeSelected(
-                            HistoryType.schedule,
-                          ),
-                          onChanged: controller.selectScheduleHistoryType,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                    ],
+                  );
+                }),
+
                 SizedBox(height: 20.h),
                 if (controller.isHistoryTypeSelected(HistoryType.schedule) ||
                     controller.isHistoryTypeSelected(HistoryType.modul))
@@ -142,7 +123,7 @@ class HistorySheet {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text("Pilih Modul", style: AppTheme.h5),
+                      Text("Pilih Perangkat", style: AppTheme.h5),
                       SizedBox(height: 8.h),
                       Obx(
                         () => Wrap(
@@ -160,7 +141,7 @@ class HistorySheet {
                       Row(
                         children: [
                           Obx(
-                            () => Checkbox(
+                            () => MyCheckbox(
                               value: controller.isModulSelectedAll.value,
                               onChanged: controller.selectAllModulFilter,
                             ),
@@ -199,14 +180,12 @@ class HistorySheet {
                                 );
                               } else {
                                 return MyDisplayChip(
-                                  backgroundColor: AppTheme.errorColor
-                                      .withValues(alpha: 0.1),
+                                  backgroundColor: AppTheme.warningColor
+                                      .withValues(alpha: 0.2),
                                   borderRadius: 5,
-                                  borderColor: AppTheme.errorColor.withValues(
-                                    alpha: 0.3,
-                                  ),
+                                  borderColor: AppTheme.warningColor,
                                   child: Text(
-                                    "Pilih Modul untuk memilih group penjadwalan!",
+                                    "Pilih Perangkat untuk memilih group penjadwalan!",
                                   ),
                                 );
                               }
@@ -215,7 +194,7 @@ class HistorySheet {
                               Row(
                                 children: [
                                   Obx(
-                                    () => Checkbox(
+                                    () => MyCheckbox(
                                       value: controller
                                           .isScheduleGroupSelectedAll
                                           .value,

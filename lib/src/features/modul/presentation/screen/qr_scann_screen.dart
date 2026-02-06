@@ -41,45 +41,6 @@ class QrScannScreen extends StatelessWidget {
 
         ctrl.processBarcode(value);
       },
-
-      // Tombol galeri: guard empty
-      // overlayBuilder: (context, controller) {
-      //   return Align(
-      //     alignment: Alignment.bottomCenter,
-      //     child: Padding(
-      //       padding: const EdgeInsets.only(bottom: 24),
-      //       child: GalleryButton(
-      //         // Callback bawaan plugin ketika selesai analisa gambar
-      //         onScan: (barcodes) {
-      //           if (barcodes == null || barcodes.isEmpty) {
-      //             Get.snackbar(
-      //               'Tidak ditemukan',
-      //               'Gambar tidak mengandung QR/Barcode',
-      //             );
-      //             return;
-      //           }
-
-      //           final String? value = barcodes
-      //               .map((b) => b.rawValue ?? b.displayValue)
-      //               .firstWhere(
-      //                 (v) => v != null && v.trim().isNotEmpty,
-      //                 orElse: () => null,
-      //               );
-
-      //           if (value == null) {
-      //             Get.snackbar(
-      //               'Tidak ditemukan',
-      //               'Tidak ada nilai teks pada barcode',
-      //             );
-      //             return;
-      //           }
-
-      //           ctrl.processBarcode(value);
-      //         },
-      //       ),
-      //     ),
-      //   );
-      // },
     );
   }
 }

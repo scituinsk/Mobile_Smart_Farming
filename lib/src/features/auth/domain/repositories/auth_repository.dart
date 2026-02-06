@@ -1,4 +1,4 @@
-import 'package:pak_tani/src/features/auth/domain/entities/user.dart';
+import 'package:pak_tani/src/features/profile/domain/entities/user.dart';
 
 abstract class AuthRepository {
   //auth

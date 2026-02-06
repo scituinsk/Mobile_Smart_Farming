@@ -1,43 +1,33 @@
-import 'package:pak_tani/src/features/auth/domain/entities/user.dart';
+import 'package:pak_tani/src/features/profile/domain/entities/user.dart';
 
 class UserModel extends User {
   UserModel({
-    super.id,
+    required super.id,
     required super.firstName,
     super.lastName,
     required super.username,
     required super.email,
     super.image,
-    super.photo,
-    super.modulCount,
-    super.penjadwalanCount,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'].toString(),
+      id: json['user_id'],
       firstName: json['first_name'] ?? '',
       lastName: json['last_name'],
       username: json['username'] ?? '',
       email: json['email'] ?? '',
       image: json['image'],
-      photo: json['photo'],
-      modulCount: json['modul_count'],
-      penjadwalanCount: json['penjadwalan_count'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'first_name': firstName,
       'last_name': lastName,
       'email': email,
       'username': username,
       'image': image,
-      'photo': photo,
-      'modul_count': modulCount,
-      'penjadwalan_count': penjadwalanCount,
     };
   }
 
@@ -49,9 +39,6 @@ class UserModel extends User {
       username: user.username,
       email: user.email,
       image: user.image,
-      photo: user.photo,
-      modulCount: user.modulCount,
-      penjadwalanCount: user.penjadwalanCount,
     );
   }
 
@@ -63,9 +50,6 @@ class UserModel extends User {
       username: username,
       email: email,
       image: image,
-      photo: photo,
-      modulCount: modulCount,
-      penjadwalanCount: penjadwalanCount,
     );
   }
 }

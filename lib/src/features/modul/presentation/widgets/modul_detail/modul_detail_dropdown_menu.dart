@@ -30,7 +30,7 @@ class ModulDetailDropdownMenu extends StatelessWidget {
           ModulDetailDropdownMenuItems.onChanged(context, value!);
         },
         dropdownStyleData: DropdownStyleData(
-          width: 180.w,
+          width: 210.w,
           padding: EdgeInsets.all(0),
           useSafeArea: true,
           decoration: BoxDecoration(

@@ -127,6 +127,7 @@ class HistoryController extends GetxController {
         }
       }
       applyFilter();
+      historyService.searchHistories(searchText.value);
       update();
     } catch (e) {
       print("error: $e");

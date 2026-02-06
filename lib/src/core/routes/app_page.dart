@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/navigation/main_navigation.dart';
 import 'package:pak_tani/src/core/navigation/main_navigation_binding.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
+import 'package:pak_tani/src/features/auth/presentation/screens/terms_screen.dart';
 import 'package:pak_tani/src/features/modul/presentation/screen/qr_code_screen.dart';
 import 'package:pak_tani/src/features/notification/presentation/bindings/notification_bindings.dart';
 import 'package:pak_tani/src/features/onboarding/presentation/bindings/onboard_screen_binding.dart';
@@ -95,5 +96,6 @@ class AppPage {
       page: () => OnboardingScreen(),
       binding: OnboardScreenBinding(),
     ),
+    GetPage(name: RouteNames.termsPage, page: () => TermsScreen()),
   ];
 }

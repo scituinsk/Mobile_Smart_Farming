@@ -1,5 +1,5 @@
-import 'package:pak_tani/src/features/auth/domain/entities/user.dart';
 import 'package:pak_tani/src/features/auth/domain/repositories/auth_repository.dart';
+import 'package:pak_tani/src/features/profile/domain/entities/user.dart';
 
 class LoginUseCase {
   final AuthRepository _repository;

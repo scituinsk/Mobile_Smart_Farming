@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/features/relays/domain/models/group_relay.dart';
 import 'package:pak_tani/src/features/relays/domain/models/relay.dart';
@@ -92,6 +93,39 @@ class RelayGroupList extends StatelessWidget {
                 )
                 .toList();
 
+            // Jika tidak ada relay, tambahkan placeholder
+            if (items.isEmpty) {
+              items.add(
+                DragAndDropItem(
+                  canDrag: false, // Placeholder tidak bisa di-drag
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0.r),
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            LucideIcons.blocks,
+                            size: 32,
+                            color: Colors.grey.shade400,
+                          ),
+                          SizedBox(height: 8.h),
+                          Text(
+                            'Tidak ada relay di group ini',
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 14.sp,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+
             return DragAndDropList(
               header: Padding(
                 padding: EdgeInsets.all(8.0.r),
@@ -138,7 +172,7 @@ class RelayGroupList extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(LucideIcons.inbox, size: 64, color: Colors.grey.shade300),
+                Icon(LucideIcons.blocks, size: 64, color: Colors.grey.shade300),
                 SizedBox(height: 16.h),
                 Text(
                   'Tidak ada relay',
@@ -150,66 +184,77 @@ class RelayGroupList extends StatelessWidget {
         }
 
         return Obx(
-          () => DragAndDropLists(
-            children: lists,
-            itemDragOnLongPress: false,
+          () => RefreshIndicator(
+            onRefresh: () async => await controller.handleReloadRelays(),
+            child: DragAndDropLists(
+              children: lists,
+              itemDragOnLongPress: false,
 
-            itemDragHandle: !controller.isEditingRelay.value
-                ? DragHandle(
-                    verticalAlignment: DragHandleVerticalAlignment.center,
-                    child: Padding(
-                      padding: EdgeInsets.only(right: 23.w),
-                      child: Icon(
-                        LucideIcons.alignJustify,
-                        color: Colors.black,
-                        size: 20.r,
+              itemDragHandle: !controller.isEditingRelay.value
+                  ? DragHandle(
+                      verticalAlignment: DragHandleVerticalAlignment.center,
+                      child: Padding(
+                        padding: EdgeInsets.only(right: 23.w),
+                        child: Icon(
+                          LucideIcons.alignJustify,
+                          color: Colors.black,
+                          size: 20.r,
+                        ),
                       ),
-                    ),
-                  )
-                : null,
-            onItemReorder:
-                (oldItemIndex, oldListIndex, newItemIndex, newListIndex) {
-                  controller.moveRelayWithIndices(
-                    oldListIndex,
-                    oldItemIndex,
-                    newListIndex,
-                    newItemIndex,
-                  );
-                },
-            onListReorder: (oldListIndex, newListIndex) {
-              final hasUnassignedList = unassignedRelays.isNotEmpty;
+                    )
+                  : null,
+              onItemReorder:
+                  (oldItemIndex, oldListIndex, newItemIndex, newListIndex) {
+                    if (newListIndex == 0 && oldListIndex != 0) {
+                      print("Cannot move relay from group to unassigned");
+                      MySnackbar.warning(
+                        message: "Relay harus diletakkan di group!",
+                      );
+                      return;
+                    }
 
-              // ✅ Skip if trying to reorder unassigned list
-              if (oldListIndex == 0 || newListIndex == 0) {
-                print("Cannot reorder unassigned list");
-                return;
-              }
+                    controller.moveRelayWithIndices(
+                      oldListIndex,
+                      oldItemIndex,
+                      newListIndex,
+                      newItemIndex,
+                    );
+                  },
+              onListReorder: (oldListIndex, newListIndex) {
+                final hasUnassignedList = unassignedRelays.isNotEmpty;
 
-              final List<RelayGroup> copied = List.from(groups);
+                // ✅ Skip if trying to reorder unassigned list
+                if (oldListIndex == 0 || newListIndex == 0) {
+                  print("Cannot reorder unassigned list");
+                  return;
+                }
 
-              // ✅ Adjust indices (karena unassigned ada di index 0)
-              final adjustedOld = hasUnassignedList
-                  ? oldListIndex - 1
-                  : oldListIndex;
-              final adjustedNew = hasUnassignedList
-                  ? newListIndex - 1
-                  : newListIndex;
+                final List<RelayGroup> copied = List.from(groups);
 
-              final moved = copied.removeAt(adjustedOld);
-              copied.insert(adjustedNew, moved);
-              controller.relayGroups.assignAll(copied);
+                // ✅ Adjust indices (karena unassigned ada di index 0)
+                final adjustedOld = hasUnassignedList
+                    ? oldListIndex - 1
+                    : oldListIndex;
+                final adjustedNew = hasUnassignedList
+                    ? newListIndex - 1
+                    : newListIndex;
 
-              print("Reordered groups:  → ");
-            },
-            listPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8.h),
-            listInnerDecoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8.0.r),
-              border: Border.all(color: Colors.grey.shade300),
+                final moved = copied.removeAt(adjustedOld);
+                copied.insert(adjustedNew, moved);
+                controller.relayGroups.assignAll(copied);
+
+                print("Reordered groups:  → ");
+              },
+              listPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8.h),
+              listInnerDecoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8.0.r),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              lastItemTargetHeight: 8.h,
+              addLastItemTargetHeightToTop: true,
+              lastListTargetSize: 40,
             ),
-            lastItemTargetHeight: 8.h,
-            addLastItemTargetHeightToTop: true,
-            lastListTargetSize: 40,
           ),
         );
       }),

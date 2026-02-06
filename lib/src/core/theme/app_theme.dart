@@ -13,6 +13,8 @@ abstract final class AppTheme {
   static const errorColor = Color(0xffC70000);
   // static const sucessColor = Color(0xff298267);
   // static const defaultColor = Color(0xffE8E9F1);
+  static const primaryLightHover = Color(0xffE0E8E8);
+  static const warningColor = Color.fromARGB(255, 211, 93, 47);
 
   // gray color for gray text based on UI design team
   static const onDefaultColor = Color(0xff7C7C7C);

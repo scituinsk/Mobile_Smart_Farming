@@ -25,31 +25,33 @@ class QrCodeScreen extends StatelessWidget {
         title: Text("QR Code", style: AppTheme.h3),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 30.w),
-        child: Center(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            padding: EdgeInsets.symmetric(vertical: 50.h, horizontal: 25.w),
-            child: Column(
-              spacing: 25.r,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "Silahkan Scan QR Code dibawah ini:",
-                  textAlign: TextAlign.center,
-                  style: AppTheme.h3.copyWith(color: AppTheme.primaryColor),
-                ),
-                QrImageView(data: modul.serialId, size: 220.r),
-                Text(
-                  'Orang yang memindai kode ini dengan aplikasi akan langsung mendapatkan akses untuk melihat data dari modul\n"${modul.name}"',
-                  textAlign: TextAlign.center,
-                  style: AppTheme.text,
-                ),
-              ],
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 30.w),
+          child: Center(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              padding: EdgeInsets.symmetric(vertical: 50.h, horizontal: 25.w),
+              child: Column(
+                spacing: 25.r,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Silahkan Scan QR Code dibawah ini:",
+                    textAlign: TextAlign.center,
+                    style: AppTheme.h3.copyWith(color: AppTheme.primaryColor),
+                  ),
+                  QrImageView(data: modul.serialId, size: 220.r),
+                  Text(
+                    'Orang yang memindai kode ini dengan aplikasi akan langsung mendapatkan akses untuk melihat data dari modul\n"${modul.name}"',
+                    textAlign: TextAlign.center,
+                    style: AppTheme.text,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

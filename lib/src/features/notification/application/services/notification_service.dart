@@ -40,14 +40,13 @@ class NotificationService extends GetxService {
   /// Number of unread notifications (computed from `notificationItems`).
   final RxInt unreadCount = 0.obs;
 
+  final RxBool isShowUnread = false.obs;
+
   @override
   void onInit() {
     super.onInit();
     // Load notifications immediately when the service is initialized.
     loadAllNotificationItems();
-
-    // Keep `unreadCount` in sync whenever `notificationItems` changes.
-    ever(notificationItems, (_) => _updateUnreadCount());
   }
 
   /// Loads all notifications from the repository.
@@ -69,7 +68,7 @@ class NotificationService extends GetxService {
         notificationList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         notificationItems.assignAll(notificationList);
         filteredNotificationItems.assignAll(notificationList);
-        _updateUnreadCount();
+        updateUnreadCount();
       } else {
         notificationItems.clear();
         filteredNotificationItems.clear();
@@ -96,6 +95,8 @@ class NotificationService extends GetxService {
       );
       notificationItems[index] = notificationItem;
       filteredNotificationItems[index] = notificationItem;
+
+      updateUnreadCount();
     } catch (e) {
       print("Error mark read notification(service): $e");
       rethrow;
@@ -120,7 +121,7 @@ class NotificationService extends GetxService {
         ),
       );
 
-      _updateUnreadCount();
+      updateUnreadCount();
 
       print("mark read item: ${filteredNotificationItems.length}");
     } catch (e) {
@@ -143,11 +144,21 @@ class NotificationService extends GetxService {
 
   /// Recomputes the `unreadCount` from the canonical `notificationItems`
   /// list.
-  void _updateUnreadCount() {
+  void updateUnreadCount() {
     unreadCount.value = notificationItems
         .where((element) => !element.readStatus)
         .length;
 
     print("unread notif: $unreadCount");
+  }
+
+  void filterNotification() {
+    if (isShowUnread.value) {
+      filteredNotificationItems.assignAll(
+        notificationItems.where((item) => !item.readStatus),
+      );
+    } else {
+      filteredNotificationItems.assignAll(notificationItems);
+    }
   }
 }

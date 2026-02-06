@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/utils/custom_icon.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_controller.dart';
 import 'package:pak_tani/src/features/modul/presentation/widgets/modul_list/modul_item.dart';
 
@@ -20,7 +22,7 @@ class ModulList extends StatelessWidget {
           // ✅ Header with device count (reactive)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("Daftar Modul", style: AppTheme.h3)],
+            children: [Text("Daftar Perangkat", style: AppTheme.h3)],
           ),
 
           // ✅ Reactive list
@@ -33,7 +35,7 @@ class ModulList extends StatelessWidget {
                     children: [
                       CircularProgressIndicator(),
                       SizedBox(height: 16.h),
-                      Text('Loading devices...'),
+                      Text('Memuat Perangkat...'),
                     ],
                   ),
                 );
@@ -45,20 +47,19 @@ class ModulList extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.device_hub_outlined,
-                        size: 80,
-                        color: Colors.grey[400],
-                      ),
-                      SizedBox(height: 24.h),
+                      CustomIcon(type: MyCustomIcon.modulEmpty, size: 300),
                       Text(
-                        'No devices found',
-                        style: AppTheme.h4.copyWith(color: Colors.grey[600]),
+                        'Tidak ada perangkat yang ditemukan',
+                        style: AppTheme.text.copyWith(
+                          color: AppTheme.ternaryColor,
+                        ),
                       ),
                       SizedBox(height: 16.h),
-                      ElevatedButton(
+                      FilledButton.icon(
                         onPressed: () => controller.refreshModulList(),
-                        child: Text('Refresh'),
+                        label: Text('Refresh'),
+                        icon: Icon(LucideIcons.refreshCcw),
+                        iconAlignment: IconAlignment.end,
                       ),
                     ],
                   ),

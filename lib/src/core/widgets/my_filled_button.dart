@@ -21,12 +21,27 @@ class MyFilledButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FilledButton(
+    return ElevatedButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.all(backgroundColor),
+        backgroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.disabled)) {
+            return null; // Gunakan default disabled color
+          }
+          return backgroundColor; // Gunakan backgroundColor hanya jika onPressed tidak null
+        }),
+        foregroundColor: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.disabled)) return null;
+          return textColor;
+        }),
+        elevation: WidgetStateProperty.all(
+          0,
+        ), // Hilangkan elevation untuk tampilan flat
+        shadowColor: WidgetStateProperty.all(
+          Colors.transparent,
+        ), // Hilangkan shadow
         padding: WidgetStateProperty.all(
-          EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+          EdgeInsets.symmetric(horizontal: 20.w),
         ),
       ),
       child: child ?? Text(title ?? "", style: TextStyle(color: textColor)),

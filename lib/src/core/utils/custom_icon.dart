@@ -8,8 +8,7 @@ enum MyCustomIcon {
   solenoid,
   greenHouse,
   waterPump,
-  batteryMax,
-  batteryLow,
+
   temprature,
   waterLevel,
   filter,
@@ -23,6 +22,16 @@ enum MyCustomIcon {
   search,
   calendarSync,
   server,
+  instagram,
+  whatsapp,
+  gmail,
+  notifEmpty,
+  modulEmpty,
+  battery_0,
+  battery_1,
+  battery_2,
+  battery_3,
+  battery_4,
 }
 
 /// Returns the asset path for the given custom icon type.
@@ -36,10 +45,16 @@ String iconAssets(MyCustomIcon type) {
       return "assets/icons/mdi-greenhouse.svg";
     case MyCustomIcon.waterPump:
       return "assets/icons/material-symbols-water-pump.svg";
-    case MyCustomIcon.batteryMax:
-      return "assets/icons/fluent-battery-924-regular.svg";
-    case MyCustomIcon.batteryLow:
-      return "assets/icons/fluent-battery-432-regular.svg";
+    case MyCustomIcon.battery_0:
+      return "assets/icons/battery_0.svg";
+    case MyCustomIcon.battery_1:
+      return "assets/icons/battery_1.svg";
+    case MyCustomIcon.battery_2:
+      return "assets/icons/battery_2.svg";
+    case MyCustomIcon.battery_3:
+      return "assets/icons/battery_3.svg";
+    case MyCustomIcon.battery_4:
+      return "assets/icons/battery_4.svg";
     case MyCustomIcon.temprature:
       return "assets/icons/oui-temperature.svg";
     case MyCustomIcon.waterLevel:
@@ -66,6 +81,17 @@ String iconAssets(MyCustomIcon type) {
       return "assets/icons/calendar-sync.svg";
     case MyCustomIcon.server:
       return "assets/icons/server.svg";
+    case MyCustomIcon.instagram:
+      return "assets/icons/instagram_logo.svg";
+    case MyCustomIcon.modulEmpty:
+      return "assets/svgs/modul_empty.svg";
+    case MyCustomIcon.notifEmpty:
+      return "assets/svgs/notif_empty.svg";
+
+    case MyCustomIcon.whatsapp:
+      return "assets/icons/whatsapp_logo.svg";
+    case MyCustomIcon.gmail:
+      return "assets/icons/gmail_logo.svg";
   }
 }
 

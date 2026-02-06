@@ -2,14 +2,12 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
-import 'package:pak_tani/src/features/auth/domain/entities/user.dart';
 
 class AuthController extends GetxController {
   final AuthService _authService = Get.find<AuthService>();
 
   RxBool get isLoading => _authService.isLoading;
   RxBool get isLoggedIn => _authService.isLoggedIn;
-  Rx<User?> get currentUser => _authService.currentUser;
 
   Future<void> login(String email, String password) async {
     try {
@@ -41,21 +39,10 @@ class AuthController extends GetxController {
         password2: password2,
       );
 
-      MySnackbar.success(message: "Register berhasil! silahkan login");
       Get.back();
+      MySnackbar.success(message: "Register berhasil! silahkan login");
     } catch (e) {
       print(e);
-      MySnackbar.error(message: e.toString());
-    }
-  }
-
-  Future<void> logout() async {
-    try {
-      await _authService.logout();
-
-      Get.offAllNamed(RouteNames.loginPage);
-      MySnackbar.success(message: "Logout berhasil");
-    } catch (e) {
       MySnackbar.error(message: e.toString());
     }
   }

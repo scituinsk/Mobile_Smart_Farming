@@ -55,7 +55,7 @@ class CustomDialog {
                     bottom: BorderSide(color: Colors.grey.shade300, width: 1),
                   ),
                 ),
-                margin: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 12.h),
+                margin: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 20.h),
                 child: title,
               ),
               Container(

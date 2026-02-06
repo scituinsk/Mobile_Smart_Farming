@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/widgets/my_filled_button.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
 import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
 import 'package:pak_tani/src/features/auth/presentation/controller/login_ui_controller.dart';
@@ -36,15 +37,17 @@ class LoginForm extends StatelessWidget {
                     fillColor: Colors.white,
                     prefixIcon: Icon(
                       Icons.email_rounded,
-                      color: AppTheme.primaryColor,
+                      color: AppTheme.secondaryColor,
                     ),
-                    validator: controller.validateEmail, // ✅ Add validation
+                    validator:
+                        controller.validateEmailandUsername, // ✅ Add validation
                   ),
                   MyTextField(
                     controller: controller.passwordController,
                     validator: controller.validatePassword,
                     title: "Password",
                     obscureText: true,
+                    obscureIconColor: AppTheme.secondaryColor,
                     hint: "Masukkan password anda...",
                     titleStyle: AppTheme.h5.copyWith(
                       color: AppTheme.primaryColor,
@@ -53,35 +56,20 @@ class LoginForm extends StatelessWidget {
                     fillColor: Colors.white,
                     prefixIcon: Icon(
                       Icons.lock_rounded,
-                      color: AppTheme.primaryColor,
+                      color: AppTheme.secondaryColor,
                     ),
                   ),
                 ],
               ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     Row(
-              //       mainAxisAlignment: MainAxisAlignment.start,
-              //       children: [
-              //         Obx(
-              //           () => Checkbox(
-              //             value: controller.rememberMe.value,
-              //             onChanged: (value) => controller.toggleRememberMe(),
-              //           ),
-              //         ),
-              //         Text("Ingat Saya"),
-              //       ],
+
+              // Align(
+              //   alignment: Alignment.centerRight,
+              //   child: GestureDetector(
+              //     child: Text(
+              //       "Lupa password?",
+              //       style: AppTheme.text.copyWith(color: AppTheme.primaryColor),
               //     ),
-              //     GestureDetector(
-              //       child: Text(
-              //         "Lupa password?",
-              //         style: AppTheme.text.copyWith(
-              //           color: AppTheme.primaryColor,
-              //         ),
-              //       ),
-              //     ),
-              //   ],
+              //   ),
               // ),
             ],
           ),
@@ -91,7 +79,7 @@ class LoginForm extends StatelessWidget {
               RichText(
                 text: TextSpan(
                   children: [
-                    WidgetSpan(child: Text("Belum punya akun?")),
+                    WidgetSpan(child: Text("Belum punya akun? ")),
                     WidgetSpan(
                       child: GestureDetector(
                         onTap: () {
@@ -99,7 +87,7 @@ class LoginForm extends StatelessWidget {
                         },
                         child: Text(
                           "Daftar akun",
-                          style: AppTheme.text.copyWith(
+                          style: AppTheme.textMedium.copyWith(
                             color: AppTheme.primaryColor,
                             fontWeight: FontWeight.bold,
                           ),
@@ -115,26 +103,13 @@ class LoginForm extends StatelessWidget {
                   // ✅ Business Controller - dari DI
                   final authController = Get.find<AuthController>();
 
-                  return FilledButton(
-                    // ✅ Disable button if loading OR form is invalid
+                  return MyFilledButton(
                     onPressed:
-                        (authController.isLoading.value ||
-                            !controller.isFormValid.value)
-                        ? null
-                        : controller.handleLogin,
-                    style: FilledButton.styleFrom(
-                      // ✅ Change button color based on state
-                      backgroundColor:
-                          (authController.isLoading.value ||
-                              !controller.isFormValid.value)
-                          ? Colors.grey[400]
-                          : AppTheme.primaryColor,
-                      foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(vertical: 16.h),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                    ),
+                        (!authController.isLoading.value &&
+                            controller.isFormValid.value)
+                        ? controller.handleLogin
+                        : null,
+
                     child: authController.isLoading.value
                         ? SizedBox(
                             height: 20.h,
@@ -145,7 +120,7 @@ class LoginForm extends StatelessWidget {
                             ),
                           )
                         : Text(
-                            'Login',
+                            'Masuk',
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.bold,

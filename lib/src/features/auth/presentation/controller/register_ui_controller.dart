@@ -12,6 +12,7 @@ class RegisterUiController extends GetxController {
   late GlobalKey<FormState> formKey;
 
   final RxBool isFormValid = false.obs;
+  final RxBool isAccept = false.obs;
 
   @override
   void onInit() {
@@ -50,18 +51,23 @@ class RegisterUiController extends GetxController {
   }
 
   void _checkFormValidity() {
-    final firstName = firstNameController.text.trim();
-    final username = usernameController.text.trim();
-    final email = emailController.text.trim();
-    final password = passwordController.text.trim();
-    final confirmPassword = confirmPasswordController.text.trim();
+    final firstNameError = validateFirstName(firstNameController.text);
+    final lastNameError = validateLastName(lastNameController.text);
+    final usernameError = validateUsername(usernameController.text);
+    final emailError = validateEmail(emailController.text);
+    final passwordError = validatePassword(passwordController.text);
+    final confirmPasswordError = validateConfirmPassword(
+      confirmPasswordController.text,
+    );
 
     isFormValid.value =
-        firstName.isNotEmpty &&
-        username.isNotEmpty &&
-        email.isNotEmpty &&
-        password.isNotEmpty &&
-        confirmPassword.isNotEmpty;
+        firstNameError == null &&
+        usernameError == null &&
+        emailError == null &&
+        passwordError == null &&
+        confirmPasswordError == null &&
+        lastNameError == null &&
+        isAccept.value;
   }
 
   void clearForm() {
@@ -80,6 +86,19 @@ class RegisterUiController extends GetxController {
     }
     if (value.trim().length < 2) {
       return 'Nama minimal 2 karakter';
+    }
+    if (value.trim().length > 255) {
+      return "Nama maksimal 255 karakter";
+    }
+    return null;
+  }
+
+  String? validateLastName(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null;
+    }
+    if (value.trim().length > 255) {
+      return "Nama maksimal 255 karakter";
     }
     return null;
   }
@@ -145,11 +164,17 @@ class RegisterUiController extends GetxController {
 
       await authController.register(
         firstName: firstNameController.text.trim(),
+        lastName: lastNameController.text.trim(),
         username: usernameController.text.trim(),
         email: emailController.text.trim(),
         password1: passwordController.text,
         password2: confirmPasswordController.text,
       );
     }
+  }
+
+  void toggleTermsAndConditions() {
+    isAccept.value = !isAccept.value;
+    _checkFormValidity();
   }
 }

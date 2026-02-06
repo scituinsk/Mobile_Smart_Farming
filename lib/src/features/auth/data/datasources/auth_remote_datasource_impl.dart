@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/config/firebase_cloud_messaging_config.dart';
 import 'package:pak_tani/src/core/services/api_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
-import 'package:pak_tani/src/features/auth/data/models/user_model.dart';
+import 'package:pak_tani/src/features/profile/data/models/user_model.dart';
 import 'package:pak_tani/src/features/auth/domain/datasources/auth_remote_datasource.dart';
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {

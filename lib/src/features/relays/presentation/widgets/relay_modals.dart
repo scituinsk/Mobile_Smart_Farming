@@ -53,8 +53,10 @@ class RelayModals {
                           ? () async => await controller.handleAddRelayGroup()
                           : null,
                       child: loading
-                          ? CircularProgressIndicator(
-                              padding: EdgeInsets.all(5.r),
+                          ? SizedBox(
+                              height: 25.h,
+                              width: 25.w,
+                              child: CircularProgressIndicator(),
                             )
                           : Text("Simpan"),
                     );
@@ -116,8 +118,10 @@ class RelayModals {
                                 .handleEditRelayGroupName(relayGroup.id)
                           : null,
                       child: loading
-                          ? CircularProgressIndicator(
-                              padding: EdgeInsets.all(5.r),
+                          ? SizedBox(
+                              height: 25.h,
+                              width: 25.w,
+                              child: CircularProgressIndicator(),
                             )
                           : Text("Simpan"),
                     );
@@ -186,8 +190,10 @@ class RelayModals {
                                 controller.handleEditRelay(relay.pin, relay.id)
                           : null,
                       child: loading
-                          ? CircularProgressIndicator(
-                              padding: EdgeInsets.all(5.r),
+                          ? SizedBox(
+                              height: 25.h,
+                              width: 25.w,
+                              child: CircularProgressIndicator(),
                             )
                           : Text("Simpan"),
                     );

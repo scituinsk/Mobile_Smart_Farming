@@ -38,4 +38,7 @@ abstract class RouteNames {
 
   /// Route for the on boarding page.
   static const onboardingPage = '/onboarding_page';
+
+  // Route for the terms and condition page
+  static const termsPage = '/terms_page';
 }

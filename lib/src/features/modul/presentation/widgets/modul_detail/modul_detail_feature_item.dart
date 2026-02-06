@@ -37,10 +37,22 @@ class ModulDetailFeatureItem extends StatelessWidget {
                 ? CustomIcon(type: myCustomIcon!, color: Colors.white)
                 : Icon(Icons.settings, color: Colors.white, size: 28),
             Expanded(
-              child: Text(
-                title,
-                style: AppTheme.textMedium.copyWith(color: Colors.white),
-                softWrap: true,
+              child: Column(
+                children: [
+                  Text(
+                    title,
+                    style: AppTheme.textMedium.copyWith(color: Colors.white),
+                    softWrap: true,
+                    textAlign: TextAlign.center,
+                  ),
+                  Text(
+                    "Group relay",
+                    style: AppTheme.textAction.copyWith(
+                      color: AppTheme.surfaceColor,
+                      fontSize: 10.sp,
+                    ),
+                  ),
+                ],
               ),
             ),
             MyIcon(

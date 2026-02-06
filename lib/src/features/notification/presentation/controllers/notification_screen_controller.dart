@@ -24,7 +24,7 @@ class NotificationScreenController extends GetxController {
       notificationService.filteredNotificationItems;
 
   /// When `true`, the UI should display only unread notifications.
-  final RxBool isShowUnread = false.obs;
+  RxBool get isShowUnread => notificationService.isShowUnread;
 
   @override
   /// Loads notifications when the controller initializes.
@@ -32,6 +32,7 @@ class NotificationScreenController extends GetxController {
     super.onInit();
     try {
       await notificationService.loadAllNotificationItems();
+      filterNotification();
     } catch (e) {
       MySnackbar.error(message: e.toString());
     }
@@ -41,6 +42,7 @@ class NotificationScreenController extends GetxController {
   Future<void> refreshNotificationItems() async {
     try {
       await notificationService.loadAllNotificationItems(refresh: true);
+      filterNotification();
     } catch (e) {
       print("error refresh notification (controller): $e");
       MySnackbar.error(message: e.toString());
@@ -50,17 +52,14 @@ class NotificationScreenController extends GetxController {
   /// Applies the current filter selection (all or unread) to the visible
   /// notification list.
   void filterNotification() {
-    if (isShowUnread.value) {
-      notificationService.filterUnreadNotification();
-    } else {
-      notificationService.filterAllNotification();
-    }
+    notificationService.filterNotification();
   }
 
   /// Marks all notifications as read. Errors are shown via snackbar.
   void markReadAllNotification() {
     try {
       notificationService.markReadAllNotifications();
+      filterNotification();
     } catch (e) {
       MySnackbar.error(message: e.toString());
     }

@@ -7,7 +7,7 @@ import 'package:pak_tani/src/core/utils/custom_icon.dart';
 /// help parse external values safely.
 enum NotificationType {
   schedule("schedule", "penjadwalan"),
-  modul("modul", "modul"),
+  modul("modul", "perangkat"),
   system("system", "sistem"),
   batteryMax("battery_max", "baterai penuh"),
   batteryLow("battery_low", "baterai habis");
@@ -59,13 +59,13 @@ extension HistoryTypeIcon on NotificationType {
       case NotificationType.modul:
         return MyCustomIcon.greenHouse;
       case NotificationType.schedule:
-        return MyCustomIcon.calendar;
+        return MyCustomIcon.calendarSync;
       case NotificationType.system:
         return MyCustomIcon.server;
       case NotificationType.batteryMax:
-        return MyCustomIcon.batteryMax;
+        return MyCustomIcon.battery_4;
       case NotificationType.batteryLow:
-        return MyCustomIcon.batteryLow;
+        return MyCustomIcon.battery_1;
     }
   }
 }

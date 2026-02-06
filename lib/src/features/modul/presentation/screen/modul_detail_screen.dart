@@ -37,13 +37,21 @@ class ModulDetailScreen extends StatelessWidget {
           height: mediaQueryHeight,
           child: Obx(() {
             if (controller.isLoading.value) {
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(),
+                    Text("Memuat perangkat..."),
+                  ],
+                ),
+              );
             }
 
             return Stack(
               children: [
                 SizedBox(
-                  height: 318.h,
+                  height: mediaQueryHeight * 35 / 100,
                   child: Stack(
                     children: [
                       Obx(() {
@@ -51,7 +59,9 @@ class ModulDetailScreen extends StatelessWidget {
                         late ImageProvider imageProvider;
                         if (modul != null) {
                           imageProvider = modul.image != null
-                              ? NetworkImage((AppConfig.baseUrl + modul.image!))
+                              ? NetworkImage(
+                                  (AppConfig.imageUrl + modul.image!),
+                                )
                               : const AssetImage(
                                   'assets/image/default_modul.jpg',
                                 );
@@ -70,27 +80,11 @@ class ModulDetailScreen extends StatelessWidget {
                             if (loadingProgress == null) {
                               return child;
                             }
-
                             return Center(child: CircularProgressIndicator());
                           },
                         );
                       }),
 
-                      Container(
-                        height: 318.h,
-                        width: mediaQueryWidth.w,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              Colors.black.withValues(alpha: 0.7),
-                            ],
-                            stops: [0.4, 1.0], // Atur posisi transisi gradient
-                          ),
-                        ),
-                      ),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           vertical: 18.h,
@@ -167,7 +161,7 @@ class ModulDetailScreen extends StatelessWidget {
                                       duration: Duration(milliseconds: 100),
                                       height: 52.h,
                                       width: controller.isQrVisible.value
-                                          ? 350.w
+                                          ? 365.w
                                           : 320.w,
                                       curve: Curves.easeInOut,
                                       decoration: BoxDecoration(
@@ -202,7 +196,9 @@ class ModulDetailScreen extends StatelessWidget {
                                           child: Container(
                                             padding: EdgeInsets.all(8.r),
                                             child: Row(
-                                              spacing: 6.r,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
                                                 Flexible(
@@ -220,8 +216,16 @@ class ModulDetailScreen extends StatelessWidget {
                                                       fontSize: 14.sp,
                                                       fontWeight:
                                                           FontWeight.w500,
+                                                      shadows:
+                                                          controller
+                                                              .isQrVisible
+                                                              .value
+                                                          ? null
+                                                          : AppShadows
+                                                                .blackFade,
                                                     ),
                                                     maxLines: 1,
+                                                    textAlign: TextAlign.center,
                                                   ),
                                                 ),
 
@@ -308,31 +312,22 @@ class ModulDetailScreen extends StatelessWidget {
                                 horizontal: 16.w,
                                 vertical: 9.h,
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    controller.modul.value!.name,
-                                    style: AppTheme.h4.copyWith(
-                                      color: Colors.white,
-                                      shadows: AppShadows.blackFade,
-                                    ),
-                                  ),
-                                  Text(
-                                    controller.modul.value!.descriptions ?? "",
-                                    style: AppTheme.text.copyWith(
-                                      color: Colors.white,
-                                      shadows: AppShadows.blackFade,
-                                    ),
-                                  ),
-                                ],
+                              child: Text(
+                                controller.modul.value!.descriptions ?? "",
+                                style: AppTheme.text.copyWith(
+                                  color: Colors.white,
+                                  shadows: AppShadows.blackFade,
+                                ),
                               ),
                             ),
                           )
                         : const SizedBox.shrink(key: ValueKey('collapsed')),
                   ),
                 ),
-                Positioned.fill(top: 298.h, child: ModulDetailFeatureSection()),
+                Positioned.fill(
+                  top: mediaQueryHeight * 32.5 / 100,
+                  child: ModulDetailFeatureSection(),
+                ),
               ],
             );
           }),

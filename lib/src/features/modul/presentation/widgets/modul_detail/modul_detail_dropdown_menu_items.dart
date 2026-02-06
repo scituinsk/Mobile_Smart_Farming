@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/config/app_config.dart';
 import 'package:pak_tani/src/core/controllers/main_navigation_controller.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/utils/custom_dialog.dart';
+import 'package:pak_tani/src/core/utils/image_utils.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/core/widgets/my_filled_button.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
@@ -20,12 +20,12 @@ class MenuItem {
 
 abstract class ModulDetailDropdownMenuItems {
   static const modulLogs = MenuItem(
-    text: "Riwayat Modul",
+    text: "Riwayat Perangkat",
     icon: LucideIcons.scrollText,
   );
-  static const editIcon = MenuItem(text: "Edit Modul", icon: Icons.edit);
+  static const editIcon = MenuItem(text: "Edit Perangkat", icon: Icons.edit);
   static const deleteIcon = MenuItem(
-    text: "Delete Modul",
+    text: "Hapus Perangkat",
     icon: Icons.delete_rounded,
   );
   static const editPasswordIcon = MenuItem(
@@ -74,49 +74,6 @@ abstract class ModulDetailDropdownMenuItems {
           );
   }
 
-  static Future<void> _showImageSourceBottomSheet(BuildContext context) async {
-    final controller = Get.find<ModulDetailUiController>();
-
-    await showModalBottomSheet(
-      context: context,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-      ),
-      builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Pilih Sumber Gambar', style: AppTheme.h4),
-              SizedBox(height: 20.h),
-              ListTile(
-                leading: Icon(Icons.camera_alt, color: AppTheme.primaryColor),
-                title: Text('Kamera', style: AppTheme.text),
-                onTap: () async {
-                  Get.back();
-                  await controller.pickAndCropImage(ImageSource.camera);
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.photo_library,
-                  color: AppTheme.primaryColor,
-                ),
-                title: Text('Galeri', style: AppTheme.text),
-                onTap: () async {
-                  Get.back();
-                  await controller.pickAndCropImage(ImageSource.gallery);
-                },
-              ),
-              SizedBox(height: 10.h),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   static void onChanged(BuildContext context, MenuItem item) {
     final controller = Get.find<ModulDetailUiController>();
 
@@ -127,7 +84,13 @@ abstract class ModulDetailDropdownMenuItems {
           widthChild: double.infinity,
           dialogMargin: 20,
           context: context,
-          title: Text("Edit Modul", style: AppTheme.h4),
+          title: Row(
+            spacing: 10.w,
+            children: [
+              Icon(LucideIcons.squarePen, color: AppTheme.primaryColor),
+              Text("Edit Perangkat", style: AppTheme.h4),
+            ],
+          ),
           child: SingleChildScrollView(
             child: Form(
               key: controller.formKeyEdit,
@@ -138,7 +101,7 @@ abstract class ModulDetailDropdownMenuItems {
                 children: [
                   MyTextField(
                     fieldWidth: double.infinity,
-                    title: "Nama Modul",
+                    title: "Nama Perangkat",
                     validator: controller.validateName,
                     controller: controller.modulNameC,
                     hint: "Ex: Greenhouse A",
@@ -146,7 +109,7 @@ abstract class ModulDetailDropdownMenuItems {
                   ),
                   MyTextField(
                     fieldWidth: double.infinity,
-                    title: "Deskripsi Modul",
+                    title: "Deskripsi Perangkat",
                     controller: controller.modulDescriptionC,
                     hint: "Ex: Greenhouse timur",
                     borderRadius: 10,
@@ -155,7 +118,7 @@ abstract class ModulDetailDropdownMenuItems {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Gambar Modul", style: AppTheme.h4),
+                      Text("Gambar Perangkat", style: AppTheme.h4),
                       Stack(
                         children: [
                           Obx(() {
@@ -167,7 +130,7 @@ abstract class ModulDetailDropdownMenuItems {
                               if (modul != null) {
                                 imageProvider = modul.image != null
                                     ? NetworkImage(
-                                        (AppConfig.baseUrl + modul.image!),
+                                        (AppConfig.imageUrl + modul.image!),
                                       )
                                     : const AssetImage(
                                         'assets/image/default_modul.jpg',
@@ -188,7 +151,18 @@ abstract class ModulDetailDropdownMenuItems {
                               ),
                               height: 164.h,
                               width: 240.w,
-                              child: Image(image: imageProvider),
+                              child: Image(
+                                image: imageProvider,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    },
+                              ),
                             );
                           }),
                           Positioned(
@@ -199,8 +173,14 @@ abstract class ModulDetailDropdownMenuItems {
                               backgroundColor: AppTheme.primaryColor,
                               iconColor: Colors.white,
                               padding: 6,
-                              onPressed: () {
-                                _showImageSourceBottomSheet(context);
+                              onPressed: () async {
+                                final croppedImage =
+                                    await ImageUtils.showImageSourceAndPick(
+                                      context,
+                                    );
+                                if (croppedImage != null) {
+                                  controller.selectedImage.value = croppedImage;
+                                }
                               },
                             ),
                           ),
@@ -213,9 +193,7 @@ abstract class ModulDetailDropdownMenuItems {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       MyFilledButton(
-                        onPressed: () {
-                          Get.back();
-                        },
+                        onPressed: () => Get.back(),
                         backgroundColor: Colors.white,
                         title: "Batal",
                         textColor: AppTheme.primaryColor,
@@ -260,11 +238,11 @@ abstract class ModulDetailDropdownMenuItems {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.delete_outline_rounded,
-                  color: AppTheme.primaryColor,
+                  LucideIcons.trash2,
+                  color: AppTheme.errorColor,
                   size: 38.r,
                 ),
-                Text("Hapus Modul ini?", style: AppTheme.h4),
+                Text("Hapus Perangkat dari akun?", style: AppTheme.h4),
               ],
             ),
           ),
@@ -275,7 +253,7 @@ abstract class ModulDetailDropdownMenuItems {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Item modul ini akan dihapus dari daftar modul.",
+                  "Perangkat ini akan dihapus dari daftar Perangkat di akun ini.",
                   textAlign: TextAlign.center,
                   style: AppTheme.textDefault,
                 ),
@@ -289,7 +267,7 @@ abstract class ModulDetailDropdownMenuItems {
                         Get.back();
                       },
                       backgroundColor: AppTheme.surfaceColor,
-                      textColor: AppTheme.primaryColor,
+                      textColor: AppTheme.surfaceDarker,
                     ),
                     MyFilledButton(
                       title: "Hapus",
@@ -311,10 +289,15 @@ abstract class ModulDetailDropdownMenuItems {
       case ModulDetailDropdownMenuItems.editPasswordIcon:
         controller.isPasswordFormValid.value = false;
         CustomDialog.show(
-          // widthTitle: 240,
           dialogMargin: 40,
           context: context,
-          title: Text("Edit password", style: AppTheme.h4),
+          title: Row(
+            spacing: 10.w,
+            children: [
+              Icon(Icons.lock_outline, color: AppTheme.primaryColor),
+              Text("Edit password", style: AppTheme.h4),
+            ],
+          ),
           child: SingleChildScrollView(
             child: Form(
               key: controller.formKeyPassword,

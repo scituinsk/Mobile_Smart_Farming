@@ -9,31 +9,26 @@ class RegisterLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      spacing: 8.r,
+      spacing: 5.h,
       children: [
         Column(
-          spacing: 2.r,
+          spacing: 5.r,
           children: [
             CustomIcon(type: MyCustomIcon.logoPrimary, size: 105),
-            Text(
-              "PAKTani",
-              style: AppTheme.h2.copyWith(color: AppTheme.primaryColor),
-            ),
+            Text("PAKTani", style: AppTheme.h2.copyWith()),
           ],
         ),
-        RichText(
-          text: TextSpan(
-            style: AppTheme.text,
-            children: [
-              WidgetSpan(
-                child: Text(
-                  "Selamat Datang! ",
-                  style: AppTheme.text.copyWith(color: AppTheme.primaryColor),
-                ),
-              ),
-              WidgetSpan(child: Text("Silahkan buat akun anda")),
-            ],
-          ),
+        Column(
+          children: [
+            Text(
+              "Daftar Akun",
+              style: AppTheme.h4.copyWith(color: AppTheme.primaryColor),
+            ),
+            Text(
+              "Lengkapi data anda untuk membuat akun.",
+              style: AppTheme.textAction,
+            ),
+          ],
         ),
       ],
     );

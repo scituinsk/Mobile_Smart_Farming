@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/theme/app_theme.dart';
 
 /// A utility class for custom snackbars.
 /// Contains static methods to display success and error notifications.
@@ -33,6 +34,25 @@ class MySnackbar {
       backgroundColor: const Color(0xFFD32F2F),
       colorText: Colors.white,
       icon: const Icon(Icons.error_outline, color: Colors.white),
+      margin: EdgeInsets.all(16.r),
+      borderRadius: 8,
+      duration: const Duration(seconds: 4),
+      dismissDirection: DismissDirection.horizontal,
+    );
+  }
+
+  ///Shows a warning snackbar with an orange background and warning icon.
+  static void warning({
+    String title = "Warning!",
+    required String message,
+  }) async {
+    Get.snackbar(
+      title,
+      message,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppTheme.warningColor,
+      colorText: Colors.white,
+      icon: const Icon(Icons.warning, color: Colors.white),
       margin: EdgeInsets.all(16.r),
       borderRadius: 8,
       duration: const Duration(seconds: 4),

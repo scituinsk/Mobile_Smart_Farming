@@ -98,7 +98,9 @@ class FirebaseCloudMessagingConfig {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       print('FCM onMessage: ${message.data} ${message.notification}');
       final notificationService = Get.find<NotificationService>();
-      notificationService.loadAllNotificationItems();
+      await notificationService.loadAllNotificationItems();
+      notificationService.filterNotification();
+      notificationService.updateUnreadCount();
 
       final notification = message.notification;
 

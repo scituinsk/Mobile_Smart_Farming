@@ -151,6 +151,25 @@ class ScheduleUiController extends GetxController {
     clearDays();
   }
 
+  Future<void> handleRefreshSchedule() async {
+    try {
+      if (selectedRelayGroup.value == null) {
+        throw Exception("Group yang dipilih tidak ada!");
+      }
+      if (modulService.selectedModul.value == null) {
+        throw Exception("Perangkat yang dipilih tidak ada!");
+      }
+
+      await scheduleService.loadSchedules(selectedRelayGroup.value!.id);
+      await relayService.loadRelaysAndAssignToRelayGroup(
+        modulService.selectedModul.value!.serialId,
+      );
+    } catch (e) {
+      print("error refresh schedule: $e");
+      MySnackbar.error(message: e.toString());
+    }
+  }
+
   Future<void> handleEditGroupSequential() async {
     final formState = sequentalFormKey.currentState;
     if (formState == null || !formState.validate()) {

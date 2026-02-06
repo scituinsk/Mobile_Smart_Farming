@@ -23,6 +23,11 @@ import 'package:pak_tani/src/features/notification/data/datasources/notification
 import 'package:pak_tani/src/features/notification/data/repositories/notification_repository_impl.dart';
 import 'package:pak_tani/src/features/notification/domain/datasources/notification_remote_datasource.dart';
 import 'package:pak_tani/src/features/notification/domain/repositories/notification_repository.dart';
+import 'package:pak_tani/src/features/profile/application/services/profile_service.dart';
+import 'package:pak_tani/src/features/profile/data/datasources/profile_remote_datasource_impl.dart';
+import 'package:pak_tani/src/features/profile/data/repositories/profile_repository_impl.dart';
+import 'package:pak_tani/src/features/profile/domain/datasources/profile_remote_datasource.dart';
+import 'package:pak_tani/src/features/profile/domain/repositories/profile_repository.dart';
 
 /// Dependency class for dependency injection.
 class DependencyInjection {
@@ -65,6 +70,9 @@ class DependencyInjection {
       Get.lazyPut<AuthRemoteDatasource>(() {
         return AuthRemoteDatasourceImpl();
       }, fenix: true);
+      Get.lazyPut<ProfileRemoteDatasource>(
+        () => ProfileRemoteDatasourceImpl(Get.find<ApiService>()),
+      );
       Get.lazyPut<NotificationRemoteDatasource>(
         () => NotificationRemoteDatasourceImpl(Get.find<ApiService>()),
         fenix: true,
@@ -82,6 +90,9 @@ class DependencyInjection {
           remoteDatasource: Get.find<AuthRemoteDatasource>(),
         );
       }, fenix: true);
+      Get.lazyPut<ProfileRepository>(
+        () => ProfileRepositoryImpl(Get.find<ProfileRemoteDatasource>()),
+      );
       Get.lazyPut<NotificationRepository>(
         () => NotificationRepositoryImpl(
           Get.find<NotificationRemoteDatasource>(),
@@ -114,13 +125,20 @@ class DependencyInjection {
   /// Initialize auth services
   static Future<void> _initServices() async {
     try {
+      Get.lazyPut<ProfileService>(
+        () => ProfileService(Get.find<ProfileRepository>()),
+      );
       // Use putAsync to ensure proper initialization sequence
       await Get.putAsync<AuthService>(() async {
-        final authService = AuthService(Get.find<WebSocketService>());
+        final authService = AuthService(
+          Get.find<WebSocketService>(),
+          Get.find<ProfileService>(),
+        );
         // Wait for AuthService initialization to complete
         await authService.onInit();
         return authService;
       }, permanent: true);
+
       Get.lazyPut<NotificationService>(
         () => NotificationService(Get.find<NotificationRepository>()),
         fenix: true,

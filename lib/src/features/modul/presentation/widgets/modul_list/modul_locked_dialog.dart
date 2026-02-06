@@ -45,16 +45,9 @@ class ModulLockedDialog {
             Column(
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  spacing: 10.w,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    MyFilledButton(
-                      title: "Batal",
-                      onPressed: () {
-                        Get.back();
-                      },
-                      backgroundColor: AppTheme.surfaceColor,
-                      textColor: AppTheme.primaryColor,
-                    ),
                     Obx(
                       () => MyFilledButton(
                         onPressed: () => controller.deleteLocalModul(serialId),
@@ -70,6 +63,7 @@ class ModulLockedDialog {
                             : Text("Hapus Modul"),
                       ),
                     ),
+
                     MyFilledButton(
                       onPressed: () {
                         Get.back();
@@ -81,7 +75,7 @@ class ModulLockedDialog {
                       backgroundColor: AppTheme.primaryColor,
                       textColor: Colors.white,
                       child: Text(
-                        "Tambahkan ulang\nModul",
+                        "Tambahkan Ulang Modul",
                         textAlign: TextAlign.center,
                       ),
                     ),

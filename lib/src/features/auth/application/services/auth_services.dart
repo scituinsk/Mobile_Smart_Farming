@@ -4,11 +4,13 @@ import 'package:pak_tani/src/features/auth/application/use_cases/get_user_use_ca
 import 'package:pak_tani/src/features/auth/application/use_cases/login_use_case.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/logout_use_case.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/register_use_case.dart';
-import 'package:pak_tani/src/features/auth/domain/entities/user.dart';
+import 'package:pak_tani/src/features/profile/application/services/profile_service.dart';
+import 'package:pak_tani/src/features/profile/domain/entities/user.dart';
 
 class AuthService extends GetxService {
   final WebSocketService _wsService;
-  AuthService(this._wsService);
+  final ProfileService _profileService;
+  AuthService(this._wsService, this._profileService);
 
   final LoginUseCase _loginUseCase = Get.find<LoginUseCase>();
   final RegisterUseCase _registerUseCase = Get.find<RegisterUseCase>();
@@ -19,7 +21,6 @@ class AuthService extends GetxService {
 
   final RxBool isLoading = false.obs;
   final RxBool isLoggedIn = false.obs;
-  final Rx<User?> currentUser = Rx<User?>(null);
   final RxBool isInitialized = false.obs;
 
   /// Indicates if the AuthService has completed its initialization
@@ -51,8 +52,8 @@ class AuthService extends GetxService {
     try {
       final user = await _getUserUseCase.execute();
       if (user != null) {
-        currentUser.value = user;
         isLoggedIn.value = true;
+        _profileService.currentUser.value = user;
         print('user logged in: ${user.username}');
       } else {
         isLoggedIn.value = false;
@@ -72,7 +73,7 @@ class AuthService extends GetxService {
       await _loginUseCase.execute(email, password);
       final user = await _getUserUseCase.execute();
 
-      currentUser.value = user;
+      _profileService.currentUser.value = user;
       isLoggedIn.value = true;
 
       return user;
@@ -112,16 +113,19 @@ class AuthService extends GetxService {
   }
 
   Future<void> logout() async {
+    isLoading.value = true;
     try {
       // Close all modul sream before log out
       await _wsService.closeAllDeviceStreams();
 
       await _logoutUseCase.execute();
-      currentUser.value = null;
+      _profileService.currentUser.value = null;
       isLoggedIn.value = false;
     } catch (e) {
       print('logout error: $e');
       rethrow;
+    } finally {
+      isLoading.value = false;
     }
   }
 }

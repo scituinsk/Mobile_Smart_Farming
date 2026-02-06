@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/config/app_config.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/utils/custom_icon.dart';
 import 'package:pak_tani/src/core/utils/modul_feature_helper.dart';
 import 'package:pak_tani/src/core/widgets/battery_status.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/feature_data.dart';
@@ -20,7 +20,7 @@ class ModulItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     late ImageProvider imageProvider = modul.image != null
-        ? NetworkImage((AppConfig.baseUrl + modul.image!))
+        ? NetworkImage((AppConfig.imageUrl + modul.image!))
         : const AssetImage('assets/image/default_modul.jpg');
 
     final batteryFeature = (modul.features ?? [])
@@ -65,6 +65,14 @@ class ModulItem extends StatelessWidget {
                           fit: BoxFit.cover,
                           width: double.infinity,
                           height: double.infinity,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            );
+                          },
                         ),
                         Positioned(
                           top: 8.h,
@@ -83,10 +91,9 @@ class ModulItem extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                SvgPicture.asset(
-                                  'assets/icons/mdi-greenhouse.svg',
-                                  width: 20.w,
-                                  height: 20.h,
+                                CustomIcon(
+                                  type: MyCustomIcon.greenHouse,
+                                  size: 20,
                                 ),
                                 Flexible(
                                   child: Text(
@@ -127,6 +134,7 @@ class ModulItem extends StatelessWidget {
           if (modul.isLocked!)
             Positioned.fill(
               child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
                 decoration: BoxDecoration(
                   color: Colors.black.withValues(
                     alpha: 0.5,
@@ -144,11 +152,18 @@ class ModulItem extends StatelessWidget {
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                        'Locked', // Tulisan
+                        'Perangkat terkunci', // Tulisan
                         style: AppTheme.textMedium.copyWith(
                           color: Colors.white,
                           fontSize: 16.sp,
                         ),
+                      ),
+                      Text(
+                        "Masukkan ulang password Perangkat yang baru untuk mengakses Perangkat!",
+                        style: AppTheme.textAction.copyWith(
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),
@@ -166,8 +181,7 @@ class ModulItem extends StatelessWidget {
           (feature) =>
               feature.name == "temperature" ||
               feature.name == "humidity" ||
-              feature.name == "water_level" ||
-              feature.name == "schedule",
+              feature.name == "water_level",
         )
         .toList();
 

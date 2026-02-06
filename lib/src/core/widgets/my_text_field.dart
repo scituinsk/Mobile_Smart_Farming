@@ -19,6 +19,8 @@ class MyTextField extends StatefulWidget {
 
   ///Whether the text should be obscured(for password). The default value is false.
   final bool obscureText;
+  final Color obscureIconColor;
+
   final double gap;
 
   /// Optional controller for the text field.
@@ -57,6 +59,7 @@ class MyTextField extends StatefulWidget {
     this.gap = 4,
     this.focusNode,
     this.autovalidateMode = AutovalidateMode.always,
+    this.obscureIconColor = AppTheme.primaryColor,
   });
 
   @override
@@ -101,6 +104,7 @@ class _MyTextFieldState extends State<MyTextField> {
     if (widget.obscureText) {
       return MyIcon(
         icon: _obscureText ? Icons.visibility_off : Icons.visibility,
+        iconColor: widget.obscureIconColor,
         backgroundColor: Colors.transparent,
         borderRadius: 0,
         onPressed: () {
