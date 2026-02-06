@@ -78,7 +78,13 @@ class ApiService extends GetxService {
             );
           }
 
-          final requestId = '${options.method}-${options.path}';
+          final isFormData = options.data is FormData;
+          final dataString = isFormData
+              ? 'form-data-${DateTime.now().millisecondsSinceEpoch}'
+              : options.data.toString();
+
+          final requestId =
+              '${options.method}-${options.path}-${options.queryParameters}-$dataString';
 
           //  Prevent duplicate requests
           // if pending request contains this request id, reject this request
@@ -96,6 +102,9 @@ class ApiService extends GetxService {
           // add this request id to pending request
           // so the request won't duplicated
           _pendingRequests.add(requestId);
+
+          /// store request id into extra
+          options.extra["request_id"] = requestId;
           print('📡 Request: ${options.method} ${options.path}');
 
           if (!_isAuthEndpoint(options.path)) {
@@ -129,9 +138,10 @@ class ApiService extends GetxService {
 
         // while do request, print status code and path for debug necessity.
         onResponse: (response, handler) {
-          final requestId =
-              '${response.requestOptions.method}-${response.requestOptions.path}';
-          _pendingRequests.remove(requestId);
+          final requestId = response.requestOptions.extra["request_id"];
+          if (requestId != null) {
+            _pendingRequests.remove(requestId);
+          }
 
           print(
             '✅ Response: ${response.statusCode} ${response.requestOptions.path}',
@@ -142,9 +152,10 @@ class ApiService extends GetxService {
         // if response error, check if error is 401 and not auth endpoint then do refresh token
         // then retry request with new access token
         onError: (error, handler) async {
-          final requestId =
-              '${error.requestOptions.method}-${error.requestOptions.path}';
-          _pendingRequests.remove(requestId);
+          final requestId = error.requestOptions.extra["request_id"];
+          if (requestId != null) {
+            _pendingRequests.remove(requestId);
+          }
 
           final statusCode = error.response?.statusCode;
           final path = error.requestOptions.path;
@@ -204,6 +215,10 @@ class ApiService extends GetxService {
                     return handler.resolve(response);
                   } catch (retryError) {
                     print('❌ Retry failed: $retryError');
+
+                    if (retryError is DioException) {
+                      return handler.next(error);
+                    }
                     return handler.next(error);
                   }
                 }
@@ -235,7 +250,7 @@ class ApiService extends GetxService {
 
     try {
       print('🔄 Getting refresh token...');
-      final refreshToken = await await _storage.readSecure('refresh_token');
+      final refreshToken = await _storage.readSecure('refresh_token');
 
       if (refreshToken == null || refreshToken.isEmpty) {
         print('❌ No refresh token found');
@@ -328,28 +343,6 @@ class ApiService extends GetxService {
     }
   }
 
-  /// Request debouncing helper.
-  /// This check if this request is alredy pending.
-  Future<T> _executeRequest<T>(
-    String method,
-    String path,
-    Future<T> Function() request,
-  ) async {
-    final requestId = '$method-$path';
-
-    //  Check if similar request is already pending
-    if (_pendingRequests.contains(requestId)) {
-      throw NetworkException(message: 'Request already in progress');
-    }
-
-    try {
-      return await request();
-    } finally {
-      // remove this request id in pending request.
-      _pendingRequests.remove(requestId);
-    }
-  }
-
   /// Http request Get.
   /// Handle custom get with dio.
   Future<Response> get(
@@ -358,18 +351,16 @@ class ApiService extends GetxService {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
-    return await _executeRequest('GET', path, () async {
-      try {
-        return await _dio.get(
-          path,
-          data: data,
-          queryParameters: queryParameters,
-          options: options,
-        );
-      } on DioException catch (error) {
-        throw _handleDioError(error);
-      }
-    });
+    try {
+      return await _dio.get(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+      );
+    } on DioException catch (error) {
+      throw _handleDioError(error);
+    }
   }
 
   /// Http request post.
@@ -380,18 +371,16 @@ class ApiService extends GetxService {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
-    return await _executeRequest('POST', path, () async {
-      try {
-        return await _dio.post(
-          path,
-          data: data,
-          queryParameters: queryParameters,
-          options: options,
-        );
-      } on DioException catch (error) {
-        throw _handleDioError(error);
-      }
-    });
+    try {
+      return await _dio.post(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+      );
+    } on DioException catch (error) {
+      throw _handleDioError(error);
+    }
   }
 
   /// Http request Put.
@@ -402,18 +391,16 @@ class ApiService extends GetxService {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
-    return await _executeRequest("PUT", path, () async {
-      try {
-        return await _dio.put(
-          path,
-          data: data,
-          queryParameters: queryParameters,
-          options: options,
-        );
-      } on DioException catch (error) {
-        throw _handleDioError(error);
-      }
-    });
+    try {
+      return await _dio.put(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+      );
+    } on DioException catch (error) {
+      throw _handleDioError(error);
+    }
   }
 
   /// Http request Patch.
@@ -424,18 +411,16 @@ class ApiService extends GetxService {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
-    return await _executeRequest("PUT", path, () async {
-      try {
-        return await _dio.patch(
-          path,
-          data: data,
-          queryParameters: queryParameters,
-          options: options,
-        );
-      } on DioException catch (error) {
-        throw _handleDioError(error);
-      }
-    });
+    try {
+      return await _dio.patch(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+      );
+    } on DioException catch (error) {
+      throw _handleDioError(error);
+    }
   }
 
   /// Http request Delete.
@@ -446,18 +431,16 @@ class ApiService extends GetxService {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
-    return await _executeRequest("DELETE", path, () async {
-      try {
-        return await _dio.delete(
-          path,
-          data: data,
-          queryParameters: queryParameters,
-          options: options,
-        );
-      } on DioException catch (error) {
-        throw _handleDioError(error);
-      }
-    });
+    try {
+      return await _dio.delete(
+        path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+      );
+    } on DioException catch (error) {
+      throw _handleDioError(error);
+    }
   }
 
   /// Http request post for file.
@@ -468,17 +451,15 @@ class ApiService extends GetxService {
     dynamic fieldName = 'file',
     Map<String, dynamic>? data,
   }) async {
-    return await _executeRequest("POST", path, () async {
-      try {
-        final formData = FormData.fromMap({
-          fieldName: await MultipartFile.fromFile(filePath),
-          if (data != null) ...data,
-        });
-        return await _dio.post(path, data: formData);
-      } on DioException catch (error) {
-        throw _handleDioError(error);
-      }
-    });
+    try {
+      final formData = FormData.fromMap({
+        fieldName: await MultipartFile.fromFile(filePath),
+        if (data != null) ...data,
+      });
+      return await _dio.post(path, data: formData);
+    } on DioException catch (error) {
+      throw _handleDioError(error);
+    }
   }
 
   /// Keep the rest of error handling methods stay the same

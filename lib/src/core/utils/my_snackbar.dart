@@ -20,7 +20,7 @@ class MySnackbar {
       icon: const Icon(Icons.check_circle, color: Colors.white),
       margin: EdgeInsets.all(16.r),
       borderRadius: 8,
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 2),
       dismissDirection: DismissDirection.horizontal,
     );
   }

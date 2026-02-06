@@ -42,44 +42,34 @@ class ModulLockedDialog {
               textAlign: TextAlign.center,
               style: AppTheme.textDefault,
             ),
-            Column(
+            Row(
+              spacing: 10.w,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  spacing: 10.w,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Obx(
-                      () => MyFilledButton(
-                        onPressed: () => controller.deleteLocalModul(serialId),
-                        backgroundColor: AppTheme.errorColor,
-                        textColor: Colors.white,
-                        child: controller.isLoadingModul.value
-                            ? Container(
-                                margin: EdgeInsets.all(8.r),
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                ),
-                              )
-                            : Text("Hapus Modul"),
-                      ),
-                    ),
+                Obx(
+                  () => MyFilledButton(
+                    onPressed: () => controller.deleteLocalModul(serialId),
+                    backgroundColor: AppTheme.errorColor,
+                    textColor: Colors.white,
+                    child: controller.isLoadingModul.value
+                        ? Container(
+                            margin: EdgeInsets.all(8.r),
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text("Hapus Modul"),
+                  ),
+                ),
 
-                    MyFilledButton(
-                      onPressed: () {
-                        Get.back();
-                        Get.toNamed(
-                          RouteNames.addModulPage,
-                          arguments: serialId,
-                        );
-                      },
-                      backgroundColor: AppTheme.primaryColor,
-                      textColor: Colors.white,
-                      child: Text(
-                        "Tambahkan Ulang Modul",
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ],
+                MyFilledButton(
+                  onPressed: () {
+                    Get.back();
+                    Get.toNamed(RouteNames.addModulPage, arguments: serialId);
+                  },
+                  backgroundColor: AppTheme.primaryColor,
+                  textColor: Colors.white,
+                  child: Text("Tambahkan Ulang", textAlign: TextAlign.center),
                 ),
               ],
             ),
