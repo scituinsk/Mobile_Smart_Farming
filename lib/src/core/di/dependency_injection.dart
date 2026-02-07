@@ -4,6 +4,7 @@
 library;
 
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pak_tani/src/core/services/api_service.dart';
 import 'package:pak_tani/src/core/services/connectivity_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
@@ -18,6 +19,15 @@ import 'package:pak_tani/src/features/auth/data/repositories/auth_repository_imp
 import 'package:pak_tani/src/features/auth/domain/datasources/auth_remote_datasource.dart';
 import 'package:pak_tani/src/features/auth/domain/repositories/auth_repository.dart';
 import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
+import 'package:pak_tani/src/features/modul/data/datasources/modul_local_datasource_impl.dart';
+import 'package:pak_tani/src/features/modul/data/datasources/modul_remote_datasource_impl.dart';
+import 'package:pak_tani/src/features/modul/data/repositories/modul_repository_impl.dart';
+import 'package:pak_tani/src/features/modul/domain/datasources/modul_local_datasource.dart';
+import 'package:pak_tani/src/features/modul/domain/datasources/modul_remote_datasource.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/feature_data.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
+import 'package:pak_tani/src/features/modul/domain/entities/modul_feature.dart';
+import 'package:pak_tani/src/features/modul/domain/repositories/modul_repository.dart';
 import 'package:pak_tani/src/features/notification/application/services/notification_service.dart';
 import 'package:pak_tani/src/features/notification/data/datasources/notification_remote_datasource_impl.dart';
 import 'package:pak_tani/src/features/notification/data/repositories/notification_repository_impl.dart';
@@ -37,6 +47,11 @@ class DependencyInjection {
     print('🔄 Starting dependency injection...');
 
     try {
+      await Hive.initFlutter();
+      Hive.registerAdapter(ModulAdapter());
+      Hive.registerAdapter(ModulFeatureAdapter());
+      Hive.registerAdapter(FeatureDataAdapter());
+
       Get.put(ConnectivityService(), permanent: true);
 
       await _initCoreServices();
@@ -67,6 +82,15 @@ class DependencyInjection {
   /// Initialize auth data source
   static Future<void> _initDataSources() async {
     try {
+      Get.put<ModulLocalDatasource>(
+        ModulLocalDatasourceImpl(),
+        permanent: true,
+      );
+
+      Get.put<ModulRemoteDatasource>(
+        ModulRemoteDatasourceImpl(),
+        permanent: true,
+      );
       Get.lazyPut<AuthRemoteDatasource>(() {
         return AuthRemoteDatasourceImpl();
       }, fenix: true);
@@ -98,6 +122,14 @@ class DependencyInjection {
           Get.find<NotificationRemoteDatasource>(),
         ),
         fenix: true,
+      );
+
+      Get.put<ModulRepository>(
+        ModulRepositoryImpl(
+          remoteDatasource: Get.find<ModulRemoteDatasource>(),
+          localDatasource: Get.find<ModulLocalDatasource>(),
+        ),
+        permanent: true,
       );
     } catch (e) {
       rethrow;

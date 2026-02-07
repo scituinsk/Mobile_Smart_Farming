@@ -6,4 +6,5 @@ abstract class ModulLocalDatasource {
   List<Modul> mergeModuls(List<Modul> remoteModuls);
   Future<void> deleteModul(String serialId);
   Future<void> closeBox();
+  Future<void> clearModuls();
 }

@@ -4,7 +4,7 @@ class FeatureDataModel extends FeatureData {
   const FeatureDataModel({required super.name, required super.data});
 
   factory FeatureDataModel.fromJson(Map<String, dynamic> json) {
-    return FeatureDataModel(name: json["name"], data: json["data"]);
+    return FeatureDataModel(name: json["name"] ?? "", data: json["data"] ?? "");
   }
 
   Map<String, dynamic> toJson() {

@@ -39,8 +39,10 @@ class LoadingDialog {
   /// Does nothing if no dialog is open to avoid errors.
   static void hide() {
     // Check if a dialog is open before trying to close it to avoid errors.
-    if (Get.isDialogOpen ?? false) {
-      Get.back();
+    if (Get.context != null) {
+      Navigator.of(Get.context!).popUntil((route) {
+        return route.settings.name != "loading";
+      });
     }
   }
 }

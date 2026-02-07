@@ -23,8 +23,8 @@ class ModulFeatureModel extends ModulFeature {
     }
 
     return ModulFeatureModel(
-      name: json["name"],
-      descriptions: json["descriptions"],
+      name: json["name"] ?? "",
+      descriptions: json["descriptions"] ?? "",
       data: parsedData,
     );
   }
