@@ -137,7 +137,62 @@ abstract final class AppTheme {
   /// This theme applies Material Design with the defined colors and integrates google fonts.
   static ThemeData light = ThemeData(
     // useMaterial3: true,
-    textTheme: GoogleFonts.rubikTextTheme(),
+    textTheme: GoogleFonts.rubikTextTheme().copyWith(
+      // Display styles (untuk judul besar)
+      displayLarge: GoogleFonts.rubikTextTheme().displayLarge?.copyWith(
+        fontSize: 57.sp,
+      ),
+      displayMedium: GoogleFonts.rubikTextTheme().displayMedium?.copyWith(
+        fontSize: 45.sp,
+      ),
+      displaySmall: GoogleFonts.rubikTextTheme().displaySmall?.copyWith(
+        fontSize: 36.sp,
+      ),
+
+      // Headline styles (untuk judul)
+      headlineLarge: GoogleFonts.rubikTextTheme().headlineLarge?.copyWith(
+        fontSize: 32.sp,
+      ),
+      headlineMedium: GoogleFonts.rubikTextTheme().headlineMedium?.copyWith(
+        fontSize: 28.sp,
+      ),
+      headlineSmall: GoogleFonts.rubikTextTheme().headlineSmall?.copyWith(
+        fontSize: 24.sp,
+      ),
+
+      // Title styles (untuk subjudul)
+      titleLarge: GoogleFonts.rubikTextTheme().titleLarge?.copyWith(
+        fontSize: 22.sp,
+      ),
+      titleMedium: GoogleFonts.rubikTextTheme().titleMedium?.copyWith(
+        fontSize: 16.sp,
+      ),
+      titleSmall: GoogleFonts.rubikTextTheme().titleSmall?.copyWith(
+        fontSize: 14.sp,
+      ),
+
+      // Body styles (untuk teks utama)
+      bodyLarge: GoogleFonts.rubikTextTheme().bodyLarge?.copyWith(
+        fontSize: 16.sp,
+      ),
+      bodyMedium: GoogleFonts.rubikTextTheme().bodyMedium?.copyWith(
+        fontSize: 14.sp,
+      ),
+      bodySmall: GoogleFonts.rubikTextTheme().bodySmall?.copyWith(
+        fontSize: 12.sp,
+      ),
+
+      // Label styles (untuk label/button)
+      labelLarge: GoogleFonts.rubikTextTheme().labelLarge?.copyWith(
+        fontSize: 14.sp,
+      ),
+      labelMedium: GoogleFonts.rubikTextTheme().labelMedium?.copyWith(
+        fontSize: 12.sp,
+      ),
+      labelSmall: GoogleFonts.rubikTextTheme().labelSmall?.copyWith(
+        fontSize: 11.sp,
+      ),
+    ),
     colorScheme: const ColorScheme(
       brightness: Brightness.light,
       primary: primaryColor,
