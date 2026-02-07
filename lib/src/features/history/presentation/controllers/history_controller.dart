@@ -119,11 +119,9 @@ class HistoryController extends GetxController {
       await historyService.loadAllHistories(refresh: true);
       if (isNavigating != null) {
         if (isNavigating) {
-          selectedFilterHistoryTypes.addAll([
-            HistoryType.modul,
-            HistoryType.schedule,
-          ]);
-          selectedFilterModuls.add(modulArgs!);
+          selectModulHistoryType(true);
+          selectScheduleHistoryType(true);
+          selectModulFilter(modulArgs!);
         }
       }
       applyFilter();

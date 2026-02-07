@@ -60,6 +60,11 @@ class ModulLocalDatasourceImpl implements ModulLocalDatasource {
     await _modulBox.delete(serialId);
   }
 
+  @override
+  Future<void> clearModuls() async {
+    await _modulBox.clear();
+  }
+
   /// Close hive box
   @override
   Future<void> closeBox() async {

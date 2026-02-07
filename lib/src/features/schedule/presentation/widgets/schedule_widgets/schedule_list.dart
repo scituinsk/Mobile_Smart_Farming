@@ -56,10 +56,11 @@ class ScheduleList extends StatelessWidget {
               ),
             ),
           if (schedules.isEmpty && !isLoading)
-            SizedBox(
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 40.h),
               width: double.infinity,
               child: Text(
-                "Tekan + untuk menambahkan jadwal baru",
+                "Tekan + untuk menambahkan jadwal irigasi baru",
                 style: AppTheme.text.copyWith(color: AppTheme.titleSecondary),
                 textAlign: TextAlign.center,
               ),

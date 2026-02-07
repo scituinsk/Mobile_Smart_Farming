@@ -53,12 +53,13 @@ class NotificationScreenController extends GetxController {
   /// notification list.
   void filterNotification() {
     notificationService.filterNotification();
+    print("filtering notification");
   }
 
   /// Marks all notifications as read. Errors are shown via snackbar.
-  void markReadAllNotification() {
+  void markReadAllNotification() async {
     try {
-      notificationService.markReadAllNotifications();
+      await notificationService.markReadAllNotifications();
       filterNotification();
     } catch (e) {
       MySnackbar.error(message: e.toString());

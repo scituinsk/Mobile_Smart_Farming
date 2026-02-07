@@ -29,41 +29,43 @@ class CustomDialog {
     double dialogMargin = 5,
   }) async {
     await Get.dialog(
-      Dialog(
-        insetPadding: EdgeInsets.symmetric(
-          vertical: 5.h,
-          horizontal: dialogMargin.w,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Container(
-          height: height?.h,
-          constraints: BoxConstraints(maxWidth: 500.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
+      SafeArea(
+        child: Dialog(
+          insetPadding: EdgeInsets.symmetric(
+            vertical: 5.h,
+            horizontal: dialogMargin.w,
+          ),
+          shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.r),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: widthTitle?.w ?? double.infinity,
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Colors.grey.shade300, width: 1),
+          child: Container(
+            height: height?.h,
+            constraints: BoxConstraints(maxWidth: 500.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: widthTitle?.w ?? double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Colors.grey.shade300, width: 1),
+                    ),
                   ),
+                  margin: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 20.h),
+                  child: title,
                 ),
-                margin: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 20.h),
-                child: title,
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 8.h),
-                width: widthChild?.w,
-                child: child,
-              ),
-            ],
+                Container(
+                  padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 8.h),
+                  width: widthChild?.w,
+                  child: child,
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -16,67 +16,69 @@ class ShowMenuEditSheet {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       builder: (BuildContext context) {
-        return Container(
-          // color: Colors.white,
-          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Pilih Menu Edit', style: AppTheme.h4),
-              SizedBox(height: 20.h),
-              Obx(
-                () => ListTile(
-                  leading: Icon(
-                    LucideIcons.group,
-                    color: !controller.isEditingGroup.value
-                        ? AppTheme.primaryColor
-                        : Colors.white,
-                  ),
-                  title: Text(
-                    'Edit Group',
-                    style: AppTheme.textMedium.copyWith(
+        return SafeArea(
+          child: Container(
+            // color: Colors.white,
+            padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Pilih Menu Edit', style: AppTheme.h4),
+                SizedBox(height: 20.h),
+                Obx(
+                  () => ListTile(
+                    leading: Icon(
+                      LucideIcons.group,
                       color: !controller.isEditingGroup.value
                           ? AppTheme.primaryColor
                           : Colors.white,
                     ),
-                  ),
-                  tileColor: controller.isEditingGroup.value
-                      ? AppTheme.primaryColor
-                      : AppTheme.surfaceColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  onTap: () => controller.setEditingGroup(),
-                ),
-              ),
-              SizedBox(height: 20.h),
-              Obx(
-                () => ListTile(
-                  leading: CustomIcon(
-                    type: MyCustomIcon.solenoid,
-                    color: !controller.isEditingRelay.value
+                    title: Text(
+                      'Edit Group',
+                      style: AppTheme.textMedium.copyWith(
+                        color: !controller.isEditingGroup.value
+                            ? AppTheme.primaryColor
+                            : Colors.white,
+                      ),
+                    ),
+                    tileColor: controller.isEditingGroup.value
                         ? AppTheme.primaryColor
-                        : Colors.white,
+                        : AppTheme.surfaceColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    onTap: () => controller.setEditingGroup(),
                   ),
-                  title: Text(
-                    'Edit Relay',
-                    style: AppTheme.textMedium.copyWith(
+                ),
+                SizedBox(height: 20.h),
+                Obx(
+                  () => ListTile(
+                    leading: CustomIcon(
+                      type: MyCustomIcon.solenoid,
                       color: !controller.isEditingRelay.value
                           ? AppTheme.primaryColor
                           : Colors.white,
                     ),
+                    title: Text(
+                      'Edit Relay',
+                      style: AppTheme.textMedium.copyWith(
+                        color: !controller.isEditingRelay.value
+                            ? AppTheme.primaryColor
+                            : Colors.white,
+                      ),
+                    ),
+                    tileColor: controller.isEditingRelay.value
+                        ? AppTheme.primaryColor
+                        : AppTheme.surfaceColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    onTap: () => controller.setEditingRelay(),
                   ),
-                  tileColor: controller.isEditingRelay.value
-                      ? AppTheme.primaryColor
-                      : AppTheme.surfaceColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  onTap: () => controller.setEditingRelay(),
                 ),
-              ),
-              SizedBox(height: 10.h),
-            ],
+                SizedBox(height: 10.h),
+              ],
+            ),
           ),
         );
       },

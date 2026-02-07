@@ -97,7 +97,7 @@ class WebSocketService extends GetxService {
     required String token,
     required String modulId,
   }) async {
-    final uri = _buildWsUri("/ws/device/$modulId/");
+    final uri = _buildWsUri("/device/$modulId/");
     print('OPEN WS -> $uri');
     final ch = IOWebSocketChannel.connect(
       uri,

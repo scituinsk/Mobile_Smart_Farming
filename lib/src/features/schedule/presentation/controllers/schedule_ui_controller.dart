@@ -42,6 +42,8 @@ class ScheduleUiController extends GetxController {
   RxBool isSequentialController = false.obs;
   RxInt sequentialCountController = 0.obs;
   late TextEditingController relaySequentialCountController;
+  final isFormValid = false.obs;
+
   final sequentalFormKey = GlobalKey<FormState>();
   final isSubmittingSequential = false.obs;
 
@@ -76,11 +78,8 @@ class ScheduleUiController extends GetxController {
               .length;
         }
 
-        print("ada selected group");
         sequentialCountController.value = selectedRelayGroup.value!.sequential;
         sequentialCount.value = sequentialCountController.value;
-
-        print("jumlah sequential: ${sequentialCount.value}");
 
         relaySequentialCountController.text = selectedRelayGroup
             .value!
@@ -90,9 +89,6 @@ class ScheduleUiController extends GetxController {
         isSequentialController.value = sequentialCount.value != 0;
         sequentialCount.value < relayCount.value;
         isSequential.value = isSequentialController.value;
-
-        print("apakah sequential controller: ${isSequentialController.value}");
-        print("apakah sequential: ${isSequential.value}");
 
         _initWsHandle();
       } else {
@@ -132,6 +128,7 @@ class ScheduleUiController extends GetxController {
   void initAddScheduleSheet() {
     scheduleDurationFocus = FocusNode();
     scheduleDurationController = TextEditingController();
+    scheduleDurationController.addListener(_checkFormValidity);
   }
 
   void initEditScheduleSheet(Schedule schedule) {
@@ -140,10 +137,13 @@ class ScheduleUiController extends GetxController {
     scheduleDurationController = TextEditingController(
       text: schedule.duration.toString(),
     );
+    scheduleDurationController.addListener(_checkFormValidity);
+
     loadDaysFromSchedule(schedule);
   }
 
   void disposeScheduleSheet() {
+    scheduleDurationController.removeListener(_checkFormValidity);
     scheduleDurationFocus.unfocus();
     scheduleDurationFocus.dispose();
     scheduleDurationController.dispose();
@@ -472,12 +472,6 @@ class ScheduleUiController extends GetxController {
         return;
       }
 
-      // final String relays = selectedRelayGroup.value!.relays!
-      //     .map((relay) => relay.pin)
-      //     .join(',');
-
-      // final int sequential = selectedRelayGroup.value!.sequential;
-
       await _sendToDevice("OFF");
 
       Get.closeAllSnackbars();
@@ -510,7 +504,7 @@ class ScheduleUiController extends GetxController {
 
   String? validateDuration(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return null;
+      return "Durasi penyiraman tidak boleh kosong";
     }
     final v = int.tryParse(value.trim());
 
@@ -518,8 +512,8 @@ class ScheduleUiController extends GetxController {
       return 'Harap masukkan angka yang valid.';
     }
 
-    if (v < 0) {
-      return 'Durasi tidak boleh kurang dari 0.';
+    if (v < 1) {
+      return 'Durasi tidak boleh kurang dari 1.';
     }
 
     if (v > 720) {
@@ -527,5 +521,14 @@ class ScheduleUiController extends GetxController {
     }
 
     return null;
+  }
+
+  void _checkFormValidity() {
+    final duration = scheduleDurationController.text.trim();
+
+    final durationError = validateDuration(duration);
+
+    isFormValid.value = durationError == null;
+    print("isformvalid: ${isFormValid.value}");
   }
 }

@@ -16,4 +16,5 @@ abstract class ModulRepository {
 
   Future<void> deleteModulFromUser(String serialId);
   Future<void> deleteLocalModul(String serialId);
+  Future<void> clearLocalModul();
 }

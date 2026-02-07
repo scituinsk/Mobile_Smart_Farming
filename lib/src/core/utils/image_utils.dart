@@ -104,44 +104,46 @@ class ImageUtils {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
       builder: (BuildContext context) {
-        return Container(
-          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16.w),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Pilih Sumber Gambar', style: AppTheme.h4),
-              SizedBox(height: 20.h),
-              ListTile(
-                leading: Icon(Icons.camera_alt, color: AppTheme.primaryColor),
-                title: Text('Kamera', style: AppTheme.text),
-                onTap: () async {
-                  Get.back(); // Close bottom sheet
-                  final result = await pickAndCropImage(
-                    ImageSource.camera,
-                    aspectRatio: aspectRatio,
-                    compressQuality: compressQuality,
-                  );
-                  completer.complete(result);
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.photo_library,
-                  color: AppTheme.primaryColor,
+        return SafeArea(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Pilih Sumber Gambar', style: AppTheme.h4),
+                SizedBox(height: 20.h),
+                ListTile(
+                  leading: Icon(Icons.camera_alt, color: AppTheme.primaryColor),
+                  title: Text('Kamera', style: AppTheme.text),
+                  onTap: () async {
+                    Get.back(); // Close bottom sheet
+                    final result = await pickAndCropImage(
+                      ImageSource.camera,
+                      aspectRatio: aspectRatio,
+                      compressQuality: compressQuality,
+                    );
+                    completer.complete(result);
+                  },
                 ),
-                title: Text('Galeri', style: AppTheme.text),
-                onTap: () async {
-                  Get.back(); // Close bottom sheet
-                  final result = await pickAndCropImage(
-                    ImageSource.gallery,
-                    aspectRatio: aspectRatio,
-                    compressQuality: compressQuality,
-                  );
-                  completer.complete(result);
-                },
-              ),
-              SizedBox(height: 10.h),
-            ],
+                ListTile(
+                  leading: Icon(
+                    Icons.photo_library,
+                    color: AppTheme.primaryColor,
+                  ),
+                  title: Text('Galeri', style: AppTheme.text),
+                  onTap: () async {
+                    Get.back(); // Close bottom sheet
+                    final result = await pickAndCropImage(
+                      ImageSource.gallery,
+                      aspectRatio: aspectRatio,
+                      compressQuality: compressQuality,
+                    );
+                    completer.complete(result);
+                  },
+                ),
+                // SizedBox(height: 10.h),
+              ],
+            ),
           ),
         );
       },

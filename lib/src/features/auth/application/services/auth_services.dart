@@ -4,6 +4,7 @@ import 'package:pak_tani/src/features/auth/application/use_cases/get_user_use_ca
 import 'package:pak_tani/src/features/auth/application/use_cases/login_use_case.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/logout_use_case.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/register_use_case.dart';
+import 'package:pak_tani/src/features/modul/domain/repositories/modul_repository.dart';
 import 'package:pak_tani/src/features/profile/application/services/profile_service.dart';
 import 'package:pak_tani/src/features/profile/domain/entities/user.dart';
 
@@ -117,6 +118,8 @@ class AuthService extends GetxService {
     try {
       // Close all modul sream before log out
       await _wsService.closeAllDeviceStreams();
+      final modulRepo = Get.find<ModulRepository>();
+      await modulRepo.clearLocalModul();
 
       await _logoutUseCase.execute();
       _profileService.currentUser.value = null;

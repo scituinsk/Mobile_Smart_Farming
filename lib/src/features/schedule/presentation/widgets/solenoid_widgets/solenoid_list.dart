@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/features/schedule/presentation/controllers/schedule_ui_controller.dart';
 import 'package:pak_tani/src/features/schedule/presentation/widgets/solenoid_widgets/selenoid_item.dart';
@@ -26,6 +27,30 @@ class SolenoidList extends StatelessWidget {
           print("jumlah relay: ${selectedGroupRelay.length}");
 
           final isTwoRow = selectedGroupRelay.length > 3;
+
+          if (selectedGroupRelay.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    LucideIcons.blocks,
+                    size: 32,
+                    color: Colors.grey.shade400,
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    'Tidak ada relay di group ini',
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 14.sp,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            );
+          }
 
           return SizedBox(
             height: isTwoRow ? 170.h : 80.h,

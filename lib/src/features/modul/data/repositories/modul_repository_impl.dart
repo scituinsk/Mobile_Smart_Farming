@@ -103,4 +103,13 @@ class ModulRepositoryImpl implements ModulRepository {
       rethrow;
     }
   }
+
+  @override
+  Future<void> clearLocalModul() async {
+    try {
+      await localDatasource.clearModuls();
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
