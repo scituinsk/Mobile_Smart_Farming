@@ -84,7 +84,9 @@ class AddModulScreen extends StatelessWidget {
                     ),
                     Obx(
                       () => FilledButton(
-                        onPressed: controller.isSubmitting.value
+                        onPressed:
+                            controller.isSubmitting.value ||
+                                !controller.isFormValid.value
                             ? null
                             : () => controller.handleAddModul(),
                         child: controller.isSubmitting.value

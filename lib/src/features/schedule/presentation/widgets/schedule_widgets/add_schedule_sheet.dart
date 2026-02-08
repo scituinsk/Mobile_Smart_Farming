@@ -59,12 +59,17 @@ class AddScheduleSheet {
                     Text("Tambah Penjadwalan", style: AppTheme.h4),
                     Obx(
                       () => IconButton(
-                        onPressed: () => controller.handleAddNewSchedule(),
+                        onPressed: controller.isFormValid.value
+                            ? () async =>
+                                  await controller.handleAddNewSchedule()
+                            : null,
                         icon: controller.isSavingSchedule.value
                             ? CircularProgressIndicator()
                             : Icon(
                                 LucideIcons.check,
-                                color: AppTheme.primaryColor,
+                                color: controller.isFormValid.value
+                                    ? AppTheme.primaryColor
+                                    : AppTheme.surfaceActive,
                                 size: 30,
                               ),
                       ),

@@ -1,6 +1,5 @@
 import 'package:pak_tani/src/features/modul/data/models/modul_feature_model.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
-import 'package:pak_tani/src/features/modul/domain/entities/modul_feature.dart';
 
 class ModulModel extends Modul {
   const ModulModel({
@@ -21,14 +20,16 @@ class ModulModel extends Modul {
       descriptions: json['descriptions'],
       serialId: json['serial_id'] ?? '',
       features: json['feature'] != null
-        ?  (json["feature"] as List<dynamic>)
-              .where((e) => e != null)
-              .map((e) => ModulFeatureModel.fromJson(e as Map<String, dynamic>))
-              .toList()
-        : null,
-      createdAt: json['created_at'] != null 
-        ? DateTime.parse(json['created_at']) 
-        : DateTime.now(),
+          ? (json["feature"] as List<dynamic>)
+                .where((e) => e != null)
+                .map(
+                  (e) => ModulFeatureModel.fromJson(e as Map<String, dynamic>),
+                )
+                .toList()
+          : null,
+      createdAt: (json["created_at"] != null || json["created_at"] != "")
+          ? DateTime.parse(json["created_at"])
+          : DateTime.now(),
       image: json['image'] ?? "",
       isLocked: false,
     );

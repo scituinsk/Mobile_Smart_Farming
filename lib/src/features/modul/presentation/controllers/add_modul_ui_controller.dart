@@ -10,16 +10,16 @@ class AddModulUiController extends GetxController {
 
   late TextEditingController modulCodeController;
   late TextEditingController modulPasswordController;
-  final formKey = GlobalKey<FormState>();
+  late GlobalKey<FormState> formKey;
   final isSubmitting = false.obs;
+  final RxBool isFormValid = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    final serialId = Get.arguments;
+    final serialId = Get.arguments ?? "";
     print("arguments: $serialId");
-    modulCodeController = TextEditingController(text: serialId);
-    modulPasswordController = TextEditingController();
+    _initFormController(serialId);
   }
 
   void openQrScanner() {
@@ -75,10 +75,36 @@ class AddModulUiController extends GetxController {
     return null;
   }
 
-  @override
-  void onClose() {
+  void _initFormController(String? serialId) {
+    formKey = GlobalKey<FormState>();
+    modulCodeController = TextEditingController(text: serialId);
+    modulPasswordController = TextEditingController();
+
+    modulCodeController.addListener(_checkFormValidity);
+    modulPasswordController.addListener(_checkFormValidity);
+  }
+
+  void _disposeFormController() {
+    modulCodeController.removeListener(_checkFormValidity);
+    modulPasswordController.removeListener(_checkFormValidity);
     modulCodeController.dispose();
     modulPasswordController.dispose();
+  }
+
+  void _checkFormValidity() {
+    final serialId = modulCodeController.text.trim();
+    final password = modulPasswordController.text.trim();
+
+    final serialIdValid = validateCode(serialId) == null && serialId.isNotEmpty;
+    final passwordValid =
+        validatePassword(password) == null && password.isNotEmpty;
+
+    isFormValid.value = serialIdValid && passwordValid;
+  }
+
+  @override
+  void onClose() {
+    _disposeFormController();
     super.onClose();
   }
 }

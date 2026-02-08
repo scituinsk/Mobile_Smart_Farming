@@ -37,10 +37,12 @@ class LoginUiController extends GetxController {
     final password = passwordController.text.trim();
 
     // Tambahkan validasi lengkap
-    final emailError = validateEmailandUsername(email);
-    final passwordError = validatePassword(password);
+    final emailValid =
+        validateEmailandUsername(email) == null && email.isNotEmpty;
+    final passwordValid =
+        validatePassword(password) == null && password.isNotEmpty;
 
-    isFormValid.value = emailError == null && passwordError == null;
+    isFormValid.value = emailValid && passwordValid;
     print("is valid: ${isFormValid.value}");
   }
 
@@ -65,8 +67,9 @@ class LoginUiController extends GetxController {
     } else {
       // Validate as username (e.g., length and characters)
       if (value.length < 3) return 'Username minimal 3 karakter';
-      if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value))
+      if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value)) {
         return 'Username hanya boleh berisi huruf, angka, dan underscore';
+      }
     }
 
     return null;

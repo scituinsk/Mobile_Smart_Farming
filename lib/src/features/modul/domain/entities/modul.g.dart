@@ -22,7 +22,9 @@ class ModulAdapter extends TypeAdapter<Modul> {
       descriptions: fields[2] as String?,
       serialId: fields[3] as String,
       features: (fields[4] as List?)?.cast<ModulFeature>(),
-      createdAt: fields[5] as String,
+      createdAt: fields[5] is String
+          ? DateTime.parse(fields[5])
+          : fields[5] as DateTime,
       image: fields[6] as String?,
       isLocked: fields[7] as bool?,
     );

@@ -37,7 +37,7 @@ class ApiService extends GetxService {
 
   /// Initializes Dio settings.
   /// this include base options and add inteceptor
-  Future<void> _initializeDio() async {
+  void _initializeDio() {
     _dio = Dio(
       // base options is base setting for request, like request base url, timeout, global headers, response type, etc.
       BaseOptions(
@@ -87,7 +87,8 @@ class ApiService extends GetxService {
               ? 'form-data-${DateTime.now().millisecondsSinceEpoch}'
               : options.data.toString();
 
-          final requestId = '${options.method}-${options.path}-${options.queryParameters}-$dataString';
+          final requestId =
+              '${options.method}-${options.path}-${options.queryParameters}-$dataString';
           //  Prevent duplicate requests
           // if pending request contains this request id, reject this request
           if (_pendingRequests.contains(requestId)) {
@@ -438,7 +439,7 @@ class ApiService extends GetxService {
     Options? options,
   }) async {
     try {
-      await isReady;  
+      await isReady;
       return await _dio.delete(
         path,
         data: data,
@@ -459,7 +460,7 @@ class ApiService extends GetxService {
     Map<String, dynamic>? data,
   }) async {
     try {
-      await isReady;  
+      await isReady;
       final formData = FormData.fromMap({
         fieldName: await MultipartFile.fromFile(filePath),
         if (data != null) ...data,

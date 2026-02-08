@@ -23,9 +23,9 @@ class StorageService extends GetxService {
 
   // init shared preferences, flutter secure storage, and hive
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
-    _initStorage();
+    await _initStorage();
   }
 
   Future<void> _initStorage() async {
@@ -34,7 +34,7 @@ class StorageService extends GetxService {
       _secureStorage = const FlutterSecureStorage(
         aOptions: AndroidOptions(resetOnError: true),
       );
-      _initCompleter.complete(); 
+      _initCompleter.complete();
       print("✅ StorageService: Initialized successfully");
     } catch (e) {
       print("❌ StorageService: Initialization failed: $e");
@@ -77,7 +77,7 @@ class StorageService extends GetxService {
   Future<int?> readInt(String key) async {
     await isReady;
     return _prefs.getInt(key);
-  }         
+  }
 
   /// Delete any data in shared prefences based on key.
   Future<void> delete(String key) async {
@@ -95,11 +95,11 @@ class StorageService extends GetxService {
   Future<String?> readSecure(String key) async {
     await isReady;
     return await _secureStorage.read(key: key);
-  }       
+  }
 
   /// Delete any data in secure storage based on key.
   Future<void> deleteSecure(String key) async {
-    await isReady;      
+    await isReady;
     await _secureStorage.delete(key: key);
   }
 
@@ -112,13 +112,13 @@ class StorageService extends GetxService {
 
   /// Delete all datas in secure storage.
   Future<void> clearOnlySecure() async {
-    await isReady;  
+    await isReady;
     await _secureStorage.deleteAll();
   }
 
   /// Delete all data in shared preferences.
   Future<void> clearOnlyPrefs() async {
     await isReady;
-    await _prefs.clear();     
+    await _prefs.clear();
   }
 }

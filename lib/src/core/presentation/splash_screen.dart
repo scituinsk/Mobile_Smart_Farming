@@ -79,8 +79,8 @@ class _SplashScreenState extends State<SplashScreen> {
         statusMessage.value = 'Welcome back!';
         await Future.delayed(Duration(milliseconds: 300));
 
-        final serialId = storageService.read("notification_serial_id");
-        final schedule = storageService.readInt("notification_schedule");
+        final serialId = await storageService.read("notification_serial_id");
+        final schedule = await storageService.readInt("notification_schedule");
         Map<String, dynamic>? argument;
         if (serialId != null) {
           argument = {"serial_id": serialId};
@@ -95,7 +95,7 @@ class _SplashScreenState extends State<SplashScreen> {
       } else {
         statusMessage.value = 'Please login...';
         await Future.delayed(Duration(milliseconds: 300));
-        final isFirstTime = storageService.readBool("is_first_time");
+        final isFirstTime = await storageService.readBool("is_first_time");
         if (isFirstTime == null || isFirstTime == true) {
           storageService.writeBool("is_first_time", false);
           Get.offAllNamed(RouteNames.onboardingPage);

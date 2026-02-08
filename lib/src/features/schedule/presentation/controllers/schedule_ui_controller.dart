@@ -526,9 +526,10 @@ class ScheduleUiController extends GetxController {
   void _checkFormValidity() {
     final duration = scheduleDurationController.text.trim();
 
-    final durationError = validateDuration(duration);
+    final durationValid =
+        validateDuration(duration) == null && duration.isNotEmpty;
 
-    isFormValid.value = durationError == null;
+    isFormValid.value = durationValid;
     print("isformvalid: ${isFormValid.value}");
   }
 }

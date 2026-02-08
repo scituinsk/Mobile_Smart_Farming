@@ -58,7 +58,7 @@ class MyTextField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.gap = 4,
     this.focusNode,
-    this.autovalidateMode = AutovalidateMode.always,
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
     this.obscureIconColor = AppTheme.primaryColor,
   });
 

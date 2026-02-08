@@ -17,7 +17,7 @@ class Modul extends Equatable {
   @HiveField(4)
   final List<ModulFeature>? features;
   @HiveField(5)
-  final String createdAt;
+  final DateTime createdAt;
   @HiveField(6)
   final String? image;
   @HiveField(7)
