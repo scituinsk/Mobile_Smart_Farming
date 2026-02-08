@@ -21,16 +21,14 @@ class ModulModel extends Modul {
       descriptions: json['descriptions'],
       serialId: json['serial_id'] ?? '',
       features: json['feature'] != null
-          ? (json["feature"] as List<dynamic>)
-                .map(
-                  (featureJson) => ModulFeatureModel.fromJson(
-                    featureJson as Map<String, dynamic>,
-                  ),
-                )
-                .cast<ModulFeature>()
-                .toList()
-          : null,
-      createdAt: json['created_at'] ?? DateTime.now(),
+        ?  (json["feature"] as List<dynamic>)
+              .where((e) => e != null)
+              .map((e) => ModulFeatureModel.fromJson(e as Map<String, dynamic>))
+              .toList()
+        : null,
+      createdAt: json['created_at'] != null 
+        ? DateTime.parse(json['created_at']) 
+        : DateTime.now(),
       image: json['image'] ?? "",
       isLocked: false,
     );
@@ -42,8 +40,8 @@ class ModulModel extends Modul {
       'name': name,
       'descriptions': descriptions,
       'serial_id': serialId,
-      'features': features,
-      'created_at': createdAt,
+      'feature': features,
+      'created_at': createdAt.toIso8601String(),
       'image': image,
     };
   }

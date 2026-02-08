@@ -15,6 +15,7 @@ class ModulFeatureModel extends ModulFeature {
 
     if (dataJson != null && dataJson is List) {
       parsedData = dataJson
+          .where((item) => item != null)
           .map(
             (item) => FeatureDataModel.fromJson(item as Map<String, dynamic>),
           )
