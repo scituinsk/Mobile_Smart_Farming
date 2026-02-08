@@ -24,12 +24,15 @@ class ApiService extends GetxService {
   //  Better refresh tracking
   bool _isRefreshing = false;
   Completer<bool>? _refreshCompleter;
-  final Set<String> _pendingRequests = <String>{}; // Track pending requests
+  final Set<String> _pendingRequests = <String>{};
+
+  final Completer<void> _dioCompleter = Completer<void>();
+  Future<void> get isReady => _dioCompleter.future;
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
-    await _initializeDio();
+    _initializeDio();
   }
 
   /// Initializes Dio settings.
@@ -52,6 +55,7 @@ class ApiService extends GetxService {
       ),
     );
     _addInterceptors();
+    _dioCompleter.complete();
   }
 
   /// Add inteceptor for dio.
@@ -83,9 +87,7 @@ class ApiService extends GetxService {
               ? 'form-data-${DateTime.now().millisecondsSinceEpoch}'
               : options.data.toString();
 
-          final requestId =
-              '${options.method}-${options.path}-${options.queryParameters}-$dataString';
-
+          final requestId = '${options.method}-${options.path}-${options.queryParameters}-$dataString';
           //  Prevent duplicate requests
           // if pending request contains this request id, reject this request
           if (_pendingRequests.contains(requestId)) {
@@ -351,6 +353,7 @@ class ApiService extends GetxService {
     Map<String, dynamic>? queryParameters,
     Options? options,
   }) async {
+    await isReady;
     try {
       return await _dio.get(
         path,
@@ -372,6 +375,7 @@ class ApiService extends GetxService {
     Options? options,
   }) async {
     try {
+      await isReady;
       return await _dio.post(
         path,
         data: data,
@@ -392,6 +396,7 @@ class ApiService extends GetxService {
     Options? options,
   }) async {
     try {
+      await isReady;
       return await _dio.put(
         path,
         data: data,
@@ -412,6 +417,7 @@ class ApiService extends GetxService {
     Options? options,
   }) async {
     try {
+      await isReady;
       return await _dio.patch(
         path,
         data: data,
@@ -432,6 +438,7 @@ class ApiService extends GetxService {
     Options? options,
   }) async {
     try {
+      await isReady;  
       return await _dio.delete(
         path,
         data: data,
@@ -452,6 +459,7 @@ class ApiService extends GetxService {
     Map<String, dynamic>? data,
   }) async {
     try {
+      await isReady;  
       final formData = FormData.fromMap({
         fieldName: await MultipartFile.fromFile(filePath),
         if (data != null) ...data,
