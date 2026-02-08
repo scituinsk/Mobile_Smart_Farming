@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/widgets/my_display_chip.dart';
 
@@ -35,7 +36,7 @@ class FilterTimeButtonWidget extends StatelessWidget {
       child: Row(
         spacing: 4.w,
         children: [
-          dateValue != null ? Text(dateString!) : Text("Pilih tanggal"),
+          dateValue != null ? Text(dateString!) : Text("filter_select_date".tr),
           Icon(Icons.calendar_month_rounded, color: AppTheme.primaryColor),
         ],
       ),

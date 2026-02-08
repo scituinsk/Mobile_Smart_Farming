@@ -57,7 +57,7 @@ class EditScheduleSheet {
                         size: 30,
                       ),
                     ),
-                    Text("Ubah Penjadwalan", style: AppTheme.h4),
+                    Text("schedule_edit_title".tr, style: AppTheme.h4),
                     Obx(
                       () => IconButton(
                         onPressed: controller.isFormValid.value
@@ -89,7 +89,7 @@ class EditScheduleSheet {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "Waktu Penjadwalan",
+                              "schedule_time_label".tr,
                               style: AppTheme.textDefault,
                             ),
                             Obx(() {
@@ -113,7 +113,7 @@ class EditScheduleSheet {
                                   controller.timeController.value = time;
                                 }
                               },
-                              child: Text("Pilih Waktu"),
+                              child: Text("schedule_pick_time_button".tr),
                             ),
                           ],
                         ),
@@ -135,8 +135,8 @@ class EditScheduleSheet {
                                   controller:
                                       controller.scheduleDurationController,
                                   focusNode: controller.scheduleDurationFocus,
-                                  title: "Durasi Penyiraman",
-                                  hint: "Masukkan durasi (menit)",
+                                  title: "schedule_duration_label".tr,
+                                  hint: "schedule_duration_hint".tr,
                                   prefixIcon: Icon(
                                     LucideIcons.clock,
                                     color: AppTheme.secondaryColor,
@@ -158,7 +158,7 @@ class EditScheduleSheet {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Ulangi penyiraman",
+                                        "schedule_repeat_label".tr,
                                         style: AppTheme.textMedium,
                                       ),
                                       Row(
@@ -167,7 +167,7 @@ class EditScheduleSheet {
                                           TextButton(
                                             onPressed: controller.selectAllDays,
                                             child: Text(
-                                              "Semua",
+                                              "schedule_all_button".tr,
                                               style: TextStyle(
                                                 color: AppTheme.primaryColor,
                                                 fontSize: 12.sp,
@@ -177,7 +177,7 @@ class EditScheduleSheet {
                                           TextButton(
                                             onPressed: controller.clearDays,
                                             child: Text(
-                                              "Reset",
+                                              "schedule_reset_button".tr,
                                               style: TextStyle(
                                                 color: Colors.grey,
                                                 fontSize: 12.sp,

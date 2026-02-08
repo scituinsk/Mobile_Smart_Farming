@@ -23,7 +23,7 @@ class NotificationList extends StatelessWidget {
               children: [
                 CircularProgressIndicator(),
                 SizedBox(height: 16.h),
-                Text('Memuat riwayat notifikasi...'),
+                Text('notification_loading'.tr),
               ],
             ),
           );
@@ -37,14 +37,14 @@ class NotificationList extends StatelessWidget {
                 CustomIcon(type: MyCustomIcon.notifEmpty, size: 300),
                 Text(
                   controller.isShowUnread.value
-                      ? 'Tidak ada notifikasi yang belum dibaca'
-                      : "Tidak ada notifikasi",
+                      ? 'notification_empty_unread'.tr
+                      : "notification_empty_all".tr,
                   style: AppTheme.text.copyWith(color: AppTheme.ternaryColor),
                 ),
                 SizedBox(height: 16.h),
                 FilledButton.icon(
                   onPressed: () => controller.refreshNotificationItems(),
-                  label: Text('Refresh'),
+                  label: Text('notification_refresh'.tr),
                   icon: Icon(LucideIcons.refreshCcw),
                   iconAlignment: IconAlignment.end,
                 ),

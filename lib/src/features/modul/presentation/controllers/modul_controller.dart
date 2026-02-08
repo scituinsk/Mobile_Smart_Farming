@@ -24,7 +24,7 @@ class ModulController extends GetxController {
     try {
       await _modulServices.deleteLocalModul(serialId);
       Get.back();
-      MySnackbar.success(message: "Berhasil menghapus modul");
+      MySnackbar.success(message: "delete_device_success".tr);
     } catch (e) {
       MySnackbar.error(message: e.toString());
     }

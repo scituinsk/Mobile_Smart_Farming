@@ -70,7 +70,7 @@ class RelayUiController extends GetxController {
     if (isLoading.value) return;
     try {
       if (selectedModul.value == null) {
-        throw Exception("Tidak ada Perangkat yang dipilih");
+        throw Exception("relay_error_no_device".tr);
       }
       await relayService.loadRelaysAndAssignToRelayGroup(
         selectedModul.value!.serialId,
@@ -86,8 +86,8 @@ class RelayUiController extends GetxController {
     if (formState == null) return;
     if (!formState.validate()) {
       MySnackbar.error(
-        title: "From tidak valid",
-        message: "Periksa kembali nama RelayGroup",
+        title: "form_invalid_title".tr,
+        message: "relay_form_invalid_message".tr,
       );
       return;
     }
@@ -103,9 +103,9 @@ class RelayUiController extends GetxController {
           selectedModul.value!.serialId,
         );
         Get.back();
-        MySnackbar.success(message: "Berhasil menambahkan RelayGroup");
+        MySnackbar.success(message: "relay_add_group_success".tr);
       } else {
-        throw Exception('Modul tidak ditemukan');
+        throw Exception('relay_error_device_not_found'.tr);
       }
     } catch (e) {
       MySnackbar.error(message: e.toString());
@@ -117,8 +117,8 @@ class RelayUiController extends GetxController {
     if (formState == null) return;
     if (!formState.validate()) {
       MySnackbar.error(
-        title: "Form tidak valid",
-        message: "Periksa kembali nama RelayGroup",
+        title: "form_invalid_title".tr,
+        message: "relay_form_invalid_message".tr,
       );
       return;
     }
@@ -129,7 +129,7 @@ class RelayUiController extends GetxController {
 
       Get.closeAllSnackbars();
       Navigator.of(Get.overlayContext!).pop();
-      MySnackbar.success(message: "Berhasil mengubah nama grub relay");
+      MySnackbar.success(message: "relay_edit_group_success".tr);
     } catch (e) {
       MySnackbar.error(message: e.toString());
     }
@@ -140,16 +140,17 @@ class RelayUiController extends GetxController {
     if (formState == null) return;
     if (!formState.validate()) {
       MySnackbar.error(
-        title: "Form tidak valid",
-        message: "Periksa kembali form",
+        title: "form_invalid_title".tr,
+        message: "relay_form_invalid_check".tr,
       );
       return;
     }
 
     if (isLoading.value) return;
     try {
-      if (selectedModul.value == null)
-        throw Exception("Perangkat tidak ditemukan");
+      if (selectedModul.value == null) {
+        throw Exception("relay_error_device_not_found".tr);
+      }
 
       await relayService.editRelay(
         id,
@@ -165,7 +166,7 @@ class RelayUiController extends GetxController {
 
       Get.closeAllSnackbars();
       Navigator.of(Get.overlayContext!).pop();
-      MySnackbar.success(message: "Berhasil mengubah relay");
+      MySnackbar.success(message: "relay_edit_success".tr);
     } catch (e) {
       MySnackbar.error(message: e.toString());
     }
@@ -177,7 +178,7 @@ class RelayUiController extends GetxController {
 
       Get.closeAllSnackbars();
       Navigator.of(Get.overlayContext!).pop();
-      MySnackbar.success(message: "Berhasil menghapus grub relay");
+      MySnackbar.success(message: "relay_delete_group_success".tr);
     } catch (e) {
       print("error (ui controller): $e");
       MySnackbar.error(message: e.toString());
@@ -195,23 +196,23 @@ class RelayUiController extends GetxController {
 
   String? validateGroupName(String? value) {
     final v = value?.trim() ?? "";
-    if (v.isEmpty) return "Nama Group tidak boleh kosong";
-    if (v.length < 2) return "Nama Group minimal 2 karakter";
-    if (v.length >= 20) return "Nama Group maksimal 20 karakter";
+    if (v.isEmpty) return "validation_relay_group_name_required".tr;
+    if (v.length < 2) return "validation_relay_group_name_min".tr;
+    if (v.length >= 20) return "validation_relay_group_name_max".tr;
     return null;
   }
 
   String? validateRelayName(String? value) {
     final v = value?.trim() ?? "";
-    if (v.isEmpty) return "Nama Relay tidak boleh kosong";
-    if (v.length < 2) return "Nama Relay minimal 2 karakter";
-    if (v.length >= 20) return "Nama Relay maksimal 20 karakter";
+    if (v.isEmpty) return "validation_relay_name_required".tr;
+    if (v.length < 2) return "validation_relay_name_min".tr;
+    if (v.length >= 20) return "validation_relay_name_max".tr;
     return null;
   }
 
   String? validateDescription(String? value) {
     final v = value?.trim() ?? "";
-    if (v.length >= 1000) return "Nama Perangkat maksimal 1000 karakter";
+    if (v.length >= 1000) return "validation_modul_description_max_length".tr;
     return null;
   }
 
@@ -281,7 +282,7 @@ class RelayUiController extends GetxController {
     } catch (e, st) {
       LoadingDialog.hide();
       print("Failed to move relay: $e\n$st");
-      MySnackbar.error(message: "Gagal memindahkan relay");
+      MySnackbar.error(message: "relay_move_failed".tr);
 
       // Rollback sudah di-handle oleh reload
       await relayService.loadRelaysAndAssignToRelayGroup(

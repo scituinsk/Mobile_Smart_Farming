@@ -31,7 +31,7 @@ class ContactInfoWidget extends StatelessWidget {
                     child: Image.asset("assets/image/logo_sc.png"),
                   ),
                 ),
-                Text("SCIT UIN Sunan Kalijaga", style: AppTheme.h2),
+                Text("contact_organization_name".tr, style: AppTheme.h2),
               ],
             ),
             Obx(

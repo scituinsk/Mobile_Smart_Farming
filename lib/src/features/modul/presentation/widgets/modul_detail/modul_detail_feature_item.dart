@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/utils/custom_icon.dart';
@@ -46,7 +47,7 @@ class ModulDetailFeatureItem extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   Text(
-                    "Group relay",
+                    "relay_group_subtitle".tr,
                     style: AppTheme.textAction.copyWith(
                       color: AppTheme.surfaceColor,
                       fontSize: 10.sp,
@@ -56,7 +57,7 @@ class ModulDetailFeatureItem extends StatelessWidget {
               ),
             ),
             MyIcon(
-              icon: LucideIcons.arrowRight500,
+              icon: LucideIcons.arrowRight,
               iconColor: AppTheme.primaryColor,
               backgroundColor: Colors.white,
               padding: 3,

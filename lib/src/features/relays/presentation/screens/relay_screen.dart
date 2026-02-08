@@ -43,9 +43,9 @@ class RelayScreen extends StatelessWidget {
         ],
         title: Column(
           children: [
-            Text("Grub Relay", style: AppTheme.h3),
+            Text("relay_title".tr, style: AppTheme.h3),
             Text(
-              "Atur group saklar perangkat irigasi",
+              "relay_subtitle".tr,
               style: AppTheme.textSmall.copyWith(
                 color: AppTheme.titleSecondary,
               ),

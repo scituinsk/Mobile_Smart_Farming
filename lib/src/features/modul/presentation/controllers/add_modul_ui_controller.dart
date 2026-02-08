@@ -39,8 +39,8 @@ class AddModulUiController extends GetxController {
     if (formState == null) return;
     if (!formState.validate()) {
       MySnackbar.error(
-        title: "Form tidak valid",
-        message: "Periksa kembali kode modul dan password.",
+        title: "form_invalid_title".tr,
+        message: "form_invalid_message".tr,
       );
       return;
     }
@@ -53,7 +53,7 @@ class AddModulUiController extends GetxController {
         modulPasswordController.text.trim(),
       );
       Get.back();
-      MySnackbar.success(message: "Berhasil menambahkan modul");
+      MySnackbar.success(message: "add_device_success".tr);
     } catch (e) {
       MySnackbar.error(message: e.toString());
     } finally {
@@ -63,15 +63,15 @@ class AddModulUiController extends GetxController {
 
   String? validateCode(String? value) {
     final v = value?.trim() ?? '';
-    if (v.isEmpty) return 'Kode modul tidak boleh kosong';
-    if (v.length < 6) return 'Kode modul minimal 6 karakter';
+    if (v.isEmpty) return 'validation_code_required'.tr;
+    if (v.length < 6) return 'validation_code_min_length'.tr;
     return null;
   }
 
   String? validatePassword(String? value) {
     final v = value?.trim() ?? '';
-    if (v.isEmpty) return 'Password tidak boleh kosong';
-    if (v.length < 4) return 'Password minimal 4 karakter';
+    if (v.isEmpty) return 'validation_device_password_required'.tr;
+    if (v.length < 4) return 'validation_device_password_min_length'.tr;
     return null;
   }
 

@@ -34,7 +34,7 @@ class ScheduleItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Durasi: ${schedule.duration ?? 0} menit",
+                  "${"schedule_duration_prefix".tr}: ${schedule.duration ?? 0} ${"schedule_duration_suffix".tr}",
                   style: AppTheme.text.copyWith(color: AppTheme.titleSecondary),
                 ),
 

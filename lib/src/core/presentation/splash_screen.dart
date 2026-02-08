@@ -23,7 +23,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final RxString statusMessage = 'Initializing...'.obs;
+  final RxString statusMessage = 'splash_initializing'.tr.obs;
   late StorageService storageService;
 
   @override
@@ -37,21 +37,21 @@ class _SplashScreenState extends State<SplashScreen> {
   /// Navigates to the appropriate page based on auth status or shows retry dialog on error.
   Future<void> _initializeApp() async {
     try {
-      statusMessage.value = "Memeriksa koneksi...";
+      statusMessage.value = "splash_checking_connection".tr;
       await Future.delayed(const Duration(milliseconds: 500));
 
       final connectivityService = Get.find<ConnectivityService>();
       await connectivityService.checkInitialConnection();
 
       if (!connectivityService.isConnected.value) {
-        statusMessage.value = "Tidak ada koneksi internet!";
+        statusMessage.value = "splash_no_internet".tr;
         _showRetryDialog();
         return;
       }
 
-      statusMessage.value = 'Starting app...';
+      statusMessage.value = 'splash_starting_app'.tr;
 
-      statusMessage.value = "Getting auth service...";
+      statusMessage.value = "splash_getting_auth".tr;
       final authService = Get.find<AuthService>();
       authService.debugInfo();
 
@@ -60,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
         // Force wait max 3 seconds
         int attempts = 0;
         while (!authService.isReady && attempts < 30) {
-          await Future.delayed(Duration(milliseconds: 100));
+          await Future.delayed(const Duration(milliseconds: 100));
           attempts++;
         }
 
@@ -69,15 +69,15 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       }
 
-      statusMessage.value = 'Checking authentication...';
+      statusMessage.value = 'splash_checking_auth'.tr;
       await authService.checkAuthenticationStatus();
 
-      await Future.delayed(Duration(milliseconds: 500));
+      await Future.delayed(const Duration(milliseconds: 500));
 
       //  Navigate based on auth status
       if (authService.isLoggedIn.value) {
-        statusMessage.value = 'Welcome back!';
-        await Future.delayed(Duration(milliseconds: 300));
+        statusMessage.value = 'splash_welcome_back'.tr;
+        await Future.delayed(const Duration(milliseconds: 300));
 
         final serialId = await storageService.read("notification_serial_id");
         final schedule = await storageService.readInt("notification_schedule");
@@ -93,8 +93,8 @@ class _SplashScreenState extends State<SplashScreen> {
         await storageService.delete("notification_serial_id");
         await storageService.delete("notification_schedule");
       } else {
-        statusMessage.value = 'Please login...';
-        await Future.delayed(Duration(milliseconds: 300));
+        statusMessage.value = 'splash_please_login'.tr;
+        await Future.delayed(const Duration(milliseconds: 300));
         final isFirstTime = await storageService.readBool("is_first_time");
         if (isFirstTime == null || isFirstTime == true) {
           storageService.writeBool("is_first_time", false);
@@ -104,20 +104,19 @@ class _SplashScreenState extends State<SplashScreen> {
         }
       }
     } catch (e) {
-      statusMessage.value = 'Error: ${e.toString()}';
-      await Future.delayed(Duration(milliseconds: 500));
+      statusMessage.value = '${"error".tr}: ${e.toString()}';
+      await Future.delayed(const Duration(milliseconds: 500));
       _showRetryDialog();
     }
   }
 
-  /// Shows a retry dialog for connectiono issues.
+  /// Shows a retry dialog for connection issues.
   /// Allows user to retry initialization.
   void _showRetryDialog() {
     Get.defaultDialog(
-      title: "Koneksi Bermasalah",
-      middleText:
-          "Tidak dapat terhubung ke server. Pastikan Anda memiliki koneksi internet yang stabil.",
-      textConfirm: "Coba Lagi",
+      title: "splash_error_dialog_title".tr,
+      middleText: "splash_error_dialog_message".tr,
+      textConfirm: "splash_error_dialog_retry".tr,
       confirmTextColor: Colors.white,
       onConfirm: () {
         Get.back();
@@ -136,11 +135,11 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // App logo
-            CustomIcon(type: MyCustomIcon.logoWhite, size: 100),
+            const CustomIcon(type: MyCustomIcon.logoWhite, size: 100),
             SizedBox(height: 24.h),
 
             // Loading indicator
-            CircularProgressIndicator(
+            const CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
             SizedBox(height: 16.h),

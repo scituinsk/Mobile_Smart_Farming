@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:pak_tani/src/features/schedule/domain/value_objects/week_day.dart';
 
 class Schedule extends Equatable {
   final int id;
@@ -35,18 +37,18 @@ class Schedule extends Equatable {
   });
 
   String getActiveDays() {
-    final days = <String>[];
-    if (repeatMonday) days.add('Sen');
-    if (repeatTuesday) days.add('Sel');
-    if (repeatWednesday) days.add('Rab');
-    if (repeatThursday) days.add('Kam');
-    if (repeatFriday) days.add('Jum');
-    if (repeatSaturday) days.add('Sab');
-    if (repeatSunday) days.add('Min');
+    final activeDays = <String>[];
+    if (repeatMonday) activeDays.add(WeekDay.mon.short);
+    if (repeatTuesday) activeDays.add(WeekDay.tue.short);
+    if (repeatWednesday) activeDays.add(WeekDay.wed.short);
+    if (repeatThursday) activeDays.add(WeekDay.thu.short);
+    if (repeatFriday) activeDays.add(WeekDay.fri.short);
+    if (repeatSaturday) activeDays.add(WeekDay.sat.short);
+    if (repeatSunday) activeDays.add(WeekDay.sun.short);
 
-    if (days.isEmpty) return 'Tidak ada pengulangan';
-    if (days.length == 7) return 'Setiap hari';
-    return days.join(', ');
+    if (activeDays.isEmpty) return 'schedule_no_repeat'.tr;
+    if (activeDays.length == 7) return 'schedule_every_day'.tr;
+    return activeDays.join(', ');
   }
 
   String getFormattedTime() {

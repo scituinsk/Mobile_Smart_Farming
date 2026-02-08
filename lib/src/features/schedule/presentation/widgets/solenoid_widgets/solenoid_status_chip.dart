@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 
 class SolenoidStatusChip extends StatelessWidget {
@@ -17,7 +18,7 @@ class SolenoidStatusChip extends StatelessWidget {
             ),
             padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 7.w),
             child: Text(
-              "Aktif",
+              "solenoid_status_active".tr,
               style: AppTheme.textSmall.copyWith(color: Colors.green),
             ),
           )
@@ -29,7 +30,7 @@ class SolenoidStatusChip extends StatelessWidget {
             ),
             padding: EdgeInsets.symmetric(vertical: 3.h, horizontal: 7.w),
             child: Text(
-              "Tidak Aktif",
+              "solenoid_status_inactive".tr,
               style: AppTheme.textSmall.copyWith(color: Colors.red),
             ),
           );

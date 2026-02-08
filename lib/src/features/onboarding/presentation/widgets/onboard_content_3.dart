@@ -21,12 +21,9 @@ class OnboardContent3 extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 18.r,
               children: [
+                Text("onboard_3_title".tr, style: AppTheme.onboardingTitle),
                 Text(
-                  "Data Lahan,\nReal Time!",
-                  style: AppTheme.onboardingTitle,
-                ),
-                Text(
-                  "Pantau suhu, kelembapan, dan air langsung dari HP. Biar lahanmu selalu siap hasilin panen terbaik.",
+                  "onboard_3_subtitle".tr,
                   style: AppTheme.h4.copyWith(fontWeight: FontWeight.normal),
                 ),
               ],
@@ -43,7 +40,7 @@ class OnboardContent3 extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 30.w),
             child: FilledButton(
               onPressed: () => Get.offAllNamed(RouteNames.loginPage),
-              child: Text("Mulai Aplikasi"),
+              child: Text("onboard_3_button".tr),
             ),
           ),
         ],

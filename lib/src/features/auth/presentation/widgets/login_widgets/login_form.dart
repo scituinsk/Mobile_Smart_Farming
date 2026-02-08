@@ -27,9 +27,9 @@ class LoginForm extends StatelessWidget {
                 spacing: 15.r,
                 children: [
                   MyTextField(
-                    title: "Username atau Email",
+                    title: "auth_username_email".tr,
                     controller: controller.emailController,
-                    hint: "Masukkan username atau email anda...",
+                    hint: "auth_username_email_hint".tr,
                     borderRadius: 5,
                     titleStyle: AppTheme.h5.copyWith(
                       color: AppTheme.primaryColor,
@@ -39,16 +39,15 @@ class LoginForm extends StatelessWidget {
                       Icons.email_rounded,
                       color: AppTheme.secondaryColor,
                     ),
-                    validator:
-                        controller.validateEmailandUsername, // ✅ Add validation
+                    validator: controller.validateEmailandUsername,
                   ),
                   MyTextField(
                     controller: controller.passwordController,
                     validator: controller.validatePassword,
-                    title: "Password",
+                    title: "auth_password".tr,
                     obscureText: true,
                     obscureIconColor: AppTheme.secondaryColor,
-                    hint: "Masukkan password anda...",
+                    hint: "auth_password_hint".tr,
                     titleStyle: AppTheme.h5.copyWith(
                       color: AppTheme.primaryColor,
                     ),
@@ -79,14 +78,14 @@ class LoginForm extends StatelessWidget {
               RichText(
                 text: TextSpan(
                   children: [
-                    WidgetSpan(child: Text("Belum punya akun? ")),
+                    WidgetSpan(child: Text("auth_dont_have_account".tr)),
                     WidgetSpan(
                       child: GestureDetector(
                         onTap: () {
                           Get.toNamed(RouteNames.registerPage);
                         },
                         child: Text(
-                          "Daftar akun",
+                          "auth_register_link".tr,
                           style: AppTheme.textMedium.copyWith(
                             color: AppTheme.primaryColor,
                             fontWeight: FontWeight.bold,
@@ -100,7 +99,6 @@ class LoginForm extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: Obx(() {
-                  // ✅ Business Controller - dari DI
                   final authController = Get.find<AuthController>();
 
                   return MyFilledButton(
@@ -120,7 +118,7 @@ class LoginForm extends StatelessWidget {
                             ),
                           )
                         : Text(
-                            'Masuk',
+                            'auth_login_btn'.tr,
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.bold,

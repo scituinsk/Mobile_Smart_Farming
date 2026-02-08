@@ -21,7 +21,7 @@ class DashboardAppbar extends StatelessWidget {
           spacing: 12.r,
           children: [
             CustomIcon(type: MyCustomIcon.logoPrimary, size: 50),
-            Text("PakTani", style: AppTheme.h3),
+            Text("app_name".tr, style: AppTheme.h3),
           ],
         ),
         Row(

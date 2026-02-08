@@ -56,7 +56,7 @@ class AddScheduleSheet {
                         size: 30,
                       ),
                     ),
-                    Text("Tambah Penjadwalan", style: AppTheme.h4),
+                    Text("schedule_add_title".tr, style: AppTheme.h4),
                     Obx(
                       () => IconButton(
                         onPressed: controller.isFormValid.value
@@ -87,7 +87,7 @@ class AddScheduleSheet {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "Waktu Penjadwalan",
+                              "schedule_time_label".tr,
                               style: AppTheme.textDefault,
                             ),
                             Obx(() {
@@ -111,7 +111,7 @@ class AddScheduleSheet {
                                   controller.timeController.value = time;
                                 }
                               },
-                              child: Text("Pilih Waktu"),
+                              child: Text("schedule_pick_time_button".tr),
                             ),
                           ],
                         ),
@@ -130,7 +130,7 @@ class AddScheduleSheet {
                               Form(
                                 key: controller.scheduleFormKey,
                                 child: MyTextField(
-                                  title: "Durasi penyiraman",
+                                  title: "schedule_duration_label".tr,
                                   fillColor: Colors.white,
                                   controller:
                                       controller.scheduleDurationController,
@@ -139,7 +139,7 @@ class AddScheduleSheet {
                                     color: AppTheme.secondaryColor,
                                   ),
 
-                                  hint: "Masukkan durasi (menit)",
+                                  hint: "schedule_duration_hint".tr,
                                   keyboardType: TextInputType.number,
                                   focusNode: controller.scheduleDurationFocus,
                                   validator: controller.validateDuration,
@@ -157,7 +157,7 @@ class AddScheduleSheet {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Ulangi penyiraman",
+                                        "schedule_repeat_label".tr,
                                         style: AppTheme.textMedium,
                                       ),
                                       Row(
@@ -166,7 +166,7 @@ class AddScheduleSheet {
                                           TextButton(
                                             onPressed: controller.selectAllDays,
                                             child: Text(
-                                              "Semua",
+                                              "schedule_all_button".tr,
                                               style: TextStyle(
                                                 color: AppTheme.primaryColor,
                                                 fontSize: 12.sp,
@@ -176,7 +176,7 @@ class AddScheduleSheet {
                                           TextButton(
                                             onPressed: controller.clearDays,
                                             child: Text(
-                                              "Reset",
+                                              "schedule_reset_button".tr,
                                               style: TextStyle(
                                                 color: Colors.grey,
                                                 fontSize: 12.sp,

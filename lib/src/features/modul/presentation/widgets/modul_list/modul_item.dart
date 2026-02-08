@@ -152,14 +152,14 @@ class ModulItem extends StatelessWidget {
                       ),
                       SizedBox(height: 8.h),
                       Text(
-                        'Perangkat terkunci', // Tulisan
+                        'device_locked_title'.tr,
                         style: AppTheme.textMedium.copyWith(
                           color: Colors.white,
                           fontSize: 16.sp,
                         ),
                       ),
                       Text(
-                        "Masukkan ulang password Perangkat yang baru untuk mengakses Perangkat!",
+                        "device_locked_message".tr,
                         style: AppTheme.textAction.copyWith(
                           color: Colors.white,
                         ),

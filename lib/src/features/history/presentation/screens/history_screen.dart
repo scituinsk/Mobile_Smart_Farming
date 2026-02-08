@@ -19,8 +19,8 @@ class HistoryScreen extends StatelessWidget {
           children: [
             Column(
               children: [
-                Text("Log Riwayat", style: AppTheme.h3),
-                Text("Catatan aktivitas sistem", style: AppTheme.textAction),
+                Text("history_log_title".tr, style: AppTheme.h3),
+                Text("history_log_subtitle".tr, style: AppTheme.textAction),
               ],
             ),
             SizedBox(height: 25.h),

@@ -44,7 +44,7 @@ class ScheduleList extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 10.r,
         children: [
-          Text("Daftar Penjadwalan", style: AppTheme.h4),
+          Text("schedule_list_title".tr, style: AppTheme.h4),
           if (schedules.isNotEmpty)
             Skeletonizer(
               enabled: isLoading,
@@ -60,7 +60,7 @@ class ScheduleList extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 40.h),
               width: double.infinity,
               child: Text(
-                "Tekan + untuk menambahkan jadwal irigasi baru",
+                "schedule_list_empty".tr,
                 style: AppTheme.text.copyWith(color: AppTheme.titleSecondary),
                 textAlign: TextAlign.center,
               ),

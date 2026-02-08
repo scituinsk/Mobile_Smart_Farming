@@ -23,7 +23,7 @@ class DeleteScheduleDialog {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(LucideIcons.trash2, color: AppTheme.errorColor, size: 38.r),
-            Text("Hapus Schedule ini?", style: AppTheme.h4),
+            Text("schedule_delete_title".tr, style: AppTheme.h4),
           ],
         ),
       ),
@@ -34,7 +34,7 @@ class DeleteScheduleDialog {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "Schedule ini akan dihapus.",
+              "schedule_delete_message".tr,
               textAlign: TextAlign.center,
               style: AppTheme.textDefault,
             ),
@@ -43,7 +43,7 @@ class DeleteScheduleDialog {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 MyFilledButton(
-                  title: "Batal",
+                  title: "button_cancel".tr,
                   onPressed: () {
                     Get.back();
                   },
@@ -67,7 +67,10 @@ class DeleteScheduleDialog {
                               color: Colors.white,
                             ),
                           )
-                        : Text("Hapus", style: TextStyle(color: Colors.white)),
+                        : Text(
+                            "button_delete".tr,
+                            style: TextStyle(color: Colors.white),
+                          ),
                   ),
                 ),
               ],

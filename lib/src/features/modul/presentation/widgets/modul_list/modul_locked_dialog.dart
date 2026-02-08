@@ -8,7 +8,7 @@ import 'package:pak_tani/src/core/widgets/my_filled_button.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_controller.dart';
 
 class ModulLockedDialog {
-  static show(BuildContext context, String serialId) {
+  static void show(BuildContext context, String serialId) {
     final controller = Get.find<ModulController>();
     CustomDialog.show(
       context: context,
@@ -22,9 +22,9 @@ class ModulLockedDialog {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(Icons.warning_rounded, color: AppTheme.errorColor, size: 38.r),
-            Text("Peringatan!", style: AppTheme.h4),
+            Text("locked_dialog_warning_title".tr, style: AppTheme.h4),
             Text(
-              'Password telah diubah!',
+              'locked_dialog_password_changed'.tr,
               style: AppTheme.textAction,
               textAlign: TextAlign.center,
             ),
@@ -38,7 +38,7 @@ class ModulLockedDialog {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "Silahkan ubah password terlebih dahulu untuk dapat mengakses modul atau hapus modul dari akun ini.",
+              "locked_dialog_message".tr,
               textAlign: TextAlign.center,
               style: AppTheme.textDefault,
             ),
@@ -58,10 +58,9 @@ class ModulLockedDialog {
                               color: Colors.white,
                             ),
                           )
-                        : Text("Hapus Modul"),
+                        : Text("locked_dialog_delete_button".tr),
                   ),
                 ),
-
                 MyFilledButton(
                   onPressed: () {
                     Get.back();
@@ -69,7 +68,10 @@ class ModulLockedDialog {
                   },
                   backgroundColor: AppTheme.primaryColor,
                   textColor: Colors.white,
-                  child: Text("Tambahkan Ulang", textAlign: TextAlign.center),
+                  child: Text(
+                    "locked_dialog_readd_button".tr,
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ],
             ),

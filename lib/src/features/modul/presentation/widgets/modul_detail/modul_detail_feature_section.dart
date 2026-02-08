@@ -75,7 +75,7 @@ class ModulDetailFeatureSection extends StatelessWidget {
                             Icon(Icons.settings, color: Colors.white, size: 28),
                             Expanded(
                               child: Text(
-                                "Pengaturan Relay",
+                                "relay_settings_title".tr,
                                 style: AppTheme.h4.copyWith(
                                   color: Colors.white,
                                 ),
@@ -84,7 +84,7 @@ class ModulDetailFeatureSection extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          "Atur group relay untuk mengatur penjadwalan",
+                          "relay_settings_subtitle".tr,
                           style: AppTheme.textAction.copyWith(
                             color: AppTheme.surfaceColor,
                             fontSize: 11.sp,

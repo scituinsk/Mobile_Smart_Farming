@@ -17,7 +17,7 @@ class RelayModals {
       // widthTitle: 240,
       context: context,
       dialogMargin: 40,
-      title: Text("Tambah Grub Baru", style: AppTheme.h4),
+      title: Text("relay_add_group_title".tr, style: AppTheme.h4),
       child: SingleChildScrollView(
         child: Form(
           key: controller.formKey,
@@ -27,10 +27,10 @@ class RelayModals {
             children: [
               MyTextField(
                 // fieldWidth: 240,
-                title: "Nama Grub",
+                title: "relay_group_name_label".tr,
                 controller: controller.groupName,
                 validator: controller.validateGroupName,
-                hint: "Ex: GreenH 1",
+                hint: "relay_group_name_hint".tr,
                 borderRadius: 10,
               ),
               Row(
@@ -43,7 +43,7 @@ class RelayModals {
                       Get.back();
                     },
                     backgroundColor: AppTheme.surfaceColor,
-                    title: "Batal",
+                    title: "button_cancel".tr,
                     textColor: AppTheme.primaryColor,
                   ),
                   Obx(() {
@@ -58,7 +58,7 @@ class RelayModals {
                               width: 25.w,
                               child: CircularProgressIndicator(),
                             )
-                          : Text("Simpan"),
+                          : Text("button_save".tr),
                     );
                   }),
                 ],
@@ -81,7 +81,7 @@ class RelayModals {
       // widthTitle: 240,
       context: context,
       dialogMargin: 40,
-      title: Text("Ubah Nama Grub", style: AppTheme.h4),
+      title: Text("relay_edit_group_title".tr, style: AppTheme.h4),
       child: SingleChildScrollView(
         child: Form(
           key: controller.formKey,
@@ -91,10 +91,10 @@ class RelayModals {
             children: [
               MyTextField(
                 // fieldWidth: 240,
-                title: "Nama Grub",
+                title: "relay_group_name_label".tr,
                 controller: controller.groupName,
                 validator: controller.validateGroupName,
-                hint: "Ex: GreenH 1",
+                hint: "relay_group_name_hint".tr,
                 borderRadius: 10,
               ),
               Row(
@@ -107,7 +107,7 @@ class RelayModals {
                       Get.back();
                     },
                     backgroundColor: AppTheme.surfaceColor,
-                    title: "Batal",
+                    title: "button_cancel".tr,
                     textColor: AppTheme.primaryColor,
                   ),
                   Obx(() {
@@ -123,7 +123,7 @@ class RelayModals {
                               width: 25.w,
                               child: CircularProgressIndicator(),
                             )
-                          : Text("Simpan"),
+                          : Text("button_save".tr),
                     );
                   }),
                 ],
@@ -143,7 +143,7 @@ class RelayModals {
       // widthTitle: 240,
       dialogMargin: 40,
       context: context,
-      title: Text("Ubah Relay", style: AppTheme.h4),
+      title: Text("relay_edit_relay_title".tr, style: AppTheme.h4),
       child: SingleChildScrollView(
         child: Form(
           key: controller.formKey,
@@ -153,18 +153,18 @@ class RelayModals {
             children: [
               MyTextField(
                 // fieldWidth: 240,
-                title: "Nama Relay",
+                title: "relay_name_label".tr,
                 controller: controller.relayNameC,
                 validator: controller.validateRelayName,
-                hint: "Ex: Solenoid 1",
+                hint: "relay_name_hint".tr,
                 borderRadius: 10,
                 focusNode: controller.relayNameFocus,
               ),
               MyTextField(
                 // fieldWidth: 240,
-                title: "Deskripsi Relay",
+                title: "relay_description_label".tr,
                 controller: controller.relayDescC,
-                hint: "Masukkan Deskripsi",
+                hint: "relay_description_hint".tr,
                 borderRadius: 10,
                 validator: controller.validateDescription,
                 focusNode: controller.relayDescFocus,
@@ -179,7 +179,7 @@ class RelayModals {
                       Get.back();
                     },
                     backgroundColor: AppTheme.surfaceColor,
-                    title: "Batal",
+                    title: "button_cancel".tr,
                     textColor: AppTheme.primaryColor,
                   ),
                   Obx(() {
@@ -195,7 +195,7 @@ class RelayModals {
                               width: 25.w,
                               child: CircularProgressIndicator(),
                             )
-                          : Text("Simpan"),
+                          : Text("button_save".tr),
                     );
                   }),
                 ],
@@ -226,7 +226,7 @@ class RelayModals {
               color: AppTheme.errorColor,
               size: 38,
             ),
-            Text("Hapus Grub ini?", style: AppTheme.h4),
+            Text("relay_delete_group_title".tr, style: AppTheme.h4),
           ],
         ),
       ),
@@ -237,7 +237,7 @@ class RelayModals {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "Grub ini akan dihapus dari daftar relay.",
+              "relay_delete_group_message".tr,
               textAlign: TextAlign.center,
               style: AppTheme.textDefault,
             ),
@@ -246,7 +246,7 @@ class RelayModals {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 MyFilledButton(
-                  title: "Batal",
+                  title: "button_cancel".tr,
                   onPressed: () {
                     Get.back();
                   },
@@ -266,7 +266,7 @@ class RelayModals {
                             color: Colors.white,
                             padding: EdgeInsets.all(5.r),
                           )
-                        : Text("Hapus"),
+                        : Text("button_delete".tr),
                   );
                 }),
               ],

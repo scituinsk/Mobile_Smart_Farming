@@ -57,18 +57,18 @@ class LoginUiController extends GetxController {
 
   // ✅ Add email validation
   String? validateEmailandUsername(String? value) {
-    if (value?.isEmpty ?? true) return 'Email atau username tidak boleh kosong';
+    if (value?.isEmpty ?? true) return 'validation_email_username_required'.tr;
 
     // Check if it looks like an email
     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
     if (emailRegex.hasMatch(value!)) {
       // Validate as email
-      if (!emailRegex.hasMatch(value)) return 'Format email tidak valid';
+      if (!emailRegex.hasMatch(value)) return 'validation_email_invalid'.tr;
     } else {
       // Validate as username (e.g., length and characters)
-      if (value.length < 3) return 'Username minimal 3 karakter';
+      if (value.length < 3) return 'validation_username_min_length'.tr;
       if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value)) {
-        return 'Username hanya boleh berisi huruf, angka, dan underscore';
+        return 'validation_username_invalid_chars'.tr;
       }
     }
 
@@ -76,8 +76,8 @@ class LoginUiController extends GetxController {
   }
 
   String? validatePassword(String? value) {
-    if (value?.isEmpty ?? true) return 'Password tidak boleh kosong';
-    if (value!.length < 6) return 'Password minimal 6 karakter';
+    if (value?.isEmpty ?? true) return 'validation_password_required'.tr;
+    if (value!.length < 6) return 'validation_password_min_length'.tr;
     return null;
   }
 }

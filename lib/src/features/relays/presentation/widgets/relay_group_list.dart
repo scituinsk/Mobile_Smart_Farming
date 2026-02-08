@@ -58,7 +58,7 @@ class RelayGroupList extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      "Relay Belum Dikelompokkan",
+                      "relay_ungrouped_title".tr,
                       style: AppTheme.h4.copyWith(
                         color: Colors.grey.shade700,
                         fontStyle: FontStyle.italic,
@@ -111,7 +111,7 @@ class RelayGroupList extends StatelessWidget {
                           ),
                           SizedBox(height: 8.h),
                           Text(
-                            'Tidak ada relay di group ini',
+                            'relay_group_empty'.tr,
                             style: TextStyle(
                               color: Colors.grey.shade600,
                               fontSize: 14.sp,
@@ -133,7 +133,10 @@ class RelayGroupList extends StatelessWidget {
                   () => Row(
                     spacing: 20.r,
                     children: [
-                      Text("Group: ${group.name}", style: AppTheme.h4),
+                      Text(
+                        "${"relay_group_label".tr}: ${group.name}",
+                        style: AppTheme.h4,
+                      ),
                       if (controller.isEditingGroup.value)
                         MyIcon(
                           icon: Icons.edit_outlined,
@@ -175,7 +178,7 @@ class RelayGroupList extends StatelessWidget {
                 Icon(LucideIcons.blocks, size: 64, color: Colors.grey.shade300),
                 SizedBox(height: 16.h),
                 Text(
-                  'Tidak ada relay',
+                  'relay_list_empty'.tr,
                   style: TextStyle(color: Colors.grey.shade600),
                 ),
               ],
@@ -196,7 +199,7 @@ class RelayGroupList extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.only(right: 23.w),
                         child: Icon(
-                          LucideIcons.alignJustify,
+                          LucideIcons.menu,
                           color: Colors.black,
                           size: 20.r,
                         ),
@@ -207,9 +210,7 @@ class RelayGroupList extends StatelessWidget {
                   (oldItemIndex, oldListIndex, newItemIndex, newListIndex) {
                     if (newListIndex == 0 && oldListIndex != 0) {
                       print("Cannot move relay from group to unassigned");
-                      MySnackbar.warning(
-                        message: "Relay harus diletakkan di group!",
-                      );
+                      MySnackbar.warning(message: "relay_must_be_in_group".tr);
                       return;
                     }
 

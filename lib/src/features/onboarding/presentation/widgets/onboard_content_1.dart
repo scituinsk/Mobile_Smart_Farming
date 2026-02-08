@@ -24,12 +24,9 @@ class OnboardContent1 extends StatelessWidget {
             child: Column(
               spacing: 18.r,
               children: [
+                Text("onboard_1_title".tr, style: AppTheme.onboardingTitle),
                 Text(
-                  "Irigasi Cerdas di Tangan Kamu",
-                  style: AppTheme.onboardingTitle,
-                ),
-                Text(
-                  "Kontrol penyiraman jadi simpel banget. Mulai langkah baru menuju pertanian modern dari genggamanmu.",
+                  "onboard_1_subtitle".tr,
                   style: AppTheme.h4.copyWith(fontWeight: FontWeight.normal),
                 ),
               ],
