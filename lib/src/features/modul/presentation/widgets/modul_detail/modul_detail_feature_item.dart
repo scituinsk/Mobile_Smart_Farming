@@ -57,7 +57,7 @@ class ModulDetailFeatureItem extends StatelessWidget {
               ),
             ),
             MyIcon(
-              icon: LucideIcons.arrowRight,
+              icon: LucideIcons.arrowRight500,
               iconColor: AppTheme.primaryColor,
               backgroundColor: Colors.white,
               padding: 3,

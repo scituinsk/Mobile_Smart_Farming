@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:pak_tani/src/features/schedule/domain/value_objects/week_day.dart';
 
 class Schedule extends Equatable {
   final int id;
@@ -36,19 +34,16 @@ class Schedule extends Equatable {
     required this.updatedAt,
   });
 
-  String getActiveDays() {
-    final activeDays = <String>[];
-    if (repeatMonday) activeDays.add(WeekDay.mon.short);
-    if (repeatTuesday) activeDays.add(WeekDay.tue.short);
-    if (repeatWednesday) activeDays.add(WeekDay.wed.short);
-    if (repeatThursday) activeDays.add(WeekDay.thu.short);
-    if (repeatFriday) activeDays.add(WeekDay.fri.short);
-    if (repeatSaturday) activeDays.add(WeekDay.sat.short);
-    if (repeatSunday) activeDays.add(WeekDay.sun.short);
-
-    if (activeDays.isEmpty) return 'schedule_no_repeat'.tr;
-    if (activeDays.length == 7) return 'schedule_every_day'.tr;
-    return activeDays.join(', ');
+  List<String> getActiveDayCodes() {
+    final codes = <String>[];
+    if (repeatMonday) codes.add('mon');
+    if (repeatTuesday) codes.add('tue');
+    if (repeatWednesday) codes.add('wed');
+    if (repeatThursday) codes.add('thu');
+    if (repeatFriday) codes.add('fri');
+    if (repeatSaturday) codes.add('sat');
+    if (repeatSunday) codes.add('sun');
+    return codes;
   }
 
   String getFormattedTime() {

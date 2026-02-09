@@ -6,6 +6,7 @@ import 'package:pak_tani/src/core/widgets/my_switch.dart';
 import 'package:pak_tani/src/features/schedule/domain/entities/schedule.dart';
 import 'package:pak_tani/src/features/schedule/presentation/controllers/schedule_ui_controller.dart';
 import 'package:pak_tani/src/features/schedule/presentation/widgets/schedule_widgets/edit_schedule_sheet.dart';
+import 'package:pak_tani/src/features/schedule/presentation/widgets/schedule_display_extension.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ScheduleItem extends StatelessWidget {
@@ -37,16 +38,14 @@ class ScheduleItem extends StatelessWidget {
                   "${"schedule_duration_prefix".tr}: ${schedule.duration ?? 0} ${"schedule_duration_suffix".tr}",
                   style: AppTheme.text.copyWith(color: AppTheme.titleSecondary),
                 ),
-
                 Text(
                   schedule.getFormattedTime(),
                   style: AppTheme.h1Rubik.copyWith(
                     color: AppTheme.primaryColor,
                   ),
                 ),
-
                 Text(
-                  schedule.getActiveDays(),
+                  schedule.getActiveDaysLocalized(),
                   style: AppTheme.text.copyWith(color: AppTheme.secondaryColor),
                 ),
               ],

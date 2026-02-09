@@ -1,43 +1,63 @@
-import 'package:get/get.dart';
-
 enum WeekDay { mon, tue, wed, thu, fri, sat, sun }
 
 extension WeekDayLabel on WeekDay {
   String get short {
     switch (this) {
       case WeekDay.mon:
-        return 'weekday_mon_short'.tr;
+        return "Sen";
       case WeekDay.tue:
-        return 'weekday_tue_short'.tr;
+        return 'Sel';
       case WeekDay.wed:
-        return 'weekday_wed_short'.tr;
+        return 'Rab';
       case WeekDay.thu:
-        return 'weekday_thu_short'.tr;
+        return 'Kam';
       case WeekDay.fri:
-        return 'weekday_fri_short'.tr;
+        return 'Jum';
       case WeekDay.sat:
-        return 'weekday_sat_short'.tr;
+        return 'Sab';
       case WeekDay.sun:
-        return 'weekday_sun_short'.tr;
+        return 'Min';
     }
   }
 
   String get long {
     switch (this) {
       case WeekDay.mon:
-        return 'weekday_mon_long'.tr;
+        return 'Senin';
       case WeekDay.tue:
-        return 'weekday_tue_long'.tr;
+        return 'Selasa';
       case WeekDay.wed:
-        return 'weekday_wed_long'.tr;
+        return 'Rabu';
       case WeekDay.thu:
-        return 'weekday_thu_long'.tr;
+        return 'Kamis';
       case WeekDay.fri:
-        return 'weekday_fri_long'.tr;
+        return 'Jumat';
       case WeekDay.sat:
-        return 'weekday_sat_long'.tr;
+        return 'Sabtu';
       case WeekDay.sun:
-        return 'weekday_sun_long'.tr;
+        return 'Minggu';
+    }
+  }
+
+  // Helper for mapping code to enum
+  static WeekDay fromCode(String code) {
+    switch (code) {
+      case 'mon':
+        return WeekDay.mon;
+      case 'tue':
+        return WeekDay.tue;
+      case 'wed':
+        return WeekDay.wed;
+      case 'thu':
+        return WeekDay.thu;
+      case 'fri':
+        return WeekDay.fri;
+      case 'sat':
+        return WeekDay.sat;
+      case 'sun':
+        return WeekDay.sun;
+      default:
+        throw ArgumentError('Invalid day code: $code');
     }
   }
 }
