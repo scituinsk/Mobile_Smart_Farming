@@ -100,17 +100,8 @@ class AddScheduleSheet {
                               );
                             }),
                             FilledButton(
-                              onPressed: () async {
-                                final time = await showTimePicker(
-                                  context: context,
-                                  initialTime:
-                                      controller.timeController.value ??
-                                      TimeOfDay.now(),
-                                );
-                                if (time != null) {
-                                  controller.timeController.value = time;
-                                }
-                              },
+                              onPressed: () async =>
+                                  controller.handlePickTime(context),
                               child: Text("schedule_pick_time_button".tr),
                             ),
                           ],

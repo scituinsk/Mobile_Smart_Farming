@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/services/device_ws_service.dart';
@@ -53,6 +54,8 @@ class ScheduleUiController extends GetxController {
   late TextEditingController scheduleDurationController;
   final RxSet<WeekDay> selectedDays = <WeekDay>{}.obs;
   final GlobalKey<FormState> scheduleFormKey = GlobalKey<FormState>();
+
+  final Rxn<Schedule> selectedSchedule = Rxn<Schedule>();
 
   final _ws = Rxn<DeviceWsService>();
 
@@ -134,12 +137,14 @@ class ScheduleUiController extends GetxController {
   void initEditScheduleSheet(Schedule schedule) {
     scheduleDurationFocus = FocusNode();
     timeController.value = schedule.time;
+    selectedSchedule.value = schedule;
     scheduleDurationController = TextEditingController(
       text: schedule.duration.toString(),
     );
     scheduleDurationController.addListener(_checkFormValidity);
 
     loadDaysFromSchedule(schedule);
+    _checkFormValidity();
   }
 
   void disposeScheduleSheet() {
@@ -147,8 +152,20 @@ class ScheduleUiController extends GetxController {
     scheduleDurationFocus.unfocus();
     scheduleDurationFocus.dispose();
     scheduleDurationController.dispose();
+    selectedSchedule.value = null;
     timeController.value = null;
     clearDays();
+  }
+
+  Future<void> handlePickTime(BuildContext context) async {
+    final time = await showTimePicker(
+      context: context,
+      initialTime: timeController.value ?? TimeOfDay.now(),
+    );
+    if (time != null) {
+      timeController.value = time;
+      _checkFormValidity();
+    }
   }
 
   Future<void> handleRefreshSchedule() async {
@@ -222,6 +239,7 @@ class ScheduleUiController extends GetxController {
       selectedDays.add(day);
     }
     selectedDays.refresh();
+    _checkFormValidity();
   }
 
   bool isDaySelected(WeekDay day) => selectedDays.contains(day);
@@ -513,12 +531,38 @@ class ScheduleUiController extends GetxController {
   }
 
   void _checkFormValidity() {
-    final duration = scheduleDurationController.text.trim();
+    final currentDuration = scheduleDurationController.text.trim();
+    final currentTime = timeController.value;
+    final currentWeekday = selectedDays.toSet();
+
+    final originalSchedule = selectedSchedule.value;
+    if (originalSchedule == null) {
+      isFormValid.value = false;
+      return;
+    }
+
+    final originalDuration = selectedSchedule.value!.duration;
+    final originalTime = selectedSchedule.value!.time;
+
+    final Set<WeekDay> originalWeekday = getSelectedWeekDays(
+      mon: selectedSchedule.value!.repeatMonday,
+      tue: selectedSchedule.value!.repeatTuesday,
+      wed: selectedSchedule.value!.repeatWednesday,
+      thu: selectedSchedule.value!.repeatThursday,
+      fri: selectedSchedule.value!.repeatFriday,
+      sat: selectedSchedule.value!.repeatSaturday,
+      sun: selectedSchedule.value!.repeatSunday,
+    );
+
+    final hasChange =
+        originalDuration != int.parse(currentDuration) ||
+        originalTime != currentTime ||
+        !setEquals(originalWeekday, currentWeekday);
 
     final durationValid =
-        validateDuration(duration) == null && duration.isNotEmpty;
+        validateDuration(currentDuration) == null && currentDuration.isNotEmpty;
 
-    isFormValid.value = durationValid;
+    isFormValid.value = durationValid && hasChange;
     print("isformvalid: ${isFormValid.value}");
   }
 }

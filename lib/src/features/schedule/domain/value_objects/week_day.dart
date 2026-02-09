@@ -1,63 +1,63 @@
+import 'package:get/get.dart';
+
 enum WeekDay { mon, tue, wed, thu, fri, sat, sun }
 
 extension WeekDayLabel on WeekDay {
   String get short {
     switch (this) {
       case WeekDay.mon:
-        return "Sen";
+        return 'weekday_mon_short'.tr;
       case WeekDay.tue:
-        return 'Sel';
+        return 'weekday_tue_short'.tr;
       case WeekDay.wed:
-        return 'Rab';
+        return 'weekday_wed_short'.tr;
       case WeekDay.thu:
-        return 'Kam';
+        return 'weekday_thu_short'.tr;
       case WeekDay.fri:
-        return 'Jum';
+        return 'weekday_fri_short'.tr;
       case WeekDay.sat:
-        return 'Sab';
+        return 'weekday_sat_short'.tr;
       case WeekDay.sun:
-        return 'Min';
+        return 'weekday_sun_short'.tr;
     }
   }
 
   String get long {
     switch (this) {
       case WeekDay.mon:
-        return 'Senin';
+        return 'weekday_mon_long'.tr;
       case WeekDay.tue:
-        return 'Selasa';
+        return 'weekday_tue_long'.tr;
       case WeekDay.wed:
-        return 'Rabu';
+        return 'weekday_wed_long'.tr;
       case WeekDay.thu:
-        return 'Kamis';
+        return 'weekday_thu_long'.tr;
       case WeekDay.fri:
-        return 'Jumat';
+        return 'weekday_fri_long'.tr;
       case WeekDay.sat:
-        return 'Sabtu';
+        return 'weekday_sat_long'.tr;
       case WeekDay.sun:
-        return 'Minggu';
+        return 'weekday_sun_long'.tr;
     }
   }
+}
 
-  // Helper for mapping code to enum
-  static WeekDay fromCode(String code) {
-    switch (code) {
-      case 'mon':
-        return WeekDay.mon;
-      case 'tue':
-        return WeekDay.tue;
-      case 'wed':
-        return WeekDay.wed;
-      case 'thu':
-        return WeekDay.thu;
-      case 'fri':
-        return WeekDay.fri;
-      case 'sat':
-        return WeekDay.sat;
-      case 'sun':
-        return WeekDay.sun;
-      default:
-        throw ArgumentError('Invalid day code: $code');
-    }
-  }
+Set<WeekDay> getSelectedWeekDays({
+  required bool mon,
+  required bool tue,
+  required bool wed,
+  required bool thu,
+  required bool fri,
+  required bool sat,
+  required bool sun,
+}) {
+  final selected = <WeekDay>{};
+  if (mon) selected.add(WeekDay.mon);
+  if (tue) selected.add(WeekDay.tue);
+  if (wed) selected.add(WeekDay.wed);
+  if (thu) selected.add(WeekDay.thu);
+  if (fri) selected.add(WeekDay.fri);
+  if (sat) selected.add(WeekDay.sat);
+  if (sun) selected.add(WeekDay.sun);
+  return selected;
 }
