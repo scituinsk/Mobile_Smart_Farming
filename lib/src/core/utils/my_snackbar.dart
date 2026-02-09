@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:toastification/toastification.dart';
 
 /// A utility class for custom snackbars.
 /// Contains static methods to display success and error notifications.
@@ -10,34 +9,38 @@ class MySnackbar {
   static void success({
     String title = "Success!",
     required String message,
+    bool instantInit = true,
   }) async {
-    Get.snackbar(
-      title,
-      message,
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: const Color(0xFF2E7D32),
-      colorText: Colors.white,
-      icon: const Icon(Icons.check_circle, color: Colors.white),
+    toastification.show(
+      title: Text(title),
+      description: Text(message),
+      alignment: Alignment.bottomCenter,
+      icon: const Icon(Icons.check_circle),
       margin: EdgeInsets.all(16.r),
-      borderRadius: 8,
-      duration: const Duration(seconds: 2),
+      type: ToastificationType.success,
+      style: ToastificationStyle.fillColored,
+      autoCloseDuration: const Duration(seconds: 3),
       dismissDirection: DismissDirection.horizontal,
     );
   }
 
-  ///Shows an error snackbar with a red background and error icon.
-  static void error({String title = "Error!", required String message}) async {
-    Get.snackbar(
-      title,
-      message,
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: const Color(0xFFD32F2F),
-      colorText: Colors.white,
-      icon: const Icon(Icons.error_outline, color: Colors.white),
+  static void error({
+    String title = "Error!",
+    required String message,
+    bool instantInit = false,
+  }) async {
+    toastification.show(
+      title: Text(title),
+      description: Text(message),
+      alignment: Alignment.bottomCenter,
+      icon: const Icon(Icons.error_outline),
       margin: EdgeInsets.all(16.r),
-      borderRadius: 8,
-      duration: const Duration(seconds: 4),
+      type: ToastificationType.error,
+      style: ToastificationStyle.fillColored,
+      autoCloseDuration: const Duration(milliseconds: 2500),
       dismissDirection: DismissDirection.horizontal,
+      animationDuration: Duration(milliseconds: 500),
+      showProgressBar: true,
     );
   }
 
@@ -45,17 +48,17 @@ class MySnackbar {
   static void warning({
     String title = "Warning!",
     required String message,
+    bool instantInit = false,
   }) async {
-    Get.snackbar(
-      title,
-      message,
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppTheme.warningColor,
-      colorText: Colors.white,
-      icon: const Icon(Icons.warning, color: Colors.white),
+    toastification.show(
+      title: Text(title),
+      description: Text(message),
+      alignment: Alignment.bottomCenter,
+      icon: const Icon(Icons.warning_rounded),
       margin: EdgeInsets.all(16.r),
-      borderRadius: 8,
-      duration: const Duration(seconds: 4),
+      type: ToastificationType.warning,
+      style: ToastificationStyle.fillColored,
+      autoCloseDuration: const Duration(seconds: 3),
       dismissDirection: DismissDirection.horizontal,
     );
   }
