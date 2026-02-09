@@ -20,7 +20,7 @@ class ProfileController extends GetxController
   late TextEditingController lastNameController;
   // late TextEditingController usernameController;
   // late TextEditingController emailController;
-  late GlobalKey<FormState> formKey;
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   final RxBool isFormValid = false.obs;
   final RxBool hasChanges = false.obs;
@@ -177,8 +177,6 @@ class ProfileController extends GetxController
     super.onInit();
     tabController = TabController(length: 2, vsync: this, initialIndex: 0);
 
-    formKey = GlobalKey<FormState>();
-
     if (currentUser.value != null) {
       firstNameController = TextEditingController(
         text: currentUser.value!.firstName,
@@ -190,6 +188,9 @@ class ProfileController extends GetxController
       //   text: currentUser.value!.username,
       // );
       // emailController = TextEditingController(text: currentUser.value!.email);
+    } else {
+      firstNameController = TextEditingController();
+      lastNameController = TextEditingController();
     }
 
     _checkFormValidity();
