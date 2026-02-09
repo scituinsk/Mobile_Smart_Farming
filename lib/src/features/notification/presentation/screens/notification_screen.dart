@@ -26,7 +26,7 @@ class NotificationScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 100,
-        title: Text("Notifikasi", style: AppTheme.h3),
+        title: Text("notification_title".tr, style: AppTheme.h3),
         centerTitle: true,
         leading: Center(child: MyBackButton()),
       ),
@@ -49,7 +49,7 @@ class NotificationScreen extends StatelessWidget {
                       paddingHorizontal: 14,
                       paddingVertical: 7,
                       child: Text(
-                        "Semua",
+                        "notification_filter_all".tr,
                         style: AppTheme.text.copyWith(
                           color: !controller.isShowUnread.value
                               ? Colors.white
@@ -70,7 +70,7 @@ class NotificationScreen extends StatelessWidget {
                       paddingHorizontal: 14,
                       paddingVertical: 7,
                       child: Text(
-                        "Belum Dibaca",
+                        "notification_filter_unread".tr,
                         style: AppTheme.text.copyWith(
                           color: controller.isShowUnread.value
                               ? Colors.white
@@ -87,7 +87,7 @@ class NotificationScreen extends StatelessWidget {
                     child: TextButton(
                       onPressed: controller.markReadAllNotification,
                       child: Text(
-                        "Tandai semua dibaca",
+                        "notification_mark_all_read".tr,
                         style: AppTheme.textSmall.copyWith(
                           color: Color(0xff0055A5),
                         ),
@@ -104,7 +104,7 @@ class NotificationScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   spacing: 6.r,
                   children: [
-                    Text("Semua Notifikasi", style: AppTheme.h5),
+                    Text("notification_list_title".tr, style: AppTheme.h5),
                     NotificationList(),
                   ],
                 ),

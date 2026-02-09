@@ -82,13 +82,13 @@ class RegisterUiController extends GetxController {
   // Validation methods (keep existing ones)
   String? validateFirstName(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Nama tidak boleh kosong';
+      return 'validation_first_name_required'.tr;
     }
     if (value.trim().length < 2) {
-      return 'Nama minimal 2 karakter';
+      return 'validation_first_name_min_length'.tr;
     }
     if (value.trim().length > 255) {
-      return "Nama maksimal 255 karakter";
+      return 'validation_name_max_length'.tr;
     }
     return null;
   }
@@ -98,61 +98,61 @@ class RegisterUiController extends GetxController {
       return null;
     }
     if (value.trim().length > 255) {
-      return "Nama maksimal 255 karakter";
+      return 'validation_name_max_length'.tr;
     }
     return null;
   }
 
   String? validateUsername(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Username tidak boleh kosong';
+      return 'validation_username_required'.tr;
     }
     if (value.trim().length < 3) {
-      return 'Username minimal 3 karakter';
+      return 'validation_username_min_3_chars'.tr;
     }
     if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value.trim())) {
-      return 'Username hanya boleh mengandung huruf, angka, dan underscore';
+      return 'validation_username_chars'.tr;
     }
     return null;
   }
 
   String? validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Email tidak boleh kosong';
+      return 'validation_email_required'.tr;
     }
     if (!RegExp(
       r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
     ).hasMatch(value.trim())) {
-      return 'Format email tidak valid';
+      return 'validation_email_format'.tr;
     }
     return null;
   }
 
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password tidak boleh kosong';
+      return 'validation_password_required'.tr;
     }
     if (value.length < 8) {
-      return 'Password minimal 8 karakter';
+      return 'validation_password_min_8'.tr;
     }
     if (!RegExp(r'[A-Z]').hasMatch(value)) {
-      return 'Password harus mengandung minimal 1 huruf besar';
+      return 'validation_password_uppercase'.tr;
     }
     if (!RegExp(r'[a-z]').hasMatch(value)) {
-      return 'Password harus mengandung minimal 1 huruf kecil';
+      return 'validation_password_lowercase'.tr;
     }
     if (!RegExp(r'[0-9]').hasMatch(value)) {
-      return 'Password harus mengandung minimal 1 angka';
+      return 'validation_password_number'.tr;
     }
     return null;
   }
 
   String? validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Konfirmasi password tidak boleh kosong';
+      return 'validation_confirm_password_required'.tr;
     }
     if (value != passwordController.text) {
-      return 'Password tidak cocok';
+      return 'validation_password_mismatch'.tr;
     }
     return null;
   }

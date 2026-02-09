@@ -27,9 +27,9 @@ class AddModulScreen extends StatelessWidget {
         ),
         title: Column(
           children: [
-            Text("Tambah Perangkat", style: AppTheme.h3),
+            Text("add_device_title".tr, style: AppTheme.h3),
             Text(
-              "Tambahkan perangkat ke akun ini",
+              "add_device_subtitle".tr,
               style: AppTheme.textSmall.copyWith(
                 color: AppTheme.titleSecondary,
               ),
@@ -54,12 +54,12 @@ class AddModulScreen extends StatelessWidget {
                   spacing: 20.r,
                   children: [
                     AddModulCodeInput(
-                      title: "Kode Perangkat",
-                      hintText: "Ex: 018bd6f8-7d8b-7132-842b-3247e",
+                      title: "device_code_label".tr,
+                      hintText: "device_code_hint".tr,
                     ),
                     MyTextField(
-                      title: "Password Perangkat",
-                      hint: "Ex: paktani1",
+                      title: "device_password_label".tr,
+                      hint: "device_password_hint".tr,
                       fillColor: Colors.white,
                       controller: controller.modulPasswordController,
                       validator: controller.validatePassword,
@@ -78,7 +78,7 @@ class AddModulScreen extends StatelessWidget {
                         backgroundColor: WidgetStateProperty.all(Colors.white),
                       ),
                       child: Text(
-                        "Batal",
+                        "button_cancel".tr,
                         style: TextStyle(color: AppTheme.primaryColor),
                       ),
                     ),
@@ -95,7 +95,7 @@ class AddModulScreen extends StatelessWidget {
                                 width: 25.w,
                                 child: CircularProgressIndicator(),
                               )
-                            : Text('Tambahkan Perangkat'),
+                            : Text('button_add_device'.tr),
                       ),
                     ),
                   ],

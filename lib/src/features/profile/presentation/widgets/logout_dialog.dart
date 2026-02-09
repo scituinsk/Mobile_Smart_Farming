@@ -21,7 +21,7 @@ class LogoutDialog {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(LucideIcons.logOut, color: AppTheme.errorColor, size: 38.r),
-            Text("Keluar dari akun ini?", style: AppTheme.h4),
+            Text("logout_dialog_title".tr, style: AppTheme.h4),
           ],
         ),
       ),
@@ -32,7 +32,7 @@ class LogoutDialog {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "Kamu akan keluar dari akun ini dan harus login ulang untuk mengakses aplikasi lagi.\nYakin keluar akun?",
+              "logout_dialog_message".tr,
               textAlign: TextAlign.center,
               style: AppTheme.textDefault,
             ),
@@ -41,7 +41,7 @@ class LogoutDialog {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 MyFilledButton(
-                  title: "Batal",
+                  title: "button_cancel".tr,
                   onPressed: () {
                     Get.back();
                   },
@@ -49,7 +49,7 @@ class LogoutDialog {
                   textColor: AppTheme.surfaceDarker,
                 ),
                 MyFilledButton(
-                  title: "Keluar",
+                  title: "logout_dialog_confirm".tr,
                   onPressed: () async {
                     Get.back();
                     final controller = Get.find<ProfileController>();

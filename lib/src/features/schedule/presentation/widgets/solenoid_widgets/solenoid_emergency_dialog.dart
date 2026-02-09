@@ -7,7 +7,7 @@ import 'package:pak_tani/src/core/widgets/my_filled_button.dart';
 import 'package:pak_tani/src/features/schedule/presentation/controllers/schedule_ui_controller.dart';
 
 class SolenoidEmergencyDialog {
-  static show(BuildContext context) {
+  static void show(BuildContext context) {
     final controller = Get.find<ScheduleUiController>();
     CustomDialog.show(
       context: context,
@@ -21,9 +21,9 @@ class SolenoidEmergencyDialog {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(Icons.warning_rounded, color: AppTheme.errorColor, size: 38.r),
-            Text("Peringatan!", style: AppTheme.h4),
+            Text("solenoid_emergency_title".tr, style: AppTheme.h4),
             Text(
-              'Fitur ini digunakan untuk keadaan darurat atau untuk percobaan/testing!',
+              'solenoid_emergency_subtitle'.tr,
               style: AppTheme.textAction,
               textAlign: TextAlign.center,
             ),
@@ -37,7 +37,7 @@ class SolenoidEmergencyDialog {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "Pilih aktifkan atau non-aktifkan semua solenoid dalam group ini.",
+              "solenoid_emergency_message".tr,
               textAlign: TextAlign.center,
               style: AppTheme.textDefault,
             ),
@@ -46,7 +46,7 @@ class SolenoidEmergencyDialog {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 MyFilledButton(
-                  title: "Batal",
+                  title: "button_cancel".tr,
                   onPressed: () {
                     Get.back();
                   },
@@ -67,7 +67,7 @@ class SolenoidEmergencyDialog {
                               color: Colors.white,
                             ),
                           )
-                        : Text("Non-aktif"),
+                        : Text("solenoid_emergency_deactivate".tr),
                   ),
                 ),
                 Obx(
@@ -84,7 +84,7 @@ class SolenoidEmergencyDialog {
                               color: Colors.white,
                             ),
                           )
-                        : Text("Aktif"),
+                        : Text("solenoid_emergency_activate".tr),
                   ),
                 ),
               ],

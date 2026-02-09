@@ -307,7 +307,7 @@ class ModulDetailUiController extends GetxController {
     try {
       await _modulService.deleteModul(modul.value!.serialId);
       Get.back();
-      MySnackbar.success(message: "berhasil menghapus modul dari user ini");
+      MySnackbar.success(message: "delete_device_from_user_success".tr);
     } catch (e) {
       print("error (ui controller): $e");
       MySnackbar.error(message: e.toString());
@@ -319,8 +319,8 @@ class ModulDetailUiController extends GetxController {
     if (formState == null) return;
     if (!formState.validate()) {
       MySnackbar.error(
-        title: "Form tidak valid",
-        message: "Periksa kembali kode modul dan password",
+        title: "form_invalid_title".tr,
+        message: "form_invalid_message".tr,
       );
       return;
     }
@@ -338,7 +338,7 @@ class ModulDetailUiController extends GetxController {
       await _modulService.loadModul(modul.value!.serialId);
 
       Get.back();
-      MySnackbar.success(message: "Berhasil mengubah modul");
+      MySnackbar.success(message: "edit_device_success".tr);
     } catch (e) {
       MySnackbar.error(message: e.toString());
     } finally {
@@ -351,8 +351,8 @@ class ModulDetailUiController extends GetxController {
     if (formState == null) return;
     if (!formState.validate()) {
       Get.snackbar(
-        "Form tidak valid",
-        "Periksa kembali kode modul dan password",
+        "form_invalid_title".tr,
+        "form_invalid_message".tr,
         backgroundColor: Colors.red.shade600,
         duration: Duration(seconds: 2),
       );
@@ -370,7 +370,7 @@ class ModulDetailUiController extends GetxController {
       await _modulService.loadModul(modul.value!.serialId);
 
       Get.back();
-      MySnackbar.success(message: "Berhasil mengubah password modul");
+      MySnackbar.success(message: "edit_password_success".tr);
     } catch (e) {
       MySnackbar.error(message: e.toString());
     } finally {
@@ -419,22 +419,22 @@ class ModulDetailUiController extends GetxController {
 
   String? validateName(String? value) {
     final v = value?.trim() ?? "";
-    if (v.isEmpty) return "Nama tidak boleh kosong";
-    if (v.length < 3) return "Nama modul minimal 3 karakter";
-    if (v.length >= 20) return "Nama modul maksimal 20 karakter";
+    if (v.isEmpty) return "validation_modul_name_required".tr;
+    if (v.length < 3) return "validation_modul_name_min_length".tr;
+    if (v.length >= 20) return "validation_modul_name_max_length".tr;
     return null;
   }
 
   String? validateDescription(String? value) {
     final v = value?.trim() ?? "";
-    if (v.length >= 1000) return "Nama modul maksimal 1000 karakter";
+    if (v.length >= 1000) return "validation_modul_description_max_length".tr;
     return null;
   }
 
   String? validatePassword(String? value) {
     final v = value?.trim() ?? '';
-    if (v.isEmpty) return 'Password tidak boleh kosong';
-    if (v.length < 4) return 'Password minimal 4 karakter';
+    if (v.isEmpty) return 'validation_device_password_required'.tr;
+    if (v.length < 4) return 'validation_device_password_min_length'.tr;
     return null;
   }
 
@@ -442,10 +442,10 @@ class ModulDetailUiController extends GetxController {
     final v = value?.trim() ?? '';
     final newPass = modulNewPassC.text.trim();
 
-    if (newPass.isEmpty) return 'Password baru tidak boleh kosong';
-    if (v.isEmpty) return 'Konfirmasi password tidak boleh kosong';
-    if (v.length < 4) return 'Password minimal 4 karakter';
-    if (v != newPass) return 'Password dan konfirmasi tidak sama';
+    if (newPass.isEmpty) return 'validation_new_password_required'.tr;
+    if (v.isEmpty) return 'validation_confirm_password_required'.tr;
+    if (v.length < 4) return 'validation_device_password_min_length'.tr;
+    if (v != newPass) return 'validation_password_confirm_mismatch'.tr;
     return null;
   }
 

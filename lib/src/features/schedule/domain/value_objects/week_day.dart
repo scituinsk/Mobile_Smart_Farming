@@ -38,4 +38,26 @@ extension WeekDayLabel on WeekDay {
         return 'Minggu';
     }
   }
+
+  // Helper for mapping code to enum
+  static WeekDay fromCode(String code) {
+    switch (code) {
+      case 'mon':
+        return WeekDay.mon;
+      case 'tue':
+        return WeekDay.tue;
+      case 'wed':
+        return WeekDay.wed;
+      case 'thu':
+        return WeekDay.thu;
+      case 'fri':
+        return WeekDay.fri;
+      case 'sat':
+        return WeekDay.sat;
+      case 'sun':
+        return WeekDay.sun;
+      default:
+        throw ArgumentError('Invalid day code: $code');
+    }
+  }
 }

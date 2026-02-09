@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 
@@ -23,7 +24,7 @@ class SortingTile extends StatelessWidget {
         color: AppTheme.primaryColor,
       ),
       title: Text(
-        isAscending ? "Terlama/Ascending" : 'Terbaru/Descending',
+        isAscending ? "sorting_oldest".tr : "sorting_newest".tr,
         style: AppTheme.textMedium.copyWith(color: AppTheme.primaryColor),
       ),
 

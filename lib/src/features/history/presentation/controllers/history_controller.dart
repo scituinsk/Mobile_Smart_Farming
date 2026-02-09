@@ -276,9 +276,7 @@ class HistoryController extends GetxController {
         if (compare == 1 || compare == 0) {
           pickedStartDate.value = pickedDate;
         } else {
-          MySnackbar.error(
-            message: 'Start date harus lebih kecil atau sama dengan end date',
-          );
+          MySnackbar.error(message: 'validation_start_date_before_end'.tr);
           return;
         }
       }
@@ -301,9 +299,7 @@ class HistoryController extends GetxController {
         if (compare == 1 || compare == 0) {
           pickedEndDate.value = pickedDate;
         } else {
-          MySnackbar.error(
-            message: 'End date harus lebih besar atau sama dengan start date',
-          );
+          MySnackbar.error(message: 'validation_end_date_after_start'.tr);
           return;
         }
       }

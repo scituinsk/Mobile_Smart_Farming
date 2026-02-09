@@ -18,7 +18,7 @@ class HistoryListWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 10.r,
         children: [
-          Text("Daftar Riwayat", style: AppTheme.h5),
+          Text("history_list_title".tr, style: AppTheme.h5),
           Expanded(
             child: Obx(() {
               if (controller.isLoading.value) {
@@ -28,7 +28,7 @@ class HistoryListWidget extends StatelessWidget {
                     children: [
                       CircularProgressIndicator(),
                       SizedBox(height: 16.h),
-                      Text('Memuat riwayat...'),
+                      Text('history_loading'.tr),
                     ],
                   ),
                 );
@@ -45,7 +45,7 @@ class HistoryListWidget extends StatelessWidget {
                         height: 200.h,
                       ),
                       Text(
-                        'Riwayat tidak ditemukan atau belum ada',
+                        'history_empty'.tr,
                         style: AppTheme.text.copyWith(
                           color: AppTheme.ternaryColor,
                         ),
@@ -53,7 +53,7 @@ class HistoryListWidget extends StatelessWidget {
                       SizedBox(height: 16.h),
                       FilledButton.icon(
                         onPressed: () => controller.refreshHistoryList(),
-                        label: Text('Refresh'),
+                        label: Text('history_refresh'.tr),
                         icon: Icon(LucideIcons.refreshCcw),
                         iconAlignment: IconAlignment.end,
                       ),

@@ -17,8 +17,8 @@ class QrScannScreen extends StatelessWidget {
         final barcodes = capture.barcodes; // List<Barcode>
         if (barcodes.isEmpty) {
           MySnackbar.error(
-            title: 'Tidak ditemukan',
-            message: 'Tidak ada QR/Barcode terdeteksi',
+            title: 'qr_not_found_title'.tr,
+            message: 'qr_no_barcode_message'.tr,
           );
           return;
         }
@@ -33,8 +33,8 @@ class QrScannScreen extends StatelessWidget {
 
         if (value == null) {
           MySnackbar.error(
-            title: 'Tidak ditemukan',
-            message: 'Kode tidak memiliki nilai teks',
+            title: 'qr_not_found_title'.tr,
+            message: 'qr_no_value_message'.tr,
           );
           return;
         }

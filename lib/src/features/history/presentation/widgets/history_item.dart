@@ -103,7 +103,7 @@ class _HistoryItemState extends State<HistoryItem> {
                       spacing: 8.r,
                       children: [
                         Text(
-                          widget.history.name ?? "default",
+                          widget.history.name ?? "history_default_name".tr,
                           style: AppTheme.h4,
                         ),
                         if (widget.history.historyType != HistoryType.modul)
@@ -117,8 +117,8 @@ class _HistoryItemState extends State<HistoryItem> {
                           widget.history.message ??
                               (widget.history.historyType ==
                                       HistoryType.schedule
-                                  ? "IoT gagal menjalankan penjadwalan"
-                                  : "IoT gagal menjalankan tugas"),
+                                  ? "history_error_schedule".tr
+                                  : "history_error_task".tr),
                           style: AppTheme.textAction.copyWith(
                             color: widget.history.message == null
                                 ? AppTheme.errorColor
@@ -185,7 +185,10 @@ class _HistoryItemState extends State<HistoryItem> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     spacing: 10.r,
                     children: [
-                      Text("Detail Grup", style: AppTheme.textAction),
+                      Text(
+                        "history_group_detail".tr,
+                        style: AppTheme.textAction,
+                      ),
                       FixedTimeline.tileBuilder(
                         theme: TimelineThemeData(
                           direction: Axis.vertical,
@@ -222,7 +225,7 @@ class _HistoryItemState extends State<HistoryItem> {
                               return Padding(
                                 padding: EdgeInsets.only(left: 15.0.w),
                                 child: Text(
-                                  'Selesai',
+                                  'history_finished'.tr,
                                   style: AppTheme.h4.copyWith(
                                     color: AppTheme.surfaceDarker,
                                   ),

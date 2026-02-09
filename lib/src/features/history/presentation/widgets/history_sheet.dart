@@ -38,7 +38,7 @@ class HistorySheet {
                   ),
                 ),
 
-                Text('Urutkan Berdasarkan', style: AppTheme.h4),
+                Text('sorting_title'.tr, style: AppTheme.h4),
                 SizedBox(height: 20.h),
                 Obx(
                   () => SortingTile(
@@ -92,7 +92,7 @@ class HistorySheet {
                       borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
-                  Text("Filter Berdasarkan", style: AppTheme.h4),
+                  Text("filter_title".tr, style: AppTheme.h4),
                   SizedBox(height: 20.h),
                   Obx(() {
                     final isSelectedModul = controller.isHistoryTypeSelected(
@@ -107,13 +107,13 @@ class HistorySheet {
                         HistoryFilterTile(
                           value: isSelectedModul,
                           onChanged: controller.selectModulHistoryType,
-                          title: "History Perangkat",
+                          title: "filter_device_history".tr,
                         ),
 
                         HistoryFilterTile(
                           value: isSelectedSchedule,
                           onChanged: controller.selectScheduleHistoryType,
-                          title: "History Penjadwalan Grup",
+                          title: "filter_schedule_history".tr,
                         ),
                       ],
                     );
@@ -126,7 +126,7 @@ class HistorySheet {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text("Pilih Perangkat", style: AppTheme.h5),
+                        Text("filter_select_device".tr, style: AppTheme.h5),
                         SizedBox(height: 8.h),
                         Obx(
                           () => Wrap(
@@ -152,7 +152,7 @@ class HistorySheet {
                                 onChanged: controller.selectAllModulFilter,
                               ),
                             ),
-                            Text("Pilih Semua"),
+                            Text("filter_select_all".tr),
                           ],
                         ),
                         if (controller.isHistoryTypeSelected(
@@ -162,7 +162,7 @@ class HistorySheet {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Pilih Grup Penjadwalan",
+                                "filter_select_schedule_group".tr,
                                 style: AppTheme.h5,
                               ),
                               SizedBox(height: 8.h),
@@ -194,7 +194,7 @@ class HistorySheet {
                                     borderRadius: 5,
                                     borderColor: AppTheme.warningColor,
                                     child: Text(
-                                      "Pilih Perangkat untuk memilih group penjadwalan!",
+                                      "filter_select_device_warning".tr,
                                     ),
                                   );
                                 }
@@ -211,7 +211,7 @@ class HistorySheet {
                                             .selectAllScheduleGroupFilter,
                                       ),
                                     ),
-                                    Text("Pilih Semua"),
+                                    Text("filter_select_all".tr),
                                   ],
                                 ),
                             ],
@@ -227,12 +227,12 @@ class HistorySheet {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Rentang Waktu", style: AppTheme.h5),
+                            Text("filter_time_range".tr, style: AppTheme.h5),
                             MyDisplayChip(
                               onPressed: controller.clearDatePicker,
                               backgroundColor: AppTheme.primaryColor,
                               child: Text(
-                                "Clear",
+                                "filter_clear".tr,
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
@@ -248,7 +248,7 @@ class HistorySheet {
                                 dateValue: controller.pickedStartDate.value,
                               ),
                             ),
-                            Text("sampai"),
+                            Text("filter_until".tr),
                             Obx(
                               () => FilterTimeButtonWidget(
                                 onPressed: () async =>
@@ -271,13 +271,13 @@ class HistorySheet {
                         Expanded(
                           child: OutlinedButton(
                             onPressed: controller.resetFilter,
-                            child: Text("Reset"),
+                            child: Text("filter_reset".tr),
                           ),
                         ),
                         Expanded(
                           child: FilledButton(
                             onPressed: controller.applyFilter,
-                            child: Text("Apply"),
+                            child: Text("filter_apply".tr),
                           ),
                         ),
                       ],

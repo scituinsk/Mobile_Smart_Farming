@@ -23,7 +23,7 @@ class ShowMenuEditSheet {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Pilih Menu Edit', style: AppTheme.h4),
+                Text('relay_menu_title'.tr, style: AppTheme.h4),
                 SizedBox(height: 20.h),
                 Obx(
                   () => ListTile(
@@ -34,7 +34,7 @@ class ShowMenuEditSheet {
                           : Colors.white,
                     ),
                     title: Text(
-                      'Edit Group',
+                      'relay_menu_edit_group'.tr,
                       style: AppTheme.textMedium.copyWith(
                         color: !controller.isEditingGroup.value
                             ? AppTheme.primaryColor
@@ -60,7 +60,7 @@ class ShowMenuEditSheet {
                           : Colors.white,
                     ),
                     title: Text(
-                      'Edit Relay',
+                      'relay_menu_edit_relay'.tr,
                       style: AppTheme.textMedium.copyWith(
                         color: !controller.isEditingRelay.value
                             ? AppTheme.primaryColor

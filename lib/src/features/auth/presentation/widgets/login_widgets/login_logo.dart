@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/utils/custom_icon.dart';
 
@@ -21,13 +22,10 @@ class LoginLogo extends StatelessWidget {
         Column(
           children: [
             Text(
-              "Masuk Akun",
+              "auth_login_title".tr,
               style: AppTheme.h4.copyWith(color: AppTheme.primaryColor),
             ),
-            Text(
-              "Masukkan email dan password anda.",
-              style: AppTheme.textAction,
-            ),
+            Text("auth_login_subtitle".tr, style: AppTheme.textAction),
           ],
         ),
       ],

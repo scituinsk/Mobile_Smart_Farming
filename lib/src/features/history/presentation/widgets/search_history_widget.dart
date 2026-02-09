@@ -18,7 +18,7 @@ class SearchHistoryWidget extends StatelessWidget {
       spacing: 12.r,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Cari Riwayat", style: AppTheme.h5),
+        Text("search_history_title".tr, style: AppTheme.h5),
         TextField(
           onChanged: (value) {
             controller.searchText.value = value;

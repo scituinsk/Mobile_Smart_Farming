@@ -22,7 +22,7 @@ class QrCodeScreen extends StatelessWidget {
           ),
         ),
         actionsPadding: EdgeInsets.only(right: 30.w),
-        title: Text("QR Code", style: AppTheme.h3),
+        title: Text("qr_code_title".tr, style: AppTheme.h3),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -40,13 +40,13 @@ class QrCodeScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "Silahkan Scan QR Code dibawah ini:",
+                    "qr_scan_instruction".tr,
                     textAlign: TextAlign.center,
                     style: AppTheme.h3.copyWith(color: AppTheme.primaryColor),
                   ),
                   QrImageView(data: modul.serialId, size: 220.r),
                   Text(
-                    'Orang yang memindai kode ini dengan aplikasi akan langsung mendapatkan akses untuk melihat data dari modul\n"${modul.name}"',
+                    '${"qr_access_message".tr}\n"${modul.name}"',
                     textAlign: TextAlign.center,
                     style: AppTheme.text,
                   ),

@@ -22,7 +22,7 @@ class ModulList extends StatelessWidget {
           // ✅ Header with device count (reactive)
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("Daftar Perangkat", style: AppTheme.h3)],
+            children: [Text("device_list_title".tr, style: AppTheme.h3)],
           ),
 
           // ✅ Reactive list
@@ -35,7 +35,7 @@ class ModulList extends StatelessWidget {
                     children: [
                       CircularProgressIndicator(),
                       SizedBox(height: 16.h),
-                      Text('Memuat Perangkat...'),
+                      Text('device_list_loading'.tr),
                     ],
                   ),
                 );
@@ -49,7 +49,7 @@ class ModulList extends StatelessWidget {
                     children: [
                       CustomIcon(type: MyCustomIcon.modulEmpty, size: 300),
                       Text(
-                        'Tidak ada perangkat yang ditemukan',
+                        'device_list_empty'.tr,
                         style: AppTheme.text.copyWith(
                           color: AppTheme.ternaryColor,
                         ),
@@ -57,7 +57,7 @@ class ModulList extends StatelessWidget {
                       SizedBox(height: 16.h),
                       FilledButton.icon(
                         onPressed: () => controller.refreshModulList(),
-                        label: Text('Refresh'),
+                        label: Text('device_list_refresh'.tr),
                         icon: Icon(LucideIcons.refreshCcw),
                         iconAlignment: IconAlignment.end,
                       ),

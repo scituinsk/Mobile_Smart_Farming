@@ -25,8 +25,8 @@ class RegisterForm extends StatelessWidget {
             children: [
               MyTextField(
                 controller: controller.firstNameController,
-                title: "Nama Depan",
-                hint: "Masukkan nama depan anda...",
+                title: "auth_first_name".tr,
+                hint: "auth_first_name_hint".tr,
                 borderRadius: 5,
                 titleStyle: AppTheme.h5.copyWith(color: AppTheme.primaryColor),
                 fillColor: Colors.white,
@@ -36,8 +36,8 @@ class RegisterForm extends StatelessWidget {
               MyTextField(
                 controller: controller.lastNameController,
                 validator: controller.validateLastName,
-                title: "Nama Belakang (opsional)",
-                hint: "Masukkan nama belakang anda...",
+                title: "auth_last_name".tr,
+                hint: "auth_last_name_hint".tr,
                 borderRadius: 5,
                 titleStyle: AppTheme.h5.copyWith(color: AppTheme.primaryColor),
                 fillColor: Colors.white,
@@ -45,8 +45,8 @@ class RegisterForm extends StatelessWidget {
               ),
               MyTextField(
                 controller: controller.usernameController,
-                title: "Username",
-                hint: "Masukkan username anda...",
+                title: "auth_username".tr,
+                hint: "auth_username_hint".tr,
                 borderRadius: 5,
                 titleStyle: AppTheme.h5.copyWith(color: AppTheme.primaryColor),
                 fillColor: Colors.white,
@@ -58,8 +58,8 @@ class RegisterForm extends StatelessWidget {
               ),
               MyTextField(
                 controller: controller.emailController,
-                title: "Alamat Email",
-                hint: "Masukkan alamat email anda...",
+                title: "auth_email".tr,
+                hint: "auth_email_hint".tr,
                 borderRadius: 5,
                 titleStyle: AppTheme.h5.copyWith(color: AppTheme.primaryColor),
                 fillColor: Colors.white,
@@ -71,10 +71,10 @@ class RegisterForm extends StatelessWidget {
               ),
               MyTextField(
                 controller: controller.passwordController,
-                title: "Password",
+                title: "auth_password".tr,
                 obscureText: true,
                 obscureIconColor: AppTheme.secondaryColor,
-                hint: "Masukkan password anda...",
+                hint: "auth_password_hint".tr,
                 titleStyle: AppTheme.h5.copyWith(color: AppTheme.primaryColor),
                 borderRadius: 5,
                 fillColor: Colors.white,
@@ -86,10 +86,10 @@ class RegisterForm extends StatelessWidget {
               ),
               MyTextField(
                 controller: controller.confirmPasswordController,
-                title: "Konfirmasi Password",
+                title: "auth_confirm_password".tr,
                 obscureText: true,
                 obscureIconColor: AppTheme.secondaryColor,
-                hint: "Konfirmasi password anda...",
+                hint: "auth_confirm_password_hint".tr,
                 titleStyle: AppTheme.h5.copyWith(color: AppTheme.primaryColor),
                 borderRadius: 5,
                 fillColor: Colors.white,
@@ -114,13 +114,13 @@ class RegisterForm extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Saya setuju dengan ", style: AppTheme.textAction),
+                        Text("auth_i_agree".tr, style: AppTheme.textAction),
                         GestureDetector(
                           onTap: () {
                             Get.toNamed(RouteNames.termsPage);
                           },
                           child: Text(
-                            "syarat dan ketentuan",
+                            "auth_terms_conditions".tr,
                             style: AppTheme.textAction.copyWith(
                               color: AppTheme.primaryColor,
                               fontWeight: FontWeight.bold,
@@ -141,12 +141,12 @@ class RegisterForm extends StatelessWidget {
               RichText(
                 text: TextSpan(
                   children: [
-                    WidgetSpan(child: Text("Sudah punya akun?")),
+                    WidgetSpan(child: Text("auth_already_have_account".tr)),
                     WidgetSpan(
                       child: GestureDetector(
                         onTap: () => Get.back(),
                         child: Text(
-                          " Login di sini",
+                          "auth_login_here".tr,
                           style: AppTheme.text.copyWith(
                             color: AppTheme.primaryColor,
                             fontWeight: FontWeight.bold,
@@ -162,15 +162,14 @@ class RegisterForm extends StatelessWidget {
                 width: double.infinity,
                 child: Obx(() {
                   final authController = Get.find<AuthController>();
-                  // ✅ FIX: Logic yang benar untuk button disable
                   final isButtonDisabled =
                       authController.isLoading.value ||
-                      !controller.isFormValid.value; // ✅ FIXED: tambah !
+                      !controller.isFormValid.value;
 
                   return MyFilledButton(
                     title: authController.isLoading.value
-                        ? "Mendaftar..."
-                        : "Daftar",
+                        ? "auth_registering_btn".tr
+                        : "auth_register_btn".tr,
                     onPressed: isButtonDisabled
                         ? null
                         : controller.handleRegister,

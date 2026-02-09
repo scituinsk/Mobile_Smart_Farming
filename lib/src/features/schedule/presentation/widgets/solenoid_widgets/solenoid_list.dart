@@ -19,7 +19,7 @@ class SolenoidList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 10.r,
       children: [
-        Text("Status Relay", style: AppTheme.h4),
+        Text("solenoid_list_title".tr, style: AppTheme.h4),
         Obx(() {
           final List<Relay> selectedGroupRelay =
               controller.selectedRelayGroup.value!.relays ?? [];
@@ -40,7 +40,7 @@ class SolenoidList extends StatelessWidget {
                   ),
                   SizedBox(height: 8.h),
                   Text(
-                    'Tidak ada relay di group ini',
+                    'solenoid_list_empty'.tr,
                     style: TextStyle(
                       color: Colors.grey.shade600,
                       fontSize: 14.sp,

@@ -46,13 +46,15 @@ class GroupScheduleInformation extends StatelessWidget {
                   mainAxisSize: MainAxisSize.max,
                   children: [
                     Text(
-                      isSequential ? "Mode Sequential" : "Mode Normal",
+                      isSequential
+                          ? "schedule_mode_sequential".tr
+                          : "schedule_mode_normal".tr,
                       style: AppTheme.h4.copyWith(color: AppTheme.primaryColor),
                     ),
                     Text(
                       isSequential
                           ? sequentialCount.toString()
-                          : "Status mode penjadwalan sistem",
+                          : "schedule_mode_status_description".tr,
                       style: isSequential
                           ? AppTheme.h1Rubik.copyWith(
                               color: AppTheme.primaryColor,
@@ -76,8 +78,8 @@ class GroupScheduleInformation extends StatelessWidget {
                             vertical: 6.h,
                           ),
                         ),
-                        label: const Text(
-                          "Atur Mode",
+                        label: Text(
+                          "schedule_set_mode_button".tr,
                           style: TextStyle(color: Colors.white),
                         ),
                         iconAlignment: IconAlignment.end,
@@ -109,7 +111,7 @@ class GroupScheduleInformation extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "Jumlah Relay",
+                    "schedule_relay_count_title".tr,
                     style: AppTheme.h4,
                     textAlign: TextAlign.center,
                   ),
@@ -124,7 +126,7 @@ class GroupScheduleInformation extends StatelessWidget {
                     );
                   }),
                   Text(
-                    "Jumlah relay pada grup ${controller.selectedRelayGroup.value!.name}",
+                    "${"schedule_relay_count_description".tr} ${controller.selectedRelayGroup.value!.name}",
                     style: AppTheme.textAction,
                     textAlign: TextAlign.center,
                   ),

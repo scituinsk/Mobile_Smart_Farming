@@ -34,19 +34,16 @@ class Schedule extends Equatable {
     required this.updatedAt,
   });
 
-  String getActiveDays() {
-    final days = <String>[];
-    if (repeatMonday) days.add('Sen');
-    if (repeatTuesday) days.add('Sel');
-    if (repeatWednesday) days.add('Rab');
-    if (repeatThursday) days.add('Kam');
-    if (repeatFriday) days.add('Jum');
-    if (repeatSaturday) days.add('Sab');
-    if (repeatSunday) days.add('Min');
-
-    if (days.isEmpty) return 'Tidak ada pengulangan';
-    if (days.length == 7) return 'Setiap hari';
-    return days.join(', ');
+  List<String> getActiveDayCodes() {
+    final codes = <String>[];
+    if (repeatMonday) codes.add('mon');
+    if (repeatTuesday) codes.add('tue');
+    if (repeatWednesday) codes.add('wed');
+    if (repeatThursday) codes.add('thu');
+    if (repeatFriday) codes.add('fri');
+    if (repeatSaturday) codes.add('sat');
+    if (repeatSunday) codes.add('sun');
+    return codes;
   }
 
   String getFormattedTime() {

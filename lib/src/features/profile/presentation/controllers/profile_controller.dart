@@ -36,7 +36,7 @@ class ProfileController extends GetxController
       await authService.logout();
 
       Get.offAllNamed(RouteNames.loginPage);
-      MySnackbar.success(message: "Logout berhasil");
+      MySnackbar.success(message: "logout_success".tr);
     } catch (e) {
       MySnackbar.error(message: e.toString());
     } finally {
@@ -54,7 +54,7 @@ class ProfileController extends GetxController
           // email: emailController.text,
         );
 
-        MySnackbar.success(message: "Berhasil mengubah profile!");
+        MySnackbar.success(message: "edit_profile_success".tr);
       } catch (e) {
         print("error edit profile(controller): $e");
         MySnackbar.error(message: e.toString());
@@ -70,7 +70,7 @@ class ProfileController extends GetxController
       );
       if (pickedFile != null) {
         await profileService.editUserProfile(imageFile: pickedFile);
-        MySnackbar.success(message: "Berhasil mengubah photo profile");
+        MySnackbar.success(message: "edit_photo_success".tr);
       }
     } catch (e) {
       MySnackbar.error(message: e.toString());
@@ -125,13 +125,13 @@ class ProfileController extends GetxController
 
   String? validateFirstName(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Nama depan tidak boleh kosong';
+      return 'validation_first_name_required'.tr;
     }
     if (value.trim().length < 2) {
-      return 'Nama depan minimal 2 karakter';
+      return 'validation_first_name_min_length'.tr;
     }
     if (value.trim().length > 255) {
-      return "Nama depan maksimal 255 karakter";
+      return "validation_name_max_length".tr;
     }
     return null;
   }
@@ -141,7 +141,7 @@ class ProfileController extends GetxController
       return null;
     }
     if (value.trim().length > 255) {
-      return "Nama belakang maksimal 255 karakter";
+      return "validation_last_name_max_length".tr;
     }
     return null;
   }

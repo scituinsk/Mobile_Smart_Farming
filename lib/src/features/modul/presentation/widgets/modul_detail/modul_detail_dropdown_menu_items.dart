@@ -12,28 +12,38 @@ import 'package:pak_tani/src/core/widgets/my_filled_button.dart';
 import 'package:pak_tani/src/core/widgets/my_text_field.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_detail_ui_controller.dart';
 
+enum MenuType { logs, edit, delete, editPassword }
+
 class MenuItem {
   final String text;
   final IconData icon;
-  const MenuItem({required this.text, required this.icon});
+  final MenuType type;
+  const MenuItem({required this.text, required this.icon, required this.type});
 }
 
 abstract class ModulDetailDropdownMenuItems {
-  static const modulLogs = MenuItem(
-    text: "Riwayat Perangkat",
+  static MenuItem get modulLogs => MenuItem(
+    text: "device_history_menu".tr,
     icon: LucideIcons.scrollText,
+    type: MenuType.logs,
   );
-  static const editIcon = MenuItem(text: "Edit Perangkat", icon: Icons.edit);
-  static const deleteIcon = MenuItem(
-    text: "Hapus Perangkat",
+  static MenuItem get editIcon => MenuItem(
+    text: "edit_device_menu".tr,
+    icon: Icons.edit,
+    type: MenuType.edit,
+  );
+  static MenuItem get deleteIcon => MenuItem(
+    text: "delete_device_menu".tr,
     icon: Icons.delete_rounded,
+    type: MenuType.delete,
   );
-  static const editPasswordIcon = MenuItem(
-    text: "Edit password",
+  static MenuItem get editPasswordIcon => MenuItem(
+    text: "edit_password_menu".tr,
     icon: Icons.key,
+    type: MenuType.editPassword,
   );
 
-  static const List<MenuItem> items = [
+  static List<MenuItem> get items => [
     modulLogs,
     editIcon,
     editPasswordIcon,
@@ -41,7 +51,7 @@ abstract class ModulDetailDropdownMenuItems {
   ];
 
   static Widget buildItem(MenuItem item) {
-    return item == deleteIcon
+    return item.type == MenuType.delete
         ? Row(
             spacing: 10.r,
             children: [
@@ -59,7 +69,6 @@ abstract class ModulDetailDropdownMenuItems {
           )
         : Row(
             spacing: 10.r,
-
             children: [
               MyIcon(
                 icon: item.icon,
@@ -77,8 +86,8 @@ abstract class ModulDetailDropdownMenuItems {
   static void onChanged(BuildContext context, MenuItem item) {
     final controller = Get.find<ModulDetailUiController>();
 
-    switch (item) {
-      case ModulDetailDropdownMenuItems.editIcon:
+    switch (item.type) {
+      case MenuType.edit:
         controller.selectedImage.value = null;
         CustomDialog.show(
           widthChild: double.infinity,
@@ -88,7 +97,7 @@ abstract class ModulDetailDropdownMenuItems {
             spacing: 10.w,
             children: [
               Icon(LucideIcons.squarePen, color: AppTheme.primaryColor),
-              Text("Edit Perangkat", style: AppTheme.h4),
+              Text("edit_device_dialog_title".tr, style: AppTheme.h4),
             ],
           ),
           child: SingleChildScrollView(
@@ -101,24 +110,24 @@ abstract class ModulDetailDropdownMenuItems {
                 children: [
                   MyTextField(
                     fieldWidth: double.infinity,
-                    title: "Nama Perangkat",
+                    title: "device_name_label".tr,
                     validator: controller.validateName,
                     controller: controller.modulNameC,
-                    hint: "Ex: Greenhouse A",
+                    hint: "device_name_hint".tr,
                     borderRadius: 10,
                   ),
                   MyTextField(
                     fieldWidth: double.infinity,
-                    title: "Deskripsi Perangkat",
+                    title: "device_description_label".tr,
                     controller: controller.modulDescriptionC,
-                    hint: "Ex: Greenhouse timur",
+                    hint: "device_description_hint".tr,
                     borderRadius: 10,
                     validator: controller.validateDescription,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Gambar Perangkat", style: AppTheme.h4),
+                      Text("device_image_label".tr, style: AppTheme.h4),
                       Stack(
                         children: [
                           Obx(() {
@@ -195,7 +204,7 @@ abstract class ModulDetailDropdownMenuItems {
                       MyFilledButton(
                         onPressed: () => Get.back(),
                         backgroundColor: Colors.white,
-                        title: "Batal",
+                        title: "button_cancel".tr,
                         textColor: AppTheme.primaryColor,
                       ),
                       Obx(() {
@@ -214,7 +223,7 @@ abstract class ModulDetailDropdownMenuItems {
                                     color: Colors.white,
                                   ),
                                 )
-                              : Text("Simpan"),
+                              : Text("button_save".tr),
                         );
                       }),
                     ],
@@ -225,7 +234,7 @@ abstract class ModulDetailDropdownMenuItems {
           ),
         );
         break;
-      case ModulDetailDropdownMenuItems.deleteIcon:
+      case MenuType.delete:
         CustomDialog.show(
           context: context,
           dialogMargin: 35,
@@ -242,7 +251,7 @@ abstract class ModulDetailDropdownMenuItems {
                   color: AppTheme.errorColor,
                   size: 38.r,
                 ),
-                Text("Hapus Perangkat dari akun?", style: AppTheme.h4),
+                Text("delete_device_dialog_title".tr, style: AppTheme.h4),
               ],
             ),
           ),
@@ -253,7 +262,7 @@ abstract class ModulDetailDropdownMenuItems {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Perangkat ini akan dihapus dari daftar Perangkat di akun ini.",
+                  "delete_device_dialog_message".tr,
                   textAlign: TextAlign.center,
                   style: AppTheme.textDefault,
                 ),
@@ -262,7 +271,7 @@ abstract class ModulDetailDropdownMenuItems {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     MyFilledButton(
-                      title: "Batal",
+                      title: "button_cancel".tr,
                       onPressed: () {
                         Get.back();
                       },
@@ -270,7 +279,7 @@ abstract class ModulDetailDropdownMenuItems {
                       textColor: AppTheme.surfaceDarker,
                     ),
                     MyFilledButton(
-                      title: "Hapus",
+                      title: "button_delete".tr,
                       onPressed: () {
                         Get.back();
                         final controller = Get.find<ModulDetailUiController>();
@@ -286,7 +295,7 @@ abstract class ModulDetailDropdownMenuItems {
           ),
         );
         break;
-      case ModulDetailDropdownMenuItems.editPasswordIcon:
+      case MenuType.editPassword:
         controller.isPasswordFormValid.value = false;
         CustomDialog.show(
           dialogMargin: 40,
@@ -295,7 +304,7 @@ abstract class ModulDetailDropdownMenuItems {
             spacing: 10.w,
             children: [
               Icon(Icons.lock_outline, color: AppTheme.primaryColor),
-              Text("Edit password", style: AppTheme.h4),
+              Text("edit_password_dialog_title".tr, style: AppTheme.h4),
             ],
           ),
           child: SingleChildScrollView(
@@ -306,19 +315,17 @@ abstract class ModulDetailDropdownMenuItems {
                 spacing: 10.r,
                 children: [
                   MyTextField(
-                    // fieldWidth: 240,
-                    title: "Password baru",
+                    title: "new_password_label".tr,
                     controller: controller.modulNewPassC,
                     validator: controller.validatePassword,
-                    hint: "Ex: PakTani1",
+                    hint: "password_hint".tr,
                     borderRadius: 10,
                   ),
                   MyTextField(
-                    // fieldWidth: 240,
-                    title: "Konfirmasi password",
+                    title: "confirm_password_label".tr,
                     controller: controller.modulConfirmNewPassC,
                     validator: controller.validateConfirmPassword,
-                    hint: "Ex: PakTani1",
+                    hint: "password_hint".tr,
                     borderRadius: 10,
                   ),
                   Row(
@@ -330,7 +337,7 @@ abstract class ModulDetailDropdownMenuItems {
                           Get.back();
                         },
                         backgroundColor: Colors.white,
-                        title: "Batal",
+                        title: "button_cancel".tr,
                         textColor: AppTheme.primaryColor,
                       ),
                       Obx(() {
@@ -344,7 +351,7 @@ abstract class ModulDetailDropdownMenuItems {
                               ? CircularProgressIndicator(
                                   padding: EdgeInsets.all(5.r),
                                 )
-                              : Text("Simpan"),
+                              : Text("button_save".tr),
                         );
                       }),
                     ],
@@ -355,7 +362,7 @@ abstract class ModulDetailDropdownMenuItems {
           ),
         );
         break;
-      case ModulDetailDropdownMenuItems.modulLogs:
+      case MenuType.logs:
         Get.back();
 
         final mainNavController = Get.find<MainNavigationController>();

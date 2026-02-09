@@ -42,7 +42,7 @@ class ModulDetailScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircularProgressIndicator(),
-                    Text("Memuat perangkat..."),
+                    Text("loading_devices".tr),
                   ],
                 ),
               );

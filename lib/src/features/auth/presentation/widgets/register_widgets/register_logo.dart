@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/utils/custom_icon.dart';
 
@@ -21,13 +22,10 @@ class RegisterLogo extends StatelessWidget {
         Column(
           children: [
             Text(
-              "Daftar Akun",
+              "auth_register_title".tr,
               style: AppTheme.h4.copyWith(color: AppTheme.primaryColor),
             ),
-            Text(
-              "Lengkapi data anda untuk membuat akun.",
-              style: AppTheme.textAction,
-            ),
+            Text("auth_register_subtitle".tr, style: AppTheme.textAction),
           ],
         ),
       ],

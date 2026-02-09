@@ -20,16 +20,16 @@ class EditProfileWidget extends StatelessWidget {
           spacing: 30.h,
           children: [
             MyTextField(
-              title: "Nama depan",
-              hint: "Masukkan nama depan",
+              title: "profile_first_name_label".tr,
+              hint: "profile_first_name_hint".tr,
               fillColor: Colors.white,
               borderRadius: 10.r,
               controller: controller.firstNameController,
               validator: controller.validateFirstName,
             ),
             MyTextField(
-              title: "Nama belakang",
-              hint: "Masukkan nama belakang",
+              title: "profile_last_name_label".tr,
+              hint: "profile_last_name_hint".tr,
               fillColor: Colors.white,
               borderRadius: 10.r,
               controller: controller.lastNameController,
@@ -72,7 +72,7 @@ class EditProfileWidget extends StatelessWidget {
                           height: 30.h,
                           child: CircularProgressIndicator(),
                         )
-                      : Text("Simpan Perubahan"),
+                      : Text("profile_save_button".tr),
                 );
               }),
             ),

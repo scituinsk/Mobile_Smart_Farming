@@ -33,9 +33,22 @@ class ProfileScreen extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 30.w),
               child: Stack(
                 children: [
+                  Positioned(
+                    left: 0,
+                    child: MyIcon(
+                      iconSize: 21,
+                      padding: 11,
+                      icon: LucideIcons.languages,
+                      iconColor: AppTheme.primaryColor,
+                      backgroundColor: AppTheme.primaryColor.withValues(
+                        alpha: 0.1,
+                      ),
+                      onPressed: () => _showLanguageBottomSheet(context),
+                    ),
+                  ),
                   Align(
                     alignment: Alignment.center,
-                    child: Text("Profile", style: AppTheme.h3),
+                    child: Text("profile_title".tr, style: AppTheme.h3),
                   ),
                   Positioned(
                     right: 0,
@@ -51,13 +64,16 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
             ),
+
             SizedBox(height: 30.h),
+
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 spacing: 30.h,
                 children: [
-                  PhotoProfileWidget(),
+                  const PhotoProfileWidget(),
+
                   TabBar(
                     controller: controller.tabController,
                     isScrollable: true,
@@ -75,20 +91,24 @@ class ProfileScreen extends StatelessWidget {
                     tabs: [
                       Padding(
                         padding: EdgeInsets.all(10.r),
-                        child: Text("Informasi Pribadi"),
+                        child: Text("profile_tab_personal".tr),
                       ),
                       Padding(
                         padding: EdgeInsets.all(10.r),
-                        child: Text("Hubungi Kami"),
+                        child: Text("profile_tab_contact".tr),
                       ),
                     ],
                   ),
+
                   Expanded(
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10.w),
                       child: TabBarView(
                         controller: controller.tabController,
-                        children: [EditProfileWidget(), ContactInfoWidget()],
+                        children: const [
+                          EditProfileWidget(),
+                          ContactInfoWidget(),
+                        ],
                       ),
                     ),
                   ),
@@ -98,6 +118,104 @@ class ProfileScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showLanguageBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      elevation: 0,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.fromLTRB(
+            20,
+            12,
+            20,
+            MediaQuery.of(context).padding.bottom + 20,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 32,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              SizedBox(height: 24.h),
+              Text(
+                "change_language".tr,
+                style: AppTheme.h3.copyWith(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16.h),
+
+              _buildLanguageItem(
+                label: "Bahasa Indonesia",
+                flag: "🇮🇩",
+                code: 'id',
+                countryCode: 'ID',
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 4),
+                child: Divider(height: 1, thickness: 0.5),
+              ),
+              _buildLanguageItem(
+                label: "English",
+                flag: "🇺🇸",
+                code: 'en',
+                countryCode: 'US',
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLanguageItem({
+    required String label,
+    required String flag,
+    required String code,
+    required String countryCode,
+  }) {
+    final bool isSelected = Get.locale?.languageCode == code;
+
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      onTap: () {
+        if (!isSelected) {
+          Get.updateLocale(Locale(code, countryCode));
+        }
+        Get.back();
+      },
+      leading: Text(flag, style: TextStyle(fontSize: 24.sp)),
+      title: Text(
+        label,
+        style: isSelected
+            ? AppTheme.text.copyWith(
+                color: AppTheme.primaryColor,
+                fontWeight: FontWeight.w600,
+              )
+            : AppTheme.text,
+      ),
+      trailing: isSelected
+          ? const Icon(
+              Icons.check_circle_rounded,
+              color: AppTheme.primaryColor,
+              size: 24,
+            )
+          : null,
+      tileColor: isSelected
+          ? AppTheme.primaryColor.withValues(alpha: 0.05)
+          : Colors.transparent,
     );
   }
 }
