@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/auth/presentation/controller/auth_controller.dart';
 
 class LoginUiController extends GetxController {
@@ -43,7 +44,7 @@ class LoginUiController extends GetxController {
         validatePassword(password) == null && password.isNotEmpty;
 
     isFormValid.value = emailValid && passwordValid;
-    print("is valid: ${isFormValid.value}");
+    LogUtils.d("is valid: ${isFormValid.value}");
   }
 
   void handleLogin() {

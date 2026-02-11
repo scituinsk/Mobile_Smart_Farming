@@ -1,3 +1,4 @@
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/notification/domain/datasources/notification_remote_datasource.dart';
 import 'package:pak_tani/src/features/notification/domain/entities/notification_item.dart';
 import 'package:pak_tani/src/features/notification/domain/repositories/notification_repository.dart';
@@ -27,7 +28,7 @@ class NotificationRepositoryImpl extends NotificationRepository {
       }
       return null;
     } catch (e) {
-      print("Error get list all notification(repo): $e");
+      LogUtils.e("Error get list all notification(repo)", e);
       rethrow;
     }
   }
@@ -38,7 +39,7 @@ class NotificationRepositoryImpl extends NotificationRepository {
     try {
       await _remoteDatasource.markAllNotifications();
     } catch (e) {
-      print("Error mark read all notifications(repo): $e");
+      LogUtils.e("Error mark read all notifications(repo)", e);
       rethrow;
     }
   }
@@ -54,7 +55,7 @@ class NotificationRepositoryImpl extends NotificationRepository {
       );
       return notificationItem.toEntity();
     } catch (e) {
-      print("Error mark read notification: $e");
+      LogUtils.e("Error mark read notification", e);
       rethrow;
     }
   }

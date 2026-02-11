@@ -9,6 +9,7 @@ import 'package:pak_tani/src/core/di/dependency_injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await dotenv.load(fileName: ".env");
 
   // Minimal initialization for background isolate

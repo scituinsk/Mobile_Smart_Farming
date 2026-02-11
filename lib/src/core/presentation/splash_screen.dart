@@ -11,6 +11,7 @@ import 'package:pak_tani/src/core/services/connectivity_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/utils/custom_icon.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
 
 /// Splash screen widget.
@@ -56,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
       authService.debugInfo();
 
       if (!authService.isReady) {
-        print('❌ AuthService not ready, initializing...');
+        LogUtils.d('❌ AuthService not ready, initializing...');
         // Force wait max 3 seconds
         int attempts = 0;
         while (!authService.isReady && attempts < 30) {
@@ -88,7 +89,7 @@ class _SplashScreenState extends State<SplashScreen> {
             argument = {"serial_id": serialId, "schedule": schedule};
           }
         }
-        print("ke main screen bawa arguments: $argument");
+        LogUtils.d("ke main screen bawa arguments: $argument");
         Get.offAllNamed(RouteNames.mainPage, arguments: argument);
         await storageService.delete("notification_serial_id");
         await storageService.delete("notification_schedule");

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
 
@@ -16,7 +17,7 @@ class AuthController extends GetxController {
       Get.offAllNamed(RouteNames.mainPage);
       MySnackbar.success(message: "login_success".tr);
     } catch (e) {
-      print("error login auth controller:  $e");
+      LogUtils.e("error login auth controller", e);
       MySnackbar.error(message: e.toString());
     }
   }
@@ -42,7 +43,7 @@ class AuthController extends GetxController {
       Get.back();
       MySnackbar.success(message: "register_success".tr);
     } catch (e) {
-      print(e);
+      LogUtils.e("error register", e);
       MySnackbar.error(message: e.toString());
     }
   }

@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/features/relays/domain/models/group_relay.dart';
@@ -209,7 +210,7 @@ class RelayGroupList extends StatelessWidget {
               onItemReorder:
                   (oldItemIndex, oldListIndex, newItemIndex, newListIndex) {
                     if (newListIndex == 0 && oldListIndex != 0) {
-                      print("Cannot move relay from group to unassigned");
+                      LogUtils.d("Cannot move relay from group to unassigned");
                       MySnackbar.warning(message: "relay_must_be_in_group".tr);
                       return;
                     }
@@ -226,7 +227,7 @@ class RelayGroupList extends StatelessWidget {
 
                 // ✅ Skip if trying to reorder unassigned list
                 if (oldListIndex == 0 || newListIndex == 0) {
-                  print("Cannot reorder unassigned list");
+                  LogUtils.d("Cannot reorder unassigned list");
                   return;
                 }
 
@@ -244,7 +245,7 @@ class RelayGroupList extends StatelessWidget {
                 copied.insert(adjustedNew, moved);
                 controller.relayGroups.assignAll(copied);
 
-                print("Reordered groups:  → ");
+                LogUtils.d("Reordered groups:  → ");
               },
               listPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8.h),
               listInnerDecoration: BoxDecoration(

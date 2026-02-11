@@ -1,3 +1,4 @@
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/auth/domain/repositories/auth_repository.dart';
 
 class LogoutUseCase {
@@ -9,7 +10,7 @@ class LogoutUseCase {
     try {
       await _repository.logout();
     } catch (e) {
-      print('logout usecase error (tetep lanjut): $e');
+      LogUtils.e('logout usecase error (tetep lanjut)', e);
     }
   }
 }

@@ -12,12 +12,10 @@ class ScheduleHistory extends Equatable {
   });
 
   @override
-  // TODO: implement props
   List<Object?> get props => [startTime, endTime, pinName];
 
   @override
   String toString() {
-    // TODO: implement toString
     return "ScheduleHistory(startTime: $startTime, endTime: $endTime, pinName: $pinName)";
   }
 }

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/services/api_service.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/history/application/services/history_service.dart';
 import 'package:pak_tani/src/features/history/data/datasources/history_remote_datasource_impl.dart';
 import 'package:pak_tani/src/features/history/data/repositories/history_repository_impl.dart';
@@ -11,7 +12,6 @@ import 'package:pak_tani/src/features/modul/application/services/modul_service.d
 class HistoryBinding extends Bindings {
   @override
   void dependencies() {
-    // TODO: implement dependencies
     Get.lazyPut<HistoryRemoteDatasource>(
       () => HistoryRemoteDatasourceImpl(Get.find<ApiService>()),
       fenix: true,
@@ -35,6 +35,6 @@ class HistoryBinding extends Bindings {
       fenix: true,
     );
 
-    print("✅ history binding dependecies initialized");
+    LogUtils.d("✅ history binding dependecies initialized");
   }
 }

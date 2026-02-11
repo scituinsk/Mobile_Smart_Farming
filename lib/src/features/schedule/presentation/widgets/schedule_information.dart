@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/core/widgets/my_icon.dart';
 import 'package:pak_tani/src/features/schedule/presentation/controllers/schedule_ui_controller.dart';
 import 'package:pak_tani/src/features/schedule/presentation/widgets/solenoid_widgets/solenoid_setting_sheet.dart';
@@ -35,8 +36,8 @@ class GroupScheduleInformation extends StatelessWidget {
               final int sequentialCount = controller.sequentialCount.value;
               final bool isSequential = controller.isSequential.value;
 
-              print("sequential count tampilan: $sequentialCount");
-              print("apakah sequential tampilan: $isSequential");
+              LogUtils.d("sequential count tampilan: $sequentialCount");
+              LogUtils.d("apakah sequential tampilan: $isSequential");
 
               return Expanded(
                 child: Column(

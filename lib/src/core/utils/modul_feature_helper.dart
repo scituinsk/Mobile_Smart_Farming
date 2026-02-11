@@ -2,6 +2,8 @@
 /// This class contains static methods to retrive icons, names, data formatting, and colors
 /// based on feature names, supporting modul features like temrature, water level, humidity, and scheduling.
 
+library;
+
 import 'package:flutter/material.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
 import 'package:pak_tani/src/core/utils/custom_icon.dart';

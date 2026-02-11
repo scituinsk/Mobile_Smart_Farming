@@ -7,6 +7,7 @@ library;
 import 'dart:async';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Service class for Storage service.
@@ -35,9 +36,9 @@ class StorageService extends GetxService {
         aOptions: AndroidOptions(resetOnError: true),
       );
       _initCompleter.complete();
-      print("✅ StorageService: Initialized successfully");
+      LogUtils.d("✅ StorageService: Initialized successfully");
     } catch (e) {
-      print("❌ StorageService: Initialization failed: $e");
+      LogUtils.e("❌ StorageService: Initialization failed", e);
       // Don't leave the completer hanging if it errors
       if (!_initCompleter.isCompleted) _initCompleter.complete();
     }

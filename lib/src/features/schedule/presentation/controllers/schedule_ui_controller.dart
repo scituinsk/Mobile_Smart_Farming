@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/services/device_ws_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/services/web_socket_service.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 import 'package:pak_tani/src/features/relays/domain/value_objects/relay_type.dart';
@@ -95,10 +96,10 @@ class ScheduleUiController extends GetxController {
 
         _initWsHandle();
       } else {
-        print("tidak ada selected group");
+        LogUtils.d("tidak ada selected group");
       }
     } catch (e) {
-      print("error init schedule ui: ${e.toString()}");
+      LogUtils.e("error init schedule ui", e);
       MySnackbar.error(message: e.toString());
     }
   }
@@ -111,7 +112,7 @@ class ScheduleUiController extends GetxController {
       final storage = Get.find<StorageService>();
       final token = await storage.readSecure("access_token");
       if (token == null || token.isEmpty) {
-        print('WS: token not available');
+        LogUtils.d('WS: token not available');
         return;
       }
 
@@ -123,7 +124,7 @@ class ScheduleUiController extends GetxController {
       // store handle to use for sending
       _ws.value = handle;
     } catch (e) {
-      print('init ws handle error: $e');
+      LogUtils.e('init ws handle error', e);
     }
   }
 
@@ -181,7 +182,7 @@ class ScheduleUiController extends GetxController {
         modulService.selectedModul.value!.serialId,
       );
     } catch (e) {
-      print("error refresh schedule: $e");
+      LogUtils.d("error refresh schedule: $e");
       MySnackbar.error(message: e.toString());
     }
   }
@@ -224,7 +225,7 @@ class ScheduleUiController extends GetxController {
         );
       }
     } catch (e) {
-      print("error edit group sequential: $e");
+      LogUtils.e("error edit group sequential", e);
       MySnackbar.error(message: e.toString());
     } finally {
       isSubmittingSequential.value = false;
@@ -379,7 +380,7 @@ class ScheduleUiController extends GetxController {
     final storage = Get.find<StorageService>();
     final token = await storage.readSecure("access_token");
     if (token == null || token.isEmpty) {
-      print('WS: token not available');
+      LogUtils.d('WS: token not available');
       return;
     }
 
@@ -400,7 +401,7 @@ class ScheduleUiController extends GetxController {
       final handle = _ws.value;
       if (handle == null) {
         MySnackbar.error(message: "ws_error_connection".tr);
-        print('WS: send aborted - no handle');
+        LogUtils.d('WS: send aborted - no handle');
         return;
       }
 
@@ -410,14 +411,14 @@ class ScheduleUiController extends GetxController {
       }
 
       // log payload
-      print('WS SEND: $payload');
+      LogUtils.d('WS SEND: $payload');
 
       // try send and await if channel expects future
       try {
         handle.send(payload);
         // some implementations return Future or not; await if Future
       } catch (e) {
-        print('WS send error (first attempt): $e');
+        LogUtils.e('WS send error (first attempt)', e);
         // try reconnect once then resend
         try {
           final serialId = modulService.selectedModul.value!.serialId;
@@ -429,13 +430,13 @@ class ScheduleUiController extends GetxController {
               modulId: serialId,
             );
             _ws.value = newHandle;
-            print('WS: re-obtained handle, retry send');
+            LogUtils.d('WS: re-obtained handle, retry send');
             newHandle.send(payload);
           } else {
             rethrow;
           }
         } catch (e2) {
-          print('WS send error (retry): $e2');
+          LogUtils.e('WS send error (retry)', e2);
           rethrow;
         }
       }
@@ -565,6 +566,6 @@ class ScheduleUiController extends GetxController {
         validateDuration(currentDuration) == null && currentDuration.isNotEmpty;
 
     isFormValid.value = durationValid && hasChange;
-    print("isformvalid: ${isFormValid.value}");
+    LogUtils.d("isformvalid: ${isFormValid.value}");
   }
 }

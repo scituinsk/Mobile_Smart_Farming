@@ -1,3 +1,4 @@
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/schedule/domain/datasources/schedule_remote_datasource.dart';
 import 'package:pak_tani/src/features/schedule/domain/entities/schedule.dart';
 import 'package:pak_tani/src/features/schedule/domain/repositories/schedule_repository.dart';
@@ -18,7 +19,7 @@ class ScheduleRepositoryImpl extends ScheduleRepository {
       }
       return null;
     } catch (e) {
-      print("Error get list schedule(repository): $e");
+      LogUtils.e("Error get list schedule(repository)", e);
       rethrow;
     }
   }
@@ -52,7 +53,7 @@ class ScheduleRepositoryImpl extends ScheduleRepository {
 
       return schedule.toEntity();
     } catch (e) {
-      print("error add schedule: $e");
+      LogUtils.e("error add schedule", e);
       rethrow;
     }
   }
@@ -88,7 +89,7 @@ class ScheduleRepositoryImpl extends ScheduleRepository {
 
       return schedule.toEntity();
     } catch (e) {
-      print("error edit schedule(repo): $e");
+      LogUtils.e("error edit schedule(repo)", e);
       rethrow;
     }
   }
@@ -98,7 +99,7 @@ class ScheduleRepositoryImpl extends ScheduleRepository {
     try {
       await _remoteDatasource.deleteSchedule(id);
     } catch (e) {
-      print("error deleting schedule(repo): $e");
+      LogUtils.e("error deleting schedule(repo)", e);
       rethrow;
     }
   }

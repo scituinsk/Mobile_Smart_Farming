@@ -32,7 +32,7 @@ class ModulDetailFeatureSection extends StatelessWidget {
         child: Obx(() {
           final modul = controller.modul.value!;
           final relayGroups = controller.relayGroups;
-          // print("UI rebuilding with modul: ${modul.name}");
+          // LogUtils.d("UI rebuilding with modul: ${modul.name}");
           List<ModulFeature> modulDatas = [];
 
           if (modul.features != null) {

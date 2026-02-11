@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/modul/domain/datasources/modul_local_datasource.dart';
 import 'package:pak_tani/src/features/modul/domain/datasources/modul_remote_datasource.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
@@ -26,7 +27,7 @@ class ModulRepositoryImpl implements ModulRepository {
       }
       return localDatasource.mergeModuls([]);
     } catch (e) {
-      print("error get list modul(repository): $e");
+      LogUtils.e("error get list modul(repository)", e);
       rethrow;
     }
   }
@@ -40,7 +41,7 @@ class ModulRepositoryImpl implements ModulRepository {
       }
       return modul.toEntity();
     } catch (e) {
-      print("error get modul(repository): $e");
+      LogUtils.e("error get modul(repository)", e);
       rethrow;
     }
   }
@@ -54,7 +55,7 @@ class ModulRepositoryImpl implements ModulRepository {
       }
       return modul.toEntity();
     } catch (e) {
-      print("error add modul(repository): $e");
+      LogUtils.e("error add modul(repository)", e);
       rethrow;
     }
   }
@@ -78,7 +79,7 @@ class ModulRepositoryImpl implements ModulRepository {
       if (modul == null) return null;
       return modul.toEntity();
     } catch (e) {
-      print("error edit modul(repository): $e");
+      LogUtils.e("error edit modul(repository)", e);
       rethrow;
     }
   }
@@ -89,7 +90,7 @@ class ModulRepositoryImpl implements ModulRepository {
       await remoteDatasource.deleteModulFromUser(serialId);
       await localDatasource.deleteModul(serialId);
     } catch (e) {
-      print("error deleting modul(repository): $e");
+      LogUtils.e("error deleting modul(repository)", e);
       rethrow;
     }
   }
@@ -99,7 +100,7 @@ class ModulRepositoryImpl implements ModulRepository {
     try {
       await localDatasource.deleteModul(serialId);
     } catch (e) {
-      print("Error deleting local modul(repository): $e");
+      LogUtils.e("Error deleting local modul(repository)", e);
       rethrow;
     }
   }

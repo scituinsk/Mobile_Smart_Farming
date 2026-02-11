@@ -7,6 +7,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 
 /// Service class for connectivity service.
 /// Check connectivity status in user device.
@@ -36,12 +37,12 @@ class ConnectivityService extends GetxService {
         result.contains(ConnectivityResult.wifi) ||
         result.contains(ConnectivityResult.ethernet)) {
       if (!isConnected.value) {
-        print("🌐 Internet Connection Restored");
+        LogUtils.d("🌐 Internet Connection Restored");
         isConnected.value = true;
       }
     } else {
       if (isConnected.value) {
-        print("🚫 Internet Connection Lost");
+        LogUtils.d("🚫 Internet Connection Lost");
         isConnected.value = false;
       }
     }

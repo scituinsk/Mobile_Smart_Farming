@@ -1,4 +1,5 @@
 import 'package:hive/hive.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/modul/domain/datasources/modul_local_datasource.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 
@@ -31,7 +32,7 @@ class ModulLocalDatasourceImpl implements ModulLocalDatasource {
   @override
   List<Modul> mergeModuls(List<Modul> remoteModuls) {
     final localModuls = getModuls();
-    print("local modul: ${remoteModuls.map((e) => e.id)}");
+    LogUtils.d("local modul: ${remoteModuls.map((e) => e.id)}");
     final merged = <Modul>[];
 
     merged.addAll(remoteModuls);

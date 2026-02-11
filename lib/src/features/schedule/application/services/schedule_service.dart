@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/core/utils/time_parser_helper.dart';
 import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/schedule/domain/entities/schedule.dart';
@@ -24,14 +25,14 @@ class ScheduleService extends GetxService {
       );
       if (scheduleList != null) {
         schedules.assignAll(scheduleList);
-        print("loaded schedule: ${scheduleList.length}");
+        LogUtils.d("loaded schedule: ${scheduleList.length}");
       } else {
         schedules.clear();
-        print("no schedules found");
+        LogUtils.d("no schedules found");
       }
     } catch (e) {
       MySnackbar.error(message: e.toString());
-      print("error loading schedules(service): $e");
+      LogUtils.e("error loading schedules(service)", e);
     } finally {
       isFetching.value = false;
     }
@@ -67,7 +68,7 @@ class ScheduleService extends GetxService {
 
       schedules.add(newSchedule);
     } catch (e) {
-      print("error add new schedule: $e");
+      LogUtils.e("error add new schedule", e);
       rethrow;
     } finally {
       isSaving.value = false;
@@ -80,7 +81,7 @@ class ScheduleService extends GetxService {
       await _repository.deleteSchedule(id.toString());
       schedules.removeWhere((element) => element.id == id);
     } catch (e) {
-      print("error deleting schedule: $e");
+      LogUtils.e("error deleting schedule", e);
       rethrow;
     } finally {
       isDeleting.value = false;
@@ -124,7 +125,7 @@ class ScheduleService extends GetxService {
       );
       schedules[index] = editedSchedule;
     } catch (e) {
-      print("Error editing schedule(service): $e");
+      LogUtils.e("Error editing schedule(service)", e);
       rethrow;
     } finally {
       isSaving.value = false;
@@ -144,7 +145,7 @@ class ScheduleService extends GetxService {
 
       schedules[index] = editedSchedule;
     } catch (e) {
-      print("Error editing schedule(service): $e");
+      LogUtils.e("Error editing schedule(service)", e);
       rethrow;
     }
   }

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/notification/domain/entities/notification_item.dart';
 import 'package:pak_tani/src/features/notification/domain/repositories/notification_repository.dart';
 
@@ -74,7 +75,7 @@ class NotificationService extends GetxService {
         filteredNotificationItems.clear();
       }
     } catch (e) {
-      print("error load notifications(service): $e");
+      LogUtils.e("error load notifications(service): ", e);
       rethrow;
     } finally {
       isLoading.value = false;
@@ -98,7 +99,7 @@ class NotificationService extends GetxService {
 
       updateUnreadCount();
     } catch (e) {
-      print("Error mark read notification(service): $e");
+      LogUtils.e("Error mark read notification(service): ", e);
       rethrow;
     }
   }
@@ -123,9 +124,9 @@ class NotificationService extends GetxService {
 
       updateUnreadCount();
 
-      print("mark read item: ${filteredNotificationItems.length}");
+      LogUtils.d("mark read item: ${filteredNotificationItems.length}");
     } catch (e) {
-      print("Error mark read all notifications: $e");
+      LogUtils.e("Error mark read all notifications: ", e);
       rethrow;
     }
   }
@@ -149,7 +150,7 @@ class NotificationService extends GetxService {
         .where((element) => !element.readStatus)
         .length;
 
-    print("unread notif: $unreadCount");
+    LogUtils.d("unread notif: $unreadCount");
   }
 
   void filterNotification() {

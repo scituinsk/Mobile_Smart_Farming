@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 
@@ -18,7 +19,7 @@ class AddModulUiController extends GetxController {
   void onInit() {
     super.onInit();
     final serialId = Get.arguments ?? "";
-    print("arguments: $serialId");
+    LogUtils.d("arguments: $serialId");
     _initFormController(serialId);
   }
 
@@ -27,14 +28,14 @@ class AddModulUiController extends GetxController {
       RouteNames.qrScanPage,
       arguments: (String barcode) {
         modulCodeController.text = barcode;
-        print("Barcode scanned: $barcode");
+        LogUtils.d("Barcode scanned: $barcode");
       },
     );
   }
 
   Future<void> handleAddModul() async {
-    print("kode modul: ${modulCodeController.text}");
-    print("kode modul: ${modulPasswordController.text}");
+    LogUtils.d("kode modul: ${modulCodeController.text}");
+    LogUtils.d("kode modul: ${modulPasswordController.text}");
     final formState = formKey.currentState;
     if (formState == null) return;
     if (!formState.validate()) {

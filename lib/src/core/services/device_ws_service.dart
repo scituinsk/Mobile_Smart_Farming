@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 /// A service class for handling WebSocket connections for individual devices.
@@ -17,16 +18,16 @@ class DeviceWsService {
   /// Logs the payload and rethrow any errors.
   void send(dynamic data) {
     if (_channel.closeCode != null) {
-      print("⚠️ DeviceWsService: Socket sudah tutup, batal kirim.");
+      LogUtils.d("⚠️ DeviceWsService: Socket sudah tutup, batal kirim.");
       return;
     }
 
     try {
       final payload = data is String ? data : data.toString();
-      print('DeviceWsHandle.send -> ${payload.replaceAll("\n", "\\n")}');
+      LogUtils.d('DeviceWsHandle.send -> ${payload.replaceAll("\n", "\\n")}');
       _channel.sink.add(payload);
     } catch (e) {
-      print('DeviceWsHandle.send error: $e');
+      LogUtils.e('DeviceWsHandle.send error', e);
       rethrow;
     }
   }

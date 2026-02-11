@@ -4,6 +4,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/utils/image_utils.dart';
 import 'package:pak_tani/src/core/utils/loading_dialog.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
 import 'package:pak_tani/src/features/profile/application/services/profile_service.dart';
@@ -56,7 +57,7 @@ class ProfileController extends GetxController
 
         MySnackbar.success(message: "edit_profile_success".tr);
       } catch (e) {
-        print("error edit profile(controller): $e");
+        LogUtils.e("error edit profile(controller): $e");
         MySnackbar.error(message: e.toString());
       }
     }
@@ -78,7 +79,7 @@ class ProfileController extends GetxController
   }
 
   void refreshTextControllerAndFocusNode() {
-    print("refreh and unfocus");
+    LogUtils.d("refreh and unfocus");
     if (currentUser.value != null) {
       firstNameController.text = currentUser.value!.firstName;
       lastNameController.text = currentUser.value!.lastName ?? "";
@@ -173,7 +174,6 @@ class ProfileController extends GetxController
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     tabController = TabController(length: 2, vsync: this, initialIndex: 0);
 

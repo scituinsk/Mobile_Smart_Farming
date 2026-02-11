@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/history/application/services/history_service.dart';
 import 'package:pak_tani/src/features/history/domain/entities/history.dart';
@@ -79,7 +80,7 @@ class HistoryController extends GetxController {
     debounce?.cancel();
     searchFocus.dispose();
     searchTextController.dispose();
-    print("dispose history controller");
+    LogUtils.d("dispose history controller");
     super.onClose();
   }
 
@@ -128,7 +129,7 @@ class HistoryController extends GetxController {
       historyService.searchHistories(searchText.value);
       update();
     } catch (e) {
-      print("error: $e");
+      LogUtils.e("error", e);
       MySnackbar.error(message: e.toString());
     }
   }
@@ -330,7 +331,7 @@ class HistoryController extends GetxController {
 
   /// Apply all filter that been selected
   void applyFilter() {
-    print(
+    LogUtils.d(
       "selected history type: ${selectedFilterHistoryTypes.map((element) => element.label)}",
     );
     historyService.filterHistories(

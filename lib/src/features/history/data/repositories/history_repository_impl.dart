@@ -1,3 +1,4 @@
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/history/domain/datasources/history_remote_datasource.dart';
 import 'package:pak_tani/src/features/history/domain/entities/history.dart';
 import 'package:pak_tani/src/features/history/domain/repositories/history_repository.dart';
@@ -16,7 +17,7 @@ class HistoryRepositoryImpl extends HistoryRepository {
       }
       return null;
     } catch (e) {
-      print("Error get list all history(repo): $e");
+      LogUtils.e("Error get list all history(repo)", e);
       rethrow;
     }
   }
@@ -30,7 +31,7 @@ class HistoryRepositoryImpl extends HistoryRepository {
       }
       return null;
     } catch (e) {
-      print("Error get list history(repo): $e");
+      LogUtils.e("Error get list history(repo)", e);
       rethrow;
     }
   }

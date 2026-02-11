@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/utils/loading_dialog.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 import 'package:pak_tani/src/features/relays/application/services/relay_service.dart';
@@ -76,7 +77,7 @@ class RelayUiController extends GetxController {
         selectedModul.value!.serialId,
       );
     } catch (e) {
-      print("error reload relays (controller): $e");
+      LogUtils.e("error reload relays (controller)", e);
       MySnackbar.error(message: e.toString());
     }
   }
@@ -180,7 +181,7 @@ class RelayUiController extends GetxController {
       Navigator.of(Get.overlayContext!).pop();
       MySnackbar.success(message: "relay_delete_group_success".tr);
     } catch (e) {
-      print("error (ui controller): $e");
+      LogUtils.e("error (ui controller)", e);
       MySnackbar.error(message: e.toString());
     }
   }
@@ -254,7 +255,7 @@ class RelayUiController extends GetxController {
         toGroupId = relayGroups[toListIndex].id;
         movingRelay = relayGroups[fromListIndex].relays![fromItemIndex];
       }
-      print(
+      LogUtils.d(
         "Moving relay ${movingRelay.name} (pin ${movingRelay.pin}) from group $fromGroupId to $toGroupId",
       );
 
@@ -281,7 +282,7 @@ class RelayUiController extends GetxController {
       LoadingDialog.hide();
     } catch (e, st) {
       LoadingDialog.hide();
-      print("Failed to move relay: $e\n$st");
+      LogUtils.e("Failed to move relay:", e, st);
       MySnackbar.error(message: "relay_move_failed".tr);
 
       // Rollback sudah di-handle oleh reload

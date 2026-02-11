@@ -1,7 +1,7 @@
 import 'package:pak_tani/src/features/profile/domain/entities/user.dart';
 
 class UserModel extends User {
-  UserModel({
+  const UserModel({
     required super.id,
     required super.firstName,
     super.lastName,

@@ -9,6 +9,7 @@ import 'package:pak_tani/src/core/services/api_service.dart';
 import 'package:pak_tani/src/core/services/connectivity_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/services/web_socket_service.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/get_user_use_case.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/login_use_case.dart';
@@ -44,7 +45,7 @@ class DependencyInjection {
   /// Initializes services, controllers, and datasources.
   /// This includes core service, datasources, repositories, use cases, business service, and presentation controllers.
   static Future<void> init() async {
-    print('🔄 Starting dependency injection...');
+    LogUtils.d('🔄 Starting dependency injection...');
 
     try {
       await Hive.initFlutter();
@@ -61,7 +62,7 @@ class DependencyInjection {
       await _initServices();
       await _initController();
     } catch (e) {
-      print('❌ Dependency injection failed: $e');
+      LogUtils.e('❌ Dependency injection failed', e);
       rethrow;
     }
   }

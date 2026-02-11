@@ -41,20 +41,19 @@ class HistorySheet {
                 Text('sorting_title'.tr, style: AppTheme.h4),
                 SizedBox(height: 20.h),
                 Obx(
-                  () => SortingTile(
-                    isAscending: true,
-                    groupValue: controller.isAscending.value,
+                  () => RadioGroup(
                     onChanged: controller.sortingHistories,
+                    groupValue: controller.isAscending.value,
+                    child: Column(
+                      children: [
+                        SortingTile(isAscending: true),
+                        SizedBox(height: 20.h),
+                        SortingTile(isAscending: false),
+                      ],
+                    ),
                   ),
                 ),
-                SizedBox(height: 20.h),
-                Obx(
-                  () => SortingTile(
-                    isAscending: false,
-                    groupValue: controller.isAscending.value,
-                    onChanged: controller.sortingHistories,
-                  ),
-                ),
+
                 SizedBox(height: 10.h),
               ],
             ),

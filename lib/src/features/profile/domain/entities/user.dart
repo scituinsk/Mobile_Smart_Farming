@@ -8,7 +8,7 @@ class User extends Equatable {
   final String email;
   final String? image;
 
-  User({
+  const User({
     required this.id,
     required this.firstName,
     this.lastName,
@@ -18,6 +18,5 @@ class User extends Equatable {
   });
 
   @override
-  // TODO: implement props
   List<Object?> get props => [id, firstName, lastName, username, email, image];
 }

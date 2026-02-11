@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/errors/api_exception.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/auth/domain/datasources/auth_remote_datasource.dart';
 import 'package:pak_tani/src/features/auth/domain/repositories/auth_repository.dart';
 import 'package:pak_tani/src/features/profile/domain/entities/user.dart';
@@ -20,7 +21,7 @@ class AuthRepositoryImpl implements AuthRepository {
     } on ApiException {
       rethrow;
     } catch (e) {
-      print('Unexpected error in AuthRepository.login: $e');
+      LogUtils.e('Unexpected error in AuthRepository.login', e);
       throw UnexpectedException(
         message: 'Terjadi kesalahan saat memproses data login.',
       );
@@ -48,7 +49,7 @@ class AuthRepositoryImpl implements AuthRepository {
       // ✅ Lakukan hal yang sama untuk semua method repository
       rethrow;
     } catch (e) {
-      print('Unexpected error in AuthRepository.register: $e');
+      LogUtils.e('Unexpected error in AuthRepository.register', e);
       throw UnexpectedException(
         message: 'Terjadi kesalahan saat memproses data registrasi.',
       );
@@ -65,7 +66,7 @@ class AuthRepositoryImpl implements AuthRepository {
         try {
           await remoteDatasource.logout(refreshToken);
         } catch (e) {
-          print('API logout gagal: $e');
+          LogUtils.e('API logout gagal', e);
         }
       }
 
@@ -74,7 +75,7 @@ class AuthRepositoryImpl implements AuthRepository {
     } on ApiException {
       rethrow;
     } catch (e) {
-      print('Unexpected error in AuthRepository.logout: $e');
+      LogUtils.e('Unexpected error in AuthRepository.logout', e);
       throw UnexpectedException(message: 'Terjadi kesalahan saat logout.');
     }
   }
@@ -94,7 +95,6 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<void> requestPasswordReset(String email) {
-    // TODO: implement requestPasswordReset
     throw UnimplementedError();
   }
 }

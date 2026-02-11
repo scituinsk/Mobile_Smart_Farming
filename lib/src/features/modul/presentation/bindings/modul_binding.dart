@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 import 'package:pak_tani/src/features/modul/domain/repositories/modul_repository.dart';
 import 'package:pak_tani/src/features/modul/presentation/controllers/modul_controller.dart';
@@ -16,6 +17,6 @@ class ModulBinding extends Bindings {
       fenix: true,
     );
 
-    print('✅ ModulBinding dependencies initialized');
+    LogUtils.d('✅ ModulBinding dependencies initialized');
   }
 }

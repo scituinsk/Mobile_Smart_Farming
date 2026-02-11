@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/relays/domain/models/group_relay.dart';
 import 'package:pak_tani/src/features/relays/domain/models/relay.dart';
 import 'package:pak_tani/src/features/relays/domain/repositories/relay_repository.dart';
@@ -18,13 +19,13 @@ class RelayService extends GetxService {
       final relayList = await _repository.getListRelay(serialId);
       if (relayList != null) {
         relays.assignAll(relayList);
-        print("loaded relays ${relayList.length}");
+        LogUtils.d("loaded relays ${relayList.length}");
       } else {
         relays.clear();
-        print("no device found");
+        LogUtils.d("no device found");
       }
     } catch (e) {
-      print("error load relays(service): $e");
+      LogUtils.e("error load relays(service)", e);
       rethrow;
     }
   }
@@ -33,9 +34,9 @@ class RelayService extends GetxService {
     try {
       final groupRelayList = await _repository.getRelayGroups(serialId);
       relayGroups.assignAll(groupRelayList);
-      print("loaded relays ${groupRelayList.length}");
+      LogUtils.d("loaded relays ${groupRelayList.length}");
     } catch (e) {
-      print("error load relays(service): $e");
+      LogUtils.e("error load relays(service)", e);
       rethrow;
     }
   }
@@ -56,7 +57,7 @@ class RelayService extends GetxService {
 
       relayGroups.assignAll(groupRelayList);
     } catch (e) {
-      print("error load and assign relays to groups(service): $e");
+      LogUtils.e("error load and assign relays to groups(service)", e);
       rethrow;
     } finally {
       isLoading.value = false;
@@ -74,7 +75,7 @@ class RelayService extends GetxService {
       final indexRelay = relays.indexWhere((element) => element.pin == pin);
       relays[indexRelay] = relay;
     } catch (e) {
-      print("error editing relay(service): $e ");
+      LogUtils.e("error editing relay(service)", e);
       rethrow;
     }
   }
@@ -99,7 +100,7 @@ class RelayService extends GetxService {
       final index = relays.indexWhere((element) => element.id == id);
       relays[index] = relay;
     } catch (e) {
-      print("error editing relay(service): $e ");
+      LogUtils.e("error editing relay(service)", e);
       rethrow;
     } finally {
       isLoading.value = false;
@@ -112,7 +113,7 @@ class RelayService extends GetxService {
       final relayGroup = await _repository.addRelayGroup(modulId, name);
       relayGroups.add(relayGroup);
     } catch (e) {
-      print("error add relay group(service): $e");
+      LogUtils.e("error add relay group(service)", e);
       rethrow;
     } finally {
       isLoading.value = false;
@@ -150,7 +151,7 @@ class RelayService extends GetxService {
       relayGroups[relayGroupIndex] = newRelayGroup;
       selectedRelayGroup.value = newRelayGroup;
     } catch (e) {
-      print("Error editing relayGroup(service): $e");
+      LogUtils.e("Error editing relayGroup(service)", e);
       rethrow;
     } finally {
       isLoading.value = false;
@@ -163,7 +164,7 @@ class RelayService extends GetxService {
       await _repository.deleteRelayGroup(id.toString());
       relayGroups.removeWhere((element) => element.id == id);
     } catch (e) {
-      print("error removing modul: $e");
+      LogUtils.e("error removing modul", e);
       rethrow;
     } finally {
       isLoading.value = false;
@@ -182,7 +183,7 @@ class RelayService extends GetxService {
         throw Exception("RelayGroup tidak ditemukan");
       }
     } catch (e) {
-      print("Error select relay group(service): $e");
+      LogUtils.e("Error select relay group(service)", e);
       rethrow;
     } finally {
       isLoading.value = false;
@@ -239,7 +240,7 @@ class RelayService extends GetxService {
     try {
       await _repository.turnOnAllSolenoid(id.toString());
     } catch (e) {
-      print("error turning on all relay schedule group: $e");
+      LogUtils.e("error turning on all relay schedule group", e);
       rethrow;
     } finally {
       isLoading.value = false;
@@ -251,7 +252,7 @@ class RelayService extends GetxService {
     try {
       await _repository.turnOffAllSolenoid(id.toString());
     } catch (e) {
-      print("error turning off all relay schedule group: $e");
+      LogUtils.e("error turning off all relay schedule group", e);
       rethrow;
     } finally {
       isLoading.value = false;

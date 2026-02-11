@@ -8,6 +8,7 @@ import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/services/device_ws_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/services/web_socket_service.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 import 'package:pak_tani/src/features/relays/application/services/relay_service.dart';
@@ -72,7 +73,7 @@ class ModulDetailUiController extends GetxController
       serialId = arguments["serial_id"];
       scheduleGroupId = arguments["schedule"];
       await getDevice(serialId);
-      print("selected device: ${modul.value!.name}");
+      LogUtils.d("selected device: ${modul.value!.name}");
 
       _initFormController();
 
@@ -88,7 +89,7 @@ class ModulDetailUiController extends GetxController
     } catch (e) {
       _modulService.loadModuls(refresh: true);
       Get.back();
-      print("error at detail init: $e");
+      LogUtils.e("error at detail init: ", e);
       MySnackbar.error(message: e.toString());
     } finally {
       isLoading.value = false;
@@ -96,7 +97,7 @@ class ModulDetailUiController extends GetxController
   }
 
   void _initFormController() {
-    print("mulai init textcontroller");
+    LogUtils.d("mulai init textcontroller");
     formKeyEdit = GlobalKey<FormState>();
     formKeyPassword = GlobalKey<FormState>();
     modulNameC = TextEditingController(text: modul.value?.name);
@@ -110,13 +111,13 @@ class ModulDetailUiController extends GetxController
     modulConfirmNewPassC.addListener(_checkPasswordFormValidity);
 
     _imageWorker = ever(selectedImage, (_) {
-      // print("selected image changed: ${selectedImage.value!.path}");
+      // LogUtils.d("selected image changed: ${selectedImage.value!.path}");
       _checkEditFormValidity();
     });
   }
 
   void _disposeFormController() {
-    print("mulai dispose textcontroller");
+    LogUtils.d("mulai dispose textcontroller");
     modulNameC.removeListener(_checkEditFormValidity);
     modulDescriptionC.removeListener(_checkEditFormValidity);
     modulNewPassC.removeListener(_checkPasswordFormValidity);
@@ -133,7 +134,7 @@ class ModulDetailUiController extends GetxController
   Future<void> _initWsStream() async {
     final token = await _storage.readSecure("access_token");
     if (token == null || token.isEmpty) {
-      print("token tidak ditemukan");
+      LogUtils.d("token tidak ditemukan");
       return;
     }
 
@@ -159,15 +160,15 @@ class ModulDetailUiController extends GetxController
 
           _updateRelayStatusFromWs(json);
         } catch (e) {
-          print("parse error: $e | raw=$raw");
+          LogUtils.e("parse error | raw=$raw", e);
         }
       },
       onError: (e) {
-        print('WS error: $e');
+        LogUtils.e('WS error: ', e);
         _cancelStreamTimer();
       },
       onDone: () {
-        print('WS selesai');
+        LogUtils.d('WS selesai');
         _cancelStreamTimer();
         ws.value = null;
       },
@@ -177,12 +178,12 @@ class ModulDetailUiController extends GetxController
     try {
       ws.value?.send("GET_SENSOR");
     } catch (e) {
-      print('WS send GET_SENSOR failed: $e');
+      LogUtils.e('WS send GET_SENSOR failed: ', e);
     }
 
     _streamTimer = Timer.periodic(const Duration(seconds: 6), (timer) {
       if (ws.value == null) {
-        print("Timer stopped: ws is null");
+        LogUtils.d("Timer stopped: ws is null");
         timer.cancel();
         return;
       }
@@ -190,7 +191,7 @@ class ModulDetailUiController extends GetxController
       try {
         ws.value?.send("GET_SENSOR");
       } catch (e) {
-        print('WS send GET_SENSOR failed: $e');
+        LogUtils.e('WS send GET_SENSOR failed: ', e);
         timer.cancel();
       }
     });
@@ -327,7 +328,7 @@ class ModulDetailUiController extends GetxController
       Get.back();
       MySnackbar.success(message: "delete_device_from_user_success".tr);
     } catch (e) {
-      print("error (ui controller): $e");
+      LogUtils.e("error (ui controller): ", e);
       MySnackbar.error(message: e.toString());
     }
   }
@@ -469,7 +470,7 @@ class ModulDetailUiController extends GetxController
 
   void _cancelStreamTimer() {
     if (_streamTimer != null && _streamTimer!.isActive) {
-      print("timer dimatikan");
+      LogUtils.d("timer dimatikan");
       _streamTimer!.cancel();
       _streamTimer = null;
     }
@@ -506,7 +507,7 @@ class ModulDetailUiController extends GetxController
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.resumed) {
-      print("🔄 Reconnecting WS from Lifecycle...");
+      LogUtils.d("🔄 Reconnecting WS from Lifecycle...");
 
       ws.value = null;
       _initWsStream();

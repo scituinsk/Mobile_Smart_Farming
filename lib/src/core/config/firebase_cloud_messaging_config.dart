@@ -14,6 +14,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart' hide FormData, Response;
 import 'package:pak_tani/src/core/services/api_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/notification/application/services/notification_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -40,12 +41,12 @@ class FirebaseCloudMessagingConfig {
   ///Call this in main() to ensure setup on app launch
   static Future<void> initialize() async {
     if (_initialized) {
-      print("FCM: alredy initilasized, skipping");
+      LogUtils.d("FCM: alredy initilasized, skipping");
       return;
     }
     _initialized = true;
 
-    print("init notifikasi");
+    LogUtils.d("init notifikasi");
 
     await _requestNotificationPermission();
     await _initializeLocalNotifications();
@@ -96,7 +97,7 @@ class FirebaseCloudMessagingConfig {
   /// Sets up listeners for FCM messages.
   static void _setupMessageListeners() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      print('FCM onMessage: ${message.data} ${message.notification}');
+      LogUtils.d('FCM onMessage: ${message.data} ${message.notification}');
       final notificationService = Get.find<NotificationService>();
       await notificationService.loadAllNotificationItems();
       notificationService.filterNotification();
@@ -115,7 +116,7 @@ class FirebaseCloudMessagingConfig {
       final isForeground =
           WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed;
       if (!isForeground) {
-        print(
+        LogUtils.d(
           "FCM onMessage reviced while not in foreground - skip local notification",
         );
         return;
@@ -144,9 +145,11 @@ class FirebaseCloudMessagingConfig {
     final apiService = Get.find<ApiService>();
     final storageService = Get.find<StorageService>();
 
-    final isRegistered = storageService.readBool("is_notification_registered");
+    final isRegistered = await storageService.readBool(
+      "is_notification_registered",
+    );
     if (isRegistered == true) {
-      print("fcm sudah pernah didaftarkan");
+      LogUtils.d("fcm sudah pernah didaftarkan");
       return;
     }
 
@@ -167,9 +170,9 @@ class FirebaseCloudMessagingConfig {
 
       await apiService.post("/devices/", data: data);
       storageService.writeBool("is_notification_registered", true);
-      print("berhasil mendaftarkan fcm");
+      LogUtils.d("berhasil mendaftarkan fcm");
     } catch (e) {
-      print("error mendaftarkan fcm: $e");
+      LogUtils.e("error mendaftarkan fcm", e);
     }
   }
 
@@ -210,7 +213,7 @@ class FirebaseCloudMessagingConfig {
       await file.writeAsBytes(resizedBytes);
       return filePath;
     } catch (e) {
-      print("Download/resize image failed: $e");
+      LogUtils.e("Download/resize image failed", e);
       return null;
     }
   }
@@ -224,7 +227,7 @@ class FirebaseCloudMessagingConfig {
   }) async {
     if ((title == null || title.trim().isEmpty) &&
         (body == null || body.trim().isEmpty)) {
-      print('FCM Foreground: Skipping empty notification.');
+      LogUtils.d('FCM Foreground: Skipping empty notification.');
       return;
     }
     String? imagePath;
@@ -298,14 +301,14 @@ class FirebaseCloudMessagingConfig {
       if (schedule != null) {
         storageService.writeInt("notification_schedule", schedule);
       }
-      print("data notifikasi tersimpan");
+      LogUtils.d("data notifikasi tersimpan");
     }
-    print("data notifikasi: ${message.data}");
-    print(
+    LogUtils.d("data notifikasi: ${message.data}");
+    LogUtils.d(
       "serial_id data: ${message.data["serial_id"]} | tipe data: ${message.data["serial_id"].runtimeType}",
     );
 
-    print(
+    LogUtils.d(
       "schedule data: ${message.data["schedule"]} | tipe data: ${message.data["schedule"].runtimeType}",
     );
   }

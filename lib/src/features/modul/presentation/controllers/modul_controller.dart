@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/modul/application/services/modul_service.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
@@ -15,7 +16,7 @@ class ModulController extends GetxController {
     try {
       await _modulServices.loadModuls(refresh: true);
     } catch (e) {
-      print("error: $e");
+      LogUtils.e("error", e);
       MySnackbar.error(message: e.toString());
     }
   }

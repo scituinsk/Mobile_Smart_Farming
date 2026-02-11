@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:pak_tani/src/core/services/api_service.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/profile/data/models/user_model.dart';
 import 'package:pak_tani/src/features/profile/domain/datasources/profile_remote_datasource.dart';
 import 'package:path/path.dart' as path;
@@ -15,7 +16,7 @@ class ProfileRemoteDatasourceImpl extends ProfileRemoteDatasource {
     final response = await _apiService.get("/user/me");
 
     final responseData = response.data["data"] as Map<String, dynamic>;
-    print("current user: $responseData");
+    LogUtils.d("current user: $responseData");
     return UserModel.fromJson(responseData);
   }
 

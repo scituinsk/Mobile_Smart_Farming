@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/config/app_config.dart';
 import 'package:pak_tani/src/core/models/websocket_message.dart';
 import 'package:pak_tani/src/core/services/device_ws_service.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -49,7 +50,7 @@ class WebSocketService extends GetxService {
   /// Handles reconnection on failure.
   Future<void> connect(String accessToken) async {
     if (_isConnected) {
-      print("web socket alredy connected");
+      LogUtils.d("web socket alredy connected");
       return;
     }
 
@@ -66,15 +67,15 @@ class WebSocketService extends GetxService {
         (event) {
           final message = WebSocketMessage.fromJson(jsonDecode(event));
           _messageController.add(message);
-          print("ws data: $event");
+          LogUtils.d("ws datav, eent");
         },
         onError: (error) {
-          print("ws error: $error");
+          LogUtils.d("ws errorr, eror");
           _setDisconnected();
           _handleReconnect();
         },
         onDone: () {
-          print("ws closed");
+          LogUtils.d("ws closed");
           _setDisconnected();
           _handleReconnect();
         },
@@ -83,9 +84,9 @@ class WebSocketService extends GetxService {
       _isConnected = true;
       isConnected.value = true;
       _connectionController.add(true);
-      print("websocket connected (header auth)");
+      LogUtils.d("websocket connected (header auth)");
     } catch (e) {
-      print("websocket connet failed: $e");
+      LogUtils.e("websocket connet failed", e);
       _setDisconnected();
       _handleReconnect();
     }
@@ -99,7 +100,7 @@ class WebSocketService extends GetxService {
     required String modulId,
   }) async {
     final uri = _buildWsUri("/device/$modulId/");
-    print('OPEN WS -> $uri');
+    LogUtils.d('OPEN WS -> $uri');
     final ch = IOWebSocketChannel.connect(
       uri,
       headers: {"Authorization": "Bearer $token"},
@@ -113,14 +114,14 @@ class WebSocketService extends GetxService {
         })
         .asBroadcastStream(
           onListen: (sub) {
-            print('WS[$modulId] broadcast: listener added');
+            LogUtils.d('WS[$modulId] broadcast: listener added');
           },
         );
 
     mapped.listen(
-      (msg) => print('WS[$modulId] <- $msg'),
-      onError: (err) => print('WS[$modulId] error: $err'),
-      onDone: () => print('WS[$modulId] done'),
+      (msg) => LogUtils.d('WS[$modulId] <- $msg'),
+      onError: (err) => LogUtils.d('WS[$modulId] errorr, er'),
+      onDone: () => LogUtils.d('WS[$modulId] done'),
       cancelOnError: false,
     );
 
@@ -137,7 +138,7 @@ class WebSocketService extends GetxService {
 
     if (existing != null) {
       if (existing.isOpen) {
-        print("♻️ Menggunakan koneksi WS yang sudah ada untuk: $modulId");
+        LogUtils.d("♻️ Menggunakan koneksi WS yang sudah ada untuk: $modulId");
         return existing;
       } else {
         await closeDeviceStream(modulId);
@@ -156,7 +157,7 @@ class WebSocketService extends GetxService {
       try {
         await h.close();
       } catch (e) {
-        print('closeDeviceStream error: $e');
+        LogUtils.e('closeDeviceStream error', e);
       }
     }
   }
@@ -183,7 +184,7 @@ class WebSocketService extends GetxService {
     _reconnectTimer?.cancel();
     if (_currentToken == null) return;
     _reconnectTimer = Timer(const Duration(seconds: 5), () {
-      print("reconnecting ws...");
+      LogUtils.d("reconnecting ws...");
       connect(_currentToken!);
     });
   }

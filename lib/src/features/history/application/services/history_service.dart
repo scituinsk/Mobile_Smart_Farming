@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/history/domain/entities/history.dart';
 import 'package:pak_tani/src/features/history/domain/repositories/history_repository.dart';
 import 'package:pak_tani/src/features/history/domain/value_objects/history_type.dart';
@@ -34,17 +35,17 @@ class HistoryService extends GetxService {
         histories.assignAll(historyList);
         filteredHistories.assignAll(historyList);
         _assignAllGroupSchedule();
-        print(
+        LogUtils.d(
           "all group schedules:${allGroupSchedule.map((element) => element["name"])}",
         );
-        print("Loaded ${historyList.length} histories");
+        LogUtils.d("Loaded ${historyList.length} histories");
       } else {
         histories.clear();
         filteredHistories.clear();
-        print("no histories found");
+        LogUtils.d("no histories found");
       }
     } catch (e) {
-      print("error load histories(service): $e");
+      LogUtils.e("error load histories(service)", e);
       rethrow;
     } finally {
       isLoading.value = false;
@@ -73,7 +74,7 @@ class HistoryService extends GetxService {
         }
       }
     } catch (e) {
-      print("error assigning group schedules: $e");
+      LogUtils.e("error assigning group schedules", e);
       rethrow;
     }
   }
@@ -83,7 +84,7 @@ class HistoryService extends GetxService {
     try {
       filteredHistories.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
     } catch (e) {
-      print("error sorting asc histories (service): $e");
+      LogUtils.e("error sorting asc histories (service)", e);
       rethrow;
     }
   }
@@ -93,7 +94,7 @@ class HistoryService extends GetxService {
     try {
       filteredHistories.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
     } catch (e) {
-      print("error sorting asc histories (service): $e");
+      LogUtils.e("error sorting asc histories (service)", e);
       rethrow;
     }
   }
@@ -123,7 +124,7 @@ class HistoryService extends GetxService {
         }),
       );
     } catch (e) {
-      print("error search histories (service): $e");
+      LogUtils.e("error search histories (service)", e);
       rethrow;
     }
   }
@@ -167,7 +168,7 @@ class HistoryService extends GetxService {
 
       return histories;
     } catch (e) {
-      print("error sorting schedule histories asc(service): $e");
+      LogUtils.e("error sorting schedule histories asc(service)", e);
       rethrow;
     }
   }
@@ -269,7 +270,7 @@ class HistoryService extends GetxService {
       final combined = [...filteredModul, ...filteredSchedule];
       filteredHistories.assignAll(combined);
     } catch (e) {
-      print("error applying combined filters: $e");
+      LogUtils.e("error applying combined filters", e);
     }
   }
 }

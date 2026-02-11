@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/relays/application/services/relay_service.dart';
 import 'package:pak_tani/src/features/relays/data/datasources/relay_remote_datasource_impl.dart';
 import 'package:pak_tani/src/features/relays/data/repositories/relay_repository_impl.dart';
@@ -25,6 +26,6 @@ class RelayBinding extends Bindings {
       fenix: true,
     );
 
-    print('✅ RelayBinding dependencies initialized');
+    LogUtils.d('✅ RelayBinding dependencies initialized');
   }
 }

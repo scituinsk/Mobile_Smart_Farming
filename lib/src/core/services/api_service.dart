@@ -13,6 +13,7 @@ import 'package:pak_tani/src/core/errors/api_exception.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/services/connectivity_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/auth/application/services/auth_services.dart';
 
 ///Service class for API service.
@@ -68,7 +69,9 @@ class ApiService extends GetxService {
         // then check is the endpoint is auth endpoint, this prevent auth endpoint being rejected.
         onRequest: (options, handler) async {
           if (!_connectivity.isConnected.value) {
-            print("🚫 No interntet connection,  request to: ${options.path}");
+            LogUtils.d(
+              "🚫 No interntet connection,  request to: ${options.path}",
+            );
 
             return handler.reject(
               DioException(
@@ -92,7 +95,7 @@ class ApiService extends GetxService {
           //  Prevent duplicate requests
           // if pending request contains this request id, reject this request
           if (_pendingRequests.contains(requestId)) {
-            print('🚫 Duplicate request blocked: $requestId');
+            LogUtils.d('🚫 Duplicate request blocked: $requestId');
             handler.reject(
               DioException(
                 requestOptions: options,
@@ -108,15 +111,15 @@ class ApiService extends GetxService {
 
           /// store request id into extra
           options.extra["request_id"] = requestId;
-          print('📡 Request: ${options.method} ${options.path}');
+          LogUtils.d('📡 Request: ${options.method} ${options.path}');
 
           if (!_isAuthEndpoint(options.path)) {
             final accessToken = await _storage.readSecure('access_token');
             if (accessToken != null && accessToken.isNotEmpty) {
               options.headers['Authorization'] = 'Bearer $accessToken';
-              print('✅ Added token to: ${options.path}');
+              LogUtils.d('✅ Added token to: ${options.path}');
             } else {
-              print('❌ No token for: ${options.path}');
+              LogUtils.d('❌ No token for: ${options.path}');
 
               // If no token and not auth endpoint, reject immediately
               _pendingRequests.remove(requestId);
@@ -133,7 +136,7 @@ class ApiService extends GetxService {
               return;
             }
           } else {
-            print('🔐 Auth endpoint (no token): ${options.path}');
+            LogUtils.d('🔐 Auth endpoint (no token): ${options.path}');
           }
 
           handler.next(options);
@@ -146,7 +149,7 @@ class ApiService extends GetxService {
             _pendingRequests.remove(requestId);
           }
 
-          print(
+          LogUtils.d(
             '✅ Response: ${response.statusCode} ${response.requestOptions.path}',
           );
           handler.next(response);
@@ -164,26 +167,26 @@ class ApiService extends GetxService {
           final path = error.requestOptions.path;
           final message = error.response?.statusMessage ?? error.message;
 
-          print('❌ Error: $statusCode $path');
-          print('❌ message: $message');
+          LogUtils.d('❌ Error: $statusCode $path');
+          LogUtils.d('❌ message: $message');
 
           // ✅ Handle 401 with better logic
           if (statusCode == 401 && !_isAuthEndpoint(path)) {
             if (error.response?.data["data"] != "unauthorized") {
-              print('🔄 Handling 401 for non-auth endpoint: $path');
+              LogUtils.d('🔄 Handling 401 for non-auth endpoint: $path');
 
               // Wait for ongoing refresh or start new one
               bool refreshSuccess = false;
               if (_isRefreshing && _refreshCompleter != null) {
-                print('⏳ Waiting for ongoing refresh...');
+                LogUtils.d('⏳ Waiting for ongoing refresh...');
                 refreshSuccess = await _refreshCompleter!.future;
               } else {
-                print('🔄 Starting new token refresh...');
+                LogUtils.d('🔄 Starting new token refresh...');
                 refreshSuccess = await _performTokenRefresh();
               }
 
               if (refreshSuccess) {
-                print('✅ Token refreshed, retrying: $path');
+                LogUtils.d('✅ Token refreshed, retrying: $path');
 
                 // Retry original request with new token
                 final newAccessToken = await _storage.readSecure(
@@ -217,7 +220,7 @@ class ApiService extends GetxService {
                     final response = await _dio.fetch(newOptions);
                     return handler.resolve(response);
                   } catch (retryError) {
-                    print('❌ Retry failed: $retryError');
+                    LogUtils.d('❌ Retry failed: $retryError');
 
                     if (retryError is DioException) {
                       return handler.next(error);
@@ -227,7 +230,7 @@ class ApiService extends GetxService {
                 }
               } else {
                 // if token refresh with refreh token failed, then do log out.
-                print('❌ Token refresh failed, logging out...');
+                LogUtils.d('❌ Token refresh failed, logging out...');
                 await _handleLogout();
               }
             }
@@ -252,16 +255,16 @@ class ApiService extends GetxService {
     _refreshCompleter = Completer<bool>();
 
     try {
-      print('🔄 Getting refresh token...');
+      LogUtils.d('🔄 Getting refresh token...');
       final refreshToken = await _storage.readSecure('refresh_token');
 
       if (refreshToken == null || refreshToken.isEmpty) {
-        print('❌ No refresh token found');
+        LogUtils.d('❌ No refresh token found');
         _refreshCompleter!.complete(false);
         return false;
       }
 
-      print('🔄 Refresh token found, calling refresh API...');
+      LogUtils.d('🔄 Refresh token found, calling refresh API...');
 
       // Create separate Dio instance to avoid interceptor loops
       final refreshDio = Dio(
@@ -281,7 +284,7 @@ class ApiService extends GetxService {
         data: {'refresh': refreshToken},
       );
 
-      print('✅ Refresh API response: ${response.statusCode}');
+      LogUtils.d('✅ Refresh API response: ${response.statusCode}');
 
       final newAccessToken = response.data['access'];
 
@@ -291,16 +294,16 @@ class ApiService extends GetxService {
         final newRefreshToken = response.data['refresh'];
         await _storage.writeSecure('refresh_token', newRefreshToken);
 
-        print('✅ Tokens updated successfully');
+        LogUtils.d('✅ Tokens updated successfully');
         _refreshCompleter!.complete(true);
         return true;
       } else {
-        print('❌ No access token in refresh response');
+        LogUtils.d('❌ No access token in refresh response');
         _refreshCompleter!.complete(false);
         return false;
       }
     } catch (e) {
-      print('❌ Token refresh failed: $e');
+      LogUtils.e('❌ Token refresh failed', e);
       _refreshCompleter!.complete(false);
       return false;
     } finally {
@@ -320,7 +323,7 @@ class ApiService extends GetxService {
   /// Clear all pending request, access and refresh token
   Future<void> _handleLogout() async {
     try {
-      print('🔄 Handling auto logout...');
+      LogUtils.d('🔄 Handling auto logout...');
 
       //  Clear pending requests
       _pendingRequests.clear();
@@ -337,7 +340,7 @@ class ApiService extends GetxService {
         await authService.logout();
       }
     } catch (e) {
-      print('❌ Logout error: $e');
+      LogUtils.e('❌ Logout error', e);
     } finally {
       //  Navigate to login
       if (Get.currentRoute != RouteNames.loginPage) {

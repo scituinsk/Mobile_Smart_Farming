@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:pak_tani/src/core/services/web_socket_service.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/get_user_use_case.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/login_use_case.dart';
 import 'package:pak_tani/src/features/auth/application/use_cases/logout_use_case.dart';
@@ -31,37 +32,37 @@ class AuthService extends GetxService {
   Future<void> onInit() async {
     super.onInit();
     isInitialized.value = true;
-    print(
+    LogUtils.d(
       '✅ AuthService initialized (instance: $hashCode) - isReady: $isReady',
     );
   }
 
   void debugInfo() {
-    print('🔍 AuthService Debug Info:');
-    print('   - Instance hash: $hashCode');
-    print('   - isInitialized: ${isInitialized.value}');
-    print('   - isReady: $isReady');
-    print('   - isLoggedIn: ${isLoggedIn.value}');
+    LogUtils.d('🔍 AuthService Debug Info:');
+    LogUtils.d('   - Instance hash: $hashCode');
+    LogUtils.d('   - isInitialized: ${isInitialized.value}');
+    LogUtils.d('   - isReady: $isReady');
+    LogUtils.d('   - isLoggedIn: ${isLoggedIn.value}');
   }
 
   Future<void> checkAuthenticationStatus() async {
     if (isLoading.value) return;
 
     isLoading.value = true;
-    print('🔍 Checking authentication status...');
+    LogUtils.d('🔍 Checking authentication status...');
 
     try {
       final user = await _getUserUseCase.execute();
       if (user != null) {
         isLoggedIn.value = true;
         _profileService.currentUser.value = user;
-        print('user logged in: ${user.username}');
+        LogUtils.d('user logged in: ${user.username}');
       } else {
         isLoggedIn.value = false;
-        print('User not logged in');
+        LogUtils.d('User not logged in');
       }
     } catch (e) {
-      print('init auth error: $e');
+      LogUtils.e('init auth error', e);
       isLoggedIn.value = false;
     } finally {
       isLoading.value = false;
@@ -79,7 +80,7 @@ class AuthService extends GetxService {
 
       return user;
     } catch (e) {
-      print("login gagal: $e");
+      LogUtils.e("login gagal", e);
       isLoggedIn.value = false;
       rethrow;
     } finally {
@@ -106,7 +107,7 @@ class AuthService extends GetxService {
         password2: password2,
       );
     } catch (e) {
-      print("register error: $e");
+      LogUtils.e("register error", e);
       rethrow;
     } finally {
       isLoading.value = false;
@@ -125,7 +126,7 @@ class AuthService extends GetxService {
       _profileService.currentUser.value = null;
       isLoggedIn.value = false;
     } catch (e) {
-      print('logout error: $e');
+      LogUtils.e('logout error', e);
       rethrow;
     } finally {
       isLoading.value = false;

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pak_tani/src/core/config/firebase_cloud_messaging_config.dart';
 import 'package:pak_tani/src/core/services/api_service.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/profile/data/models/user_model.dart';
 import 'package:pak_tani/src/features/auth/domain/datasources/auth_remote_datasource.dart';
 
@@ -52,11 +53,11 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
       requestData['last_name'] = lastName;
     }
 
-    print('Register Request Data: $requestData');
+    LogUtils.d('Register Request Data: $requestData');
 
     await _apiService.post('/register', data: requestData);
 
-    print("register sampai sini le");
+    LogUtils.d("register sampai sini le");
   }
 
   @override
@@ -91,7 +92,6 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDatasource {
 
   @override
   Future<void> requestPasswordReset(String email) {
-    // TODO: implement requestPasswordReset
     throw UnimplementedError();
   }
 

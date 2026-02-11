@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/profile/domain/datasources/profile_remote_datasource.dart';
 import 'package:pak_tani/src/features/profile/domain/entities/user.dart';
 import 'package:pak_tani/src/features/profile/domain/repositories/profile_repository.dart';
@@ -15,7 +16,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
       if (userProfile == null) return null;
       return userProfile.toEntity();
     } catch (e) {
-      print("error get user profile (repo): $e");
+      LogUtils.e("error get user profile (repo)", e);
       rethrow;
     }
   }
@@ -38,7 +39,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
       );
       return userProfile.toEntity();
     } catch (e) {
-      print("error editing user profile(repo): $e");
+      LogUtils.e("error editing user profile(repo)", e);
       rethrow;
     }
   }
@@ -48,7 +49,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
     try {
       return await _remoteDatasource.getContact();
     } catch (e) {
-      print("Error get contact (repo): $e");
+      LogUtils.e("Error get contact (repo)", e);
       rethrow;
     }
   }

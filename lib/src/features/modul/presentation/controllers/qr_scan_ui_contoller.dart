@@ -1,11 +1,12 @@
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 
 class QrScanUiContoller extends GetxController {
   final RxBool isProcessingQR = false.obs;
 
   void processBarcode(String barcode) {
     if (isProcessingQR.value) {
-      print("alredy processing, ignoring duplicate scan");
+      LogUtils.d("alredy processing, ignoring duplicate scan");
       return;
     }
 
@@ -15,17 +16,16 @@ class QrScanUiContoller extends GetxController {
     if (callback != null) {
       callback(barcode);
     } else {
-      print("Warning: No callback provided for QR scan result");
+      LogUtils.d("Warning: No callback provided for QR scan result");
     }
 
-    print("barcode detected: $barcode");
+    LogUtils.d("barcode detected: $barcode");
 
     Get.back();
   }
 
   @override
   void onClose() {
-    // TODO: implement onClose
     isProcessingQR.value = false;
     super.onClose();
   }

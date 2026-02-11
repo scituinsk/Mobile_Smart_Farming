@@ -4,6 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:pak_tani/src/core/theme/app_theme.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/schedule/presentation/controllers/schedule_ui_controller.dart';
 import 'package:pak_tani/src/features/schedule/presentation/widgets/solenoid_widgets/selenoid_item.dart';
 import 'package:pak_tani/src/features/relays/domain/models/relay.dart';
@@ -24,7 +25,7 @@ class SolenoidList extends StatelessWidget {
           final List<Relay> selectedGroupRelay =
               controller.selectedRelayGroup.value!.relays ?? [];
 
-          print("jumlah relay: ${selectedGroupRelay.length}");
+          LogUtils.d("jumlah relay: ${selectedGroupRelay.length}");
 
           final isTwoRow = selectedGroupRelay.length > 3;
 

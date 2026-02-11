@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/domain/repositories/modul_repository.dart';
@@ -20,21 +21,21 @@ class ModulService extends GetxService {
     }
 
     isLoading.value = true;
-    print("memulai loading: ${isLoading.value}");
+    LogUtils.d("memulai loading: ${isLoading.value}");
 
     try {
-      print("loading devices.....");
+      LogUtils.d("loading devices.....");
       final deviceList = await _repository.getListModul();
 
       if (deviceList != null) {
         moduls.assignAll(deviceList);
-        print("loaded ${deviceList.length} devices");
+        LogUtils.d("loaded ${deviceList.length} devices");
       } else {
         moduls.clear();
-        print("no device found");
+        LogUtils.d("no device found");
       }
     } catch (e) {
-      print("error loading devices(service): $e");
+      LogUtils.e("error loading devices(service)", e);
       MySnackbar.error(message: e.toString());
       rethrow;
     } finally {
@@ -46,7 +47,7 @@ class ModulService extends GetxService {
     isLoading.value = true;
 
     try {
-      print("loading get device");
+      LogUtils.d("loading get device");
       final modul = await _repository.getModul(id);
       if (modul != null) {
         final index = moduls.indexWhere((d) => d.serialId == modul.serialId);
@@ -58,7 +59,7 @@ class ModulService extends GetxService {
         selectedModul.value = modul;
       }
     } catch (e) {
-      print("error load device(service): $e");
+      LogUtils.e("error load device(service)", e);
       rethrow;
     } finally {
       isLoading.value = false;
@@ -81,7 +82,7 @@ class ModulService extends GetxService {
         }
       }
     } catch (e) {
-      print("error add device(service): $e");
+      LogUtils.e("error add device(service)", e);
       rethrow;
     } finally {
       isLoading.value = false;
@@ -111,7 +112,7 @@ class ModulService extends GetxService {
         moduls[index] = modul;
       }
     } catch (e) {
-      print("error editing modul(service): $e");
+      LogUtils.e("error editing modul(service)", e);
       rethrow;
     } finally {
       isLoading.value = false;
@@ -124,7 +125,7 @@ class ModulService extends GetxService {
       await _repository.deleteModulFromUser(id);
       moduls.removeWhere((element) => element.serialId == id);
     } catch (e) {
-      print("error removing modul: $e");
+      LogUtils.e("error removing modul", e);
       rethrow;
     } finally {
       isLoading.value = false;
@@ -137,7 +138,7 @@ class ModulService extends GetxService {
       await _repository.deleteLocalModul(serialId);
       moduls.removeWhere((element) => element.serialId == serialId);
     } catch (e) {
-      print("error delete local modul (service): $e");
+      LogUtils.e("error delete local modul (service)", e);
       rethrow;
     } finally {
       isLoading.value = false;

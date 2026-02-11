@@ -9,7 +9,6 @@ class OnboardScreenController extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     pageController = PageController();
   }

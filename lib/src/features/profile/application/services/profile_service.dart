@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:get/get.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/profile/domain/entities/user.dart';
 import 'package:pak_tani/src/features/profile/domain/repositories/profile_repository.dart';
 
@@ -19,11 +20,11 @@ class ProfileService extends GetxService {
       final user = await _repository.getUserProfile();
       if (user != null) {
         currentUser.value = user;
-        print("first name: ${currentUser.value?.firstName}");
+        LogUtils.d("first name: ${currentUser.value?.firstName}");
       }
       await _getContact();
     } catch (e) {
-      print("failed to load userProfile(service): $e");
+      LogUtils.e("failed to load userProfile(service)", e);
       rethrow;
     } finally {
       isLoading.value = false;
@@ -48,7 +49,7 @@ class ProfileService extends GetxService {
       );
       currentUser.value = userProfile;
     } catch (e) {
-      print("error editing user photo profile (service): $e");
+      LogUtils.e("error editing user photo profile (service)", e);
       rethrow;
     } finally {
       isLoadingSubmit.value = false;
@@ -60,7 +61,7 @@ class ProfileService extends GetxService {
       final contact = await _repository.getContact();
       contacts.value = contact;
     } catch (e) {
-      print("Error get contact (service): $e");
+      LogUtils.e("Error get contact (service)", e);
       rethrow;
     }
   }

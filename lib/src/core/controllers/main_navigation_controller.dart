@@ -13,6 +13,7 @@ import 'package:pak_tani/src/core/config/firebase_cloud_messaging_config.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/utils/loading_dialog.dart';
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/history/presentation/bindings/history_binding.dart';
 import 'package:pak_tani/src/features/history/presentation/controllers/history_controller.dart';
 import 'package:pak_tani/src/features/history/presentation/screens/history_screen.dart';
@@ -109,7 +110,7 @@ class MainNavigationController extends GetxController
       }
     });
 
-    print("✅ Main navigation controller initialized");
+    LogUtils.d("✅ Main navigation controller initialized");
   }
 
   /// Initializes a tab based on its index.
@@ -118,7 +119,7 @@ class MainNavigationController extends GetxController
     // if tabs alredy initialized, return this function.
     if (_initializedTabs.contains(index)) return;
 
-    print("🔄 Initializing tab $index...");
+    LogUtils.d("🔄 Initializing tab $index...");
 
     switch (index) {
       case 0:
@@ -135,7 +136,7 @@ class MainNavigationController extends GetxController
     // add initialized tab to this variable
     _initializedTabs.add(index);
     _updateScreensList();
-    print("✅ Tab $index initialized");
+    LogUtils.d("✅ Tab $index initialized");
   }
 
   /// Update the screens list and triggers GetBuilder rebuild.
@@ -151,16 +152,16 @@ class MainNavigationController extends GetxController
   void _initializeModulTab() async {
     if (!Get.isRegistered<ModulBinding>()) {
       ModulBinding().dependencies();
-      print("inisialisasi modul binding");
+      LogUtils.d("inisialisasi modul binding");
     }
     _screensCache[0] = ModulsScreen();
 
     // load all moduls
-    print("load modul init");
+    LogUtils.d("load modul init");
     final modulService = Get.find<ModulService>();
     await modulService.loadModuls();
     if (notificationArguments != null) {
-      print("notif argument: $notificationArguments");
+      LogUtils.d("notif argument: $notificationArguments");
       Get.toNamed(RouteNames.detailModulPage, arguments: notificationArguments);
     }
   }
@@ -170,7 +171,7 @@ class MainNavigationController extends GetxController
   void _initializeHistoryTab() {
     if (!Get.isRegistered<HistoryBinding>()) {
       HistoryBinding().dependencies();
-      print("✅ init history binding");
+      LogUtils.d("✅ init history binding");
     }
     _screensCache[1] = HistoryScreen();
   }
@@ -180,7 +181,7 @@ class MainNavigationController extends GetxController
   void _initializeProfileTab() {
     if (!Get.isRegistered<ModulBinding>()) {
       ProfileBindings().dependencies();
-      print("✅ init profile binding");
+      LogUtils.d("✅ init profile binding");
     }
     _screensCache[2] = ProfileScreen();
   }
@@ -207,10 +208,10 @@ class MainNavigationController extends GetxController
   /// Handle tab change events.
   /// Update current page and loads tab lifecycle.
   void _onTabChanged(int index) {
-    print("🔄 Tab changed to: $index");
+    LogUtils.d("🔄 Tab changed to: $index");
     currentPage.value = index;
     final tabNames = ["Modul", "History", "Profile"];
-    print("📊 User visited: ${tabNames[index]} tab");
+    LogUtils.d("📊 User visited: ${tabNames[index]} tab");
 
     _loadTabLifeCycle(index);
 
@@ -224,7 +225,7 @@ class MainNavigationController extends GetxController
       case 0:
         FocusManager.instance.primaryFocus?.unfocus();
 
-        print("load modul lifecycle");
+        LogUtils.d("load modul lifecycle");
         final modulService = Get.find<ModulService>();
         await modulService.loadModuls();
         break;
@@ -283,11 +284,11 @@ class MainNavigationController extends GetxController
         (currentPage.value >= 0 && currentPage.value < tabNames.length)
         ? tabNames[currentPage.value]
         : 'Unknown';
-    print('🔄 Back button pressed, current tab: $currentTabName');
+    LogUtils.d('🔄 Back button pressed, current tab: $currentTabName');
 
     // If we're not on the first tab, go to first tab
     if (currentPage.value != 0) {
-      print('🔄 Navigating to modul tab');
+      LogUtils.d('🔄 Navigating to modul tab');
       navigateToModul();
       return false;
     }
@@ -352,7 +353,7 @@ class MainNavigationController extends GetxController
 
   @override
   void onClose() {
-    print('🔄 MainNavigationController disposing...');
+    LogUtils.d('🔄 MainNavigationController disposing...');
     tabController.dispose();
     animationController.dispose();
     super.onClose();

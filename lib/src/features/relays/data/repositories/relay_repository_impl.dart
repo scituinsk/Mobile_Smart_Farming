@@ -1,3 +1,4 @@
+import 'package:pak_tani/src/core/utils/log_utils.dart';
 import 'package:pak_tani/src/features/relays/domain/datasources/relay_remote_datasource.dart';
 import 'package:pak_tani/src/features/relays/domain/models/group_relay.dart';
 import 'package:pak_tani/src/features/relays/domain/models/relay.dart';
@@ -18,7 +19,7 @@ class RelayRepositoryImpl extends RelayRepository {
       }
       return null;
     } catch (e) {
-      print("error get list relay(repository): $e");
+      LogUtils.e("error get list relay(repository)", e);
       rethrow;
     }
   }
@@ -45,7 +46,7 @@ class RelayRepositoryImpl extends RelayRepository {
       );
       return relay.toEntity();
     } catch (e) {
-      print("Error edit modul(repo): $e");
+      LogUtils.e("Error edit modul(repo)", e);
       rethrow;
     }
   }
@@ -57,7 +58,7 @@ class RelayRepositoryImpl extends RelayRepository {
 
       return listGroup.map((element) => element.toEntity()).toList();
     } catch (e) {
-      print("error get list group(repo): $e");
+      LogUtils.e("error get list group(repo)", e);
       rethrow;
     }
   }
@@ -69,7 +70,7 @@ class RelayRepositoryImpl extends RelayRepository {
 
       return relayGroup.toEntity();
     } catch (e) {
-      print("error add group(repo): $e");
+      LogUtils.e("error add group(repo): $e");
       rethrow;
     }
   }
@@ -84,7 +85,7 @@ class RelayRepositoryImpl extends RelayRepository {
       );
       return relayGroup.toEntity();
     } catch (e) {
-      print("error edit group(repo): $e");
+      LogUtils.e("error edit group(repo)", e);
       rethrow;
     }
   }
@@ -135,7 +136,7 @@ class RelayRepositoryImpl extends RelayRepository {
 
       return updatedGroups;
     } catch (e) {
-      print('error insertRelaysToGroupsRelay (local merge): $e');
+      LogUtils.e('error insertRelaysToGroupsRelay (local merge)', e);
       return groups;
     }
   }
@@ -145,7 +146,7 @@ class RelayRepositoryImpl extends RelayRepository {
     try {
       await remoteDatasource.deleteGroup(id);
     } catch (e) {
-      print("error deleting relay group (repo): $e");
+      LogUtils.e("error deleting relay group (repo)", e);
       rethrow;
     }
   }
@@ -155,7 +156,7 @@ class RelayRepositoryImpl extends RelayRepository {
     try {
       await remoteDatasource.turnOffAllSolenoid(id);
     } catch (e) {
-      print("error turning off all relay(repo): $e");
+      LogUtils.e("error turning off all relay(repo)", e);
       rethrow;
     }
   }
@@ -165,7 +166,7 @@ class RelayRepositoryImpl extends RelayRepository {
     try {
       await remoteDatasource.turnOnAllSolenoid(id);
     } catch (e) {
-      print("error turning on all relay(repo): $e");
+      LogUtils.e("error turning on all relay(repo)", e);
       rethrow;
     }
   }
