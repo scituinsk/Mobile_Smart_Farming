@@ -13,7 +13,6 @@ import 'package:pak_tani/src/core/config/firebase_cloud_messaging_config.dart';
 import 'package:pak_tani/src/core/routes/route_named.dart';
 import 'package:pak_tani/src/core/services/storage_service.dart';
 import 'package:pak_tani/src/core/utils/loading_dialog.dart';
-import 'package:pak_tani/src/core/utils/my_snackbar.dart';
 import 'package:pak_tani/src/features/history/presentation/bindings/history_binding.dart';
 import 'package:pak_tani/src/features/history/presentation/controllers/history_controller.dart';
 import 'package:pak_tani/src/features/history/presentation/screens/history_screen.dart';
@@ -71,7 +70,10 @@ class MainNavigationController extends GetxController
     _updateScreensList();
     await _registerFCM();
 
-    Future.delayed(Duration(seconds: 2), () => checkUpdateDaily());
+    await Future.delayed(
+      Duration(seconds: 2),
+      () async => await _performUpdateCheck(),
+    );
   }
 
   /// Register FCM life cycle.
@@ -320,28 +322,28 @@ class MainNavigationController extends GetxController
     );
   }
 
-  Future<void> checkUpdateDaily() async {
-    try {
-      String todayDate = DateTime.now().toIso8601String().split("T")[0];
-      String? lastCheckedDate = await _storageService.read("last_checked_date");
+  // Future<void> checkUpdateDaily() async {
+  //   try {
+  //     String todayDate = DateTime.now().toIso8601String().split("T")[0];
+  //     String? lastCheckedDate = await _storageService.read("last_checked_date");
 
-      if (todayDate == lastCheckedDate) {
-        return;
-      }
+  //     if (todayDate == lastCheckedDate) {
+  //       return;
+  //     }
 
-      await _performUpdateCheck();
+  //     await _performUpdateCheck();
 
-      await _storageService.write("last_checked_date", todayDate);
-    } catch (e) {
-      MySnackbar.error(message: e.toString());
-    }
-  }
+  //     await _storageService.write("last_checked_date", todayDate);
+  //   } catch (e) {
+  //     MySnackbar.error(message: e.toString());
+  //   }
+  // }
 
   Future<void> _performUpdateCheck() async {
     try {
       final info = await InAppUpdate.checkForUpdate();
       if (info.updateAvailability == UpdateAvailability.updateAvailable) {
-        InAppUpdate.performImmediateUpdate();
+        await InAppUpdate.performImmediateUpdate();
       }
     } catch (e) {
       rethrow;

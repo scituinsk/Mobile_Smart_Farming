@@ -9,7 +9,6 @@ class MySnackbar {
   static void success({
     String title = "Success!",
     required String message,
-    bool instantInit = true,
   }) async {
     toastification.show(
       title: Text(title),
@@ -24,11 +23,7 @@ class MySnackbar {
     );
   }
 
-  static void error({
-    String title = "Error!",
-    required String message,
-    bool instantInit = false,
-  }) async {
+  static void error({String title = "Error!", required String message}) async {
     toastification.show(
       title: Text(title),
       description: Text(message),
@@ -48,7 +43,6 @@ class MySnackbar {
   static void warning({
     String title = "Warning!",
     required String message,
-    bool instantInit = false,
   }) async {
     toastification.show(
       title: Text(title),
@@ -57,6 +51,23 @@ class MySnackbar {
       icon: const Icon(Icons.warning_rounded),
       margin: EdgeInsets.all(16.r),
       type: ToastificationType.warning,
+      style: ToastificationStyle.fillColored,
+      autoCloseDuration: const Duration(seconds: 3),
+      dismissDirection: DismissDirection.horizontal,
+    );
+  }
+
+  static void info({
+    String title = "Info!",
+    required String message,
+    bool instantInit = false,
+  }) async {
+    toastification.show(
+      title: Text(title),
+      description: Text(message),
+      alignment: Alignment.bottomCenter,
+      margin: EdgeInsets.all(16.r),
+      type: ToastificationType.info,
       style: ToastificationStyle.fillColored,
       autoCloseDuration: const Duration(seconds: 3),
       dismissDirection: DismissDirection.horizontal,
