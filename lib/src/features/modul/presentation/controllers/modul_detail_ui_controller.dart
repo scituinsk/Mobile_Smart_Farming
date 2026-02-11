@@ -16,7 +16,8 @@ import 'package:pak_tani/src/features/relays/domain/models/group_relay.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul.dart';
 import 'package:pak_tani/src/features/modul/domain/entities/modul_feature.dart';
 
-class ModulDetailUiController extends GetxController {
+class ModulDetailUiController extends GetxController
+    with WidgetsBindingObserver {
   final ModulService _modulService;
   final RelayService _relayService;
   ModulDetailUiController(this._modulService, this._relayService);
@@ -64,6 +65,7 @@ class ModulDetailUiController extends GetxController {
   @override
   Future<void> onInit() async {
     super.onInit();
+    WidgetsBinding.instance.addObserver(this);
     isLoading.value = true;
     try {
       arguments = await Get.arguments;
@@ -135,6 +137,9 @@ class ModulDetailUiController extends GetxController {
       return;
     }
 
+    await _sub?.cancel();
+    _streamTimer?.cancel();
+
     final handle =
         ws.value ??
         await _wsService.getOrOpenDeviceStream(token: token, modulId: serialId);
@@ -157,12 +162,18 @@ class ModulDetailUiController extends GetxController {
           print("parse error: $e | raw=$raw");
         }
       },
-      onError: (e) => print('WS error: $e'),
-      onDone: () => print('WS selesai'),
+      onError: (e) {
+        print('WS error: $e');
+        _cancelStreamTimer();
+      },
+      onDone: () {
+        print('WS selesai');
+        _cancelStreamTimer();
+        ws.value = null;
+      },
       cancelOnError: false,
     );
 
-    _streamTimer?.cancel();
     try {
       ws.value?.send("GET_SENSOR");
     } catch (e) {
@@ -170,10 +181,17 @@ class ModulDetailUiController extends GetxController {
     }
 
     _streamTimer = Timer.periodic(const Duration(seconds: 6), (timer) {
+      if (ws.value == null) {
+        print("Timer stopped: ws is null");
+        timer.cancel();
+        return;
+      }
+
       try {
         ws.value?.send("GET_SENSOR");
       } catch (e) {
         print('WS send GET_SENSOR failed: $e');
+        timer.cancel();
       }
     });
   }
@@ -449,8 +467,17 @@ class ModulDetailUiController extends GetxController {
     return null;
   }
 
+  void _cancelStreamTimer() {
+    if (_streamTimer != null && _streamTimer!.isActive) {
+      print("timer dimatikan");
+      _streamTimer!.cancel();
+      _streamTimer = null;
+    }
+  }
+
   @override
   Future<void> onClose() async {
+    WidgetsBinding.instance.removeObserver(this);
     _streamTimer?.cancel();
 
     await _sub?.cancel();
@@ -473,5 +500,16 @@ class ModulDetailUiController extends GetxController {
 
     _disposeFormController();
     super.onClose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      print("🔄 Reconnecting WS from Lifecycle...");
+
+      ws.value = null;
+      _initWsStream();
+    }
   }
 }

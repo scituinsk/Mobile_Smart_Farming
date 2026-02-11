@@ -380,7 +380,8 @@ Pengguna bertanggung jawab penuh atas:
   'ws_error_connection': 'Koneksi websocket tidak tersedia.',
   'ws_error_send': 'Gagal mengirim ke websocket: @error',
   'error_no_relay_in_group': 'Tidak ada relay dalam group ini.',
-  'success_turn_on_all': 'Berhasil menyalakan semua relay dalam group',
+  'success_turn_on_all':
+      'Berhasil mengirim perintah untuk menyalakan semua relay',
   'success_turn_off_all': 'Berhasil mematikan semua relay dalam group',
 
   // Schedule - Validation

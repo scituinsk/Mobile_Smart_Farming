@@ -108,8 +108,7 @@ class ScheduleUiController extends GetxController {
       final serialId = modulService.selectedModul.value!.serialId;
 
       // replace with your storage service to read token
-      final storage =
-          Get.find<StorageService>(); // <-- ganti dengan StorageService type
+      final storage = Get.find<StorageService>();
       final token = await storage.readSecure("access_token");
       if (token == null || token.isEmpty) {
         print('WS: token not available');
@@ -373,26 +372,26 @@ class ScheduleUiController extends GetxController {
     }
   }
 
+  // ...existing code...
+
   Future<void> _ensureWsHandle() async {
-    if (_ws.value != null) return;
-    try {
-      final serialId = modulService.selectedModul.value!.serialId;
-      final storage = Get.find<StorageService>();
-      final token = await storage.readSecure("access_token");
-      if (token == null || token.isEmpty) {
-        print('WS: token not available (ensure)');
-        return;
-      }
-      final handle = await _wsService.getOrOpenDeviceStream(
-        token: token,
-        modulId: serialId,
-      );
-      _ws.value = handle;
-      print('WS: handle obtained for modul $serialId');
-    } catch (e) {
-      print('WS: ensure handle failed: $e');
+    final serialId = modulService.selectedModul.value!.serialId;
+    final storage = Get.find<StorageService>();
+    final token = await storage.readSecure("access_token");
+    if (token == null || token.isEmpty) {
+      print('WS: token not available');
+      return;
     }
+
+    // get or open new handle
+    final handle = await _wsService.getOrOpenDeviceStream(
+      token: token,
+      modulId: serialId,
+    );
+    _ws.value = handle;
   }
+
+  // ...existing code...
 
   Future<void> _sendToDevice(String payload) async {
     try {
@@ -402,6 +401,11 @@ class ScheduleUiController extends GetxController {
       if (handle == null) {
         MySnackbar.error(message: "ws_error_connection".tr);
         print('WS: send aborted - no handle');
+        return;
+      }
+
+      if (!handle.isOpen) {
+        MySnackbar.error(message: "ws_error_connection".tr);
         return;
       }
 
@@ -455,14 +459,12 @@ class ScheduleUiController extends GetxController {
           .map((relay) => relay.pin)
           .join(',');
 
-      final int sequential = selectedRelayGroup.value!.sequential;
-
       final data = [
         'check=0',
         'relay=$relays',
         'time=600',
         'schedule=0',
-        'sequential=$sequential',
+        'sequential=0',
       ].join('\n');
 
       await _sendToDevice(data);

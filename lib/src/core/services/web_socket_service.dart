@@ -34,6 +34,7 @@ class WebSocketService extends GetxService {
   //public streams
   Stream<WebSocketMessage> get messageStream => _messageController.stream;
   Stream<bool> get connectionStatus => _connectionController.stream;
+  // bool get isOpen => _channel.closeCode == null && !_isClosed;
 
   @override
   void onClose() async {
@@ -132,7 +133,16 @@ class WebSocketService extends GetxService {
     required String modulId,
   }) async {
     final existing = _deviceHandles[modulId];
-    if (existing != null) return existing;
+    // if (existing != null && existing.isOpen) return existing;
+
+    if (existing != null) {
+      if (existing.isOpen) {
+        print("♻️ Menggunakan koneksi WS yang sudah ada untuk: $modulId");
+        return existing;
+      } else {
+        await closeDeviceStream(modulId);
+      }
+    }
 
     final handle = await openDeviceStream(token: token, modulId: modulId);
     _deviceHandles[modulId] = handle;

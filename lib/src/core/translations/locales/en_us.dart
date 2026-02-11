@@ -384,7 +384,7 @@ The User is fully responsible for:
   'ws_error_connection': 'Websocket connection unavailable.',
   'ws_error_send': 'Failed to send to websocket: @error',
   'error_no_relay_in_group': 'No relays in this group.',
-  'success_turn_on_all': 'Successfully turned on all relays in group',
+  'success_turn_on_all': 'Successfully sent command to turn on all relays',
   'success_turn_off_all': 'Successfully turned off all relays in group',
 
   // Schedule - Validation

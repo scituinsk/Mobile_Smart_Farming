@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pak_tani/firebase_options.dart';
 import 'package:pak_tani/src/app.dart';
@@ -16,6 +17,12 @@ void main() async {
   await DependencyInjection.init();
 
   await FirebaseCloudMessagingConfig.initialize();
+
+  // Mengunci orientasi ke Portrait Up dan Portrait Down
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
 
   runApp(const MyApp());
 }

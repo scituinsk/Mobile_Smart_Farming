@@ -10,12 +10,17 @@ class DeviceWsService {
 
   DeviceWsService(this._channel, this.stream);
 
-  bool _isClosed = false;
+  bool get isOpen => _channel.closeCode == null;
 
   /// Sends data over the WebSocket connection.
   /// If data is not a string, it converts it to a string.
   /// Logs the payload and rethrow any errors.
   void send(dynamic data) {
+    if (_channel.closeCode != null) {
+      print("⚠️ DeviceWsService: Socket sudah tutup, batal kirim.");
+      return;
+    }
+
     try {
       final payload = data is String ? data : data.toString();
       print('DeviceWsHandle.send -> ${payload.replaceAll("\n", "\\n")}');
@@ -28,11 +33,6 @@ class DeviceWsService {
 
   /// Closes the WebSocket connection
   Future<void> close() async {
-    _isClosed = true;
     await _channel.sink.close();
   }
-
-  /// Checks if the WebSocket connection is open.
-  /// Note: WebSocketChannel does not expose readyState, so this is a best-effort check.
-  bool get isOpen => !_isClosed;
 }
