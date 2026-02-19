@@ -283,7 +283,7 @@ class RelayUiController extends GetxController {
     } catch (e, st) {
       LoadingDialog.hide();
       LogUtils.e("Failed to move relay:", e, st);
-      MySnackbar.error(message: "relay_move_failed".tr);
+      MySnackbar.error(message: e.toString());
 
       // Rollback sudah di-handle oleh reload
       await relayService.loadRelaysAndAssignToRelayGroup(

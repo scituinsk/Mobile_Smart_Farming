@@ -209,7 +209,8 @@ class RelayGroupList extends StatelessWidget {
                   : null,
               onItemReorder:
                   (oldItemIndex, oldListIndex, newItemIndex, newListIndex) {
-                    if (newListIndex == 0 && oldListIndex != 0) {
+                    if (unassignedRelays.isNotEmpty &&
+                        (newListIndex == 0 && oldListIndex != 0)) {
                       LogUtils.d("Cannot move relay from group to unassigned");
                       MySnackbar.warning(message: "relay_must_be_in_group".tr);
                       return;
@@ -226,7 +227,8 @@ class RelayGroupList extends StatelessWidget {
                 final hasUnassignedList = unassignedRelays.isNotEmpty;
 
                 // ✅ Skip if trying to reorder unassigned list
-                if (oldListIndex == 0 || newListIndex == 0) {
+                if (hasUnassignedList &&
+                    (oldListIndex == 0 || newListIndex == 0)) {
                   LogUtils.d("Cannot reorder unassigned list");
                   return;
                 }

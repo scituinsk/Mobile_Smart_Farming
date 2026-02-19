@@ -244,13 +244,17 @@ class ScheduleUiController extends GetxController {
 
   bool isDaySelected(WeekDay day) => selectedDays.contains(day);
 
-  void clearDays() => selectedDays.clear();
+  void clearDays() {
+    selectedDays.clear();
+    _checkFormValidity();
+  }
 
   void selectAllDays() {
     selectedDays
       ..clear()
       ..addAll(WeekDay.values);
     selectedDays.refresh();
+    _checkFormValidity();
   }
 
   void loadDaysFromSchedule(Schedule s) {
@@ -538,14 +542,21 @@ class ScheduleUiController extends GetxController {
     final currentTime = timeController.value;
     final currentWeekday = selectedDays.toSet();
 
+    final isDurationValid =
+        validateDuration(currentDuration) == null && currentDuration.isNotEmpty;
+    final isTimeSelected = currentTime != null;
+    final isDaySelected = currentWeekday.isNotEmpty;
+
+    final isBaseValid = isDurationValid && isTimeSelected && isDaySelected;
+
     final originalSchedule = selectedSchedule.value;
     if (originalSchedule == null) {
-      isFormValid.value = false;
+      isFormValid.value = isBaseValid;
       return;
     }
 
-    final originalDuration = selectedSchedule.value!.duration;
-    final originalTime = selectedSchedule.value!.time;
+    final originalDuration = originalSchedule.duration;
+    final originalTime = originalSchedule.time;
 
     final Set<WeekDay> originalWeekday = getSelectedWeekDays(
       mon: selectedSchedule.value!.repeatMonday,
@@ -558,14 +569,11 @@ class ScheduleUiController extends GetxController {
     );
 
     final hasChange =
-        originalDuration != int.parse(currentDuration) ||
+        originalDuration.toString() != currentDuration ||
         originalTime != currentTime ||
         !setEquals(originalWeekday, currentWeekday);
 
-    final durationValid =
-        validateDuration(currentDuration) == null && currentDuration.isNotEmpty;
-
-    isFormValid.value = durationValid && hasChange;
+    isFormValid.value = isBaseValid && hasChange;
     LogUtils.d("isformvalid: ${isFormValid.value}");
   }
 }
